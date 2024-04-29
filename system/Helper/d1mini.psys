@@ -9,12 +9,13 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 26.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 582                                                     $ #
+//# Revision     : $Rev:: 594                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.psys 582 2024-04-10 06:45:45Z                     $ #
+//# File-ID      : $Id:: d1mini.psys 594 2024-04-29 17:52:07Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
+use system\WebCom;
 /**
  * ermittelt den D1 Mini CompiledWith und ordnet ihm MQTT und Datenpunkte zu
  * @author Checker
@@ -26,131 +27,194 @@ class d1mini {
 	const BM = 'BM';
 	const Rain = 'Rain';
 	const Distance = 'Distance';
-	/** responsed /shelly */
-	private static function insertValues($Json) {
-		$database = new wpDatabase();
-		$idMqttBroker = 1;
-		$idDBGroup = 1;
-		$idTrendGroup = 1;
-		$Name = $Json->FreakaZoneDevice->DeviceName;
-		$Description = $Json->FreakaZoneDevice->DeviceDescription;
 
-		$sql = "INSERT INTO [mqtttopic] ([id_mqttbroker], [topic]) VALUES (" . $idMqttBroker . ", '" . $Name . "/info/WiFi/RSSI')";
-		if($database->query($sql)) {
-			$sql = "INSERT INTO [db] " .
-				"([id_dpgroup], [id_mqtttopic], [name], [description], [unit], [nks], [min], [max], [active]) VALUES ".
-				`({$idDBGroup}, {$database->lastid('mqtttopic')}, '{$Name}_Rssi', '{$Description} Signal', 'db', 0, -130, 0, 1)`;
-			if($database->query($sql)) {
-				$sql = "INSERT INTO [trend] " .
-					"([id_dp], [id_trendgroup], [name], [intervall], [active]) VALUES " .
-					`({$database->lastid('db')}, {$idTrendGroup}, '{$Description} Signal', 120, 1)`;
-				$database->query($sql);
-			}
+	private $database, $webCom, $status;
+	private $idD1MiniGroup, $idMqttBroker, $idDBGroup, $idTrendGroup;
+	private $name, $description, $ip, $version, $mac;
+	public function __construct($ip) {
+		$this->database = new wpDatabase();
+		$this->webCom = new WebCom();
+		$this->ip = $ip;
+		$res = $this->webCom->send('getD1MiniStatus', $ip);
+		$this->status = \json_decode($res);
+		$this->name = $this->status->FreakaZoneDevice->DeviceName;
+		$this->description = $this->status->FreakaZoneDevice->DeviceDescription;
+		$this->version = $this->status->FreakaZoneDevice->Version;
+		$this->mac = $this->status->FreakaZoneDevice->miniMAC;
+	}
+	public function insertDevice($idD1MiniGroup, $idMqttBroker, $idDBGroup, $idTrendGroup) {
+		$this->idD1MiniGroup = $idD1MiniGroup;
+		$this->idMqttBroker = $idMqttBroker;
+		$this->idDBGroup = $idDBGroup;
+		$this->idTrendGroup = $idTrendGroup;
+
+		$this->setDevice();
+		$this->setRSSI();
+		if(isset($this->status->FreakaZoneDevice->HT)) {
+			$this->setHT();
 		}
-
-		if(isset($Json->FreakaZoneDevice->HT)) {
-
-			$sql = "INSERT INTO [mqtttopic] ([id_mqttbroker], [topic]) VALUES (" . $idMqttBroker . ", '" . $Name . "/Temperature')";
-			if($database->query($sql)) {
-				$sql = "INSERT INTO [db] " .
-						"([id_dpgroup], [id_mqtttopic], [name], [description], [unit], [nks], [min], [max], [active]) VALUES ".
-						`({$idDBGroup}, {$database->lastid('mqtttopic')}, '{$Name}_Temp', '{$Description} Temperatur', '°C', 1, -50, 100, 1)`;
-				if($database->query($sql)) {
-					$sql = "INSERT INTO [trend] " .
-							"([id_dp], [id_trendgroup], [name], [active]) VALUES " .
-							`({$database->lastid('db')}, {$idTrendGroup}, '{$Description} Temperatur', 1)`;
-					$database->query($sql);
-				}
-			}
-
-			$sql = "INSERT INTO [mqtttopic] ([id_mqttbroker], [topic]) VALUES (" . $idMqttBroker . ", '" . $Name . "/Humidity')";
-			if($database->query($sql)) {
-				$sql = "INSERT INTO [db] " .
-						"([id_dpgroup], [id_mqtttopic], [name], [description], [unit], [nks], [min], [max], [active]) VALUES ".
-						`({$idDBGroup}, {$database->lastid('mqtttopic')}, '{$Name}_Hum', '{$Description} Feuchte', '%rF', 0, 0, 100, 1)`;
-				if($database->query($sql)) {
-					$sql = "INSERT INTO [trend] " .
-							"([id_dp], [id_trendgroup], [name], [active]) VALUES " .
-							`({$database->lastid('db')}, {$idTrendGroup}, '{$Description} Feuchte', 1)`;
-					$database->query($sql);
-				}
-			}
+		if(isset($this->status->FreakaZoneDevice->LDR)) {
+			$this->setLDR();
 		}
-
-		if(isset($Json->FreakaZoneDevice->LDR)) {
-
-			$sql = "INSERT INTO [mqtttopic] ([id_mqttbroker], [topic]) VALUES (" . $idMqttBroker . ", '" . $Name . "/LDR')";
-			if($database->query($sql)) {
-				$sql = "INSERT INTO [db] " .
-						"([id_dpgroup], [id_mqtttopic], [name], [description], [unit], [nks], [min], [max], [active]) VALUES ".
-						`({$idDBGroup}, {$database->lastid('mqtttopic')}, '{$Name}_LDR', '{$Description} LDR', 'lux', 0, 0, 1024, 1)`;
-				if($database->query($sql)) {
-					$sql = "INSERT INTO [trend] " .
-							"([id_dp], [id_trendgroup], [name], [active]) VALUES " .
-							`({$database->lastid('db')}, {$idTrendGroup}, '{$Description} LDR', 1)`;
-					$database->query($sql);
-				}
-			}
+		if(isset($this->status->FreakaZoneDevice->Light)) {
+			$this->setLight();
 		}
-
-		if(isset($Json->FreakaZoneDevice->Light)) {
-
-			$sql = "INSERT INTO [mqtttopic] ([id_mqttbroker], [topic]) VALUES (" . $idMqttBroker . ", '" . $Name . "/Light')";
-			if($database->query($sql)) {
-				$sql = "INSERT INTO [db] " .
-						"([id_dpgroup], [id_mqtttopic], [name], [description], [unit], [nks], [min], [max], [active]) VALUES ".
-						`({$idDBGroup}, {$database->lastid('mqtttopic')}, '{$Name}_Light', '{$Description} Licht', 'lux', 0, 0, 65535, 1)`;
-				if($database->query($sql)) {
-					$sql = "INSERT INTO [trend] " .
-							"([id_dp], [id_trendgroup], [name], [active]) VALUES " .
-							`({$database->lastid('db')}, {$idTrendGroup}, '{$Description} Licht', 1)`;
-					$database->query($sql);
-				}
-			}
+		if(isset($this->status->FreakaZoneDevice->BM)) {
+			$this->setBM();
 		}
-
-		if(isset($Json->FreakaZoneDevice->BM)) {
-
-			$sql = "INSERT INTO [mqtttopic] ([id_mqttbroker], [topic]) VALUES (" . $idMqttBroker . ", '" . $Name . "/BM')";
-			if($database->query($sql)) {
-				$sql = "INSERT INTO [db] " .
-						"([id_dpgroup], [id_mqtttopic], [name], [description], [unit], [active]) VALUES ".
-						`({$idDBGroup}, {$database->lastid('mqtttopic')}, '{$Name}_BM', '{$Description} Bewegung', '1:Bewegung;0:Stille;', 1)`;
-				$database->query($sql);
-			}
+		if(isset($this->status->FreakaZoneDevice->Rain)) {
+			$this->setRain();
 		}
-
-		if(isset($Json->FreakaZoneDevice->Rain)) {
-
-			$sql = "INSERT INTO [mqtttopic] ([id_mqttbroker], [topic]) VALUES (" . $idMqttBroker . ", '" . $Name . "/Rain')";
-			if($database->query($sql)) {
-				$sql = "INSERT INTO [db] " .
-						"([id_dpgroup], [id_mqtttopic], [name], [description], [unit], [nks], [min], [max], [active]) VALUES ".
-						`({$idDBGroup}, {$database->lastid('mqtttopic')}, '{$Name}_Rain', '{$Description} Regen', 'l/min', 3, 0, 10, 1)`;
-				if($database->query($sql)) {
-					$sql = "INSERT INTO [trend] " .
-							"([id_dp], [id_trendgroup], [name], [active]) VALUES " .
-							`({$database->lastid('db')}, {$idTrendGroup}, '{$Description} Regen', 1)`;
-					$database->query($sql);
-				}
-			}
+		if(isset($this->status->FreakaZoneDevice->Distance)) {
+			$this->setVolume();
 		}
-
-		if(isset($Json->FreakaZoneDevice->Distance)) {
-
-			$sql = "INSERT INTO [mqtttopic] ([id_mqttbroker], [topic]) VALUES (" . $idMqttBroker . ", '" . $Name . "/Volume')";
-			if($database->query($sql)) {
-				$sql = "INSERT INTO [db] " .
-						"([id_dpgroup], [id_mqtttopic], [name], [description], [unit], [nks], [min], [max], [active]) VALUES ".
-						`({$idDBGroup}, {$database->lastid('mqtttopic')}, '{$Name}_Vol', '{$Description} Volume', 'l', 0, 0, 10000, 1)`;
-				if($database->query($sql)) {
-					$sql = "INSERT INTO [trend] " .
-							"([id_dp], [id_trendgroup], [name], [active]) VALUES " .
-							`({$database->lastid('db')}, {$idTrendGroup}, '{$Description} Volume', 1)`;
-					$database->query($sql);
-				}
-			}
-		}
+	}
+	private function setDevice() {
+		$this->mergeDivice();
+	}
+	private function setRSSI() {
+		$id_mqtttopic = $this->insertTopic('info/WIFI/RSSI');
+		$id_dp = $this->mergeDP($id_mqtttopic, 'Rssi', 'Signal', 'db', 0, -130, 0);
+		$this->mergeTrend($id_dp, 'Signal', 120);
+	}
+	private function setHT() {
+		$id_mqtttopic_temp = $this->insertTopic('Temperature');
+		$id_dp_temp = $this->mergeDP($id_mqtttopic_temp, 'Temp', 'Temperatur', '°C', 1, -50);
+		$this->mergeTrend($id_dp_temp, 'Temperatur');
+		$id_mqtttopic_hum = $this->insertTopic('Humidity');
+		$id_dp_hum = $this->mergeDP($id_mqtttopic_hum, 'Hum', 'Feuchte', '%rF', 0);
+		$this->mergeTrend($id_dp_hum, 'Feuchte');
+	}
+	private function setLDR() {
+		$id_mqtttopic = $this->insertTopic('LDR');
+		$id_dp = $this->mergeDP($id_mqtttopic, 'LDR', 'LDR', 'lux', 0, 0, 1024);
+		$this->mergeTrend($id_dp, 'LDR');
+	}
+	private function setLight() {
+		$id_mqtttopic = $this->insertTopic('Light');
+		$id_dp = $this->mergeDP($id_mqtttopic, 'Light', 'Licht', 'lux', 0, 0, 1024);
+		$this->mergeTrend($id_dp, 'Licht');
+	}
+	private function setBM() {
+		$id_mqtttopic = $this->insertTopic('BM');
+		$this->mergeDP($id_mqtttopic, 'BM', 'Bewegung', '1:Bewegung;0:Stille;');
+	}
+	private function setRain() {
+		$id_mqtttopic = $this->insertTopic('Rain');
+		$id_dp = $this->mergeDP($id_mqtttopic, 'Rain', 'Regen', 'l/min', 3, 0, 10);
+		$this->mergeTrend($id_dp, 'Licht');
+	}
+	private function setVolume() {
+		$id_mqtttopic = $this->insertTopic('Volume');
+		$id_dp = $this->mergeDP($id_mqtttopic, 'Vol', 'Füllstand', 'l', 0, 0, 10000);
+		$this->mergeTrend($id_dp, 'Füllstand', 120);
+	}
+	private function mergeDivice($active = 1) {
+		$sql = "
+MERGE INTO [d1mini] AS [TARGET]
+	USING (
+		VALUES (
+			$this->idD1MiniGroup, '$this->name', '$this->description',
+			'$this->version', '$this->ip', '$this->mac', $active
+		)
+	) AS [SOURCE] (
+			[id_d1minigroup], [name], [description],
+			[version], [ip], [mac], [active]
+	) ON
+		[TARGET].[name] = [SOURCE].[name]
+	WHEN MATCHED THEN
+		UPDATE SET
+			[TARGET].[id_d1minigroup] = [SOURCE].[id_d1minigroup],
+			[TARGET].[description] = [SOURCE].[description],
+			[TARGET].[version] = [SOURCE].[version],
+			[TARGET].[ip] = [SOURCE].[ip],
+			[TARGET].[mac] = [SOURCE].[mac],
+			[TARGET].[active] = [SOURCE].[active]
+	WHEN NOT MATCHED THEN
+		INSERT (
+			[id_d1minigroup], [name], [description],
+			[version], [ip], [mac], [active]
+		)
+		VALUES (
+			[SOURCE].[id_d1minigroup], [SOURCE].[name], [SOURCE].[description],
+			[SOURCE].[version], [SOURCE].[ip], [SOURCE].[mac], [SOURCE].[active]
+		);";
+			$this->database->query($sql);
+	}
+	private function insertTopic($aptopic) {
+		$sql = "
+INSERT INTO [mqtttopic]
+	([id_mqttbroker], [topic])
+OUTPUT [INSERTED].[id_mqtttopic] AS [ID]
+VALUES
+	(" . $this->idMqttBroker . ", '" . $this->name . "/info/WiFi/RSSI')";
+		$this->database->query($sql);
+		return $this->database->fetch()['ID'];
+	}
+	private function mergeDP($idtopic, $apname, $apdec, $unit = '', $nks = '', $min = 0, $max = 100, $active = 1) {
+		$sql = "
+MERGE INTO [dp] AS [TARGET]
+	USING (
+		VALUES (
+			$this->idDBGroup, $idtopic, '" . $this->name . "_" . $apname . "', '$this->description $apdec',
+			'$unit', $nks, $min, $max, $active
+		)
+	) AS [SOURCE] (
+			[id_dpgroup], [id_mqtttopic], [name], [description],
+			[unit], [nks], [min], [max], [active]
+	) ON
+		[TARGET].[name] = [SOURCE].[name]
+	WHEN MATCHED THEN
+		UPDATE SET
+			[TARGET].[id_dpgroup] = [SOURCE].[id_dpgroup],
+			[TARGET].[id_mqtttopic] = [SOURCE].[id_mqtttopic],
+			[TARGET].[description] = [SOURCE].[description],
+			[TARGET].[unit] = [SOURCE].[unit],
+			[TARGET].[nks] = [SOURCE].[nks],
+			[TARGET].[min] = [SOURCE].[min],
+			[TARGET].[max] = [SOURCE].[max],
+			[TARGET].[active] = [SOURCE].[active]
+	WHEN NOT MATCHED THEN
+		INSERT (
+			[id_dpgroup], [id_mqtttopic], [name], [description],
+			[unit], [nks], [min], [max], [active]
+		)
+		VALUES (
+			[SOURCE].[id_dpgroup], [SOURCE].[id_mqtttopic], [SOURCE].[name], [SOURCE].[description],
+			[SOURCE].[unit], [SOURCE].[nks], [SOURCE].[min], [SOURCE].[max], [SOURCE].[active]
+		)
+	OUTPUT [INSERTED].[id_dp] AS [ID];";
+			$this->database->query($sql);
+			return $this->database->fetch()['ID'];
+	}
+	private function mergeTrend($id_dp, $apdesc, $intervall = 0, $active = 1) {
+		$sql = "
+MERGE INTO [trend] AS [TARGET]
+	USING (
+		VALUES (
+			$id_dp, $this->idTrendGroup, '$this->description $apdesc', $intervall, $active
+		)
+	) AS [SOURCE] (
+		[id_dp], [id_trendgroup], [name], [intervall], [active]
+	) ON
+		[TARGET].[id_dp] = [SOURCE].[id_dp]
+	WHEN MATCHED THEN
+		UPDATE SET
+			[TARGET].[id_dp] = [SOURCE].[id_dp],
+			[TARGET].[id_trendgroup] = [SOURCE].[id_trendgroup],
+			[TARGET].[name] = [SOURCE].[name],
+			[TARGET].[intervall] = [SOURCE].[intervall],
+			[TARGET].[active] = [SOURCE].[active]
+	WHEN NOT MATCHED THEN
+		INSERT (
+			[id_dp], [id_trendgroup],
+			[name], [intervall], [active]
+		)
+		VALUES (
+			[SOURCE].[id_dp], [SOURCE].[id_trendgroup],
+			[SOURCE].[name], [SOURCE].[intervall], [SOURCE].[active]
+		);";
+		$this->database->query($sql);
 	}
 }
 ?>
