@@ -1,0 +1,35 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 505                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: login.css 505 2021-05-07 21:55:45Z checker               $ #
+//#                                                                                 #
+//###################################################################################
+?> login */
+
+#login { padding:20px; /*background:transparent url(images/Logo.png) center top no-repeat; */ }
+#login .accordion { width:600px; margin:auto; }
+#login fieldset { width:500px; padding:20px; margin:10px auto 0; border-radius:6px; }
+#login legend { padding:3px 30px; }
+#login input { width:230px; float:right; }
+#login .osk { float:right; }
+#login label, #login span.label { display:inline-block; width:190px; text-align:right; line-height:25px; }
+#login div.row { height:25px; clear:both; }
+#login div.error { text-align:center; color:#A91919; }
+#login .autologon { margin-left:100px; }
+#login .ps-input { text-align:left; }
+#login #angemeldetbleiben { width:auto; margin-right:265px; }
+#ldapform h3 { text-align:center; }
+
+#dialog div.popup { width:auto; }
+#oskinput { font-size:12pt; font-weight:bold; }
+#oskinput.pw { font-size:14pt; font-weight:bold; }

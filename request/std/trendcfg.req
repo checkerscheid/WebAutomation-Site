@@ -1,0 +1,439 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 15.05.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 582                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: trendcfg.req 582 2024-04-10 06:45:45Z                    $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\std;
+use system\Helper\wpDatabase;
+use system\std, system\WebCom;
+
+require_once 'request/system/groups.psys';
+require_once 'request/system/dps.psys';
+
+class trendcfg {
+	// Menueeintraege
+	const c_menueditelem = 'menueditelem';
+	// Trends bearbeiten (menutrends)
+	const c_gettrend = 'gettrend';
+	const c_popallgroup = 'popallgroup';
+	const c_saveallgroup = 'saveallgroup';
+	const c_popallintervall = 'popallintervall';
+	const c_saveallintervall = 'saveallintervall';
+	const c_popallactive = 'popallactive';
+	const c_saveallactive = 'saveallactive';
+	const c_popallmaximal = 'popallmaximal';
+	const c_saveallmaximal = 'saveallmaximal';
+	const c_popallalter = 'popallalter';
+	const c_saveallalter = 'saveallalter';
+	const c_popalldelete = 'popalldelete';
+	const c_savealldelete = 'savealldelete';
+	const c_poponetrend = 'poponetrend';
+	const c_updateonetrend = 'updateonetrend';
+	const c_deleteonetrend = 'deleteonetrend';
+}
+
+switch(std::gets('param1')) {
+//###################################################################################
+// Menueeintraege
+//###################################################################################
+//###################################################################################
+	case trendcfg::c_menueditelem:
+?>
+		<h1>Trend Details</h1>
+		<hr />
+		<ul id="trend">
+<?
+		$database = new wpDatabase();
+		$database->query('SELECT [id_trendgroup], [name] FROM [trendgroup] ORDER BY [name]');
+		while($erg = $database->fetch()) {
+			echo '<li class="ps-tree-parent trendgroupfolder" data-trendgroup="'.$erg['id_trendgroup'].'">'.$erg['name'].'</li>';
+			echo '<li data-trends="'.$erg['id_trendgroup'].'"></li>';
+		}
+		echo '<li class="ps-tree-parent trendgroupfolder" data-trendgroup="NULL">Trends ohne Gruppe</li>';
+		echo '<li data-trends="NULL"></li>';
+?>
+		</ul>
+<?
+		break;
+
+//###################################################################################
+// Trends bearbeiten (menutrends)
+//###################################################################################
+	case trendcfg::c_gettrend:
+?>
+	<ul class="trendingroup" data-group="<?=std::posts('trendgroup')?>">
+		<li><hr /></li>
+		<li>
+			<div class="table forall">
+				<div class="tr">
+					<div class="td"><span>Markierung:</span></div>
+					<div class="td">
+						<span class="ps-button markall">alle</span>
+						<span class="ps-button markno">keine</span>
+					</div>
+				</div>
+				<div class="tr">
+					<div class="td"><span>markierte:</span></div>
+					<div class="td">
+						<span class="ps-button allgroup" title="in Gruppe verschieben">Gruppe</span>
+						<span class="ps-button allintervall" title="Aufzeichnungsintervall">Intervall</span>
+						<span class="ps-button allaktiv" title="aktivieren / deaktivieren">Aktiv</span>
+						<span class="ps-button allmaximal" title="maximale Anzahl an Einträgen">Maximal</span>
+						<span class="ps-button allalter" title="maximales Alter der Einträge">Alter</span>
+						<span class="ps-button alldelete">l&ouml;schen</span>
+					</div>
+				</div>
+			</div>
+		</li>
+		<li><hr /></li>
+		<li>
+			<div class="table">
+				<div class="tr">
+					<div class="th">Trendname</div>
+					<div class="th">Datenpunkt Name</div>
+					<div class="th">Intervall</div>
+					<div class="th">Aktiv</div>
+					<div class="th" title="maximale Anzahl an Einträgen">Maximal</div>
+					<div class="th" title="maximales Alter der Einträge">Alter</div>
+					<div class="th"></div>
+					<div class="th"></div>
+				</div>
+<?
+		$database = new wpDatabase();
+		if(std::posts('trendgroup') == 'NULL') {
+			$database->query('SELECT [dp].[name], [s].[id_trend], [s].[name] AS [trendname], [s].[active], [s].[intervall], [s].[max], [s].[maxAge] FROM [trend] [s]
+					INNER JOIN [dp] ON [dp].[id_dp] = [s].[id_dp]
+					WHERE [s].[id_trendgroup] IS NULL ORDER BY [dp].[name]');
+		} else {
+			$database->query('SELECT [dp].[name], [s].[id_trend], [s].[name] AS [trendname], [s].[active], [s].[intervall], [s].[max], [s].[maxAge] FROM [trend] [s]
+					INNER JOIN [dp] ON [dp].[id_dp] = [s].[id_dp]
+					WHERE [s].[id_trendgroup] = '.std::posts('trendgroup').' ORDER BY [dp].[name]');
+		}
+		while($erg = $database->fetch()) {
+			echo '<div class="tr" data-idtrend="'.$erg['id_trend'].'">';
+			echo '<div class="td"><span class="ps-checkbox tr-trendname">'.$erg['trendname'].'</span></div>';
+			echo '<div class="td"><span>'.$erg['name'].'</span></div>';
+			echo '<div class="td"><span class="tr-trendintervall">'.($erg['intervall'] == '0' ? 'onChange' : $erg['intervall'].' sec').'</div>';
+			echo '<div class="td"><span class="tr-trendactive'.($erg['active'] == '0' ? '">Nein' : ' ps-green">Ja').'</div>';
+			echo '<div class="td"><span class="tr-trendmax">'.$erg['max'].'</span></div>';
+			echo '<div class="td"><span class="tr-trendmaxAge">'.$erg['maxAge'].' Tage</span></div>';
+			echo '<div class="td"><span class="ps-button trendedit">bearbeiten</span></div>';
+			echo '<div class="td"><span class="ps-button trenddelete">l&ouml;schen</span></div>';
+			echo '</div>';
+		}
+?>
+			</div>
+		</li>
+	</ul>
+<?
+		break;
+//###################################################################################
+	case trendcfg::c_popallgroup:
+?>
+		<h3>ausgewälte Trends:</h3>
+		<ul class="names">
+<? foreach(std::posts('names') as $name) { ?>
+			<li><?=$name?></li>
+<? } ?>
+		</ul>
+		<hr />
+		<div class="table">
+		<?getGroups();?>
+		</div>
+<?
+		break;
+//###################################################################################
+	case trendcfg::c_saveallgroup:
+		$where = '';
+		foreach($_POST['ids'] as $ids) {
+			$where .= '[id_trend] = '.$ids.' OR ';
+		}
+		$database = new wpDatabase();
+		$database->query("UPDATE [trend] SET
+				[id_trendgroup] = ".std::posts('newgroup')."
+				WHERE ".substr($where, 0, -4));
+		echo '{"erg": "S_OK"}';
+		break;
+//###################################################################################
+	case trendcfg::c_popallintervall:
+?>
+		<h3>ausgewälte Trends:</h3>
+		<ul class="names">
+<? foreach(std::posts('names') as $name) { ?>
+			<li><?=$name?></li>
+<? } ?>
+		</ul>
+		<hr />
+		<div class="table">
+			<div class="tr">
+				<div class="td">
+					<label for="c-intervall">neues Intervall</label>
+				</div>
+				<div class="td">
+					<select id="c-intervall" class="ps-input">
+						<option value="0">onChange</option>
+						<option value="10">10 sec</option>
+						<option value="30">30 sec</option>
+						<option value="60">60 sec</option>
+						<option value="90">90 sec</option>
+						<option value="120">120 sec</option>
+					</select>
+				</div>
+			</div>
+		</div>
+<?
+		break;
+//###################################################################################
+	case trendcfg::c_saveallintervall:
+		$where = '';
+		$fortcp = '';
+		foreach($_POST['ids'] as $ids) {
+			$where .= '[id_trend] = '.$ids.' OR ';
+			$fortcp .= $ids.'%~%';
+		}
+		$database = new wpDatabase();
+		$database->query("UPDATE [trend] SET
+				[intervall] = ".std::posts('newintervall')."
+				WHERE ".substr($where, 0, -4));
+		$WebCom = new WebCom();
+		echo $WebCom->send('UpdateTrendIntervall', std::posts('newintervall') . '%~%' . substr($fortcp, 0, -3));
+		break;
+//###################################################################################
+	case trendcfg::c_popallactive:
+?>
+		<h3>ausgewälte Trends:</h3>
+		<ul class="names">
+<? foreach(std::posts('names') as $name) { ?>
+			<li><?=$name?></li>
+<? } ?>
+		</ul>
+<?
+		break;
+//###################################################################################
+	case trendcfg::c_saveallactive:
+		$where = '';
+		$fortcp = '';
+		foreach(std::posts('ids') as $ids) {
+			$where .= '[id_trend] = '.$ids.' OR ';
+			$fortcp .= $ids.'%~%';
+		}
+		$database = new wpDatabase();
+		$database->query("UPDATE [trend] SET
+				[active] = ".(std::posts('newaktiv') == 'True' ? '1' : '0')."
+				WHERE ".substr($where, 0, -4));
+		$WebCom = new WebCom();
+		echo $WebCom->send(std::posts('newaktiv') == 'True' ? 'ActivateTrend' : 'DeactivateTrend', substr($fortcp, 0, -3));
+		break;
+//###################################################################################
+	case trendcfg::c_popallmaximal:
+?>
+		<h3>ausgewälte Trends:</h3>
+		<ul class="names">
+<? foreach(std::posts('names') as $name) { ?>
+			<li><?=$name?></li>
+<? } ?>
+		</ul>
+		<hr />
+		<div class="table">
+			<div class="tr">
+				<div class="td">Max</div>
+				<div class="td"><input type="text" id="c-max" value="50400" class="ps-input" /> Einträge</div>
+			</div>
+		</div>
+<?
+		break;
+//###################################################################################
+	case trendcfg::c_saveallmaximal:
+		$where = '';
+		$fortcp = '';
+		foreach($_POST['ids'] as $ids) {
+			$where .= '[id_trend] = '.$ids.' OR ';
+			$fortcp .= $ids.'%~%';
+		}
+		$database = new wpDatabase();
+		$database->query("UPDATE [trend] SET
+				[max] = ".std::posts('newmaximal')."
+				WHERE ".substr($where, 0, -4));
+		$WebCom = new WebCom();
+		echo $WebCom->send('UpdateTrendMaxEntries', std::posts('newmaximal') . '%~%' . substr($fortcp, 0, -3));
+		break;
+//###################################################################################
+	case trendcfg::c_popallalter:
+?>
+		<h3>ausgewälte Trends:</h3>
+		<ul class="names">
+<? foreach(std::posts('names') as $name) { ?>
+			<li><?=$name?></li>
+<? } ?>
+		</ul>
+		<hr />
+		<div class="table">
+			<div class="tr">
+				<div class="td">Alter</div>
+				<div class="td"><input type="text" id="c-maxage" value="35" class="ps-input" /> Tage</div>
+			</div>
+		</div>
+<?
+		break;
+//###################################################################################
+	case trendcfg::c_saveallalter:
+		$where = '';
+		$fortcp = '';
+		foreach($_POST['ids'] as $ids) {
+			$where .= '[id_trend] = '.$ids.' OR ';
+			$fortcp .= $ids.'%~%';
+		}
+		$database = new wpDatabase();
+		$database->query("UPDATE [trend] SET
+				[maxAge] = ".std::posts('newalter')."
+				WHERE ".substr($where, 0, -4));
+		$WebCom = new WebCom();
+		echo $WebCom->send('UpdateTrend', std::posts('newalter') . '%~%' . substr($fortcp, 0, -3));
+		break;
+//###################################################################################
+	case trendcfg::c_popalldelete:
+?>
+		<h3>ausgewälte Trends</h3>
+		<ul class="names">
+<? foreach(std::posts('names') as $name) { ?>
+			<li><?=$name?></li>
+<? } ?>
+		</ul>
+<?
+		break;
+//###################################################################################
+	case trendcfg::c_savealldelete:
+		$fortcp = '';
+		foreach($_POST['ids'] as $ids) {
+			$fortcp .= $ids.'%~%';
+		}
+		$WebCom = new WebCom();
+		echo $WebCom->send('DeleteTrend', substr($fortcp, 0, -3));
+		break;
+//###################################################################################
+	case trendcfg::c_poponetrend:
+		$database = new wpDatabase();
+		$database->query("SELECT [id_trendgroup], [name], [intervall], [max], [maxAge], [active]
+			FROM [trend] WHERE [id_trend] = ".std::posts('id'));
+		$erg = $database->fetch();
+?>
+<div class="table">
+	<div class="tr">
+		<div class="td">
+			<label for="c-description">Name</label>
+		</div>
+		<div class="td">
+			<input type="text" id="c-description" value="<?=$erg['name']?>" class="ps-input" />
+		</div>
+	</div>
+	<div class="tr">
+		<div class="td">
+			<label for="c-intervall">Intervall</label>
+		</div>
+		<div class="td">
+			<select id="c-intervall" class="ps-input">
+				<option value="0"<?=($erg['intervall'] == 0 ? ' selected="selected"' : '')?>>onChange</option>
+				<option value="10"<?=($erg['intervall'] == 10 ? ' selected="selected"' : '')?>>10 sec</option>
+				<option value="30"<?=($erg['intervall'] == 30 ? ' selected="selected"' : '')?>>30 sec</option>
+				<option value="60"<?=($erg['intervall'] == 60 ? ' selected="selected"' : '')?>>60 sec</option>
+				<option value="90"<?=($erg['intervall'] == 90 ? ' selected="selected"' : '')?>>90 sec</option>
+				<option value="120"<?=($erg['intervall'] == 120 ? ' selected="selected"' : '')?>>120 sec</option>
+			</select>
+		</div>
+	</div>
+<?
+	getGroups($erg['id_trendgroup']);
+?>
+	<div class="tr">
+		<div class="td">Max</div>
+		<div class="td"><input type="text" id="c-max" value="<?=$erg['max']?>" class="ps-input" /> Einträge</div>
+	</div>
+	<div class="tr">
+		<div class="td">Alter</div>
+		<div class="td"><input type="text" id="c-maxage" value="<?=$erg['maxAge']?>" class="ps-input" /> Tage</div>
+	</div>
+	<div class="tr">
+		<div class="td"></div>
+		<div class="td"><span id="c-active" class="ps-checkbox<?=(($erg['active'] == 1) ? ' checked' : '')?>">aktiv</span></div>
+	</div>
+</div>
+<?
+		break;
+//###################################################################################
+	case trendcfg::c_updateonetrend:
+		header(wpJSON_HEADER);
+		$returns = '{';
+		$database = new wpDatabase();
+		$database->query("UPDATE [trend] SET
+				[id_trendgroup] = ".std::posts('group').",
+				[name] = '".std::posts('description')."',
+				[intervall] = '".std::posts('intervall')."',
+				[max] = ".std::posts('max').",
+				[maxAge] = ".std::posts('maxage').",
+				[active] = ".(std::posts('active') == 'True' ? '1' : '0')."
+				WHERE [id_trend] = ".std::posts('id'));
+		$WebCom = new WebCom();
+		$erg = \json_decode($WebCom->send('UpdateTrend', std::posts('id')));
+		if($erg->erg != 'S_OK') {
+			$returns .=
+				'"erg":"S_ERROR",' .
+				'"message":"<span class=\"neg\">Trend konnte nicht gespeichert werden ('.std::posts('id').')</span>"';
+		} else {
+			$returns .=  '"erg":"S_OK"';
+		}
+		echo $returns . '}';
+		//std::test_array($encode->getArray());
+		break;
+//###################################################################################
+	case trendcfg::c_deleteonetrend:
+		$database = new wpDatabase();
+		$database->query('DELETE FROM [trend] WHERE [id_trend] = ' . std::posts('id'));
+		$WebCom = new WebCom();
+		echo $WebCom->send('DeleteTrend', std::posts('id'));
+		break;
+//###################################################################################
+	default:
+		//\system\html::default();
+		break;
+}
+
+//###################################################################################
+// Hilfsfunktionen
+//###################################################################################
+function getGroups($defaultValue = 0) {
+	$groups = array('NULL' => 'keine Gruppe');
+	$database = new wpDatabase();
+	$database->query('SELECT [id_trendgroup], [name] FROM [trendgroup] ORDER BY [name]');
+	while($erg = $database->fetch()) $groups[$erg['id_trendgroup']] = $erg['name'];
+	?>
+	<div class="tr">
+		<div class="td"><label for="c-group">neue Trendgruppe</label></div>
+		<div class="td">
+			<select id="c-group" class="ps-input">
+			<?=createDropDown($groups, $defaultValue)?>
+			</select>
+		</div>
+	</div>
+<?
+}
+
+//###################################################################################
+function createDropDown($array, $active = 0) {
+	$html = '';
+	foreach($array as $key => $value) {
+		$selected = $active == $key ? ' selected="selected"' : '';
+		$html .= '<option value="'.$key.'"'.$selected.'>'.$value.'</option>';
+	}
+	return $html;
+}

@@ -1,0 +1,48 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 572                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: useradmin.css 572 2024-03-20 06:52:42Z checker           $ #
+//#                                                                                 #
+//###################################################################################
+?> useradmin */
+
+#useradmin { margin:0 25px 0 10px; }
+#useradmin h3 { padding-left:30px; line-height:27px; }
+#useradmin h3.noreset { color:#060; }
+#useradmin .usercontainer { min-width:350px; }
+#useradmin p { padding:5px 50px 0px 50px; }
+#useradmin p span.ps-bold { float:right; }
+#useradmin .p-userbutton { float:right; width:27px; height:27px; padding:0 2px; margin:0 3px; cursor:pointer; }
+#useradmin .p-useredit { background:transparent url(images/layout/ic_menu_edit.png) center center no-repeat; }
+#useradmin .p-userdelete { background:transparent url(images/layout/ic_menu_delete.png) center center no-repeat; }
+#useradmin .p-userrefresh { background:transparent url(images/layout/ic_menu_refresh.png) center center no-repeat; }
+#useradmin .ps-checkbox { margin-left:250px; }
+#useradmin .ps-button { float:right; }
+#useradmin .copyPW { float:right; text-align:center; }
+
+#useradmin .ps-flex-container { align-items:flex-start; }
+
+#useradmin div.height0 { height:0px; overflow:hidden; }
+
+#useradmin h3 { cursor:pointer; background:transparent url(images/layout/ic_menu_add.png) left center no-repeat; }
+#useradmin h3.open { background:none; }
+
+.fieldsetcontainer { padding:20px; }
+.fieldsetcontainer fieldset { width:500px; padding:20px; margin:10px auto 0; border-radius:6px; }
+.fieldsetcontainer legend { padding:3px 30px; }
+.fieldsetcontainer input, .fieldsetcontainer select, .fieldsetcontainer span.ps-input { width:230px; float:right; text-align:left !important; }
+.fieldsetcontainer label, .fieldsetcontainer span.label { display:inline-block; width:230px; text-align:right; line-height:25px; }
+.fieldsetcontainer div.row { height:25px; clear:both; }
+.fieldsetcontainer div.error { text-align:center; color:#A91919; }
+.fieldsetcontainer div.entry, .fieldsetcontainer p.p-help { clear:both; }
+#dialog input[type=button] { color:#fff; }

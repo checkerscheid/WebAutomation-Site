@@ -1,0 +1,31 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 28.06.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 505                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: sys_ddc.css 505 2021-05-07 21:55:45Z checker             $ #
+//#                                                                                 #
+//###################################################################################
+?> ddc */
+
+#ddc h1, #ddc h2, #ddc h3 { text-align:center; }
+#ddc { margin:0 20px; }
+
+#ddc span { display:inline-block; }
+#ddc span.ps-input { width:350px; text-align:center; }
+#ddc tr.td-center td { text-align:center; }
+#ddc .besch { width:200px; padding:5px 0; float:left; }
+#ddc .ps-container { width:400px; height:75px; overflow:hidden; }
+#ddc .ps-container h2 { cursor:pointer; }
+#ddc .write { cursor:pointer; }
+#ddc .neg { background-color:#A91919; color:#FFF; }
+#ddc .pos { background-color:#0F0; color:#000; }
+#ddc .serverinfo { position:fixed; top:85px; right:25px; color:#FFF; font-size:7pt; }

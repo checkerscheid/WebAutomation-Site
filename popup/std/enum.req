@@ -1,0 +1,46 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 20.12.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: enum.req 550 2023-12-25 03:02:54Z                        $ #
+//#                                                                                 #
+//###################################################################################
+/** @var Type $m */
+namespace popup\std;
+use system\std;
+
+$unit = $_SESSION[SESSION_ID]['POINTS'][std::posts('elem')]->unit;
+
+?>
+
+<div class="popup">
+	<h1><?=std::posts('headline')?></h1>
+	<table summary="">
+		<tr>
+			<td>
+				<span>Sollwert:</span>
+			</td>
+			<td>
+<?
+			if(preg_match_all('/(\d+):([^;]+);/', $unit, $m) > 0) {
+				echo '<select id="writeitem" class="ps-input">';
+				for($i = 0; $i < count($m[0]); $i++) {
+					echo '<option value="' . $m[1][$i] . '">' . $m[2][$i] . '</option>';
+				}
+				echo '</select>';
+			}
+?>
+			</td>
+		</tr>
+
+	</table>
+</div>

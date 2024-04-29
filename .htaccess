@@ -1,0 +1,67 @@
+RewriteEngine on
+
+ErrorDocument 401								/index.php?src=notallowed
+ErrorDocument 403								/index.php?src=notallowed
+ErrorDocument 404								/index.php?src=notfound
+
+RewriteCond %{REQUEST_URI} !Remote/
+
+#RewriteCond %{SERVER_PORT} 80
+#RewriteRule (.*) https://automation.freakazone.com/$1 [R=301,L]
+#RewriteCond %{HTTP_HOST} !^automation.freakazone.com
+#RewriteRule (.*) https://automation.freakazone.com/$1 [R=301,L]
+
+RewriteRule ^logout\.auto\.htm$					/index.php?path=std&src=login&aktion=out&auto=true [L]
+RewriteRule ^logout\.htm$						/index.php?path=std&src=login&aktion=out [L]
+RewriteRule ^login\.htm$						/index.php?path=std&src=login [L]
+
+RewriteRule ^std\.(.*)\.(.*)\.(.*)\.htm$		/index.php?path=std&src=$1&param1=$2&param2=$3 [L]
+RewriteRule ^std\.(.*)\.(.*)\.htm$				/index.php?path=std&src=$1&param1=$2 [L]
+RewriteRule ^std\.(.*)\.htm$					/index.php?path=std&src=$1 [L]
+RewriteRule ^(.*)\.(.*)\.(.*)\.htm$				/index.php?src=$1&param1=$2&param2=$3 [L]
+RewriteRule ^(.*)\.(.*)\.htm$					/index.php?src=$1&param1=$2 [L]
+RewriteRule ^(.*)\.htm$							/index.php?src=$1 [L]
+
+RewriteRule ^std\.(.*)\.(.*)\.(.*)\.pop$		/popup.php?path=std&src=$1&param1=$2&param2=$3 [L]
+RewriteRule ^std\.(.*)\.(.*)\.pop$				/popup.php?path=std&src=$1&param1=$2 [L]
+RewriteRule ^std\.(.*)\.pop$					/popup.php?path=std&src=$1 [L]
+RewriteRule ^(.*)\.(.*)\.(.*)\.pop$				/popup.php?src=$1&param1=$2&param2=$3 [L]
+RewriteRule ^(.*)\.(.*)\.pop$					/popup.php?src=$1&param1=$2 [L]
+RewriteRule ^(.*)\.pop$							/popup.php?src=$1 [L]
+
+RewriteRule ^std\.(.*)\.(.*)\.(.*)\.req$		/request.php?path=std&src=$1&param1=$2&param2=$3 [L]
+RewriteRule ^std\.(.*)\.(.*)\.req$				/request.php?path=std&src=$1&param1=$2 [L]
+RewriteRule ^std\.(.*)\.req$					/request.php?path=std&src=$1 [L]
+RewriteRule ^(.*)\.(.*)\.(.*)\.req$				/request.php?src=$1&param1=$2&param2=$3 [L]
+RewriteRule ^(.*)\.(.*)\.req$					/request.php?src=$1&param1=$2 [L]
+RewriteRule ^(.*)\.req$							/request.php?src=$1 [L]
+
+RewriteCond %{REQUEST_URI} !library/.*\.css$
+RewriteRule ^std\.(.*)\.(.*)\.css$				/css.php?path=std&src=$1&param1=$2 [L]
+RewriteCond %{REQUEST_URI} !library/.*\.css$
+RewriteRule ^std\.(.*)\.css$					/css.php?path=std&src=$1 [L]
+RewriteCond %{REQUEST_URI} !library/.*\.css$
+RewriteRule ^(.*)\.(.*)\.css$					/css.php?src=$1&param1=$2 [L]
+RewriteCond %{REQUEST_URI} !library/.*\.css$
+RewriteRule ^(.*)\.css$							/css.php?src=$1 [L]
+
+RewriteCond %{REQUEST_URI} !library/.*\.js$
+RewriteRule ^std\.(.*)\.(.*)\.js$				/js.php?path=std&src=$1&param1=$2 [L]
+RewriteCond %{REQUEST_URI} !library/.*\.js$
+RewriteRule ^std\.(.*)\.js$						/js.php?path=std&src=$1 [L]
+RewriteCond %{REQUEST_URI} !library/.*\.js$
+RewriteRule ^(.*)\.(.*)\.js$					/js.php?src=$1&param1=$2 [L]
+RewriteCond %{REQUEST_URI} !library/.*\.js$
+RewriteRule ^(.*)\.js$							/js.php?src=$1 [L]
+
+RewriteRule ^std\.(.*)\.(.*)\.pdf$				/pdf.php?path=std&src=$1&param1=$2 [L]
+RewriteRule ^std\.(.*)\.pdf$					/pdf.php?path=std&src=$1 [L]
+
+RewriteRule ^std\.(.*)\.(.*)\.csv$				/csv.php?path=std&src=$1&param1=$2 [L]
+RewriteRule ^std\.(.*)\.csv$					/csv.php?path=std&src=$1 [L]
+
+RewriteRule ^std\.(.*)\.(.*)\.xml$				/xml.php?path=std&src=$1&param1=$2 [L]
+RewriteRule ^std\.(.*)\.xml$					/xml.php?path=std&src=$1 [L]
+
+RewriteRule ^(.*)\.inc							/notallowed.htm
+RewriteRule ^(.*)\.psys							/notallowed.htm

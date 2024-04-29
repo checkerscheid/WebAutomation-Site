@@ -1,0 +1,142 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 22.01.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 578                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: dps.psys 578 2024-03-22 21:53:46Z                        $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\system;
+
+use system\Helper\wpDatabase;
+use system\std;
+
+switch(std::gets('param1')) {
+	case dps::c_dpmenu:
+		dps::dpmenu();
+		break;
+	case dps::c_dpgroup:
+		dps::dpgroup();
+		break;
+	case dps::c_dp:
+		dps::dp();
+		break;
+	case dps::c_savenewelems:
+		dps::savenewelems();
+		break;
+	case dps::c_savenewelem:
+		dps::savenewelem();
+		break;
+}
+
+class dps {
+	//###################################################################################
+	const c_dpmenu = 'menunewelem';
+	public static function dpmenu() {
+		$database = new wpDatabase();
+		$database->query("SELECT [id_dpnamespace], [name] FROM [dpnamespace] ORDER BY [name]");
+		echo'
+			<h1>Neu anlegen</h1>
+			<span>Filter:</span><input type="text" class="ps-input filterNewelem" />
+			<span class="markall ps-button">alle markieren</span>
+			<span class="markno ps-button">Markierung entfernen</span>
+			<span class="savenewelem ps-button">markierte hinzuf&uuml;gen</span>
+			<hr />
+			<ul>';
+		while($erg = $database->fetch()) {
+			echo '
+				<li class="ps-tree-parent dpnamespacefolder" data-dpnamespace="' . $erg['id_dpnamespace'] . '">' . $erg['name'] . '</li>
+				<li data-groups="' . $erg['id_dpnamespace'] . '"></li>';
+		}
+		echo '
+			</ul>';
+	}
+	//###################################################################################
+	const c_dpgroup = 'dpgroup';
+	public static function dpgroup() {
+		$database = new wpDatabase();
+		$database->query("SELECT [id_dpgroup], [name] FROM [dpgroup] WHERE [id_dpnamespace] = ".std::posts('dpnamespace')." ORDER BY [name]");
+		echo '
+			<ul>';
+		while($erg = $database->fetch()) {
+			echo '
+				<li class="ps-tree-parent dpgroupfolder" data-dpgroup="'.$erg['id_dpgroup'].'">'.$erg['name'].'</li>
+				<li data-dps="'.$erg['id_dpgroup'].'"></li>';
+		}
+		echo '
+			</ul>';
+	}
+	//###################################################################################
+	const c_dp = 'dp';
+	public static function dp() {
+		$database = new wpDatabase();
+		$sql = 'SELECT [dp].[id_dp], [dp].[name], [dp].[description], [t].[id_' . std::posts('table') . ']';
+		if(std::posts('writeable') == 'True') {
+			$sql .= ', ISNULL([dp].[usergroupwrite], ISNULL([grp].[usergroupwrite], ISNULL([ns].[usergroupwrite], 100))) AS [usergroupwrite]';
+		}
+		$sql .= ' FROM [dp] ';
+		if(std::posts('writeable') == 'True') {
+			$sql .= 'INNER JOIN [dpgroup] [grp] ON [dp].[id_dpgroup] = [grp].[id_dpgroup]
+					INNER JOIN [dpnamespace] [ns] ON [grp].[id_dpnamespace] = [ns].[id_dpnamespace] ';
+		}
+		$sql .= 'LEFT OUTER JOIN [' . std::posts('table') . '] [t] ON [dp].[id_dp] = [t].[id_dp]
+				WHERE [dp].[id_dpgroup] = ' . std::posts('dpgroup') . ' ORDER BY [dp].[name]';
+		$database->query($sql);
+		echo '
+			<ul>';
+		if($database->hasRows() == 0) {
+			echo '
+				<li>Es sind keine Items mehr zum hinzufügen übrig</li>';
+		} else {
+			while($erg = $database->fetch()) {
+				if(std::posts('writeable') == 'True' && $erg['usergroupwrite'] > $_SESSION[SESSION_ID]['LEVEL']) {
+					echo '<li class="ps-checkbox ps-disabled" title="Schreibrechte fehlen">'.($erg['description'] == '' ? $erg['name'] : $erg['description'] . ' ('.$erg['name'].')').'</li>';
+				} else {
+					echo '<li class="ps-checkbox' . ($erg['id_' . std::posts('table')] != '' ? ' checked ps-disabled' : '').'" data-dp="'.$erg['id_dp'].'">'.($erg['description'] == '' ? $erg['name'] : $erg['description'] . ' ('.$erg['name'].')').'</li>';
+				}
+			}
+		}
+		echo '
+			</ul>';
+	}
+	//###################################################################################
+	const c_savenewelems = 'savenewelems';
+	public static function savenewelems() {
+		if(std::posts('newelems') != '' && count(std::posts('newelems')) > 0) {
+			$database = new wpDatabase();
+			foreach(std::posts('newelems') as $newElem) {
+				$database->query("INSERT INTO [" . std::posts('table') . "] ([id_dp], [name])
+					SELECT TOP 1 " . $newElem . ", ISNULL([description], [name]) AS [name] FROM [dp] WHERE [id_dp] = '" . $newElem . "'");
+// 				$WebCom = new WebCom();
+// 				$data = \json_decode($WebCom->send('SaveNewTrend', $newElem));
+// 				if($data->erg == 'S_ERROR') {
+// 					echo '
+// 	<span class="neg">
+// 		Datenpunkt konnte nicht gespeichert werden ('.$newTrend.')<br />
+// 		' . $data->message . '
+// 	</span>';
+// 				}
+			}
+		}
+	}
+	//###################################################################################
+	const c_savenewelem = 'savenewelem';
+	public static function savenewelem() {
+		if(std::posts('newelem') != '') {
+			$database = new wpDatabase();
+			$database->query("INSERT INTO [" . std::posts('table') . "] ([id_dp], [name])
+				SELECT TOP 1 " . std::posts('newelem') . ", ISNULL([description], [name]) AS [name] FROM [dp] WHERE [id_dp] = " . std::posts('newelem'));
+// 			$WebCom = new WebCom();
+// 			echo $WebCom->send('SaveNewTrend', std::posts('newTrend'));
+		}
+
+	}
+}

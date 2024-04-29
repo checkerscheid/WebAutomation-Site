@@ -1,0 +1,173 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Matthias Kotulla                                                 #
+//# Date         : 21.03.2016                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 582                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: contacts.req 582 2024-04-10 06:45:45Z                    $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\std;
+use system\Helper\wpDatabase;
+use system\std, system\WebCom;
+class contacts {
+	const c_popupnewcontact = 'popupnewcontact';
+	const c_savenewcontact = 'savenewcontact';
+	const c_popupeditcontact = 'popupeditcontact';
+	const c_updatecontact = 'updatecontact';
+	const c_deletecontact = 'deletecontact';
+}
+
+switch(std::gets('param1')) {
+	//###################################################################################
+	case contacts::c_popupnewcontact:
+		?>
+			<div class="table">
+				<div class="tr">
+					<div class="td"><span>Nachname:</span></div>
+					<div class="td"><input type="text" class="ps-input lastname" /></div>
+				</div>
+				<div class="tr">
+					<div class="td"><span>Vorname:</span></div>
+					<div class="td"><input type="text" class="ps-input name" /></div>
+				</div>
+				<div class="tr">
+					<div class="td"><span>E-Mail-Adresse:</span></div>
+					<div class="td"><input type="text" class="ps-input email" /></div>
+				</div>
+				<div class="tr">
+					<div class="td"><span>E-Mail 2 SMS:</span></div>
+					<div class="td"><span class="ps-checkbox sms"><?=wpHTML_EMPTY?></span></div>
+				</div>
+				<div class="tr">
+					<div class="td"><span>Telefonnummer 1:</span></div>
+					<div class="td"><input type="text" class="ps-input phone" /></div>
+				</div>
+				<div class="tr">
+					<div class="td"><span>Telefonnummer 2:</span></div>
+					<div class="td"><input type="text" class="ps-input phone2" /></div>
+				</div>
+				<div class="tr">
+					<div class="td"><span>Anmerkungen:</span></div>
+					<div class="td"><input type="text" class="ps-input etc" /></div>
+				</div>
+				<div class="tr">
+					<div class="td"></div>
+					<div class="td"><span class="ps-checkbox active">aktiv</span></div>
+				</div>
+			</div>
+		<?
+			break;
+//###################################################################################
+	case contacts::c_savenewcontact:
+		$database = new wpDatabase();
+
+		$database->query('SELECT [address] FROM [email]');
+
+		$emails = array();
+		while($erg = $database->fetch()){
+			array_push($emails, $erg['address']);
+		}
+
+		if(in_array(std::posts('address'), $emails) && std::posts('address') != ''){
+			echo 'Diese E-Mail-Adresse wird bereits verwendet';
+		} else {
+			$database->query("INSERT INTO [email] ([address], [sms], [phone], [phone2], [etc], [lastname], [name], [active]) VALUES
+				('".std::posts('address')."', ".std::posts('sms').", '".std::posts('phone')."', '".std::posts('phone2')."', '".std::posts('etc')."', '".std::posts('lastname')."', '".std::posts('name')."', ".std::posts('active').")");
+			$WebCom = new WebCom();
+			$WebCom->send('UpdateMail');
+			echo 'S_OK';
+		}
+		break;
+//###################################################################################
+	case contacts::c_popupeditcontact:
+		$database = new wpDatabase();
+		$database->query('SELECT [phone], [phone2], [etc], [address], [sms], [lastname], [name], [active] FROM [email] WHERE [id_email] = '.std::posts('id'));
+		$erg = $database->fetch();
+		?>
+		<div data-id="<?=std::posts('id')?>" class="table">
+			<div class="tr">
+				<div class="td"><span>Nachname:</span></div>
+				<div class="td"><input type="text" class="ps-input lastname" value="<?=$erg['lastname']?>" /></div>
+				<div class="td"></div>
+			</div>
+			<div class="tr">
+				<div class="td"><span>Vorname:</span></div>
+				<div class="td"><input type="text" class="ps-input name" value="<?=$erg['name']?>" /></div>
+				<div class="td"></div>
+			</div>
+			<div class="tr">
+				<div class="td"><span>E-Mail-Adresse:</span></div>
+				<div class="td"><input type="text" class="ps-input email" value="<?=$erg['address']?>" /></div>
+				<div class="td"></div>
+			</div>
+			<div class="tr">
+				<div class="td"><span>E-Mail 2 SMS:</span></div>
+				<div class="td"><span class="ps-checkbox sms<?=($erg['sms'] == 1 ? ' checked' : '')?>"><?=wpHTML_EMPTY?></span></div>
+				<div class="td"></div>
+			</div>
+			<div class="tr">
+				<div class="td"><span>Telefonnummer 1:</span></div>
+				<div class="td"><input type="text" class="ps-input phone" value="<?=$erg['phone']?>" /></div>
+				<div class="td"></div>
+			</div>
+			<div class="tr">
+				<div class="td"><span>Telefonnummer 2:</span></div>
+				<div class="td"><input type="text" class="ps-input phone2" value="<?=$erg['phone2']?>" /></div>
+				<div class="td"></div>
+			</div>
+			<div class="tr">
+				<div class="td"><span>Anmerkungen:</span></div>
+				<div class="td"><input type="text" class="ps-input etc" value="<?=$erg['etc']?>" /></div>
+				<div class="td"></div>
+			</div>
+			<div class="tr">
+				<div class="td"></div>
+				<div class="td"><span class="ps-checkbox <?=($erg['active'] == 1 ? 'checked ' : '')?>active">aktiv</span></div>
+				<div class="td"></div>
+			</div>
+		</div>
+	<?
+		break;
+//###################################################################################
+	case contacts::c_updatecontact:
+		$database = new wpDatabase();
+
+		$database->query("SELECT [id_email] FROM [email] WHERE [address] = '".std::posts('address')."'");
+		$emailowner = '';
+		while($erg = $database->fetch()){
+			$emailowner = $erg['id_email'];
+		}
+
+		if(std::posts('id') != $emailowner && $emailowner != '' && std::posts('address') != ''){
+			echo 'Diese E-Mail-Adresse wird bereits verwendet';
+		} else {
+			$database->query("UPDATE [email] SET
+				[phone] = '".std::posts('phone')."', [phone2] = '".std::posts('phone2')."', [etc] = '".std::posts('etc')."', [address] = '".std::posts('address')."', [sms] = ".std::posts('sms').", [lastname] = '".std::posts('lastname')."', [name] = '".std::posts('name')."', [active] = ".std::posts('active')."
+				WHERE [id_email] = ".std::posts('id'));
+			$WebCom = new WebCom();
+			$WebCom->send('UpdateMail');
+			echo 'S_OK';
+		}
+		break;
+//###################################################################################
+	case contacts::c_deletecontact:
+		$database = new wpDatabase();
+		$database->query('DELETE FROM [email] WHERE [id_email] = '.std::posts('id'));
+		$database->query('UPDATE [user] SET [id_email] = 0 WHERE [id_email] = '.std::posts('id'));
+		$WebCom = new WebCom();
+		$WebCom->send('UpdateMail');
+		echo 'S_OK';
+		break;
+//###################################################################################
+	default:
+		\system\html::default();
+		break;
+};

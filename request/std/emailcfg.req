@@ -1,0 +1,123 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: emailcfg.req 550 2023-12-25 03:02:54Z                    $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\std;
+use system\Helper\wpDatabase;
+use system\std, system\WebCom;
+class emailcfg {
+	const c_menuorder = 'menuorder';
+
+	const c_saveorder = 'saveorder';
+	const c_treegroup = 'treegroup';
+	const c_treealarm = 'treealarm';
+	const c_insertalltouser = 'insertalltouser';
+	const c_deleteallfromuser = 'deleteallfromuser';
+}
+
+switch(std::gets('param1')) {
+//###################################################################################
+// Menueeintraege
+//###################################################################################
+	case emailcfg::c_menuorder:
+		$database = new wpDatabase();
+		$database->query("SELECT [id_email], [address], CONCAT([lastname], ', ', [name]) AS [name] FROM [email] WHERE [active] = 1 ORDER BY [lastname]");
+		while($erg = $database->fetch()) {
+?>
+			<div>
+				<h2 data-id="<?=$erg['id_email']?>" class="editorder"><?=$erg['name']?></h2>
+				<span class="address"><?=$erg['address']?></span>
+				<hr />
+			</div>
+<?
+		}
+		break;
+//###################################################################################
+// order Aktionen
+//###################################################################################
+	case emailcfg::c_saveorder:
+		$database = new wpDatabase();
+		if(std::arrays($_POST, 'cinsert') != '') {
+			$insert = 'INSERT INTO [alarmtoemail] ([id_alarm], [id_email]) VALUES';
+			foreach($_POST['cinsert'] as $ins) {
+				$insert .= ' ('.$ins.', '.std::posts('id_email').'),';
+			}
+			$database->query(substr($insert, 0, -1));
+		}
+		if(std::arrays($_POST, 'cdelete') != '') {
+			$delete = 'DELETE FROM [alarmtoemail] WHERE';
+			foreach($_POST['cdelete'] as $ins) {
+				$delete .= ' [id_alarmtoemail] = '.$ins.' OR ';
+			}
+			$database->query(substr($delete, 0, -4));
+		}
+		$WebCom = new WebCom();
+		$WebCom->send('UpdateMail');
+		echo 'S_OK';
+		break;
+//###################################################################################
+	case emailcfg::c_treegroup:
+		$database = new wpDatabase();
+		$database->query("SELECT CONCAT([lastname], ', ', [name], ' (', [email], ')') AS [recipient] FROM [contacts] WHERE [id_contact] = ".std::posts('id'));
+		$erg = $database->fetch();
+		echo '<h1>'.$erg['recipient'].'</h1>';
+		echo '<div><hr />';
+		echo '<span class="ps-button insertalltouser">Alle hinzufügen</span>';
+		echo '<span class="ps-button deleteallfromuser">Alle entfernen</span>';
+		echo '<hr /></div>';
+		echo '<div class="TheTree" data-id="'.std::posts('id').'"><ul>';
+		$database->query('SELECT [id_alarmgroup], [name] FROM [alarmgroup] ORDER BY [name]');
+		while($erg = $database->fetch()) {
+			echo '<li data-id="'.$erg['id_alarmgroup'].'"><span class="ps-tree-parent">'.$erg['name'].'</span><span class="ps-button ps-hidden markallintree">Alle markieren</span><span class="ps-button ps-hidden marknointree">Markierung entfernen</span></li>';
+		}
+		echo '</ul><input type="button" class="ps-button saveorder" value="konfiguration speichern" /></div>';
+		break;
+//###################################################################################
+	case emailcfg::c_treealarm:
+		$database = new wpDatabase();
+		echo '<li><ul>';
+		$database->query('SELECT [a].[id_alarm], [ae].[id_email], [a].[name], [ae].[id_alarmtoemail]
+			FROM [alarm] [a]
+			LEFT OUTER JOIN [alarmtoemail] [ae] ON [ae].[id_alarm] = [a].[id_alarm] AND [ae].[id_email] = '.std::posts('idmail').'
+			WHERE [a].[id_alarmgroup] = '.std::posts('idgroup').'
+			ORDER BY [a].[name]');
+		while($erg = $database->fetch()) {
+			echo '<li><span class="ps-checkbox'.($erg['id_email'] == '' ? '' : ' checked').'" data-idalarm="'.$erg['id_alarm'].'" data-cross="'.$erg['id_alarmtoemail'].'">'.$erg['name'].'</span></li>';
+		}
+		echo '</ul></li>';
+		break;
+//###################################################################################
+	case emailcfg::c_insertalltouser:
+		$database = new wpDatabase();
+		$database->query('INSERT INTO [alarmtoemail] ([id_alarm], [id_email]) SELECT [id_alarm], '.std::posts('id').' FROM [alarm]');
+		$WebCom = new WebCom();
+		$WebCom->send('UpdateMail');
+		echo 'S_OK';
+		break;
+//###################################################################################
+	case emailcfg::c_deleteallfromuser:
+		$database = new wpDatabase();
+		$database->query('DELETE FROM [alarmtoemail] WHERE [id_email] = '.std::posts('id'));
+		$WebCom = new WebCom();
+		$WebCom->send('UpdateMail');
+		echo 'S_OK';
+		break;
+//###################################################################################
+	default:
+		\system\html::default();
+		break;
+	}
+
+?>

@@ -1,0 +1,527 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 15.01.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 505                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: elemente_.css 505 2021-05-07 21:55:45Z checker           $ #
+//#                                                                                 #
+//###################################################################################
+?> elemente */
+
+.label { width:60px; }
+.label.big { width:75px; }
+.bedienbar { cursor:pointer; }
+
+/* Pumpen */
+
+.Pumpe { width:25px; height:25px; }
+.Pumpe.bedienbar { cursor:pointer; }
+.Pumpe img { width:25px; height:25px; top:15px; left:15px; }
+
+.Pumpe.links { background:transparent url(images/visuelemente/Aggregate.png) 0 -75px no-repeat; }
+.Pumpe.links.bm { background-position:-25px -75px; }
+.Pumpe.links.sm { background-position:-150px -75px; }
+.Pumpe.links img { left:-15px; }
+
+.Pumpe.rechts { background:transparent url(images/visuelemente/Aggregate.png) 0 -25px no-repeat; }
+.Pumpe.rechts.bm { background-position:-25px -25px; }
+.Pumpe.rechts.sm { background-position:-150px -25px; }
+
+.Pumpe.oben { background:transparent url(images/visuelemente/Aggregate.png) 0 0 no-repeat; }
+.Pumpe.oben.bm { background-position:-25px 0; }
+.Pumpe.oben.sm { background-position:-150px 0; }
+.Pumpe.oben img { left:-15px; }
+
+.Pumpe.unten { background:transparent url(images/visuelemente/Aggregate.png) 0 -50px no-repeat; }
+.Pumpe.unten.bm { background-position:-25px -50px; }
+.Pumpe.unten.sm { background-position:-150px -50px; }
+
+.PumpeAnalog { width:25px; height:25px; }
+.PumpeAnalog.bedienbar { cursor:pointer; }
+.PumpeAnalog img { width:25px; height:25px; top:15px; left:15px; }
+.PumpeAnalog span.ps-input { display:block; top:-20px; left:15px; width:75px; text-align:center; }
+
+.PumpeAnalog.links { background:transparent url(images/visuelemente/Aggregate.png) 0 -75px no-repeat; }
+.PumpeAnalog.links.bm { background-position:-25px -75px; }
+.PumpeAnalog.links.sm { background-position:-150px -75px; }
+.PumpeAnalog.links span.ps-input { left:50px; display:inline-block; width:50px; }
+
+.PumpeAnalog.rechts { background:transparent url(images/visuelemente/Aggregate.png) 0 -25px no-repeat; }
+.PumpeAnalog.rechts.bm { background-position:-25px -25px; }
+.PumpeAnalog.rechts.sm { background-position:-150px -25px; }
+.PumpeAnalog.rechts span.ps-input { left:50px; display:inline-block; width:50px; text-align:center; }
+
+.PumpeAnalog.oben { background:transparent url(images/visuelemente/Aggregate.png) 0 0 no-repeat; }
+.PumpeAnalog.oben.bm { background-position:-25px 0; }
+.PumpeAnalog.oben.sm { background-position:-150px 0; }
+.PumpeAnalog.oben span.ps-input { left:50px; display:inline-block; width:50px; }
+
+.PumpeAnalog.unten { background:transparent url(images/visuelemente/Aggregate.png) 0 -50px no-repeat; }
+.PumpeAnalog.unten.bm { background-position:-25px -50px; }
+.PumpeAnalog.unten.sm { background-position:-150px -50px; }
+.PumpeAnalog.unten span.ps-input { left:23px; display:inline-block; width:40px; text-align:center; }
+
+/* Messwerte */
+
+.Temperatur.links { width:50px; height:25px; background:transparent url(images/visuelemente/Fuehler.png) 0px -50px no-repeat; }
+.Temperatur.links span.ps-input { text-align:center; top:-25px; left:-45px; width:50px; }
+.Temperatur.rechts { width:50px; height:25px; background:transparent url(images/visuelemente/Fuehler.png) 0px -75px no-repeat; }
+.Temperatur.rechts span.ps-input { text-align:center; top:-1px; left:26px; width:50px; }
+.Temperatur.oben { width:25px; height:50px; background:transparent url(images/visuelemente/Fuehler.png) -100px -50px no-repeat; }
+.Temperatur.oben span.ps-input { text-align:center; top:-25px; left:-25px; width:50px; }
+.Temperatur.unten { width:25px; height:50px; background:transparent url(images/visuelemente/Fuehler.png) -150px -50px no-repeat; }
+.Temperatur.unten span.ps-input { text-align:center; top:55px; left:-25px; width:50px; }
+
+.Druck.links { width:50px; height:25px; background:transparent url(images/visuelemente/Fuehler.png) 0px -250px no-repeat; }
+.Druck.links span.ps-input { text-align:center; top:-25px; left:-45px; width:50px; }
+.Druck.rechts { width:50px; height:25px; background:transparent url(images/visuelemente/Fuehler.png) 0px -275px no-repeat; }
+.Druck.rechts span.ps-input { text-align:center; top:-25px; left:23px; width:50px; }
+.Druck.oben { width:25px; height:50px; background:transparent url(images/visuelemente/Fuehler.png) -100px -250px no-repeat; }
+.Druck.oben span.ps-input { text-align:center; top:-4px; left:-24px; width:50px; }
+.Druck.unten { width:25px; height:50px; background:transparent url(images/visuelemente/Fuehler.png) -100px -250px no-repeat; }
+.Druck.unten span.ps-input { text-align:center; top:-4px; left:-24px; width:50px; }
+
+.CO2.links { width:50px; height:25px; background:transparent url(images/visuelemente/Fuehler.png) 0px -300px no-repeat; }
+.CO2.links span.ps-input { text-align:center; top:-25px; left:-45px; width:50px; }
+.CO2.rechts { width:50px; height:25px; background:transparent url(images/visuelemente/Fuehler.png) 0px -325px no-repeat; }
+.CO2.rechts span.ps-input { text-align:center; top:-25px; left:23px; width:50px; }
+.CO2.oben { width:25px; height:50px; background:transparent url(images/visuelemente/Fuehler.png) -100px -300px no-repeat; }
+.CO2.oben span.ps-input { text-align:center; top:-25px; left:-25px; width:50px; }
+.CO2.unten { width:25px; height:50px; background:transparent url(images/visuelemente/Fuehler.png) -150px -300px no-repeat; }
+.CO2.unten span.ps-input { text-align:center; top:55px; left:-25px; width:50px; }
+
+.Durchfluss.links { width:50px; height:25px; background:transparent url(images/visuelemente/Fuehler.png) 0px -350px no-repeat; }
+.Durchfluss.links span.ps-input { text-align:center; top:-25px; left:-45px; width:50px; }
+.Durchfluss.rechts { width:50px; height:25px; background:transparent url(images/visuelemente/Fuehler.png) 0px -375px no-repeat; }
+.Durchfluss.rechts span.ps-input { text-align:center; top:25px; left:23px; width:50px; }
+.Durchfluss.oben { width:25px; height:50px; background:transparent url(images/visuelemente/Fuehler.png) -100px -350px no-repeat; }
+.Durchfluss.oben span.ps-input { text-align:center; top:-25px; left:-25px; width:50px; }
+.Durchfluss.unten { width:25px; height:50px; background:transparent url(images/visuelemente/Fuehler.png) -150px -350px no-repeat; }
+.Durchfluss.unten span.ps-input { text-align:center; top:55px; left:-25px; width:50px; }
+
+.Temperatur span.ps-input { text-align:center; width:75px; }
+
+.Temperatur.aussen { width:50px; height:50px; background:transparent url(images/visuelemente/Fuehler.png) 0px 0px no-repeat; }
+.Temperatur.aussen span.ps-input { top:-10px; left:-75px; }
+
+/* Waechter */
+
+.TW.links { width:50px; height:25px; background:transparent url(images/visuelemente/Waechter.png) 0px 0px no-repeat; }
+.TW.links.sm { width:50px; height:25px; background:transparent url(images/visuelemente/Waechter.png) -50px 0px no-repeat; }
+.TW.rechts { width:50px; height:25px; background:transparent url(images/visuelemente/Waechter.png) 0px -25px no-repeat; }
+.TW.rechts.sm { width:50px; height:25px; background:transparent url(images/visuelemente/Waechter.png) -50px -25px no-repeat; }
+.TW.oben { width:25px; height:50px; background:transparent url(images/visuelemente/Waechter.png) -100px 0px no-repeat; }
+.TW.oben.sm { width:25px; height:50px; background:transparent url(images/visuelemente/Waechter.png) -125px 0px no-repeat; }
+.TW.unten { width:25px; height:50px; background:transparent url(images/visuelemente/Waechter.png) -150px 0px no-repeat; }
+.TW.unten.sm { width:25px; height:50px; background:transparent url(images/visuelemente/Waechter.png) -175px 0px no-repeat; }
+
+.STB.links { width:50px; height:25px; background:transparent url(images/visuelemente/Waechter.png) 0px -50px no-repeat; }
+.STB.links.sm { width:50px; height:25px; background:transparent url(images/visuelemente/Waechter.png) -50px -50px no-repeat; }
+.STB.rechts { width:50px; height:25px; background:transparent url(images/visuelemente/Waechter.png) 0px -75px no-repeat; }
+.STB.rechts.sm { width:50px; height:25px; background:transparent url(images/visuelemente/Waechter.png) -50px -75px no-repeat; }
+.STB.oben { width:25px; height:50px; background:transparent url(images/visuelemente/Waechter.png) -100px -50px no-repeat; }
+.STB.oben.sm { width:25px; height:50px; background:transparent url(images/visuelemente/Waechter.png) -125px -50px no-repeat; }
+.STB.unten { width:25px; height:50px; background:transparent url(images/visuelemente/Waechter.png) -150px -50px no-repeat; }
+.STB.unten.sm { width:25px; height:50px; background:transparent url(images/visuelemente/Waechter.png) -175px -50px no-repeat; }
+
+.Flow.links { width:50px; height:25px; background:transparent url(images/visuelemente/Waechter.png) 0px -200px no-repeat; }
+.Flow.links.sm { width:50px; height:25px; background:transparent url(images/visuelemente/Waechter.png) -50px -200px no-repeat; }
+.Flow.rechts { width:50px; height:25px; background:transparent url(images/visuelemente/Waechter.png) 0px -225px no-repeat; }
+.Flow.rechts.sm { width:50px; height:25px; background:transparent url(images/visuelemente/Waechter.png) -50px -225px no-repeat; }
+.Flow.oben { width:25px; height:50px; background:transparent url(images/visuelemente/Waechter.png) -100px -200px no-repeat; }
+.Flow.oben.sm { width:25px; height:50px; background:transparent url(images/visuelemente/Waechter.png) -125px -200px no-repeat; }
+.Flow.unten { width:25px; height:50px; background:transparent url(images/visuelemente/Waechter.png) -150px -200px no-repeat; }
+.Flow.unten.sm { width:25px; height:50px; background:transparent url(images/visuelemente/Waechter.png) -175px -200px no-repeat; }
+
+.Rauchmelder.links { width:50px; height:25px; background:transparent url(images/visuelemente/Waechter.png) 0px -250px no-repeat; }
+.Rauchmelder.links.sm { width:50px; height:25px; background:transparent url(images/visuelemente/Waechter.png) -50px -250px no-repeat; }
+.Rauchmelder.rechts { width:50px; height:25px; background:transparent url(images/visuelemente/Waechter.png) 0px -275px no-repeat; }
+.Rauchmelder.rechts.sm { width:50px; height:25px; background:transparent url(images/visuelemente/Waechter.png) -50px -275px no-repeat; }
+.Rauchmelder.oben { width:25px; height:50px; background:transparent url(images/visuelemente/Waechter.png) -100px -250px no-repeat; }
+.Rauchmelder.oben.sm { width:25px; height:50px; background:transparent url(images/visuelemente/Waechter.png) -125px -250px no-repeat; }
+.Rauchmelder.unten { width:25px; height:50px; background:transparent url(images/visuelemente/Waechter.png) -150px -250px no-repeat; }
+.Rauchmelder.unten.sm { width:25px; height:50px; background:transparent url(images/visuelemente/Waechter.png) -175px -250px no-repeat; }
+
+.dP { width:50px; height:50px; background:transparent url(images/visuelemente/Waechter.png) -200px 0px no-repeat; }
+.dP.sm { width:50px; height:50px; background:transparent url(images/visuelemente/Waechter.png) -250px 0px no-repeat; }
+
+/* Ventile */
+
+.Ventil2W { width:25px; height:25px; }
+.Ventil2W.bedienbar { cursor:pointer; }
+.Ventil2W img { width:25px; height:25px; top:15px; left:15px; }
+.Ventil2W span.ps-input { display:block; top:-10px; left:25px; width:50px; text-align:center; }
+
+.Ventil2W.links { background:transparent url(images/visuelemente/Ventile.png) 0px 0px no-repeat; }
+.Ventil2W.links.bm { background-position:-25px 0px; }
+.Ventil2W.links.sm { background-position:-50px 0px; }
+.Ventil2W.links img { left:-15px; }
+
+.Ventil2W.rechts { background:transparent url(images/visuelemente/Ventile.png) 0px -25px no-repeat; }
+.Ventil2W.rechts.bm { background-position:-25px -25px; }
+.Ventil2W.rechts.sm { background-position:-50px -25px; }
+
+.Ventil2W.oben { background:transparent url(images/visuelemente/Ventile.png) 0px -50px no-repeat; }
+.Ventil2W.oben.bm { background-position:-25px -50px; }
+.Ventil2W.oben.sm { background-position:-50px -50px; }
+
+.Ventil2W.unten { background:transparent url(images/visuelemente/Ventile.png) 0px -75px no-repeat; }
+.Ventil2W.unten.bm { background-position:-25px -75px; }
+.Ventil2W.unten.sm { background-position:-50px -75px; }
+
+.Ventil3W { width:30px; height:25px; }
+.Ventil3W.bedienbar { cursor:pointer; }
+.Ventil3W img { width:30px; height:25px; top:15px; left:-16px; }
+
+.Ventil3W.links { background:transparent url(images/visuelemente/Ventile.png) -7px -100px no-repeat; }
+.Ventil3W.links span.ps-input { display:block; top:0px; left:-75px; width:50px; text-align:center; }
+.Ventil3W.rechts { background:transparent url(images/visuelemente/Ventile.png) -13px -150px no-repeat; }
+.Ventil3W.rechts span.ps-input { display:block; top:0px; left:35px; width:50px; text-align:center; }
+
+.MVentil2W { width:25px; height:25px; }
+.MVentil2W.bedienbar { cursor:pointer; }
+.MVentil2W img { width:25px; height:25px; top:18px; left:18px; }
+
+.MVentil2W.oben { background:transparent url(images/visuelemente/Ventile.png) -125px -50px no-repeat; }
+.MVentil2W.oben.auf { background-position:-50px -100px; }
+.MVentil2W.oben.zu { background-position:-50px -75px; }
+.MVentil2W.oben span.k-beschriftung { top:-3px; left:-10px; }
+.MVentil2W.oben img { top:-13px; left:12px; }
+
+.RVentil2W { width:50px; height:50px; }
+.RVentil2W.bedienbar { cursor:pointer; }
+.RVentil2W img { width:30px; height:25px; top:26px; left:-6px; }
+
+.RVentil2W.links { background:transparent url(images/visuelemente/Klappen.png) 0px -105px; no-repeat; }
+.RVentil2W.links span.ps-input { display:block; top:13px; left:35px; width:50px; text-align:center; }
+
+.Pmin.links { width:50px; height:25px; background:transparent url(images/visuelemente/Waechter.png) 0px -100px no-repeat; }
+.Pmin.links.sm { width:50px; height:25px; background:transparent url(images/visuelemente/Waechter.png) -50px -100px no-repeat; }
+.Pmin.rechts { width:50px; height:25px; background:transparent url(images/visuelemente/Waechter.png) 0px -175px no-repeat; }
+.Pmin.rechts.sm { width:50px; height:25px; background:transparent url(images/visuelemente/Waechter.png) -50px -125px no-repeat; }
+.Pmin.oben { width:25px; height:50px; background:transparent url(images/visuelemente/Waechter.png) -100px -100px no-repeat; }
+.Pmin.oben.sm { width:25px; height:50px; background:transparent url(images/visuelemente/Waechter.png) -125px -100px no-repeat; }
+.Pmin.unten { width:25px; height:50px; background:transparent url(images/visuelemente/Waechter.png) -150px -100px no-repeat; }
+.Pmin.unten.sm { width:25px; height:50px; background:transparent url(images/visuelemente/Waechter.png) -175px -100px no-repeat; }
+
+.Pmax.links { width:50px; height:25px; background:transparent url(images/visuelemente/Waechter.png) 0px -150px no-repeat; }
+.Pmax.links.sm { width:50px; height:25px; background:transparent url(images/visuelemente/Waechter.png) -50px -150px no-repeat; }
+.Pmax.rechts { width:50px; height:25px; background:transparent url(images/visuelemente/Waechter.png) 0px -175px no-repeat; }
+.Pmax.rechts.sm { width:50px; height:25px; background:transparent url(images/visuelemente/Waechter.png) -50px -175px no-repeat; }
+.Pmax.oben { width:25px; height:50px; background:transparent url(images/visuelemente/Waechter.png) -100px -150px no-repeat; }
+.Pmax.oben.sm { width:25px; height:50px; background:transparent url(images/visuelemente/Waechter.png) -125px -150px no-repeat; }
+.Pmax.unten { width:25px; height:50px; background:transparent url(images/visuelemente/Waechter.png) -150px -150px no-repeat; }
+.Pmax.unten.sm { width:25px; height:50px; background:transparent url(images/visuelemente/Waechter.png) -175px -150px no-repeat; }
+
+/* Luefter */
+
+.Luefter { width:50px; height:50px; }
+.Luefter.bedienbar { cursor:pointer; }
+.Luefter img { width:25px; height:25px; top:35px; left:35px; }
+.Luefter span.ps-input { text-align:center; top:-25px; left:-15px; width:50px; }
+
+.Luefter.links { background:transparent url(images/visuelemente/Aggregate.png) 0 -200px no-repeat; }
+.Luefter.links.bm { background-position:-50px -200px; }
+.Luefter.links.sm { background-position:-100px -200px; }
+
+.Luefter.rechts { background:transparent url(images/visuelemente/Aggregate.png) 0 -150px no-repeat; }
+.Luefter.rechts.bm { background-position:-50px -150px; }
+.Luefter.rechts.sm { background-position:-100px -150px; }
+
+.Luefter.oben { background:transparent url(images/visuelemente/Aggregate.png) 0 -100px no-repeat; }
+.Luefter.oben.bm { background-position:-50px -100px; }
+.Luefter.oben.sm { background-position:-100px -100px; }
+
+.Luefter.unten { background:transparent url(images/visuelemente/Aggregate.png) -150px -100px no-repeat; }
+.Luefter.unten.bm { background-position:-150px -150px; }
+.Luefter.unten.sm { background-position:-150px -200px; }
+
+/* Klappen */
+
+.KlappeAnalog { width:50px; height:55px; }
+.KlappeAnalog.bedienbar { cursor:pointer; }
+.KlappeAnalog img { width:25px; height:25px; top:35px; left:35px; }
+.KlappeAnalog span.ps-input { text-align:center; top:55px; left:-15px; width:50px; }
+
+.KlappeAnalog.unten { background:transparent url(images/visuelemente/Klappen.png) 0px -50px no-repeat; }
+.KlappeAnalog.unten.bm { background-position:-50px -50px; }
+
+.BSK { width:50px; height:50px; }
+.BSK { background:transparent url(images/visuelemente/Klappen.png) 0px 0px no-repeat; }
+.BSK.sm { background-position:-50px 0px; }
+.BSK .opened { left:0px; top:55px; }
+.BSK .closed { left:0px; top:55px; }
+
+.Klappe.links { width:50px; height:50px; background:transparent url(images/visuelemente/Klappen.png) 0px -205px no-repeat; }
+.Klappe.links.auf { background-position:0px -155px; }
+.Klappe.links.zu { background-position:0px -105px; }
+.Klappe.links.sm { background-position:0px -255px; }
+.Klappe.links span.hide { width:50px; height:50px; background:transparent url(images/visuelemente/Klappen.png) 0px -305px no-repeat; }
+
+.Klappe.rechts { width:50px; height:50px; background:transparent url(images/visuelemente/Klappen.png) -100px -205px no-repeat; }
+.Klappe.rechts.auf { background-position:-100px -155px; }
+.Klappe.rechts.zu { background-position:-100px -105px; }
+.Klappe.rechts.sm { background-position:-100px -255px; }
+.Klappe.rechts span.hide { width:50px; height:50px; background:transparent url(images/visuelemente/Klappen.png) -100px -305px no-repeat; }
+
+.Klappe.oben { width:50px; height:50px; background:transparent url(images/visuelemente/Klappen.png) -50px -205px no-repeat; }
+.Klappe.oben.auf { background-position:-50px -155px; }
+.Klappe.oben.zu { background-position:-50px -105px; }
+.Klappe.oben.sm { background-position:-50px -255px; }
+.Klappe.oben span.hide { width:50px; height:50px; background:transparent url(images/visuelemente/Klappen.png) -50px -305px no-repeat; }
+
+.Klappe.unten { width:50px; height:50px; background:transparent url(images/visuelemente/Klappen.png) -150px -205px no-repeat; }
+.Klappe.unten.auf { background-position:-150px -155px; }
+.Klappe.unten.zu { background-position:-150px -105px; }
+.Klappe.unten.sm { background-position:-150px -255px; }
+.Klappe.unten span.hide { width:50px; height:50px; background:transparent url(images/visuelemente/Klappen.png) -150px -305px no-repeat; }
+
+.KlappeM { width:50px; height:50px; }
+.KlappeM.bedienbar { cursor:pointer; }
+.KlappeM img { width:25px; height:25px; top:-5px; left:23px; }
+.KlappeM span.ps-input { text-align:center; top:13px; left:-62px; width:50px; }
+
+.KlappeM.links { background:transparent url(images/visuelemente/Klappen.png) 0px -355px no-repeat; }
+.KlappeM.links img { top:26px; left:-2px; }
+
+.KlappeM.rechts { background:transparent url(images/visuelemente/Klappen.png) -100px -355px no-repeat; }
+.KlappeM.rechts img { top:26px; left:-2px; }
+
+.KlappeM.oben { background:transparent url(images/visuelemente/Klappen.png) -50px -355px no-repeat; }
+.KlappeM.oben img { top:26px; left:-2px; }
+
+.KlappeM.unten { background:transparent url(images/visuelemente/Klappen.png) -150px -355px no-repeat; }
+.KlappeM.unten img { top:26px; left:-2px; }
+
+/* Sonstiges */
+
+.Filter { width:50px; height:50px; }
+
+.Filter.links { background:transparent url(images/visuelemente/Sonstiges.png) 0px 0px no-repeat; }
+.Filter.links.sm { background-position:-50px 0px; }
+.Filter.rechts { background:transparent url(images/visuelemente/Sonstiges.png) -100px 0px no-repeat; }
+.Filter.rechts.sm { background-position:-150px 0px; }
+
+.FU { width:50px; height:50px; }
+.FU { background:transparent url(images/visuelemente/Sonstiges.png) 0px -50px no-repeat; }
+.FU img { width:25px; height:25px; top:35px; left:35px; }
+.FU span.ps-input { display:block; top:-20px; left:35px; width:50px; text-align:center; }
+.FU.bm { background-position:-50px -50px; }
+.FU.sm { background-position:-100px -50px; }
+
+.Rep { width:50px; height:50px; }
+.Rep { background:transparent url(images/visuelemente/Sonstiges.png) 0px -100px no-repeat; }
+.Rep.sm { background-position:-50px -100px; }
+
+/* Motor */
+.Motor.links { width:50px; height:25px; background:transparent url(images/visuelemente/Motor.png) 0px -50px no-repeat; }
+.Motor.links span.ps-input { text-align:center; top:-25px; left:-45px; width:50px; }
+.Motor.rechts { width:50px; height:25px; background:transparent url(images/visuelemente/Motor.png) 0px -75px no-repeat; }
+.Motor.rechts span.ps-input { text-align:center; top:-25px; left:23px; width:50px; }
+.Motor.oben { width:25px; height:50px; background:transparent url(images/visuelemente/Motor.png) -102px -51px no-repeat; }
+.Motor.oben span.ps-input { text-align:center; top:-4px; left:-25px; width:50px; }
+.Motor.unten { width:25px; height:50px; background:transparent url(images/visuelemente/Motor.png) -150px -50px no-repeat; }
+.Motor.unten span.ps-input { text-align:center; top:55px; left:-25px; width:50px; }
+.Motor span.ps-input { text-align:center; width:75px; }
+
+.Motor.aussen { width:50px; height:50px; background:transparent url(images/visuelemente/Motor.png) 0px 0px no-repeat; }
+.Motor.aussen span.ps-input { top:-10px; left:-75px; }
+
+/* FS */
+.FS.links { width:50px; height:25px; background:transparent url(images/visuelemente/FS.png) 0px -50px no-repeat; }
+.FS.links span.ps-input { text-align:center; top:-25px; left:-45px; width:50px; }
+.FS.rechts { width:50px; height:25px; background:transparent url(images/visuelemente/FS.png) 0px -75px no-repeat; }
+.FS.rechts span.ps-input { text-align:center; top:-25px; left:23px; width:50px; }
+.FS.oben { width:25px; height:50px; background:transparent url(images/visuelemente/FS.png) -102px -51px no-repeat; }
+.FS.oben span.ps-input { text-align:center; top:-25px; left:-25px; width:50px; }
+.FS.unten { width:25px; height:50px; background:transparent url(images/visuelemente/FS.png) -150px -52px no-repeat; }
+.FS.unten span.ps-input { text-align:center; top:55px; left:-25px; width:50px; }
+.FS span.ps-input { text-align:center; width:75px; }
+
+.FS.aussen { width:50px; height:50px; background:transparent url(images/visuelemente/FS.png) 0px 0px no-repeat; }
+.FS.aussen span.ps-input { top:-10px; left:-75px; }
+
+/* RS */
+
+.RS.links { width:50px; height:25px; background:transparent url(images/visuelemente/RS.png) 0px -50px no-repeat; }
+.RS.links span.ps-input { text-align:center; top:-25px; left:-45px; width:50px; }
+.RS.rechts { width:50px; height:25px; background:transparent url(images/visuelemente/RS.png) 0px -75px no-repeat; }
+.RS.rechts span.ps-input { text-align:center; top:-25px; left:23px; width:50px; }
+.RS.oben { width:25px; height:50px; background:transparent url(images/visuelemente/RS.png) -102px -51px no-repeat; }
+.RS.oben span.ps-input { text-align:center; top:-25px; left:-25px; width:50px; }
+.RS.unten { width:25px; height:50px; background:transparent url(images/visuelemente/RS.png) -150px -52px no-repeat; }
+.RS.unten span.ps-input { text-align:center; top:55px; left:-25px; width:50px; }
+.RS span.ps-input { text-align:center; width:75px; }
+
+.RS.aussen { width:50px; height:50px; background:transparent url(images/visuelemente/RS.png) 0px 0px no-repeat; }
+.RS.aussen span.ps-input { top:-10px; left:-75px; }
+
+/* MS */
+.MS.links { width:50px; height:25px; background:transparent url(images/visuelemente/MS.png) 0px -50px no-repeat; }
+.MS.links span.ps-input { text-align:center; top:-25px; left:-45px; width:50px; }
+.MS.rechts { width:50px; height:25px; background:transparent url(images/visuelemente/MS.png) 0px -75px no-repeat; }
+.MS.rechts span.ps-input { text-align:center; top:-25px; left:23px; width:50px; }
+.MS.oben { width:25px; height:50px; background:transparent url(images/visuelemente/MS.png) -102px -51px no-repeat; }
+.MS.oben span.ps-input { text-align:center; top:-25px; left:-25px; width:50px; }
+.MS.unten { width:25px; height:50px; background:transparent url(images/visuelemente/MS.png) -150px -52px no-repeat; }
+.MS.unten span.ps-input { text-align:center; top:55px; left:-25px; width:50px; }
+.MS span.ps-input { text-align:center; width:75px; }
+
+.MS.aussen { width:50px; height:50px; background:transparent url(images/visuelemente/MS.png) 0px 0px no-repeat; }
+.MS.aussen span.ps-input { top:-10px; left:-75px; }
+
+/* TS ANALOG */
+.TS.links { width:50px; height:25px; background:transparent url(images/visuelemente/TS.png) 0px -50px no-repeat; }
+.TS.links span.ps-input { text-align:center; top:-25px; left:-45px; width:50px; }
+.TS.rechts { width:50px; height:25px; background:transparent url(images/visuelemente/TS.png) 0px -75px no-repeat; }
+.TS.rechts span.ps-input { text-align:center; top:-25px; left:23px; width:50px; }
+.TS.oben { width:25px; height:50px; background:transparent url(images/visuelemente/TS.png) -102px -51px no-repeat; }
+.TS.oben span.ps-input { text-align:center; top:-25px; left:-25px; width:50px; }
+.TS.unten { width:25px; height:50px; background:transparent url(images/visuelemente/TS.png) -150px -52px no-repeat; }
+.TS.unten span.ps-input { text-align:center; top:55px; left:-25px; width:50px; }
+.TS span.ps-input { text-align:center; width:75px; }
+
+.TS.aussen { width:50px; height:50px; background:transparent url(images/visuelemente/TS.png) 0px 0px no-repeat; }
+.TS.aussen span.ps-input { top:-10px; left:-75px; }
+
+/* Bypassklappe */
+
+.BP { width:189px; height:100px; background:url(images/visuelemente/Bypassklappe.png)0px 0px  no-repeat; }
+
+/* DPA*/
+.DPA { width:50px; height:50px; background:transparent url(images/visuelemente/Waechter.png) -200px 0px no-repeat; }
+.DPA.sm { width:50px; height:50px; background:transparent url(images/visuelemente/Waechter.png) -250px 0px no-repeat; }
+/*ELEKTRODUMP*/
+.ED { width:114px; height:139px; background:url(images/visuelemente/ELEKTRODUMP.png) 0px 0px  no-repeat; }
+
+/*TS Digital*/
+
+.TSD.links { width:50px; height:25px; background:transparent url(images/visuelemente/TS_Digital.png) 0px 0px no-repeat; }
+.TSD.links.sm { width:50px; height:25px; background:transparent url(images/visuelemente/TS_Digital.png) -50px 0px no-repeat; }
+.TSD.rechts { width:50px; height:25px; background:transparent url(images/visuelemente/TS_Digital.png) 0px -25px no-repeat; }
+.TSD.rechts.sm { width:50px; height:25px; background:transparent url(images/visuelemente/TS_Digital.png) -50px -25px no-repeat; }
+.TSD.oben { width:25px; height:50px; background:transparent url(images/visuelemente/TS_Digital.png) -100px 0px no-repeat; }
+.TSD.oben.sm { width:25px; height:50px; background:transparent url(images/visuelemente/TS_Digital.png) -125px 0px no-repeat; }
+.TSD.unten { width:25px; height:50px; background:transparent url(images/visuelemente/TS_Digital.png) -150px 0px no-repeat; }
+.TSD.unten.sm { width:25px; height:50px; background:transparent url(images/visuelemente/TS_Digital.png) -175px 0px no-repeat; }
+
+/*FS Digital*/
+
+.FSD.links { width:50px; height:25px; background:transparent url(images/visuelemente/FS_Digital.png) 0px 0px no-repeat; }
+.FSD.links.sm { width:50px; height:25px; background:transparent url(images/visuelemente/FS_Digital.png) -50px 0px no-repeat; }
+.FSD.rechts { width:50px; height:25px; background:transparent url(images/visuelemente/FS_Digital.png) 0px -25px no-repeat; }
+.FSD.rechts.sm { width:50px; height:25px; background:transparent url(images/visuelemente/TS_Digital.png) -50px -25px no-repeat; }
+.FSD.oben { width:25px; height:50px; background:transparent url(images/visuelemente/FS_Digital.png) -100px 0px no-repeat; }
+.FSD.oben.sm { width:25px; height:50px; background:transparent url(images/visuelemente/FS_Digital.png) -125px 0px no-repeat; }
+.FSD.unten { width:25px; height:50px; background:transparent url(images/visuelemente/FS_Digital.png) -150px 0px no-repeat; }
+.FSD.unten.sm { width:25px; height:50px; background:transparent url(images/visuelemente/FS_Digital.png) -175px 0px no-repeat; }
+
+/*MS Digital*/
+
+.MSD.links { width:50px; height:25px; background:transparent url(images/visuelemente/MS_Digital.png) 0px 0px no-repeat; }
+.MSD.links.sm { width:50px; height:25px; background:transparent url(images/visuelemente/MS_Digital.png) -50px 0px no-repeat; }
+.MSD.rechts { width:50px; height:25px; background:transparent url(images/visuelemente/MS_Digital.png) 0px -25px no-repeat; }
+.MSD.rechts.sm { width:50px; height:25px; background:transparent url(images/visuelemente/MS_Digital.png) -50px -25px no-repeat; }
+.MSD.oben { width:25px; height:50px; background:transparent url(images/visuelemente/MS_Digital.png) -100px 0px no-repeat; }
+.MSD.oben.sm { width:25px; height:50px; background:transparent url(images/visuelemente/MS_Digital.png) -125px 0px no-repeat; }
+.MSD.unten { width:25px; height:50px; background:transparent url(images/visuelemente/MS_Digital.png) -150px 0px no-repeat; }
+.MSD.unten.sm { width:25px; height:50px; background:transparent url(images/visuelemente/MS_Digital.png) -175px 0px no-repeat; }
+
+/*RS Digital*/
+
+.RSD.links { width:50px; height:25px; background:transparent url(images/visuelemente/RS_Digital.png) 0px 0px no-repeat; }
+.RSD.links.sm { width:50px; height:25px; background:transparent url(images/visuelemente/RS_Digital.png) -50px 0px no-repeat; }
+.RSD.rechts { width:50px; height:25px; background:transparent url(images/visuelemente/RS_Digital.png) 0px -25px no-repeat; }
+.RSD.rechts.sm { width:50px; height:25px; background:transparent url(images/visuelemente/RS_Digital.png) -50px -25px no-repeat; }
+.RSD.oben { width:25px; height:50px; background:transparent url(images/visuelemente/RS_Digital.png) -100px 0px no-repeat; }
+.RSD.oben.sm { width:25px; height:50px; background:transparent url(images/visuelemente/RS_Digital.png) -125px 0px no-repeat; }
+.RSD.unten { width:25px; height:50px; background:transparent url(images/visuelemente/RS_Digital.png) -150px 0px no-repeat; }
+.RSD.unten.sm { width:25px; height:50px; background:transparent url(images/visuelemente/RS_Digital.png) -175px 0px no-repeat; }
+
+/* BSK EG*/
+.BSK { width:31px; height:100px; background:url(images/visuelemente/klappen3.png) 0px 0px  no-repeat; }
+.BSK.rechts { width:63px; height:25px; background:url(images/visuelemente/klappen_rotate.png) 0px 0px  no-repeat; }
+
+/* BSK UG oben*/
+.BSK { width:31px; height:100px; background:url(images/visuelemente/klappen3.png) 0px 0px  no-repeat; }
+.BSK.oben { width:63px; height:25px; background:url(images/visuelemente/klappen_oben.png) 0px 0px  no-repeat; }
+
+/* Temperatur_feuchtefuehler */
+
+.TF.rechts { width:14px; height:8px; background:url(images/visuelemente/Temperatur_feuchtefuhler.png) 10px 0px  no-repeat; }
+.TF.rechts span.ps-input { text-align:center; top:-3px; left:-66px; width:50px; }
+
+/* link */
+.link { width:50px; height:50px; }
+/* humidity */
+.humidity.links { width:50px; height:25px; background:transparent url(images/visuelemente/humidity.png) 0px -50px no-repeat; }
+.humidity.links span.ps-input { text-align:center; top:-25px; left:-45px; width:50px; }
+.humidity.rechts { width:50px; height:25px; background:transparent url(images/visuelemente/humidity.png) 0px -75px no-repeat; }
+.humidity.rechts span.ps-input { text-align:center; top:-25px; left:23px; width:50px; }
+.humidity.oben { width:24px; height:50px; background:transparent url(images/visuelemente/humidity.png) -100px -50px no-repeat; }
+.humidity.oben span.ps-input { text-align:center; top:-5px; left:-25px; width:50px; }
+.humidity.unten { width:25px; height:50px; background:transparent url(images/visuelemente/humidity.png) -150px -50px no-repeat; }
+.humidity.unten span.ps-input { text-align:center; top:55px; left:-25px; width:50px; }
+
+/*misc*/
+.misc.links { width:52px; height:89px; background:transparent url(images/visuelemente/misc.png) 0px -200px no-repeat; }
+.misc.links span.ps-input { text-align:center; top:-25px; left:-45px; width:50px; }
+.misc.rechts { width:50px; height:25px; background:transparent url(images/visuelemente/misc.png) 0px 0px no-repeat; }
+.misc.rechts span.ps-input { text-align:center; top:-25px; left:23px; width:50px; }
+.misc.oben { width:50px; height:50px; background:transparent url(images/visuelemente/misc.png) -100px -150px no-repeat; }
+.misc.oben span.ps-input { text-align:center; top:-5px; left:-25px; width:50px; }
+.misc.unten { width:50px; height:50px; background:transparent url(images/visuelemente/misc.png) -300px -150px no-repeat; }
+.misc.unten span.ps-input { text-align:center; top:55px; left:-25px; width:50px; }
+
+/*TZ Digital*/
+.TZD.links { width:50px; height:25px; background:transparent url(images/visuelemente/TZ_Digital.png) 0px 0px no-repeat; }
+.TZD.links.sm { width:50px; height:25px; background:transparent url(images/visuelemente/TZ_Digital.png) -50px 0px no-repeat; }
+.TZD.rechts { width:50px; height:25px; background:transparent url(images/visuelemente/TZ_Digital.png) 0px -25px no-repeat; }
+.TZD.rechts.sm { width:50px; height:25px; background:transparent url(images/visuelemente/TZ_Digital.png) -50px -25px no-repeat; }
+.TZD.oben { width:25px; height:50px; background:transparent url(images/visuelemente/TZ_Digital.png) -100px 0px no-repeat; }
+.TZD.oben.sm { width:25px; height:50px; background:transparent url(images/visuelemente/TZ_Digital.png) -125px 0px no-repeat; }
+.TZD.unten { width:25px; height:50px; background:transparent url(images/visuelemente/TZ_Digital.png) -150px 0px no-repeat; }
+.TZD.unten.sm { width:25px; height:50px; background:transparent url(images/visuelemente/TZ_Digital.png) -175px 0px no-repeat; }
+
+/*Elektro_lufterhitzer*/
+.ELEKTROLufter { width:25px; height:50px; background:url(images/visuelemente/Elektro_lufterhitzer.png) 0px 0px no-repeat; }
+.ELEKTROLufter.bm { background-position:-25px 0; }
+.ELEKTROLufter.sm { background-position:-50px 0; }
+
+/*Bodenkonvektoren*/
+.Bodenkonvektoren { width:53px; height:60px; background:url(images/visuelemente/Bodenkonvektoren.png) 0px 0px  no-repeat; }
+
+/*Kondensatpumpen*/
+.Kondensatpumpen { width:56px; height:83px; background:url(images/visuelemente/Kondensatpumpen.png) 0px 0px  no-repeat; }
+
+/*bauseitigeSteuerung*/
+.bauseitigeSteuerung { width:56px; height:83px; background:url(images/visuelemente/bauseitigeSteuerung.png) 0px 0px  no-repeat;
+; }
+
+ /* LQ ANALOG */
+.LQ.links { width:50px; height:25px; background:transparent url(images/visuelemente/LQ.png) 0px -50px no-repeat; }
+.LQ.links span.ps-input { text-align:center; top:-25px; left:-45px; width:50px; }
+.LQ.rechts { width:50px; height:25px; background:transparent url(images/visuelemente/LQ.png) 0px -75px no-repeat; }
+.LQ.rechts span.ps-input { text-align:center; top:-25px; left:23px; width:50px; }
+.LQ.oben { width:25px; height:45px; background:transparent url(images/visuelemente/LQ.png) -102px -51px no-repeat; }
+.LQ.oben span.ps-input { text-align:center; top:-6px; left:-25px; width:50px; }
+.LQ.unten { width:25px; height:50px; background:transparent url(images/visuelemente/LQ.png) -150px -52px no-repeat; }
+.LQ.unten span.ps-input { text-align:center; top:25px; left:-25px; width:50px; }
+.LQ span.ps-input { text-align:center; width:75px; }
+
+.LQ.aussen { width:50px; height:50px; background:transparent url(images/visuelemente/LQ.png) 0px 0px no-repeat; }
+
+/* Spuelventil */
+.Spuelventil { width:42px; height:50px; background:url(images/visuelemente/Spuelventil.png) 0px 0px  no-repeat; }
+/* Druckhaltestation  */
+.Druckhaltestation { width:55px; height:89px; background:url(images/visuelemente/Druckhaltestation.png) 0px 0px  no-repeat; }
+
+<? include('elements.css'); ?>

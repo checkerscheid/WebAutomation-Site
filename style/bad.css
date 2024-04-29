@@ -1,0 +1,39 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 26.01.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 533                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: bad.css 533 2022-10-08 13:30:30Z checker                 $ #
+//#                                                                                 #
+//###################################################################################
+?> bad */
+
+@media screen and (min-width:1024px) {
+	.page { background:transparent url(images/bad.png) center top no-repeat; width:993px; height:409px; position:relative; margin:auto; }
+	.page * { position:absolute; }
+	.page .ps-zimmer-info { bottom:20px; right:20px; }
+	.page .ps-button { padding:8px 25px; }
+
+	#RT { top:68px; left:481px; background:transparent url(images/visuelemente/Fuehler.png) -200px 0px no-repeat; height:25px; width:25px; }
+	#RT span { left:20px; }
+	#RT span.sw { top:25px; }
+	#RT span.iw { top:0px; }
+
+	#VTContainer { top:152px; left:279px; }
+
+	.FK .ps-input { top:20px; }
+	#FK { top:117px; left:123px; }
+
+	#LI { top:220px; left:320px; }
+	#LI_SP { top:94px; left:297px; }
+}
+
+#FK { top:107px; left:48px; } /* new: checker 2021-12-03T08:02:40 */

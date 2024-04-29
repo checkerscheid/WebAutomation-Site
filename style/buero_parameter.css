@@ -1,0 +1,21 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 26.01.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 537                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: buero_parameter.css 537 2023-10-15 09:37:31Z checker     $ #
+//#                                                                                 #
+//###################################################################################
+?> esszimmer_parameter */
+
+@media screen and (min-width:1024px) {
+	.parampage { background:transparent url(images/buero.png) center top no-repeat; position:relative; margin:auto; }
+}

@@ -1,0 +1,124 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 25.06.2020                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: paramimport.req 550 2023-12-25 03:02:54Z                 $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\std;
+use system\std, system\WebCom;
+class paramimport {
+	const c_popup = 'popup';
+	const c_form = 'form';
+	const c_setvalues = 'setvalues';
+}
+
+switch(std::gets('param1')) {
+	//###################################################################################
+	case paramimport::c_popup:
+		echo '<iframe src="std.paramimport.form.req"></iframe>';
+		break;
+	//###################################################################################
+	case paramimport::c_form:
+?>
+	<!doctype HTML>
+	<html>
+	<head>
+		<style>
+.ps-button { padding:7px; margin:2px 5px; background-color:#555; color:#FFF;
+	border:1px solid #CCC; cursor:pointer; display:inline-block;
+	font-size:13px; line-height:16px; font-weight:bold;
+	white-space:nowrap; border-radius:2px; box-shadow:0px 0px 2px 0px #888;
+	background-image:linear-gradient(#606060 25%, #222 100%); }
+.ps-button:hover { border-color:#888; }
+.ps-button:active { /*border-color:#004caf; */ box-shadow:none; color:#888; }
+		</style>
+	</head>
+	<body>
+		<form action="std.paramimport.setvalues.req" method="post" enctype="multipart/form-data">
+			<input id="datei" name="datei" type="file">
+			<input id="importparam" name="submit" class="ps-button" type="submit" value="importParam" />
+		</form>
+	</body>
+	</html>
+<?
+		break;
+	//###################################################################################
+	case paramimport::c_setvalues:
+		if(std::posts('submit') == 'importParam') {
+			if(file_exists($_FILES['datei']['tmp_name'])) {
+				$getCsvData = new parseCSV($_FILES['datei']['tmp_name']);
+				$getCsvData->loadFromFile();
+				$getCsvData->setDefaultValues();
+			} else {
+				echo 'Datei nicht gefunden!';
+			}
+		}
+		break;
+	//###################################################################################
+	default:
+		\system\html::default();
+		break;
+}
+
+class parseCSV {
+	private $file;
+	private $entries;
+	public function __construct($filename) {
+		if(file_exists($filename)) $this->file = file($filename);
+	}
+	public function loadFromFile() {
+		foreach($this->file as $line => $data) {
+			if($line > 0) {
+				$explode = explode(';', $data);
+				$this->entries[] = new importParam($explode[0], $explode[1], $explode[2], $explode[3], $explode[4]);
+			}
+		}
+
+	}
+	public function setDefaultValues() {
+		foreach($this->entries as $entrie) {
+			$this->writeDP($entrie);
+		}
+	}
+	private function writeDP($readentry) {
+		echo $readentry->getName() . ': ';
+		if(gettype(std::arrays($_SESSION[SESSION_ID]['POINTS'], $readentry->getPagename())) == 'object') {
+			$WebCom = new WebCom();
+			echo $WebCom->send('WriteDP', $_SESSION[SESSION_ID]['LEVEL'].'%~%'.$readentry->getId().'%~%'.$readentry->getValue());
+		} else {
+			echo 'Dieser Datenpunkt existiert nicht';
+		}
+		echo '<br />';
+	}
+}
+
+class importParam {
+	private $id;
+	private $name;
+	private $opcname;
+	private $pagename;
+	private $value;
+	public function getId() { return $this->id; }
+	public function getName() { return $this->name; }
+	public function geOpcname() { return $this->opcname; }
+	public function getPagename() { return $this->pagename; }
+	public function getValue() { return $this->value; }
+	public function __construct($id, $name, $opcname, $pagename, $value) {
+		$this->id = $id;
+		$this->name = $name;
+		$this->opcname = $opcname;
+		$this->pagename = $pagename;
+		$this->value = $value;
+	}
+}
+

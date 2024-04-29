@@ -1,0 +1,212 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 20.12.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: osk.req 550 2023-12-25 03:02:54Z                         $ #
+//#                                                                                 #
+//###################################################################################
+namespace popup\std;
+use system\Helper\wpDatabase;
+use system\std;
+$database= new wpDatabase();
+
+$pw = std::posts('pw') == 'True';
+
+switch(std::posts('type')) {
+	case 'unit':
+		$keyboard = array(
+			0 => array('°', '%', '‰', 'Δ', 'µ', 'φ', 'Ω', '/', '$', '€'),
+			1 => array('q', 'w', 'e', 'r', 't', 'z', 'u', 'i', 'o', 'p'),
+			2 => array('a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', '<-'),
+			3 => array('shift', 'y', 'x', 'c', 'v', 'b', 'n', 'm', 'ß'),
+			4 => array('½', '¼', '¾', 'space', '²', '³')
+		);
+		$shift = 2;
+		$space = 5;
+		break;
+	case 'min':
+		$keyboard = array(
+			0 => array('1', '2', '3', '4', '5', '6', '7', '8', '9', '0'),
+			1 => array('q', 'w', 'e', 'r', 't', 'z', 'u', 'i', 'o', 'p'),
+			2 => array('a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', '<-'),
+			3 => array('shift', 'y', 'x', 'c', 'v', 'b', 'n', 'm'),
+			4 => array('space', '_')
+		);
+		$shift = 3;
+		$space = 9;
+		break;
+	case 'nook':
+		$keyboard = array(
+			0 => array('1', '2', '3', '4', '5', '6', '7', '8', '9', '0'),
+			1 => array('q', 'w', 'e', 'r', 't', 'z', 'u', 'i', 'o', 'p'),
+			2 => array('a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', '<-'),
+			3 => array('shift', 'y', 'x', 'c', 'v', 'b', 'n', 'm', 'ß'),
+			4 => array('-', '@', 'space', ',', '.')
+		);
+		$shift = 2;
+		$space = 6;
+		break;
+	default:
+		$keyboard = array(
+			0 => array('1', '2', '3', '4', '5', '6', '7', '8', '9', '0'),
+			1 => array('q', 'w', 'e', 'r', 't', 'z', 'u', 'i', 'o', 'p'),
+			2 => array('a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', '<-'),
+			3 => array('shift', 'y', 'x', 'c', 'v', 'b', 'n', 'm', 'ß'),
+			4 => array('-', '@', 'space', ',', '.', 'OK')
+		);
+		$shift = 2;
+		$space = 5;
+		break;
+}
+
+?>
+
+<div class="popup">
+	<table id="osk" summary="">
+		<tr>
+<?
+	$hasCheckBox = 0;
+	if(std::posts('type') == 'unit') {
+		$hasCheckBox = 1;
+?>
+			<td>
+				<input type="radio" name="facet" value="unit" checked="checked" />
+			</td>
+<?
+	}
+?>
+			<td colspan="<?=(count($keyboard[1]) - $hasCheckBox)?>">
+				<input id="oskinput" class="ps-input" type="<?=($pw) ? 'password' : 'text'?>" value="<?=std::posts('defaultValue')?>" />
+			</td>
+		</tr>
+<?
+// Facet für units
+	if(std::posts('type') == 'unit') {
+		$database->query('SELECT DISTINCT [unit] FROM [opcdatapoint] ORDER BY [unit]');
+		echo '<tr><td colspan="'.count($keyboard[1]).'"><hr /></td></tr>';
+		if(std::posts('dtype') == 'VT_BOOL') {
+			echo '
+		<tr>
+			<td rowspan="2">
+				<input type="radio" name="facet" value="boolean" />
+			</td>
+			<td rowspan="2">
+				<span>Boolean</span>
+			</td>
+			<td>
+				<span>wahr:</span>
+			</td>
+			<td colspan="'.(count($keyboard[1]) - 3).'">
+				<input class="ps-input ibool" type="text" value="" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<span>falsch:</span>
+			</td>
+			<td colspan="'.(count($keyboard[1]) - 3).'">
+				<input class="ps-input ibool" type="text" value="" />
+			</td>
+		</tr>
+		<tr><td colspan="'.count($keyboard[1]).'"><hr /></td></tr>
+		<tr>
+			<td>
+				<input type="radio" name="facet" value="vorlage" />
+			</td>
+			<td colspan="'.(count($keyboard[1]) - 1).'">
+				<select class="ps-input">';
+			while($erg = $database->fetch()) {
+				if(is_null($erg['unit'])) $erg['unit'] = '';
+				if(preg_match('/^True:(.*);False:(.*);$/', $erg['unit']) > 0) {
+					echo '<option>'.$erg['unit'].'</option>';
+				}
+			}
+			echo '
+				</selecet>
+			</td>
+		</tr>';
+		} else {
+			echo '
+		<tr>
+			<th colspan="2"></th>
+			<th colspan="2">Eingangswert</th>
+			<th colspan="2">Anzeige</th>
+			<th colspan="'.(count($keyboard[1]) - 6).'"></th>
+		</tr>
+		<tr>
+			<td>
+				<input type="radio" name="facet" value="nAuswahl" />
+			</td>
+			<td>
+				<span>n-Zustände</span>
+			</td>
+			<td colspan="2" id="bedingung">
+				<input  class="ps-input" type="text" value="" />
+				<input  class="ps-input" type="text" value="" />
+			</td>
+			<td colspan="2" id="text">
+				<input  class="ps-input" type="text" value="" />
+				<input  class="ps-input" type="text" value="" />
+			</td>
+			<td colspan="'.(count($keyboard[1]) - 6).'">
+				<span id="weitere" class="ps-button">+</span>
+				<span id="weniger" class="ps-button">-</span>
+			</td>
+		</tr>
+		<tr><td colspan="'.count($keyboard[1]).'"><hr /></td></tr>
+		<tr>
+			<td>
+				<input type="radio" name="facet" value="vorlage" />
+			</td>
+			<td colspan="'.(count($keyboard[1]) - 1).'">
+				<select class="ps-input">';
+			while($erg = $database->fetch()) {
+				echo '<option>'.$erg['unit'].'</option>';
+			}
+			echo '
+				</selecet>
+			</td>
+		</tr>';
+		}
+	}
+	echo '<!--tr><td colspan="'.count($keyboard[1]).'"><hr /></td></tr-->';
+	foreach($keyboard as $row) {
+		echo '<!--tr>';
+		$counter = 1;
+		foreach($row as $button) {
+			switch($button) {
+				case 'shift':
+					$counter += $shift;
+					echo '<td colspan="'.$shift.'"><span class="ps-button column'.$shift.'">'.$button.'</span></td>';
+					break;
+				case 'space':
+					$counter += $space;
+					echo '<td colspan="'.$space.'"><span class="ps-button column'.$space.'">'.$button.'</span></td>';
+					break;
+				case 'OK':
+					$counter++;
+					echo '<td><span class="ps-button" data-sname="'.std::posts('dp').'">'.$button.'</span></td>';
+					break;
+				default:
+					$counter++;
+					echo '<td><span class="ps-button">'.$button.'</span></td>';
+					break;
+			}
+		}
+		for($i = $counter; $i <= count($keyboard[1]); $i++) {
+			echo '<td></td>';
+		}
+		echo '</tr-->';
+	}
+	?>
+	</table>
+</div>

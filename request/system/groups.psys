@@ -1,0 +1,129 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 22.01.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 578                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: groups.psys 578 2024-03-22 21:53:46Z                     $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\system;
+
+use system\Helper\wpDatabase;
+use system\std;
+
+switch(std::gets('param1')) {
+	case groups::c_groupmenu:
+		groups::groupmenu();
+		break;
+	case groups::c_groupinsert:
+		groups::groupinsert();
+		break;
+	case groups::c_groupupdate:
+		groups::groupupdate();
+		break;
+	case groups::c_groupdelete:
+		groups::groupdelete();
+		break;
+}
+
+class groups {
+	//###################################################################################
+	const c_groupmenu = 'menugroups';
+	public static function groupmenu() {
+		$database = new wpDatabase();
+		$database->query("SELECT [id_" . std::posts('table') . "], [name]
+			FROM [" . std::posts('table') . "] ORDER BY [name]");
+		echo '
+			<h1>Gruppen</h1>
+			<span>Filter:</span>
+			<input type="text" class="ps-input filterGroup" />
+			<hr />
+			<div class="divupdate">';
+		while($erg = $database->fetch()) {
+			echo '
+				<div>
+					<input type="hidden" value="'.$erg['id_' . std::posts('table')].'" />
+					<input type="text" value="'.$erg['name'].'" class="ps-input" />
+					<input type="button" value="speichern" class="groupupdate ps-button">
+					<input type="button" value="entfernen" class="groupdelete ps-button">
+				</div>';
+		}
+		echo '
+			</div>
+			<p>Neue Gruppe anlegen:</p>
+			<div class="divinsert">
+				<input type="text" class="ps-input" />
+				<input type="button" class="groupinsert ps-button" value="speichern" />
+			</div>';
+	}
+	//###################################################################################
+	const c_groupinsert = 'groupinsert';
+	public static function groupinsert() {
+		if(std::posts('table') != '' && std::posts('name') != '') {
+			$database = new wpDatabase();
+			$database->query("INSERT INTO [" . std::posts('table') . "] ([name]) VALUES('" . std::posts('name') . "')");
+			echo '{
+				"erg": "S_OK",
+				"forhtml":"
+<div>
+	<input type=\"hidden\" value=\"'.$database->lastid().'\" />
+	<input type=\"text\" value=\"'.std::posts('name').'\" class=\"ps-input\" />
+	<input type=\"button\" value=\"speichern\" class=\"groupupdate ps-button\">
+	<input type=\"button\" value=\"entfernen\" class=\"groupupdelete ps-button\">
+</div>"
+			}';
+		} else {
+			echo '{
+				"erg": "S_ERROR",
+				"message": "Daten konnten nicht gespeichert werden: Der name darf nicht leer sein."
+			}';
+		}
+	}
+	//###################################################################################
+	const c_groupupdate = 'groupupdate';
+	public static function groupupdate() {
+		if(std::posts('table') != '' && std::posts('id') != '' && std::posts('name') != '') {
+			$database = new wpDatabase();
+			$database->query("UPDATE [" . std::posts('table') . "]
+				SET [name] = '" . std::posts('name') . "'
+				WHERE [id_" . std::posts('table') . "] = "  .std::posts('id'));
+			echo '{"erg": "S_OK"}';
+		} else {
+			echo '{
+				"erg": "S_ERROR",
+				"message": "Daten konnten nicht gespeichert werden"
+			}';
+		}
+	}
+	//###################################################################################
+	const c_groupdelete = 'groupdelete';
+	public static function groupdelete() {
+		if(std::posts('table') != '' && std::posts('member') && std::posts('id') != '') {
+			$database = new wpDatabase();
+			if(std::posts('force') == 'true') {
+				$database->query("DELETE FROM [" . std::posts('table') . "]
+					WHERE [id_" . std::posts('table') . "] = " . std::posts('id'));
+				echo '{"erg": "S_OK"}';
+			} else {
+				$database->query("SELECT COUNT(*) AS [anzahl]
+					FROM [" . std::posts('member') . "]
+					WHERE [id_" . std::posts('table') . "] = " . std::posts('id'));
+				$erg = $database->fetch();
+				if($erg['anzahl'] == 0) {
+					$database->query("DELETE FROM [" . std::posts('table') . "] WHERE [id_" . std::posts('table') . "] = ".std::posts('id'));
+					echo '{"erg": "S_OK"}';
+				} else {
+					echo '{"erg": "S_CK", "count":'.$erg['anzahl'].'}';
+				}
+			}
+		}
+	}
+}

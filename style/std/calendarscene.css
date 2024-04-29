@@ -1,0 +1,29 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 23.07.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 505                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: calendarscene.css 505 2021-05-07 21:55:45Z checker       $ #
+//#                                                                                 #
+//###################################################################################
+?> calendarscene */
+
+#calendarscene { margin:10px 50px; }
+#calendarscene h1 { text-align:center; }
+
+#calendarscene ul, #calendarscene table { margin-left:30px; }
+#calendarscene .ps-input { width:75px; text-align:center; }
+span.ps-tree-parent { display:inline-block; }
+.ps-tree-parent .ps-button { padding:0 5px; margin-left:10px; }
+div.td { padding:2px 5px; }
+div.tr { margin:2px; }
+.popup-text { display:inline-block; margin:5px 0px; }
+.popup-result { font-weight:bold; }

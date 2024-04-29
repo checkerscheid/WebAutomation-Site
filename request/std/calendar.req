@@ -1,0 +1,54 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 20.05.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 570                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: calendar.req 570 2024-03-13 18:22:21Z                    $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\std;
+use system\Helper\wpDatabase;
+use system\std;
+$_SESSION[SESSION_ID]['POINTS'] = array();
+$points = array();
+
+$database = new wpDatabase();
+
+if(std::posts('id') == 'NULL') {
+	$database->query('SELECT [c].[id_calendar], [c].[name], [c].[active], [dp].[name] AS [dpname], [dp].[id_dp]
+						FROM [calendar] [c]
+					LEFT OUTER JOIN [calendargroup] [g] ON [g].[id_calendargroup] = [c].[id_calendargroup]
+					INNER JOIN [dp] ON [dp].[id_dp] = [c].[id_dp]
+					WHERE [c].[id_calendargroup] IS NULL AND [c].[id_dp] IS NOT NULL ORDER BY [c].[name]');
+} else {
+	$database->query('SELECT [c].[id_calendar], [c].[name], [c].[active], [dp].[name] AS [dpname], [dp].[id_dp]
+						FROM [calendar] [c]
+					LEFT OUTER JOIN [calendargroup] [g] ON [g].[id_calendargroup] = [c].[id_calendargroup]
+					INNER JOIN [dp] ON [dp].[id_dp] = [c].[id_dp]
+					WHERE [c].[id_calendargroup] = '.std::posts('id').' AND [c].[id_dp] IS NOT NULL ORDER BY [c].[name]');
+}
+
+if(std::posts('id') != 'NULL') {
+	echo '<li><a class="ps-button" href="std.calendargroup.'.std::posts('id').'.htm">Gruppen&uuml;bersicht</a></li>';
+}
+while($erg = $database->fetch()) {
+	$points[$erg['dpname']] = $erg['dpname'];
+
+	echo '<li data-opcitem="'.$erg['id_dp'].'" data-calendar="' . $erg['id_calendar']. '">';
+	echo '<h2 class="ps-bold" title="'.$erg['dpname'].'">Name: '.$erg['name'].'</h2>';
+	echo '<a href="std.calendaredit.'.$erg['id_calendar'].'.htm" class="ps-button right">bearbeiten</a>';
+	echo '<span class="ps-checkbox '.($erg['active'] == '1' ? 'checked' : '').'">Aktiv</span>';
+	echo '<span class="desc">aktueller Wert:</span><span class="ps-input" data-value="'.$erg['dpname'].'">undefined</span><br />';
+
+	echo '<hr /></li>';
+}
+
+new \system\RegisterSignals($points);

@@ -1,0 +1,96 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 23.07.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 552                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: scene.req 552 2024-01-06 13:56:24Z                       $ #
+//#                                                                                 #
+//###################################################################################
+/** @var Type $m */
+namespace request\std;
+use system\Helper\wpDatabase;
+use system\std;
+class scene {
+	const c_getgroup = 'getgroup';
+	const c_getpoint = 'getpoint';
+}
+
+switch(std::gets('param1')) {
+//###################################################################################
+// Treeview Aktionen
+//###################################################################################
+	case scene::c_getgroup:
+		echo '<ul class="group">';
+		$database = new wpDatabase();
+		$where = (std::posts('group') == '' || std::posts('group') == 'NULL') ? 'IS NULL' : '= '.std::posts('group');
+		$database->query('SELECT [id_scene], [name] FROM [scene] WHERE [id_scenegroup] '.$where.' ORDER BY [name]');
+		while($erg = $database->fetch()) {
+			echo '<li data-scene="'.$erg['id_scene'].'" class="GroupHeadLine">';
+			echo '<span class="ps-tree-parent p-tree-parent-scene">'.$erg['name'].'</span>';
+			echo '<span class="ps-button" data-writescene="'.$erg['id_scene'].'">aktivieren</span>';
+			echo '</li>';
+			echo '<li data-points="'.$erg['id_scene'].'" class="p-tree-child p-tree-child-scene">';
+			echo '</li>';
+		}
+		if($database->hasRows() == 0) echo '<li>Keine Szenen definiert</li>';
+		echo '</ul>';
+		break;
+//###################################################################################
+	case scene::c_getpoint:
+		if(std::posts('id') != '' && std::posts('id') != '0') {
+			echo '<table summary=""><tr>';
+			echo '<th>Datenpunktname</th>';
+			echo '<th>Szenensollwert</th>';
+			echo '<th>Istwert</th>';
+			echo '</tr>';
+			$database = new wpDatabase();
+			$database->query('SELECT
+					[v].[id_scenevalue], [og].[name] AS [group], ISNULL([d].[description], [d].[name]) AS [description], [d].[name], [d].[unit], [v].[value]
+					FROM [opcdatapoint] [d]
+					INNER JOIN [opcgroup] [og] ON [d].[id_opcgroup] = [og].[id_opcgroup]
+					LEFT JOIN [scenevalue] [v] ON [v].[id_opcdatapoint] = [d].[id_opcdatapoint]
+					WHERE [v].[id_scene] = '.std::posts('id'));
+			$points = array();
+			while($erg = $database->fetch()) {
+				if(is_null($erg['unit'])) $erg['unit'] = '';
+				echo '<tr data-scenevalue="'.$erg['id_scenevalue'].'">';
+				echo '<td><span class="p-desc" title="'.$erg['name'].'">' . $erg['group'] . ' - '.$erg['description'].'</span></td>';
+				if(preg_match('/True:(.*);False:(.*);/', $erg['unit'], $m) > 0) {
+					echo '<td><span class="ps-input">'.(($erg['value'] == 'True') ? $m[1] : $m[2]).'</span></td>';
+				} else if(preg_match('/((\d){1,}:.*;){1,}/', $erg['unit']) > 0 ) {
+					$ergTemp = substr($erg['unit'], 0, -1);
+					$arr = explode(';', $ergTemp);
+					foreach ($arr as $state){
+						$arrErg[trim(strstr($state, ':', true))] = str_replace(':', '', strstr($state, ':'));
+					}
+					if(isset($arrErg[$erg['value']])) {
+						echo '<td><span class="ps-input">'.(($arrErg[$erg['value']] == '') ? '-' : $arrErg[$erg['value']]).'</span></td>';
+					} else {
+						echo '<td><span class="ps-input">'.(($erg['value'] == '') ? '-' : $erg['value']).'</span></td>';
+					}
+				} else {
+					echo '<td><span class="ps-input">'.(($erg['value'] == '') ? '-' : $erg['value']).'</span></td>';
+				}
+				echo '<td><span class="ps-input" data-value="'.$erg['name'].'">-</span></td>';
+				echo '</tr>';
+				$points[$erg['name']] = $erg['name'];
+			}
+			$_SESSION[SESSION_ID]['POINTS'] = array();
+			new \system\RegisterSignals($points);
+			echo '</table>';
+		}
+		break;
+//###################################################################################
+	default:
+		\system\html::default();
+		break;
+}
+?>

@@ -1,0 +1,44 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 26.01.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 533                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: wohnzimmer.css 533 2022-10-08 13:30:30Z checker          $ #
+//#                                                                                 #
+//###################################################################################
+?> wohnzimmer */
+
+@media screen and (min-width:1024px) {
+	.page { background:transparent url(images/wohnzimmer.png) center top no-repeat; width:993px; height:409px; position:relative; margin:auto; }
+	.page * { position:absolute; }
+	.page .ps-zimmer-info { bottom:20px; left:20px; }
+	.page .ps-button { padding:8px 25px; }
+
+	#RT { top:161px; left:543px; background:transparent url(images/visuelemente/Fuehler.png) -200px 0px no-repeat; height:25px; width:25px; }
+	#RT span { left:20px; }
+	#RT span.sw { top:25px; }
+	#RT span.iw { top:0px; }
+
+	.FK .ps-input { top:20px; }
+	#FK { top:189px; left:850px; }
+	#FK_TE { top:287px; left:360px; }
+
+	#LI_LS { top:150px; left:738px; }
+	#LI_SL { top:346px; left:797px; }
+	#LI_LL { top:83px; left:175px; }
+	#LI { top:33px; left:443px; }
+	#LI_GA { top:346px; left:300px; }
+}
+
+@media (orientation: portrait) {
+	.page .ps-button, #dialog .ps-button { padding:25px 6px; }
+}
+#FK_TE { top:247px; left:360px; } /* new: checker 2021-12-03T08:02:22 */

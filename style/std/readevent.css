@@ -1,0 +1,28 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 505                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: readevent.css 505 2021-05-07 21:55:45Z checker           $ #
+//#                                                                                 #
+//###################################################################################
+?> userhistorics */
+
+#readevent .tac { text-align:center; }
+#readevent .ps-loading { background-position:center top; }
+#readevent .floatr { float:left; padding-right:20px; }
+/*#userhistorics td { border:1px solid #ccc; padding:1px 5px; }*/
+#readeventtable td { color:#222; }
+#readeventtable tr.ps-warning { background-color:#FF0; }
+#readeventtable tr.ps-error { background-color:#F00; }
+table.dataTable thead th.noborder { border:none; }
+
+h1 { text-align:center; }

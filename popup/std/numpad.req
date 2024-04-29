@@ -1,0 +1,112 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 20.12.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: numpad.req 550 2023-12-25 03:02:54Z                      $ #
+//#                                                                                 #
+//###################################################################################
+namespace popup\std;
+use system\Helper\wpDatabase;
+use system\Helper\security;
+use system\std;
+$minmax = '';
+$dataid = '';
+$additional = '';
+$defaultvalue = '';
+$bacnet = std::posts('bacnet') == 'True' ? true : false;
+$id = std::posts('elem').($bacnet ? '_SW' : '');
+
+if(std::arrays($_SESSION[SESSION_ID]['POINTS'], $id)) {
+	$minmax .= '<tr><td colspan="3"><hr /></td></tr><tr><td colspan="3" class="ps-taright">min: ';
+	if(security::checkGroup(security::entwickler)) {
+		$minmax .= '<input type="text" class="ps-input minvalue" value="';
+	}
+	$minmax .= wpDatabase::sqlDebug($_SESSION[SESSION_ID]['POINTS'][$id]->min).' '.$_SESSION[SESSION_ID]['POINTS'][$id]->unit;
+	if(security::checkGroup(security::entwickler)) {
+		$minmax .= '" />';
+	}
+	$minmax .= '</td></tr><tr><td colspan="3" class="ps-taright">max: ';
+	if(security::checkGroup(security::entwickler)) {
+		$minmax .= '<input type="text" class="ps-input maxvalue" value="';
+	}
+	$minmax .= wpDatabase::sqlDebug($_SESSION[SESSION_ID]['POINTS'][$id]->max).' '.$_SESSION[SESSION_ID]['POINTS'][$id]->unit;
+	if(security::checkGroup(security::entwickler)) {
+		$minmax .= '" />';
+		$minmax .= '</td></tr><tr><td colspan="3" class="ps-taright"><span class="ps-button saveminmax" title="Min Max Werte speichern" data-id="'.$_SESSION[SESSION_ID]['POINTS'][$id]->id.'">speichern</span>';
+	}
+	$minmax .= '</td></tr><tr><td colspan="3"><hr /></td></tr>';
+	$dataid = ' data-id="'.$id.'"';
+}
+if(std::arrays($_SESSION[SESSION_ID]['POINTS'], std::posts('elem').($bacnet ? '_IW' : ''))) {
+	$defaultvalue = $_SESSION[SESSION_ID]['POINTS'][std::posts('elem').($bacnet ? '_IW' : '')]->value;
+}
+
+switch(std::posts('type')) {
+	case 'setdefault':
+		$additional .= '<tr><td colspan="3"><hr /></td></tr>';
+
+		$additional .= '<tr>';
+		$additional .= '<td colspan="3" class="ps-taleft"><span class="ps-checkbox null">zurücksetzen</span></td>';
+		$additional .= '</tr>';
+
+		$additional .= '<tr><td colspan="3"><hr /></td></tr>';
+		break;
+	case 'setdefaultforce':
+		$additional .= '<tr><td colspan="3"><hr /></td></tr>';
+
+		$additional .= '<tr>';
+		$additional .= '<td colspan="3" class="ps-taleft"><span class="ps-checkbox null">zurücksetzen</span></td>';
+		$additional .= '</tr>';
+
+		$additional .= '<tr>';
+		$additional .= '<td colspan="3" class="ps-taleft"><span class="ps-checkbox force">Vererbung erzwingen</span></td>';
+		$additional .= '</tr>';
+
+		$additional .= '<tr><td colspan="3"><hr /></td></tr>';
+		break;
+	default:
+		break;
+}
+
+$keyboard = array(
+	0 => array('1', '2', '3'),
+	1 => array('4', '5', '6'),
+	2 => array('7', '8', '9'),
+	3 => array('.', '0', '<-')
+);
+
+?>
+
+<div class="popup">
+	<h1><?=std::posts('headline')?></h1>
+	<table id="numpad" summary=""<?=$dataid?>>
+		<?=$minmax.$additional?>
+		<tr>
+			<td colspan="<?=count($keyboard[1])?>">
+				<input id="oskinput" class="ps-input" value="<?=$defaultvalue?>" />
+			</td>
+		</tr>
+	<?
+		foreach($keyboard as $row) {
+			echo '<!--tr>';
+			foreach($row as $button) {
+				if($button == '') {
+					echo '<td></td>';
+				} else {
+					echo '<td><span class="ps-button">'.$button.'</span></td>';
+				}
+			}
+			echo '</tr-->';
+		}
+	?>
+	</table>
+</div>

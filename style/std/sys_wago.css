@@ -1,0 +1,30 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 28.06.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 505                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: sys_wago.css 505 2021-05-07 21:55:45Z checker            $ #
+//#                                                                                 #
+//###################################################################################
+?> wago */
+
+#wago h1, #wago h2, #wago h3 { text-align:center; }
+#wago { margin:0 20px; }
+
+#wago span { display:inline-block; width:100px; text-align:center; }
+#wago .besch { width:200px; padding:5px 0; float:left; text-align:left; }
+#wago .ps-container { width:400px; }
+#wago .height0 { height:0px; overflow:hidden; }
+#wago .ps-container h2 { cursor:pointer; }
+#wago .write { cursor:pointer; }
+#wago .neg { background-color:#A91919; color:#FFF; }
+#wago .pos { background-color:#0F0; color:#000; }
+#wago .serverinfo { position:fixed; top:85px; right:25px; color:#FFF; font-size:7pt; }

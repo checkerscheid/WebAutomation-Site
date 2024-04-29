@@ -1,0 +1,42 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 15.12.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 505                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: templategen.css 505 2021-05-07 21:55:45Z checker         $ #
+//#                                                                                 #
+//###################################################################################
+?> templategen */
+
+#templategen h1 { text-align:center; }
+
+#containerleft { width:250px; float:left; border:1px solid #CCC; padding:5px; overflow:visible; }
+#containerright { width:250px; float:right; border:1px solid #CCC; padding:5px; overflow:visible; }
+#containertemplate { margin:2px 270px; border:1px solid #CCC; padding:5px; overflow:auto; }
+#containertemplate * { margin:auto; }
+#templateraster { position:relative; }
+#templateraster * { position:absolute; }
+#containerright div.optionsrow input { width:40px; }
+#containerleft ul ul li { padding-left:20px; line-height:30px; }
+
+#containerright span.p-element { padding:2px 5px; margin:2px 5px; background-color:#f2f2f2; color:#004caf; border:1px solid #b3b3b3; cursor:pointer; display:inline-block; width:230px; text-align:center; text-decoration:none;
+	border-radius:2px;
+	box-shadow:0px 0px 4px 0px #AAA;
+	background-image:linear-gradient(#f2f2f2 25%, #ddd 100%); }
+#containerright .ui-state-highlight { padding:2px 5px; margin:2px 5px;
+	border-radius:2px; box-shadow:0px 0px 4px 0px #AAA; }
+#containerright span.ps-button { width:230px; text-align:center; }
+#templategen .p-dpbutton { display:inline-block; width:27px; height:27px; padding:0 2px; margin:0 3px; cursor:pointer; float:right; }
+#templategen .p-dpedit { background:transparent url(images/layout/ic_menu_edit.png) center center no-repeat; }
+#templategen .p-dpdelete { background:transparent url(images/layout/ic_menu_delete.png) center center no-repeat; }
+
+#div1 { background-color:#888; width:30px; height:30px; }
+#div2 { background-color:#DDD; width:30px; height:30px; }

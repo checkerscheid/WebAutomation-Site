@@ -1,0 +1,136 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 24.06.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: useradmin.req 550 2023-12-25 03:02:54Z                   $ #
+//#                                                                                 #
+//###################################################################################
+/** @var Type $errormessage */
+namespace request\std;
+use system\Helper\wpDatabase;
+use system\std, system\wpInit, system\html;
+class useradmin {
+	const c_deleteuser = 'deleteuser';
+	const c_resetpasswort = 'resetpasswort';
+	const c_useredit = 'useredit';
+	const c_saveuseredit = 'saveuseredit';
+}
+
+switch(std::gets('param1')) {
+//###################################################################################
+	case useradmin::c_deleteuser:
+		$database = new wpDatabase();
+		$database->query('DELETE FROM [user] WHERE [id_user] = '.std::posts('id'));
+		echo 'S_OK';
+		break;
+//###################################################################################
+	case useradmin::c_resetpasswort:
+		$database = new wpDatabase();
+		$database->query("UPDATE [user] SET [password] = '".\system\Helper\security::createHash(wpInit::$stdpwd)."' WHERE [id_user] = ".std::posts('id'));
+		echo 'S_OK';
+		break;
+//###################################################################################
+	case useradmin::c_useredit:
+		$database = new wpDatabase();
+		$database->query("SELECT TOP 1 [login], [name], [lastname], [id_usergroup], [autologoff], [startpage], [showpopup], [id_email] FROM [user] WHERE [id_user] = '".std::posts('id')."'");
+		$erg = $database->fetch();
+		if($database->hasRows() > 0) {
+			$lastnamePOST = $erg['lastname'];
+			$namePOST = $erg['name'];
+			$gruppePOST = $erg['id_usergroup'];
+			$autologoffPOST = $erg['autologoff'];
+			$startpagePOST = $erg['startpage'];
+			$showpopupPOST = $erg['showpopup'];
+			$contactPOST = $erg['id_email'];
+
+			$database->query("SELECT CONCAT ([lastname],', ', [name]) AS [name], [id_email] FROM [email] ORDER BY [lastname]");
+			$contacts = array ();
+			$contacts[0] = 'Keine Zuordnung';
+			while($erg = $database->fetch()){
+				$contacts[$erg['id_email']] = $erg['name'];
+			}
+
+			echo '<form class="fieldsetcontainer">';
+
+			if(isset($errormessage['lastname'])) echo showerror($errormessage['lastname']);
+			echo html::getTextInput('pulastname', 'ps-input', 'Name', $lastnamePOST);
+
+			if(isset($errormessage['name'])) echo showerror($errormessage['name']);
+			echo html::getTextInput('puname', 'ps-input', 'Vorname', $namePOST);
+
+			$database->query('SELECT [id_usergroup], [name] FROM [usergroup] WHERE [order] <= '.$_SESSION[SESSION_ID]['LEVEL'].' AND [order] >= 10 ORDER BY [order]');
+			$userdrpdown = array();
+			while($erg = $database->fetch()) { $userdrpdown[$erg['id_usergroup']] = $erg['name']; }
+			echo html::getSelectInputnoDefault('pugruppe', 'ps-input', 'Gruppe', $userdrpdown, $gruppePOST);
+
+			$autologoffdropdown = array(15 => '15 min', 20 => '20 min', 30 => '30 min', 45 => '45 min', 60 => '60 min', 120 => '120 min', 0 => 'kein Autologoff');
+			echo html::getSelectInputnoDefault('puautologoff', 'ps-input', 'automatisches Abmelden nach', $autologoffdropdown, $autologoffPOST);
+
+			if(isset($errormessage['startpage'])) echo showerror($errormessage['startpage']);
+			echo html::getTextInput('pustartpage', 'ps-input', 'eigene Startseite', $startpagePOST);
+
+			$showpopupdropdown = array(0 => 'nein', 1 => 'ja');
+			echo html::getSelectInputnoDefault('pushowpopup', 'ps-input', 'Alarmierungs Pop-up anzeigen', $showpopupdropdown, $showpopupPOST);
+
+			echo html::getSelectInputnoDefault('pucontact', 'ps-input', 'Teilnehmerzuordnung', $contacts, $contactPOST);
+
+			?>
+				<input type="hidden" id="puiduser" value="<?=std::posts('id')?>" />
+				<br />
+				<hr />
+				<input class="ps-button usereditsend" type="button" value="speichern" />
+				<div class="puerror"></div>
+<?
+			echo '</form>';
+		} else {
+			echo '<span class="neg">Sie haben keine Berechtigung diese Seite anzuzeigen</span>';
+		}
+		break;
+//###################################################################################
+	case useradmin::c_saveuseredit:
+		$database = new wpDatabase();
+		$errormessage = array();
+		if(!preg_match('/^[a-zA-ZüöäÜÖÄ ]{2,30}$/', $_POST['lastname'])) {
+			$errormessage['lastname'] = 'Der Nachname muss zwischen 2 und 30 Zeichen lang sein.<br />Er darf nur die folgenden Zeichen enthalten:<br />- Buchstaben (a-z und A-Z)<br />- Leerzeichen<br /><br />';
+		}
+		if(!preg_match('/^[a-zA-ZüöäÜÖÄ ]{2,30}$/', $_POST['name'])) {
+			$errormessage['name'] = 'Der Vorname muss zwischen 2 und 30 Zeichen lang sein.<br />Er darf nur die folgenden Zeichen enthalten:<br />- Buchstaben (a-z und A-Z)<br />- Leerzeichen<br /><br />';
+		}
+		if(std::posts('startpage') != '' && !preg_match('/^[a-zA-Z0-9_\-\.]+$/', $_POST['startpage'])) {
+			$errormessage['startpage'] = 'Die Startseite darf nur die folgenden Zeichen enthalten:<br />- Buchstaben (a-z und A-Z)<br />- Zahlen (0-9)<br />- Binde- oder Unterstrich<br />- Punkte<br /><br />';
+		}
+		if(count($errormessage) == 0) {
+			$startpage = std::posts('startpage') == '' ? 'NULL' : '\''.strtolower(std::posts('startpage')).'\'';
+			$database->query("UPDATE [user] SET
+					[name] = '".$_POST['name']."',
+					[lastname] = '".$_POST['lastname']."',
+					[id_usergroup] = ".$_POST['gruppe'].",
+					[autologoff] = '".$_POST['autologoff']."',
+					[startpage] = ".$startpage.",
+					[showpopup] = '".$_POST['showpopup']."',
+					[id_email] = '".$_POST['contact']."'
+					WHERE [id_user] = ".std::posts('id'));
+			echo 'S_OK';
+
+		} else {
+			foreach ($errormessage as $message) {
+				echo '<span class="neg">'.$message.'</span>';
+			}
+		}
+		break;
+//###################################################################################
+	default:
+		html::default();
+		break;
+}
+
+?>

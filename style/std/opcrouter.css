@@ -1,0 +1,41 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christopher Korn                                                 #
+//# Date         : 06.06.2015                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 505                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: opcrouter.css 505 2021-05-07 21:55:45Z checker           $ #
+//#                                                                                 #
+//###################################################################################
+?> opcrouter */
+
+#submenu { height:20px; padding:0 0 5px 50px; }
+#submenu li { float:left; }
+#opcroute { margin:10px 50px; }
+#opcroute ul { margin:0 30px; }
+#opcroute div.td, #opcroute div.th { padding:2px 5px; }
+#erg input.neg, #erg select.neg { border-color:#A91919; color:#A91919; }
+h2.editorder { cursor:pointer; }
+div.divupdate div, div.divinsert { border:1px solid #CCC; padding:3px 5px; margin:3px; display:inline-block; border-radius:6px; }
+div.td { padding:2px 5px; }
+div.tr { margin:2px; }
+div.table-bold { font-weight:bold; }
+div.table-head { border:1px solid #FFF; }
+div.table-group { padding-left:10px; font-weight:bold; }
+div.table-item { padding-left:25px; }
+span.ps-tree-parent { display:inline-block; }
+h1 { text-align:center; }
+#routen .ps-delete { width:27px; height:27px; line-height:27px; cursor:pointer; float:right; background:transparent url(images/layout/ic_menu_delete.png) center center no-repeat; }
+#tree1 { display:inline-block; float:left; }
+#selectdp { display:inline-block; }
+.td { vertical-align:middle; }
+#routen span { display:inline-block; margin:0 4px; line-height:27px; }
+#tree .dplink { text-indent:10px; cursor:pointer; padding:4px 0px; }
+#tree .dplink:hover { color:#408cef; }

@@ -1,0 +1,161 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 20.12.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: fu.req 550 2023-12-25 03:02:54Z                          $ #
+//#                                                                                 #
+//###################################################################################
+namespace popup\std;
+use system\std;
+$bacnet = std::posts('bacnet') == 'True' ? true : false;
+?>
+
+<div class="popup">
+	<h1><?=std::posts('headline')?></h1>
+	<table summary="">
+		<tr>
+			<td colspan="2">
+				<hr />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<span>R&uuml;ckmeldung:</span>
+			</td>
+			<td>
+				<span class="ps-input pa-EinAus" data-value="<?=std::posts('elem')?>_BM">undefined</span>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<hr />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<span>Hand / Auto:</span>
+			</td>
+			<td>
+				<span class="ps-input pa-<?=($bacnet ? 'bac-' : '')?>HandAuto" data-value="<?=std::posts('elem')?>_Hand">undefined</span>
+			</td>
+		</tr>
+		<? if($bacnet) { ?>
+		<tr>
+			<td colspan="2">
+				<span class="ps-button" data-point="<?=std::posts('elem')?>_Auto" data-write="False">Automatik</span>
+			</td>
+		</tr>
+		<? } else { ?>
+		<tr>
+			<td>
+				<span class="ps-button" data-point="<?=std::posts('elem')?>_Hand" data-write="False">Automatik</span>
+			</td>
+			<td>
+				<span class="ps-button" data-point="<?=std::posts('elem')?>_Hand" data-write="True">Hand</span>
+			</td>
+		</tr>
+		<? } ?>
+		<tr>
+			<td colspan="2">
+				<hr />
+			</td>
+		</tr>
+		<? if(!$bacnet) { ?>
+		<tr>
+			<td>
+				<span>Handvorwahl:</span>
+			</td>
+			<td>
+				<span class="ps-input pa-EinAus" data-value="<?=std::posts('elem')?>_Hand_ein">undefined</span>
+			</td>
+		</tr>
+		<? } ?>
+		<tr>
+			<td>
+				<span class="ps-button" data-point="<?=std::posts('elem')?>_<?=($bacnet ? 'BM' : 'Hand_ein')?>" data-write="True">Ein</span>
+			</td>
+			<td>
+				<span class="ps-button" data-point="<?=std::posts('elem')?>_<?=($bacnet ? 'BM' : 'Hand_ein')?>" data-write="False">Aus</span>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<hr />
+			</td>
+		</tr>
+	</table>
+	<h1>FU <?=std::posts('headline')?></h1>
+	<table summary="">
+		<tr>
+			<td colspan="2">
+				<hr />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<span>R&uuml;ckmeldung:</span>
+			</td>
+			<td>
+				<span class="ps-input" data-value="<?=std::posts('elem')?>_IW">undefined</span>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<hr />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<span>Hand / Auto:</span>
+			</td>
+			<td>
+				<span class="ps-input pa-<?=($bacnet ? 'bac-' : '')?>HandAuto" data-value="<?=std::posts('elem')?>_SW_Hand">undefined</span>
+			</td>
+		</tr>
+		<? if($bacnet) { ?>
+			<tr>
+				<td colspan="2">
+					<span class="ps-button" data-point="<?=std::posts('elem')?>_SW_Auto" data-write="False">Automatik</span>
+				</td>
+			</tr>
+		<? } else { ?>
+		<tr>
+			<td>
+				<span class="ps-button" data-point="<?=std::posts('elem')?>_SW_Hand" data-write="False">Automatik</span>
+			</td>
+			<td>
+				<span class="ps-button" data-point="<?=std::posts('elem')?>_SW_Hand" data-write="True">Hand</span>
+			</td>
+		</tr>
+		<? } ?>
+		<tr>
+			<td colspan="2">
+				<hr />
+			</td>
+		</tr>
+		<? if(!$bacnet) { ?>
+		<tr>
+			<td>
+				<span>Handvorwahl:</span>
+			</td>
+			<td>
+				<span class="ps-input ps-param" data-value="<?=std::posts('elem')?>_SW">undefined</span>
+			</td>
+		</tr>
+		<? } ?>
+		<tr>
+			<td colspan="2">
+				<div class="pa-slider" data-value="<?=std::posts('elem')?>_<?=($bacnet ? 'IW' : 'SW')?>"></div>
+			</td>
+		</tr>
+	</table>
+</div>

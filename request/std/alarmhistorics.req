@@ -1,0 +1,1040 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: alarmhistorics.req 550 2023-12-25 03:02:54Z              $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\std;
+use system\Helper\wpDatabase;
+use system\Helper\wpConvert;
+use system\std;
+class alarmhistorics {
+	const c_getactivitytable = 'getactivitytable';
+	const c_optiongroup = 'optiongroup';
+	const c_optiongroup1 = 'optiongroup1';
+	const c_optiongroup2 = 'optiongroup2';
+	const c_optiongroup3 = 'optiongroup3';
+	const c_optiongroup4 = 'optiongroup4';
+	const c_optiongroup5 = 'optiongroup5';
+	const c_optiontype = 'optiontype';
+	const c_optionfrom = 'optionfrom';
+	const c_optiondp = 'optiondp';
+}
+
+switch(std::gets('param1')) {
+//###################################################################################
+	case alarmhistorics::c_getactivitytable:
+		$where = '';
+		if(std::posts('from') != '' && std::posts('to') == '') {
+			$where = "WHERE [come] > '".std::posts('from')."T00:00:00'";
+		}
+		if(std::posts('from') == '' && std::posts('to') != '') {
+			$where = "WHERE [come] < '".std::posts('to')."T23:59:59'";
+		}
+		if(std::posts('from') != '' && std::posts('to') != '') {
+			$where = "WHERE [come] > '".std::posts('from')."T00:00:00' AND [come] < '".std::posts('to')."T23:59:59'";
+		}
+		getTable($where, $_POST['flgroup'], $_POST['flgroup1'], $_POST['flgroup2'], $_POST['flgroup3'], $_POST['flgroup4'], $_POST['flgroup5'], $_POST['fltype'], $_POST['flfrom'], $_POST['fldp']);
+		break;
+//###################################################################################
+	case alarmhistorics::c_optiongroup:
+		$database = new wpDatabase();
+		$where = 'WHERE ';
+		if(std::posts('from') != '' && std::posts('to') == '') {
+			$where .= "[come] > '".std::posts('from')."T00:00:00'";
+		}
+		if(std::posts('from') == '' && std::posts('to') != '') {
+			$where .= "[come] < '".std::posts('to')."T23:59:59'";
+		}
+		if(std::posts('from') != '' && std::posts('to') != '') {
+			$where .= "[come] > '".std::posts('from')."T00:00:00' AND [come] < '".std::posts('to')."T23:59:59'";
+		}
+		if($_POST['flgroup1'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup1'] as $filter) {
+			$where .= " [ag1].[name] = '".$filter."' OR";
+		}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup2'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup2'] as $filter) {
+				$where .= " [ag2].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup3'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup3'] as $filter) {
+				$where .= " [ag3].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup4'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup4'] as $filter) {
+				$where .= " [ag4].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup5'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup5'] as $filter) {
+				$where .= " [ag5].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['fltype'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['fltype'] as $filter) {
+				$where .= " [at].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+
+		if($_POST['fldp'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['fldp'] as $filter) {
+				$where .= " [opc].[opcname] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+
+		if($_POST['flfrom'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flfrom'] as $filter) {
+				$where .= " [ah].[quitfrom] = '".$filter."' OR";
+			}
+			if(in_array('leere', $_POST['flfrom'])) {
+				$where .= " [ah].[quitfrom] IS NULL OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($where == 'WHERE ') $where = '';
+
+		$sql = "SELECT DISTINCT([ag].[name]) AS [group] FROM [alarmhistoric] [ah]
+					INNER JOIN [alarm] [a] ON [ah].[id_alarm] = [a].[id_alarm]
+					INNER JOIN [opcdatapoint] [opc] ON [opc].[id_opcdatapoint] = [a].[id_opcdatapoint]
+					INNER JOIN [alarmtype] [at] ON [a].[id_alarmtype] = [at].[id_alarmtype]
+					INNER JOIN [alarmgroup] [ag] ON [a].[id_alarmgroup] = [ag].[id_alarmgroup]
+					LEFT OUTER JOIN [alarmgroups1] [ag1] ON [a].[id_alarmgroups1] = [ag1].[id_alarmgroups1]
+					LEFT OUTER JOIN [alarmgroups2] [ag2] ON [a].[id_alarmgroups2] = [ag2].[id_alarmgroups2]
+					LEFT OUTER JOIN [alarmgroups3] [ag3] ON [a].[id_alarmgroups3] = [ag3].[id_alarmgroups3]
+					LEFT OUTER JOIN [alarmgroups4] [ag4] ON [a].[id_alarmgroups4] = [ag4].[id_alarmgroups4]
+					LEFT OUTER JOIN [alarmgroups5] [ag5] ON [a].[id_alarmgroups5] = [ag5].[id_alarmgroups5]
+					".$where." ORDER BY [ag].[name]";
+
+		$database->query($sql);
+		while($erg = $database->fetch()) {
+			$checked = '';
+			if($_POST['flgroup'][0] == 'All' || in_array($erg['group'], $_POST['flgroup'])) {
+				$checked = ' checked';
+			}
+			echo '<li class="ps-checkbox'.$checked.'">'.$erg['group'].'</li>';
+		}
+		break;
+//###################################################################################
+	case alarmhistorics::c_optiongroup1:
+		$database = new wpDatabase();
+		$where = 'WHERE ';
+		if(std::posts('from') != '' && std::posts('to') == '') {
+			$where .= "[come] > '".std::posts('from')."T00:00:00'";
+		}
+		if(std::posts('from') == '' && std::posts('to') != '') {
+			$where .= "[come] < '".std::posts('to')."T23:59:59'";
+		}
+		if(std::posts('from') != '' && std::posts('to') != '') {
+			$where .= "[come] > '".std::posts('from')."T00:00:00' AND [come] < '".std::posts('to')."T23:59:59'";
+		}
+		if($_POST['flgroup'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup'] as $filter) {
+				$where .= " [ag].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup2'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup2'] as $filter) {
+				$where .= " [ag2].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup3'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup3'] as $filter) {
+				$where .= " [ag3].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup4'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup4'] as $filter) {
+				$where .= " [ag4].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup5'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup5'] as $filter) {
+				$where .= " [ag5].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['fltype'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['fltype'] as $filter) {
+				$where .= " [at].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+
+		if($_POST['fldp'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['fldp'] as $filter) {
+				$where .= " [opc].[opcname] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+
+		if($_POST['flfrom'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flfrom'] as $filter) {
+				$where .= " [ah].[quitfrom] = '".$filter."' OR";
+			}
+			if(in_array('leere', $_POST['flfrom'])) {
+				$where .= " [ah].[quitfrom] IS NULL OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($where == 'WHERE ') $where = '';
+
+		$sql = "SELECT DISTINCT([ag1].[name]) AS [group1] FROM [alarmhistoric] [ah]
+					INNER JOIN [alarm] [a] ON [ah].[id_alarm] = [a].[id_alarm]
+					INNER JOIN [opcdatapoint] [opc] ON [opc].[id_opcdatapoint] = [a].[id_opcdatapoint]
+					INNER JOIN [alarmtype] [at] ON [a].[id_alarmtype] = [at].[id_alarmtype]
+					INNER JOIN [alarmgroup] [ag] ON [a].[id_alarmgroup] = [ag].[id_alarmgroup]
+					LEFT OUTER JOIN [alarmgroups1] [ag1] ON [a].[id_alarmgroups1] = [ag1].[id_alarmgroups1]
+					LEFT OUTER JOIN [alarmgroups2] [ag2] ON [a].[id_alarmgroups2] = [ag2].[id_alarmgroups2]
+					LEFT OUTER JOIN [alarmgroups3] [ag3] ON [a].[id_alarmgroups3] = [ag3].[id_alarmgroups3]
+					LEFT OUTER JOIN [alarmgroups4] [ag4] ON [a].[id_alarmgroups4] = [ag4].[id_alarmgroups4]
+					LEFT OUTER JOIN [alarmgroups5] [ag5] ON [a].[id_alarmgroups5] = [ag5].[id_alarmgroups5]
+					".$where." ORDER BY [ag1].[name]";
+
+		$database->query($sql);
+		while($erg = $database->fetch()) {
+			$checked = '';
+			if($_POST['flgroup1'][0] == 'All' || in_array($erg['group1'], $_POST['flgroup1'])) {
+				$checked = ' checked';
+			}
+			echo '<li class="ps-checkbox'.$checked.'">'.$erg['group1'].'</li>';
+		}
+		break;
+//###################################################################################
+	case alarmhistorics::c_optiongroup2:
+		$database = new wpDatabase();
+		$where = 'WHERE ';
+		if(std::posts('from') != '' && std::posts('to') == '') {
+			$where .= "[come] > '".std::posts('from')."T00:00:00'";
+		}
+		if(std::posts('from') == '' && std::posts('to') != '') {
+			$where .= "[come] < '".std::posts('to')."T23:59:59'";
+		}
+		if(std::posts('from') != '' && std::posts('to') != '') {
+			$where .= "[come] > '".std::posts('from')."T00:00:00' AND [come] < '".std::posts('to')."T23:59:59'";
+		}
+		if($_POST['flgroup'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup'] as $filter) {
+				$where .= " [ag].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup1'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup1'] as $filter) {
+				$where .= " [ag1].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup3'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup3'] as $filter) {
+				$where .= " [ag3].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup4'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup4'] as $filter) {
+				$where .= " [ag4].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup5'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup5'] as $filter) {
+				$where .= " [ag5].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['fltype'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['fltype'] as $filter) {
+				$where .= " [at].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+
+		if($_POST['fldp'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['fldp'] as $filter) {
+				$where .= " [opc].[opcname] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+
+		if($_POST['flfrom'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flfrom'] as $filter) {
+				$where .= " [ah].[quitfrom] = '".$filter."' OR";
+			}
+			if(in_array('leere', $_POST['flfrom'])) {
+				$where .= " [ah].[quitfrom] IS NULL OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($where == 'WHERE ') $where = '';
+
+		$sql = "SELECT DISTINCT([ag2].[name]) AS [group2] FROM [alarmhistoric] [ah]
+					INNER JOIN [alarm] [a] ON [ah].[id_alarm] = [a].[id_alarm]
+					INNER JOIN [opcdatapoint] [opc] ON [opc].[id_opcdatapoint] = [a].[id_opcdatapoint]
+					INNER JOIN [alarmtype] [at] ON [a].[id_alarmtype] = [at].[id_alarmtype]
+					INNER JOIN [alarmgroup] [ag] ON [a].[id_alarmgroup] = [ag].[id_alarmgroup]
+					LEFT OUTER JOIN [alarmgroups1] [ag1] ON [a].[id_alarmgroups1] = [ag1].[id_alarmgroups1]
+					LEFT OUTER JOIN [alarmgroups2] [ag2] ON [a].[id_alarmgroups2] = [ag2].[id_alarmgroups2]
+					LEFT OUTER JOIN [alarmgroups3] [ag3] ON [a].[id_alarmgroups3] = [ag3].[id_alarmgroups3]
+					LEFT OUTER JOIN [alarmgroups4] [ag4] ON [a].[id_alarmgroups4] = [ag4].[id_alarmgroups4]
+					LEFT OUTER JOIN [alarmgroups5] [ag5] ON [a].[id_alarmgroups5] = [ag5].[id_alarmgroups5]
+					".$where." ORDER BY [ag2].[name]";
+
+		$database->query($sql);
+		while($erg = $database->fetch()) {
+			$checked = '';
+			if($_POST['flgroup2'][0] == 'All' || in_array($erg['group2'], $_POST['flgroup2'])) {
+				$checked = ' checked';
+			}
+			echo '<li class="ps-checkbox'.$checked.'">'.$erg['group2'].'</li>';
+		}
+		break;
+//###################################################################################
+	case alarmhistorics::c_optiongroup3:
+		$database = new wpDatabase();
+		$where = 'WHERE ';
+		if(std::posts('from') != '' && std::posts('to') == '') {
+			$where .= "[come] > '".std::posts('from')."T00:00:00'";
+		}
+		if(std::posts('from') == '' && std::posts('to') != '') {
+			$where .= "[come] < '".std::posts('to')."T23:59:59'";
+		}
+		if(std::posts('from') != '' && std::posts('to') != '') {
+			$where .= "[come] > '".std::posts('from')."T00:00:00' AND [come] < '".std::posts('to')."T23:59:59'";
+		}
+		if($_POST['flgroup'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup'] as $filter) {
+				$where .= " [ag].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup1'][0] != 'All') {
+		$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+		foreach($_POST['flgroup1'] as $filter) {
+		$where .= " [ag1].[name] = '".$filter."' OR";
+		}
+		$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup2'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup2'] as $filter) {
+				$where .= " [ag2].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup4'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup4'] as $filter) {
+				$where .= " [ag4].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup5'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup5'] as $filter) {
+				$where .= " [ag5].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['fltype'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['fltype'] as $filter) {
+				$where .= " [at].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+
+		if($_POST['fldp'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['fldp'] as $filter) {
+				$where .= " [opc].[opcname] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+
+		if($_POST['flfrom'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flfrom'] as $filter) {
+				$where .= " [ah].[quitfrom] = '".$filter."' OR";
+			}
+			if(in_array('leere', $_POST['flfrom'])) {
+				$where .= " [ah].[quitfrom] IS NULL OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($where == 'WHERE ') $where = '';
+
+		$sql = "SELECT DISTINCT([ag3].[name]) AS [group3] FROM [alarmhistoric] [ah]
+					INNER JOIN [alarm] [a] ON [ah].[id_alarm] = [a].[id_alarm]
+					INNER JOIN [opcdatapoint] [opc] ON [opc].[id_opcdatapoint] = [a].[id_opcdatapoint]
+					INNER JOIN [alarmtype] [at] ON [a].[id_alarmtype] = [at].[id_alarmtype]
+					INNER JOIN [alarmgroup] [ag] ON [a].[id_alarmgroup] = [ag].[id_alarmgroup]
+					LEFT OUTER JOIN [alarmgroups1] [ag1] ON [a].[id_alarmgroups1] = [ag1].[id_alarmgroups1]
+					LEFT OUTER JOIN [alarmgroups2] [ag2] ON [a].[id_alarmgroups2] = [ag2].[id_alarmgroups2]
+					LEFT OUTER JOIN [alarmgroups3] [ag3] ON [a].[id_alarmgroups3] = [ag3].[id_alarmgroups3]
+					LEFT OUTER JOIN [alarmgroups4] [ag4] ON [a].[id_alarmgroups4] = [ag4].[id_alarmgroups4]
+					LEFT OUTER JOIN [alarmgroups5] [ag5] ON [a].[id_alarmgroups5] = [ag5].[id_alarmgroups5]
+					".$where." ORDER BY [ag3].[name]";
+
+		$database->query($sql);
+		while($erg = $database->fetch()) {
+			$checked = '';
+			if($_POST['flgroup3'][0] == 'All' || in_array($erg['group3'], $_POST['flgroup3'])) {
+				$checked = ' checked';
+			}
+			echo '<li class="ps-checkbox'.$checked.'">'.$erg['group3'].'</li>';
+		}
+		break;
+//###################################################################################
+	case alarmhistorics::c_optiongroup4:
+		$database = new wpDatabase();
+		$where = 'WHERE ';
+		if(std::posts('from') != '' && std::posts('to') == '') {
+			$where .= "[come] > '".std::posts('from')."T00:00:00'";
+		}
+		if(std::posts('from') == '' && std::posts('to') != '') {
+			$where .= "[come] < '".std::posts('to')."T23:59:59'";
+		}
+		if(std::posts('from') != '' && std::posts('to') != '') {
+			$where .= "[come] > '".std::posts('from')."T00:00:00' AND [come] < '".std::posts('to')."T23:59:59'";
+		}
+		if($_POST['flgroup'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup'] as $filter) {
+				$where .= " [ag].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup1'][0] != 'All') {
+		$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+		foreach($_POST['flgroup1'] as $filter) {
+		$where .= " [ag1].[name] = '".$filter."' OR";
+		}
+		$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup2'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup2'] as $filter) {
+				$where .= " [ag2].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup3'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup3'] as $filter) {
+				$where .= " [ag3].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup5'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup5'] as $filter) {
+				$where .= " [ag5].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['fltype'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['fltype'] as $filter) {
+				$where .= " [at].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+
+		if($_POST['fldp'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['fldp'] as $filter) {
+				$where .= " [opc].[opcname] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+
+		if($_POST['flfrom'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flfrom'] as $filter) {
+				$where .= " [ah].[quitfrom] = '".$filter."' OR";
+			}
+			if(in_array('leere', $_POST['flfrom'])) {
+				$where .= " [ah].[quitfrom] IS NULL OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($where == 'WHERE ') $where = '';
+
+		$sql = "SELECT DISTINCT([ag4].[name]) AS [group4] FROM [alarmhistoric] [ah]
+					INNER JOIN [alarm] [a] ON [ah].[id_alarm] = [a].[id_alarm]
+					INNER JOIN [opcdatapoint] [opc] ON [opc].[id_opcdatapoint] = [a].[id_opcdatapoint]
+					INNER JOIN [alarmtype] [at] ON [a].[id_alarmtype] = [at].[id_alarmtype]
+					INNER JOIN [alarmgroup] [ag] ON [a].[id_alarmgroup] = [ag].[id_alarmgroup]
+					LEFT OUTER JOIN [alarmgroups1] [ag1] ON [a].[id_alarmgroups1] = [ag1].[id_alarmgroups1]
+					LEFT OUTER JOIN [alarmgroups2] [ag2] ON [a].[id_alarmgroups2] = [ag2].[id_alarmgroups2]
+					LEFT OUTER JOIN [alarmgroups3] [ag3] ON [a].[id_alarmgroups3] = [ag3].[id_alarmgroups3]
+					LEFT OUTER JOIN [alarmgroups4] [ag4] ON [a].[id_alarmgroups4] = [ag4].[id_alarmgroups4]
+					LEFT OUTER JOIN [alarmgroups5] [ag5] ON [a].[id_alarmgroups5] = [ag5].[id_alarmgroups5]
+					".$where." ORDER BY [ag4].[name]";
+
+		$database->query($sql);
+		while($erg = $database->fetch()) {
+			$checked = '';
+			if($_POST['flgroup4'][0] == 'All' || in_array($erg['group4'], $_POST['flgroup4'])) {
+				$checked = ' checked';
+			}
+			echo '<li class="ps-checkbox'.$checked.'">'.$erg['group4'].'</li>';
+		}
+		break;
+//###################################################################################
+	case alarmhistorics::c_optiongroup5:
+		$database = new wpDatabase();
+		$where = 'WHERE ';
+		if(std::posts('from') != '' && std::posts('to') == '') {
+			$where .= "[come] > '".std::posts('from')."T00:00:00'";
+		}
+		if(std::posts('from') == '' && std::posts('to') != '') {
+			$where .= "[come] < '".std::posts('to')."T23:59:59'";
+		}
+		if(std::posts('from') != '' && std::posts('to') != '') {
+			$where .= "[come] > '".std::posts('from')."T00:00:00' AND [come] < '".std::posts('to')."T23:59:59'";
+		}
+		if($_POST['flgroup'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup'] as $filter) {
+				$where .= " [ag].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup1'][0] != 'All') {
+		$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+		foreach($_POST['flgroup1'] as $filter) {
+		$where .= " [ag1].[name] = '".$filter."' OR";
+		}
+		$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup2'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup2'] as $filter) {
+				$where .= " [ag2].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup3'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup3'] as $filter) {
+				$where .= " [ag3].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup4'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup4'] as $filter) {
+				$where .= " [ag4].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['fltype'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['fltype'] as $filter) {
+				$where .= " [at].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+
+		if($_POST['fldp'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['fldp'] as $filter) {
+				$where .= " [opc].[opcname] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+
+		if($_POST['flfrom'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flfrom'] as $filter) {
+				$where .= " [ah].[quitfrom] = '".$filter."' OR";
+			}
+			if(in_array('leere', $_POST['flfrom'])) {
+				$where .= " [ah].[quitfrom] IS NULL OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($where == 'WHERE ') $where = '';
+
+		$sql = "SELECT DISTINCT([ag5].[name]) AS [group5] FROM [alarmhistoric] [ah]
+					INNER JOIN [alarm] [a] ON [ah].[id_alarm] = [a].[id_alarm]
+					INNER JOIN [opcdatapoint] [opc] ON [opc].[id_opcdatapoint] = [a].[id_opcdatapoint]
+					INNER JOIN [alarmtype] [at] ON [a].[id_alarmtype] = [at].[id_alarmtype]
+					INNER JOIN [alarmgroup] [ag] ON [a].[id_alarmgroup] = [ag].[id_alarmgroup]
+					LEFT OUTER JOIN [alarmgroups1] [ag1] ON [a].[id_alarmgroups1] = [ag1].[id_alarmgroups1]
+					LEFT OUTER JOIN [alarmgroups2] [ag2] ON [a].[id_alarmgroups2] = [ag2].[id_alarmgroups2]
+					LEFT OUTER JOIN [alarmgroups3] [ag3] ON [a].[id_alarmgroups3] = [ag3].[id_alarmgroups3]
+					LEFT OUTER JOIN [alarmgroups4] [ag4] ON [a].[id_alarmgroups4] = [ag4].[id_alarmgroups4]
+					LEFT OUTER JOIN [alarmgroups5] [ag5] ON [a].[id_alarmgroups5] = [ag5].[id_alarmgroups5]
+					".$where." ORDER BY [ag5].[name]";
+
+		$database->query($sql);
+		while($erg = $database->fetch()) {
+			$checked = '';
+			if($_POST['flgroup5'][0] == 'All' || in_array($erg['group5'], $_POST['flgroup5'])) {
+				$checked = ' checked';
+			}
+			echo '<li class="ps-checkbox'.$checked.'">'.$erg['group5'].'</li>';
+		}
+		break;
+//###################################################################################
+	case alarmhistorics::c_optiontype:
+		$database = new wpDatabase();
+		$where = 'WHERE ';
+		if(std::posts('from') != '' && std::posts('to') == '') {
+			$where .= "[come] > '".std::posts('from')."T00:00:00'";
+		}
+		if(std::posts('from') == '' && std::posts('to') != '') {
+			$where .= "[come] < '".std::posts('to')."T23:59:59'";
+		}
+		if(std::posts('from') != '' && std::posts('to') != '') {
+			$where .= "[come] > '".std::posts('from')."T00:00:00' AND [come] < '".std::posts('to')."T23:59:59'";
+		}
+		if($_POST['flgroup'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup'] as $filter) {
+				$where .= " [ag].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup1'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup1'] as $filter) {
+				$where .= " [ag1].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup2'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup2'] as $filter) {
+				$where .= " [ag2].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup3'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup3'] as $filter) {
+				$where .= " [ag3].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup4'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup4'] as $filter) {
+				$where .= " [ag4].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup5'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup5'] as $filter) {
+				$where .= " [ag5].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+
+		if($_POST['fldp'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['fldp'] as $filter) {
+				$where .= " [opc].[opcname] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+
+		if($_POST['flfrom'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flfrom'] as $filter) {
+				$where .= " [ah].[quitfrom] = '".$filter."' OR";
+			}
+			if(in_array('leere', $_POST['flfrom'])) {
+				$where .= " [ah].[quitfrom] IS NULL OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($where == 'WHERE ') $where = '';
+
+		$sql = "SELECT DISTINCT([at].[name]) AS [type] FROM [alarmhistoric] [ah]
+					INNER JOIN [alarm] [a] ON [ah].[id_alarm] = [a].[id_alarm]
+					INNER JOIN [opcdatapoint] [opc] ON [opc].[id_opcdatapoint] = [a].[id_opcdatapoint]
+					INNER JOIN [alarmtype] [at] ON [a].[id_alarmtype] = [at].[id_alarmtype]
+					INNER JOIN [alarmgroup] [ag] ON [a].[id_alarmgroup] = [ag].[id_alarmgroup]
+					LEFT OUTER JOIN [alarmgroups1] [ag1] ON [a].[id_alarmgroups1] = [ag1].[id_alarmgroups1]
+					LEFT OUTER JOIN [alarmgroups2] [ag2] ON [a].[id_alarmgroups2] = [ag2].[id_alarmgroups2]
+					LEFT OUTER JOIN [alarmgroups3] [ag3] ON [a].[id_alarmgroups3] = [ag3].[id_alarmgroups3]
+					LEFT OUTER JOIN [alarmgroups4] [ag4] ON [a].[id_alarmgroups4] = [ag4].[id_alarmgroups4]
+					LEFT OUTER JOIN [alarmgroups5] [ag5] ON [a].[id_alarmgroups5] = [ag5].[id_alarmgroups5]
+					".$where." ORDER BY [at].[name]";
+
+		$database->query($sql);
+
+		while($erg = $database->fetch()) {
+			$checked = '';
+			if($_POST['fltype'][0] == 'All' || in_array($erg['type'], $_POST['fltype'])) {
+				$checked = ' checked';
+			}
+			echo '<li class="ps-checkbox'.$checked.'">'.$erg['type'].'</li>';
+		}
+		break;
+//###################################################################################
+	case alarmhistorics::c_optiondp:
+		$database = new wpDatabase();
+		$where = 'WHERE ';
+		if(std::posts('from') != '' && std::posts('to') == '') {
+			$where .= "[come] > '".std::posts('from')."T00:00:00'";
+		}
+		if(std::posts('from') == '' && std::posts('to') != '') {
+			$where .= "[come] < '".std::posts('to')."T23:59:59'";
+		}
+		if(std::posts('from') != '' && std::posts('to') != '') {
+			$where .= "[come] > '".std::posts('from')."T00:00:00' AND [come] < '".std::posts('to')."T23:59:59'";
+		}
+		if($_POST['flgroup'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup'] as $filter) {
+				$where .= " [ag].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup1'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup1'] as $filter) {
+				$where .= " [ag1].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup2'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup2'] as $filter) {
+				$where .= " [ag2].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup3'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup3'] as $filter) {
+				$where .= " [ag3].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup4'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup4'] as $filter) {
+				$where .= " [ag4].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup5'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup5'] as $filter) {
+				$where .= " [ag5].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+
+		if($_POST['fltype'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['fltype'] as $filter) {
+				$where .= ' [at].[name] = "'.$filter.'" OR';
+			}
+			$where = substr($where, 0, -3).')';
+		}
+
+		if($_POST['flfrom'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flfrom'] as $filter) {
+				$where .= " [ah].[quitfrom] = '".$filter."' OR";
+			}
+			if(in_array('leere', $_POST['flfrom'])) {
+				$where .= " [ah].[quitfrom] IS NULL OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($where == 'WHERE ') $where = '';
+
+		$sql = "SELECT DISTINCT([opc].[opcname]) AS [opcname] FROM [alarmhistoric] [ah]
+				INNER JOIN [alarm] [a] ON [ah].[id_alarm] = [a].[id_alarm]
+				INNER JOIN [opcdatapoint] [opc] ON [a].[id_opcdatapoint] = [opc].[id_opcdatapoint]
+				INNER JOIN [alarmtype] [at] ON [a].[id_alarmtype] = [at].[id_alarmtype]
+				INNER JOIN [alarmgroup] [ag] ON [a].[id_alarmgroup] = [ag].[id_alarmgroup]
+				LEFT OUTER JOIN [alarmgroups1] [ag1] ON [a].[id_alarmgroups1] = [ag1].[id_alarmgroups1]
+				LEFT OUTER JOIN [alarmgroups2] [ag2] ON [a].[id_alarmgroups2] = [ag2].[id_alarmgroups2]
+				LEFT OUTER JOIN [alarmgroups3] [ag3] ON [a].[id_alarmgroups3] = [ag3].[id_alarmgroups3]
+				LEFT OUTER JOIN [alarmgroups4] [ag4] ON [a].[id_alarmgroups4] = [ag4].[id_alarmgroups4]
+				LEFT OUTER JOIN [alarmgroups5] [ag5] ON [a].[id_alarmgroups5] = [ag5].[id_alarmgroups5]
+				".$where." ORDER BY [opc].[opcname]";
+
+		$database->query($sql);;
+
+		while($erg = $database->fetch()) {
+			$checked = '';
+			if($_POST['fldp'][0] == 'All' || in_array($erg['opcname'], $_POST['fldp'])) {
+				$checked = ' checked';
+			}
+			echo '<li class="ps-checkbox'.$checked.'">'.$erg['opcname'].'</li>';
+		}
+		break;
+//###################################################################################
+	case alarmhistorics::c_optionfrom:
+		$database = new wpDatabase();
+		$where = 'WHERE ';
+		if(std::posts('from') != '' && std::posts('to') == '') {
+			$where .= "[come] > '".std::posts('from')."T00:00:00'";
+		}
+		if(std::posts('from') == '' && std::posts('to') != '') {
+			$where .= "[come] < '".std::posts('to')."T23:59:59'";
+		}
+		if(std::posts('from') != '' && std::posts('to') != '') {
+			$where .= "[come] > '".std::posts('from')."T00:00:00' AND [come] < '".std::posts('to')."T23:59:59'";
+		}
+		if($_POST['flgroup'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup'] as $filter) {
+				$where .= ' [ag].[name] = "'.$filter.'" OR';
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup1'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup1'] as $filter) {
+				$where .= " [ag1].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup2'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup2'] as $filter) {
+				$where .= " [ag2].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup3'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup3'] as $filter) {
+				$where .= " [ag3].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup4'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup4'] as $filter) {
+				$where .= " [ag4].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($_POST['flgroup5'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flgroup5'] as $filter) {
+				$where .= " [ag5].[name] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+
+		if($_POST['fldp'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['fldp'] as $filter) {
+				$where .= " [opc].[opcname] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+
+		if($_POST['fltype'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['fltype'] as $filter) {
+				$where .= ' [at].[name] = "'.$filter.'" OR';
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($where == 'WHERE ') $where = '';
+
+		$sql = "SELECT DISTINCT([ah].[quitfrom]) AS [quitfrom] FROM [alarmhistoric] [ah]
+					INNER JOIN [alarm] [a] ON [ah].[id_alarm] = [a].[id_alarm]
+					INNER JOIN [opcdatapoint] [opc] ON [opc].[id_opcdatapoint] = [a].[id_opcdatapoint]
+					INNER JOIN [alarmtype] [at] ON [a].[id_alarmtype] = [at].[id_alarmtype]
+					INNER JOIN [alarmgroup] [ag] ON [a].[id_alarmgroup] = [ag].[id_alarmgroup]
+					LEFT OUTER JOIN [alarmgroups1] [ag1] ON [a].[id_alarmgroups1] = [ag1].[id_alarmgroups1]
+					LEFT OUTER JOIN [alarmgroups2] [ag2] ON [a].[id_alarmgroups2] = [ag2].[id_alarmgroups2]
+					LEFT OUTER JOIN [alarmgroups3] [ag3] ON [a].[id_alarmgroups3] = [ag3].[id_alarmgroups3]
+					LEFT OUTER JOIN [alarmgroups4] [ag4] ON [a].[id_alarmgroups4] = [ag4].[id_alarmgroups4]
+					LEFT OUTER JOIN [alarmgroups5] [ag5] ON [a].[id_alarmgroups5] = [ag5].[id_alarmgroups5]
+					".$where." ORDER BY [ah].[quitfrom] DESC";
+
+		$database->query($sql);
+
+		$checked = '';
+		if($_POST['flfrom'][0] == 'All' || in_array('leere', $_POST['flfrom'])) {
+			$checked = ' checked';
+		}
+		echo '<li class="ps-checkbox'.$checked.'">leere</li>';
+		while($erg = $database->fetch()) {
+			$checked = '';
+			if($_POST['flfrom'][0] == 'All' || in_array($erg['quitfrom'], $_POST['flfrom'])) {
+				$checked = ' checked';
+			}
+			echo '<li class="ps-checkbox'.$checked.'">'.$erg['quitfrom'].'</li>';
+		}
+		break;
+//###################################################################################
+	default:
+		\system\html::default();
+		break;
+}
+
+function getTable($where, $arrayGroup, $arrayGroup1, $arrayGroup2, $arrayGroup3, $arrayGroup4, $arrayGroup5, $arrayType, $arrayFrom, $arrayDP) {
+	global $system;
+	$database = new wpDatabase();
+?>
+<table id="historictable" class="stripe hover">
+	<thead>
+		<tr>
+			<th>gekommen</th>
+			<th>gegangen</th>
+			<th>quittiert</th>
+			<th<?=($arrayFrom[0] == 'All' ? '' : ' class="neg"')?>>quittiert von</th>
+			<?
+			if($system->useAlarmGroup5()){
+				echo "<th".($arrayGroup5[0] == 'All' ? '' : ' class="neg"').">".$system->nameAlarmGroup5()."</th>";
+			}
+			if($system->useAlarmGroup4()){
+				echo "<th".($arrayGroup4[0] == 'All' ? '' : ' class="neg"').">".$system->nameAlarmGroup4()."</th>";
+			}
+			if($system->useAlarmGroup3()){
+				echo "<th".($arrayGroup3[0] == 'All' ? '' : ' class="neg"').">".$system->nameAlarmGroup3()."</th>";
+			}
+			if($system->useAlarmGroup2()){
+				echo "<th".($arrayGroup2[0] == 'All' ? '' : ' class="neg"').">".$system->nameAlarmGroup2()."</th>";
+			}
+			if($system->useAlarmGroup1()){
+				echo "<th".($arrayGroup1[0] == 'All' ? '' : ' class="neg"').">".$system->nameAlarmGroup1()."</th>";
+			}
+			?>
+			<th<?=($arrayGroup[0] == 'All' ? '' : ' class="neg"')?>>Gruppe</th>
+			<th>Beschreibung</th>
+			<th<?=($arrayType[0] == 'All' ? '' : ' class="neg"')?>>Typ</th>
+			<th>Quittiertext</th>
+			<th<?=($arrayDP[0] == 'All' ? '' : ' class="neg"')?>>Datenpunkt</th>
+		</tr>
+	</thead>
+	<tbody>
+<?
+	$addwhere = $where == '' ? 'WHERE ' : ' AND ';
+	if($arrayFrom[0] != 'All' && !in_array('leere', $arrayFrom)) {
+		$where .= $addwhere.'[ah].[quitfrom] IS NOT NULL';
+	}
+	$scriptstart = microtime(true);
+
+	$sql = 'SELECT [d].[opcname], [a].[name], ISNULL([ah].[text], [a].[text]) AS [text], [at].[name] AS [type], [ag5].[name] AS [group5], [ag4].[name] AS [group4], [ag3].[name] AS [group3], [ag2].[name] AS [group2], [ag1].[name] AS [group1], [ag].[name] AS [group], [ah].[come], [ah].[gone], [ah].[quit], [ah].[quitfrom], [ah].[quittext]
+			FROM [alarmhistoric] [ah]
+			INNER JOIN [alarm] [a] ON [ah].[id_alarm] = [a].[id_alarm]
+			INNER JOIN [alarmtype] [at] ON [a].[id_alarmtype] = [at].[id_alarmtype]
+			INNER JOIN [alarmgroup] [ag] ON [a].[id_alarmgroup] = [ag].[id_alarmgroup]
+			LEFT OUTER JOIN [alarmgroups5] [ag5] ON [a].[id_alarmgroups5] = [ag5].[id_alarmgroups5]
+			LEFT OUTER JOIN [alarmgroups4] [ag4] ON [a].[id_alarmgroups4] = [ag4].[id_alarmgroups4]
+			LEFT OUTER JOIN [alarmgroups3] [ag3] ON [a].[id_alarmgroups3] = [ag3].[id_alarmgroups3]
+			LEFT OUTER JOIN [alarmgroups2] [ag2] ON [a].[id_alarmgroups2] = [ag2].[id_alarmgroups2]
+			LEFT OUTER JOIN [alarmgroups1] [ag1] ON [a].[id_alarmgroups1] = [ag1].[id_alarmgroups1]
+			INNER JOIN [opcdatapoint] [d] ON [a].[id_opcdatapoint] = [d].[id_opcdatapoint]
+			'.$where.' ORDER BY [ah].[come] DESC';
+
+	$database->query($sql);
+	$count = $database->hasRows();
+	while($erg = $database->fetch()) {
+		if(
+				($arrayGroup[0] == 'All' || in_array($erg['group'], $arrayGroup)) &&
+				($arrayGroup1[0] == 'All' || in_array($erg['group1'], $arrayGroup1)) &&
+				($arrayGroup2[0] == 'All' || in_array($erg['group2'], $arrayGroup2)) &&
+				($arrayGroup3[0] == 'All' || in_array($erg['group3'], $arrayGroup3)) &&
+				($arrayGroup4[0] == 'All' || in_array($erg['group4'], $arrayGroup4)) &&
+				($arrayGroup5[0] == 'All' || in_array($erg['group5'], $arrayGroup5)) &&
+				($arrayType[0] == 'All' || in_array($erg['type'], $arrayType)) &&
+				($arrayDP[0] == 'All' || in_array($erg['opcname'], $arrayDP)) &&
+				($arrayFrom[0] == 'All' || in_array($erg['quitfrom'], $arrayFrom))
+			) {
+			echo '<tr>';
+			echo '<td>'.wpConvert::getdeDateTimeFromDB($erg['come']).'</td>';
+			echo '<td>'.wpConvert::getdeDateTimeFromDB($erg['gone']).'</td>';
+			echo '<td>'.wpConvert::getdeDateTimeFromDB($erg['quit']).'</td>';
+			echo '<td>'.$erg['quitfrom'].'</td>';
+
+			if($system->useAlarmGroup5()){
+				echo '<td>'.$erg['group5'].'</td>';
+			}
+			if($system->useAlarmGroup4()){
+				echo '<td>'.$erg['group4'].'</td>';
+			}
+			if($system->useAlarmGroup3()){
+				echo '<td>'.$erg['group3'].'</td>';
+			}
+			if($system->useAlarmGroup2()){
+				echo '<td>'.$erg['group2'].'</td>';
+			}
+			if($system->useAlarmGroup1()){
+				echo '<td>'.$erg['group1'].'</td>';
+			}
+			echo '<td>'.$erg['group'].'</td>';
+			echo '<td>'.$erg['text'].'</td>';
+			echo '<td>'.$erg['type'].'</td>';
+			echo '<td>'.$erg['quittext'].'</td>';
+			echo '<td>'.$erg['opcname'].'</td>';
+			echo '</tr>';
+		}
+	}
+?>
+	</tbody>
+</table>
+<?
+	//if(intval($count) >= 1000) echo '<span>Ihre Abfrage erzeugte 1000 Datens&auml;tze. Es sind vielleicht weitere Daten vorhanden. Bitte spezifizieren Sie Ihre Suchanfrage.</span>'."\n";
+	echo '<!-- Eintraege: '.$count." -->\n";
+	echo '<!-- Dauer:'.(microtime(true) - $scriptstart)." -->\n";
+}
+?>

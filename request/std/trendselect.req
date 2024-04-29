@@ -1,0 +1,338 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 10.12.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 591                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: trendselect.req 591 2024-04-24 20:57:52Z                 $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\std;
+use system\std;
+use system\Helper\wpDatabase;
+use system\Helper\security;
+use system\Helper\wpDateTime;
+class trendselect {
+	const c_gettrendsingroup = 'gettrendsingroup';
+	const c_getusertrends = 'getusertrends';
+	const c_deletetrendvalue = 'deletetrendvalue';
+	const c_savetrenduser = 'savetrenduser';
+	const c_savetrendadmin = 'savetrendadmin';
+	const c_deletetrenduser = 'deletetrenduser';
+	const c_deletetrendadmin = 'deletetrendadmin';
+	const c_renametrenduser = 'renametrenduser';
+	const c_renametrendadmin = 'renametrendadmin';
+}
+
+switch(std::gets('param1')) {
+	//###################################################################################
+	case trendselect::c_gettrendsingroup:
+		if(std::posts('id') == '') {
+			echo '<li><span class="neg">Die Trendgruppe wurde nicht gefunden.</span></li>';
+		} else {
+			$database = new wpDatabase();
+			if(std::posts('id') == 'NULL') {
+				$database->query('SELECT [t].[id_trend], [t].[name], [dp].[name] AS [dpname]
+					FROM [trend] [t]
+					INNER JOIN [dp] ON [t].[id_dp] = [dp].[id_dp]
+					WHERE [t].[active] = 1 AND [t].[id_trendgroup] IS NULL
+					ORDER BY [t].[name]');
+			} else {
+				$database->query('SELECT [t].[id_trend], [t].[name], [dp].[name] AS [dpname]
+					FROM [trend] [t]
+					INNER JOIN [dp] ON [t].[id_dp] = [dp].[id_dp]
+					WHERE [t].[active] = 1 AND [t].[id_trendgroup] = '.std::posts('id').'
+					ORDER BY [t].[name]');
+			}
+			echo '<ul>';
+			while($erg = $database->fetch()) {
+				echo '<li><div class="trend" data-group="'.std::posts('id').'" data-trend="'.$erg['id_trend'].'" title="'.$erg['dpname'].'"><span class="text">'.$erg['name'].'</span><span class="ps-button">&rarr;</span><div class="clearboth"></div></div></li>'."\n";
+			}
+			echo '</ul>';
+		}
+		break;
+	//###################################################################################
+	case trendselect::c_getusertrends:
+		$database = new wpDatabase();
+		$database->query("SELECT
+			[tc].[id_user], [tc].[name], [tc].[time], [tc].[timefrom], [tc].[timeto], [tc].[timeday], [tc].[choosentime], [tc].[useminmax], [tc].[only1axes], [tc].[id_trendcfg],
+			[t].[id_trend], [tg].[id_trendgroup], [t].[name] AS [trendname]
+			FROM [trendcfg] [tc]
+			LEFT OUTER JOIN [trendcfgtrend] [tct] ON [tct].[id_trendcfg] = [tc].[id_trendcfg]
+			LEFT OUTER JOIN [trend] [t] ON [t].[id_trend] = [tct].[id_trend]
+			LEFT OUTER JOIN [user] [u] ON [u].[id_user] = [tc].[id_user]
+			LEFT OUTER JOIN [trendgroup] [tg] ON [t].[id_trendgroup] = [tg].[id_trendgroup]
+			WHERE [u].[login] = '".$_SESSION[SESSION_ID]['USER']."' OR [tc].[id_user] IS NULL
+			ORDER BY [tc].[name]");
+		$admin = array();
+		$user = array();
+		while($erg = $database->fetch()) {
+			if($erg['id_user'] == '') {
+				$admin[$erg['name']]['idcfg'] = $erg['id_trendcfg'];
+				$admin[$erg['name']]['time'] = $erg['time'];
+				$admin[$erg['name']]['timefrom'] = getDateTimeFromDB($erg['timefrom']);
+				$admin[$erg['name']]['timeto'] = getDateTimeFromDB($erg['timeto']);
+				$admin[$erg['name']]['timeday'] = getDateTimeFromDB($erg['timeday']);
+				$admin[$erg['name']]['choosentime'] = $erg['choosentime'];
+				$admin[$erg['name']]['useminmax'] = $erg['useminmax'];
+				$admin[$erg['name']]['only1axes'] = $erg['only1axes'] == '1' ? 'True' : 'False';
+				$admin[$erg['name']]['trends'][$erg['id_trend']]['name'] = $erg['trendname'];
+				$admin[$erg['name']]['trends'][$erg['id_trend']]['group'] = $erg['id_trendgroup'];
+			} else {
+				$user[$erg['name']]['idcfg'] = $erg['id_trendcfg'];
+				$user[$erg['name']]['time'] = $erg['time'];
+				$user[$erg['name']]['timefrom'] = getDateTimeFromDB($erg['timefrom']);
+				$user[$erg['name']]['timeto'] = getDateTimeFromDB($erg['timeto']);
+				$user[$erg['name']]['timeday'] = getDateTimeFromDB($erg['timeday']);
+				$user[$erg['name']]['choosentime'] = $erg['choosentime'];
+				$user[$erg['name']]['useminmax'] = $erg['useminmax'];
+				$user[$erg['name']]['only1axes'] = $erg['only1axes'] == '1' ? 'True' : 'False';
+				$user[$erg['name']]['trends'][$erg['id_trend']]['name'] = $erg['trendname'];
+				$user[$erg['name']]['trends'][$erg['id_trend']]['group'] = $erg['id_trendgroup'];
+			}
+		}
+?>
+				<h3>Trends für alle Benutzer</h3>
+				<hr />
+				<ul>
+<?
+		foreach($admin as $name => $tinfo) {
+			echo '<li class="GroupHeadLine" data-time="'.$tinfo['time'].'" data-from="'.$tinfo['timefrom'].'" data-to="'.$tinfo['timeto'].'" data-day="'.$tinfo['timeday'].'" data-choosen="'.$tinfo['choosentime'].'" ';
+			echo 'data-useminmax="'.$tinfo['useminmax'].'" data-only1axes="'.$tinfo['only1axes'].'" data-child="'.$tinfo['idcfg'].'">';
+			echo '<span class="ps-tree-parent">'.wpHTML_EMPTY.'</span>';
+			echo '<span class="ps-bold">'.$name.'</span> <span>('.getTimeReadable($tinfo['time']).')</span>';
+			if(security::checkGroup(security::administrator)) {
+				echo '<span class="ps-dpbutton ps-dpdelete ps-hover-noborder ps-displayright trenddeleteadmin" title="entfernen">'.wpHTML_EMPTY.'</span>';
+				echo '<span class="ps-dpbutton ps-dprefresh ps-hover-noborder ps-displayright trendrenameadmin" title="Umbenennen">'.wpHTML_EMPTY.'</span>';
+			}
+			echo '</li>';
+			echo '<li class="ps-tree-child ps-hidden" data-parent="'.$tinfo['idcfg'].'"><ul>';
+			foreach($tinfo['trends'] as $trendid => $trendinfo) {
+				echo '<li data-trendid="'.$trendid.'" data-trendgroup="'.$trendinfo['group'].'">'.$trendinfo['name'].'</li>';
+			}
+			echo '</ul></li>';
+		}
+?>
+				</ul>
+				<h3>Meine Trends</h3>
+				<hr />
+				<ul>
+<?
+		foreach($user as $name => $tinfo) {
+			echo '<li class="GroupHeadLine" data-time="'.$tinfo['time'].'" data-from="'.$tinfo['timefrom'].'" data-to="'.$tinfo['timeto'].'" data-day="'.$tinfo['timeday'].'" data-choosen="'.$tinfo['choosentime'].'" ';
+			echo 'data-useminmax="'.$tinfo['useminmax'].'" data-only1axes="'.$tinfo['only1axes'].'" data-child="'.$tinfo['idcfg'].'">';
+			echo '<span class="ps-tree-parent">'.wpHTML_EMPTY.'</span>';
+			echo '<span class="ps-bold">'.$name.'</span> <span>('.getTimeReadable($tinfo['time']).')</span>';
+			echo '<span class="ps-dpbutton ps-dpdelete ps-hover-noborder ps-displayright trenddeleteuser" title="entfernen">'.wpHTML_EMPTY.'</span>';
+			echo '<span class="ps-dpbutton ps-dprefresh ps-hover-noborder ps-displayright trendrenameuser" title="Umbenennen">'.wpHTML_EMPTY.'</span>';
+			echo '</li>';
+			echo '<li class="ps-tree-child ps-hidden" data-parent="'.$tinfo['idcfg'].'"><ul>';
+			foreach($tinfo['trends'] as $trendid => $trendinfo) {
+				echo '<li data-trendid="'.$trendid.'" data-trendgroup="'.$trendinfo['group'].'">'.$trendinfo['name'].'</li>';
+			}
+			echo '</ul></li>';
+		}
+?>
+				</ul>
+<?
+		break;
+	//###################################################################################
+	case trendselect::c_deletetrendvalue:
+		$date = new \DateTime();
+		$date->setTimestamp(std::posts('time') / 1000);
+		$sql = "SELECT * FROM [trendvalue] WHERE [id_trend] = " . std::posts('id_trend') . " AND [time] = CAST('" . $date->format(wpDateTime::forDB) . "' AS DATETIME) AND [value] = '" . std::posts('value') . "'";
+		echo $sql;
+		break;
+	//###################################################################################
+	case trendselect::c_savetrenduser:
+		if(strlen(wpDatabase::getString(std::posts('name'))) >= 3) {
+			$database = new wpDatabase();
+			$sql = "INSERT INTO [trendcfg]
+				([id_user], [time], [timefrom], [timeto], [timeday], [choosentime], [useminmax], [only1axes], [name])
+				SELECT TOP 1 [id_user], '".std::posts('time')."',
+				".(std::posts('from') == '' ? 'NULL' : "'" . date(wpDateTime::forDB, std::posts('from')) . "'") .",
+				".(std::posts('to') == '' ? 'NULL' : "'" . date(wpDateTime::forDB, std::posts('to')) . "'") .",
+				".(std::posts('day') == '' ? 'NULL' : "'" . date(wpDateTime::forDB, std::posts('day')) . "'") .",
+				'".wpDatabase::getString(std::posts('choosen'))."',
+				'".wpDatabase::getString(std::posts('useminmax'))."',
+				".(std::posts('only1axes') == 'True' ? '1' : '0').",
+				'".wpDatabase::getString(std::posts('name'))."'
+				FROM [user] WHERE [login] = '".$_SESSION[SESSION_ID]['USER']."'";
+			//echo $sql;
+			$database->query($sql);
+			$lastid = $database->lastid();
+			$values = '';
+			foreach(std::posts('ids') as $id) {
+				if(wpDatabase::checkID($id)) {
+					$values .= '('.$lastid.', '.$id.'),';
+				}
+			}
+			if(strlen($values) > 1) {
+				$database->query('INSERT INTO [trendcfgtrend] ([id_trendcfg], [id_trend]) VALUES '.substr($values, 0, -1));
+				echo 'S_OK';
+			} else {
+				echo 'Keine gültigen Einträge gefunden.';
+			}
+		} else {
+			echo 'Sie benötigen mindestens 3 Zeichen';
+		}
+		break;
+	//###################################################################################
+	case trendselect::c_savetrendadmin:
+		if(strlen(wpDatabase::getString(std::posts('name'))) >= 3) {
+			$database = new wpDatabase();
+			$sql = "INSERT INTO [trendcfg]
+				([id_user], [time], [timefrom], [timeto], [timeday], [choosentime], [useminmax], [only1axes], [name])
+				VALUES (NULL, '".std::posts('time')."',
+				".(std::posts('from') == '' ? 'NULL' : "'" . date(wpDateTime::forDB, std::posts('from')) . "'") .",
+				".(std::posts('to') == '' ? 'NULL' : "'" . date(wpDateTime::forDB, std::posts('to')) . "'") .",
+				".(std::posts('day') == '' ? 'NULL' : "'" . date(wpDateTime::forDB, std::posts('day')) . "'") .",
+				'".wpDatabase::getString(std::posts('choosen'))."',
+				'".wpDatabase::getString(std::posts('useminmax'))."',
+				".(std::posts('only1axes') == 'True' ? '1' : '0').",
+				'".wpDatabase::getString(std::posts('name'))."')";
+			$database->query($sql);
+			$lastid = $database->lastid();
+			$values = '';
+			foreach(std::posts('ids') as $id) {
+				if(wpDatabase::checkID($id)) {
+					$values .= '('.$lastid.', '.$id.'),';
+				}
+			}
+			if(strlen($values) > 1) {
+				$database->query('INSERT INTO [trendcfgtrend] ([id_trendcfg], [id_trend]) VALUES '.substr($values, 0, -1));
+				echo 'S_OK';
+			} else {
+				echo 'Keine gültigen Einträge gefunden.';
+			}
+		} else {
+			echo 'Sie benötigen mindestens 3 Zeichen';
+		}
+		break;
+	//###################################################################################
+	case trendselect::c_deletetrenduser:
+		if(wpDatabase::checkID(std::posts('idtrendcfg'))) {
+			$database = new wpDatabase();
+			$database->query("DELETE FROM [trendcfg]
+					WHERE [id_trendcfg] = ".std::posts('idtrendcfg')." AND
+					[id_user] = (SELECT TOP 1 [id_user] FROM [user] WHERE [login] = '".$_SESSION[SESSION_ID]['USER']."')");
+			echo 'S_OK';
+		} else {
+			echo 'ungültig';
+		}
+		break;
+	//###################################################################################
+	case trendselect::c_deletetrendadmin:
+		if(security::checkGroup(security::administrator)) {
+			if(wpDatabase::checkID(std::posts('idtrendcfg'))) {
+				$database = new wpDatabase();
+				$database->query('DELETE FROM [trendcfg] WHERE [id_trendcfg] = '.std::posts('idtrendcfg').' AND
+							id_user IS NULL');
+				echo 'S_OK';
+			} else {
+				echo 'ungültig';
+			}
+		} else {
+			echo 'Sie haben nicht die erforderlichen Rechte';
+		}
+		break;
+	//###################################################################################
+	case trendselect::c_renametrenduser:
+		if(wpDatabase::checkID(std::posts('idtrendcfg'))) {
+			if(strlen(wpDatabase::getString(std::posts('newname'))) >= 3) {
+				$database = new wpDatabase();
+				$database->query("UPDATE [trendcfg] SET [name] = '".wpDatabase::getString(std::posts('newname'))."'
+						WHERE [id_trendcfg] = ".std::posts('idtrendcfg')." AND
+						[id_user] = (SELECT TOP 1 [id_user] FROM [user] WHERE [login] = '".$_SESSION[SESSION_ID]['USER']."')");
+				echo 'S_OK';
+			} else {
+				echo 'Sie benötigen mindestens 3 Zeichen';
+			}
+		} else {
+			echo 'ungültig';
+		}
+		break;
+	//###################################################################################
+	case trendselect::c_renametrendadmin:
+		if(security::checkGroup(security::administrator)) {
+			if(wpDatabase::checkID(std::posts('idtrendcfg'))) {
+				if(strlen(wpDatabase::getString(std::posts('newname'))) >= 3) {
+					$database = new wpDatabase();
+					$database->query("UPDATE [trendcfg] SET [name] = '".wpDatabase::getString(std::posts('newname'))."'
+							WHERE [id_trendcfg] = ".std::posts('idtrendcfg')." AND
+							id_user IS NULL");
+					echo 'S_OK';
+				} else {
+					echo 'Sie benötigen mindestens 3 Zeichen';
+				}
+			} else {
+				echo 'ungültig';
+			}
+		} else {
+			echo 'Sie haben nicht die erforderlichen Rechte';
+		}
+		break;
+//###################################################################################
+	default:
+		\system\html::default();
+		break;
+}
+
+function getTimeReadable($time) {
+	$returns = '';
+	switch($time) {
+		case 'last1Hours':
+			$returns = '1 Stunde';
+			break;
+		case 'last2Hours':
+			$returns = '2 Stunden';
+			break;
+		case 'last3Hours':
+			$returns = '3 Stunden';
+			break;
+		case 'last6Hours':
+			$returns = '6 Stunden';
+			break;
+		case 'last12Hours':
+			$returns = '12 Stunden';
+			break;
+		case 'last24Hours':
+			$returns = '1 Tag';
+			break;
+		case 'last2days':
+			$returns = '2 Tage';
+			break;
+		case 'last3days':
+			$returns = '3 Tage';
+			break;
+		case 'last7days':
+			$returns = '1 Woche';
+			break;
+		case 'last14days':
+			$returns = '2 Wochen';
+			break;
+		case 'last30days':
+			$returns = '30 Tage';
+			break;
+		default:
+			$returns = '1 Tag';
+			break;
+	}
+	return $returns;
+}
+
+	function getDateTimeFromDB($DateTime) {
+		if(is_object($DateTime) && get_class($DateTime) == 'DateTime') {
+			return strtotime($DateTime->format('Y-m-d'));
+		} else {
+			return '';
+		}
+	}
+?>

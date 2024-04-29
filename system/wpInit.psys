@@ -1,0 +1,212 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 582                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: wpInit.psys 582 2024-04-10 06:45:45Z                     $ #
+//#                                                                                 #
+//###################################################################################
+namespace system;
+/**
+ * @addtogroup PSystemFiles
+ * @{
+ */
+/**  */
+define('SESSION_ID', 'WebAutomation');
+ /**
+ * Initialisierung der Seite
+ * @author ScheidC
+ */
+class wpInit {
+	/** Debugen <b>[ true | false ]</b> */
+	public static $PDebug = true;
+	/** Alarmlinks automatisch für registrierte Datenpunkte eintragen <b>[ true | false ]</b> */
+	public static $SetAlarmLink = false;
+	/** Daten für den Datenbankzugriff */
+	public static $db = array (
+		'server' => '.',
+		'database' => 'WebAutomation'
+	);
+	/** Active Directory login - Server leer lassen, um AD Login zu deaktivieren */
+	public static $ad = array (
+		'Server' => '',
+		'SubSubDomain' => '',
+		'SubDomain' => '',
+		'Domain' => 'FreakaZone',
+		'TopDomain' => 'com',
+		'GroupGuest' => 'wpAutomationGuest',
+		'GroupUser' => 'wpAutomationUser',
+		'GroupAdmin' => 'wpAutomationAdmin',
+		'GroupDevelop' => 'wpAutomationEntwickler'
+	);
+	/** IP Adresse des CS - Servers */
+	public static $CS_server = '127.0.0.1';
+	/** Port des CS - Servers */
+	public static $CS_port = 51345;
+	/** lokales Netzwerk verfuegt ueber einen DNS Server und loest die IP Adressen in Hostnamen auf <b>[ true | false ]</b> */
+	public static $useDns = false;
+	/** Macht nur Sinn auf True zu setzen, wenn die Lizenz auf dem Server ist <b>[ true | false ]</b> */
+	public static $useAlarmingmodule = false;
+	/** AutoLogin <b>[ true | false ]</b> */
+	public static $AutoLogin = true;
+	/** Startseite */
+	public static $StartSeite = 'uebersicht';
+	/** Startseite im std Ordner <b>[ true | false ]</b> */
+	public static $StartseiteStd = true;
+	/** steht hinterm Haeusschen, bei leer wird nur das Haeusschen angezeigt */
+	public static $PageName = '';
+	/** Anzahl der sichtbaren Alarme im Footer **/
+	public static $AlarmsToShow = 4;
+	/** Menueeintraege */
+	public static $menuorder = array(
+		'uebersicht'
+	);
+	/** vordefinierte Variable */
+	protected static $menu = array();
+	/** Systemmenueeintraege */
+	public static $systemmenuorder = array(
+		// Popup id
+		'webvisucs' => array(
+			// Popup Name
+			'name'						=> 'WebAutomation',
+			// Headline => src
+			'Aktivitäten'				=> array( 'userhistorics', 'alarmhistorics', 'emailhistorics', 'chromehistorics' ),
+			'Plug Ins'					=> array( 'trendselect', 'calendar', 'scene', 'calendarscene', 'opcrouter' ),
+			'Alarmierung' 				=> array( 'useralarming', 'contacts', 'alarming' ),
+			'Sonstiges'					=> array( 'weather', 'bsp-bedienung' )
+		),
+		// Popup id
+		'projekt' => array(
+			// Popup Name
+			'name'						=> 'Projektierung',
+			// Headline => src
+			'Treiber Konfiguration'		=> array( 'dpactive', 'opcbrowse', 'opcactive', 'mqttactive', 'shellycfg', 'd1miniactive' ),
+			'Server Konfiguration'		=> array( 'alarmcfg', 'trendcfg', 'calendarcfg', 'scenecfg', 'calendarscenecfg' )
+		),
+		// Popup id
+		'website' => array(
+			// Popup Name
+			'name'						=> 'Seiteneinstellungen',
+			// Headline => src
+			'Benutzeradministration'	=> array( 'usergroup', 'useradmin', 'pageadmin', 'navigation' ),
+			'Benutzereinstellungen'		=> array( 'useralarmcfg' )
+		),
+		// einzelne Seite
+		'system' => array(
+			// Popup Name
+			'name'						=> 'System',
+			// Headline => src
+			'Systeminformationen'		=> array( 'sys_codesys', 'sys_ddc', 'sys_kepware', 'sys_prosystems', 'sys_siemens', 'sys_wago' ),
+			'System'					=> array( 'systemeinstellung', 'readevent', 'dbinfo' ),
+			'Hilfe'						=> array( 'pdf_uebersicht' )
+		)
+	);
+	/** Seiten, nicht im std Ordner */
+	public static $noStdPageInSystem = array();
+	/** vordefinierte Variable */
+	protected static $systemmenu = array();
+	/** Zugriffsebene Quittierung */
+	public static $reqgroupquit = 30;
+	/** Zugriffsebene Wartung */
+	public static $reqgroupwartung = 90;
+	/** Zugriffsebene Alarming */
+	public static $reqgroupalarm = 30;
+	/** Zugriffsebene Touchoptimum */
+	public static $reqgrouptouchoptimum = 100;
+	/** Zugriffsebene Markierungen */
+	public static $reqgroupmark = 99;
+	/** Zugriffsebene Session */
+	public static $reqgroupsession = 99;
+	/** Zugriffsebene Dragqueen */
+	public static $reqgroupdragqueen = 99;
+	/** Standardpasswort */
+	public static $stdpwd = 'Welcome@FreakaZone';
+	/** Hohe Sicherheitsanforderungen an das Passwort <b>[ true | false ]</b> */
+	public static $PasswordHigh = false;
+	/** Array fuer Datenpunkte, die auf jeder Seite angezeigt werden */
+	public static $stdpoints = array();
+	/** Aussentemperatur wird im Footer angezeigt. Benötigt den Datenpunktnamen */
+	public static $showATinFooter = '';
+	/** absoluter Pfad zum Trend Archiv (vgl. settings.ini von WEBautomationCS) */
+	public static $trendBasePath = 'C:\\Archiv';
+	/** Projekt Nummer (vgl. settings.ini von WEBautomationCS) */
+	public static $ProjektNumber = '190000';
+	/** Projekt Name (vgl. settings.ini von WEBautomationCS) */
+	public static $ProjektName = 'Ziegelhausen';
+	/** Maximale Anzahl Buttons in einer Reihe */
+	public static $MaxNumberOfButtons = 7;
+	/** Open Weather Code (aus URL) */
+	public static $weathercode = '';
+	/** Open Weather API Key */
+	public static $weatherkey = '';
+	/**
+	 * Array für die angebundenen CoDeSys Geraete
+	 * @example
+	 * wpInit::$codesys = array (
+	 * 	'CoDeSys1', 'CoDeSys2'
+	 * );
+	 */
+	public static $codesys = array();
+	/**
+	 * CBus Controller (Tschesch)
+	 * @example
+	 * wpInit::$ddc = array(
+	 * 	'0' => array(
+	 * 		'Port' => '',
+	 * 		'Addr' => '',
+	 * 		'Conf' => 'Cbus1Control.cfg',
+	 * 		'GaWa' => 'Cbus1_par'
+	 * 	)
+	 * )
+	 */
+	public static $ddc = array();
+	/**
+	 * Array für die angebundenen Modbus Geraete (Kepware)
+	 * @example
+	 * wpInit::$kepware = array (
+	 * 	'ModbusAlias1' => 'Anzeigename Gerät 1',
+	 * 	'ModbusAlias2' => 'Anzeigename Gerät 2'
+	 * );
+	 */
+	public static $kepware = array();
+	/**
+	 * Array für die angebundenen PsOpcUtilities Geraete
+	 * @example
+	 * wpInit::$prosystems = array (
+	 * 	'ConnectTo' => array(
+	 * 		'FolderToNetwork' => 'NetworkName'
+	 * 	)
+	 * );
+	 */
+	public static $prosystems = array();
+	/**
+	 * Array für die angebundenen Siemens Geraete (Softing)
+	 * @example
+	 * wpInit::$siemens = array (
+	 * 	'Siemens1', 'Siemens2'
+	 * );
+	 */
+	public static $siemens = array();
+	/**
+	 * Array für die angebundenen Modbus Geraete (INAT)
+	 * @example
+	 * wpInit::$wago = array (
+	 * 	'ModbusGereat1', 'ModbusGeraet2'
+	 * );
+	 */
+	public static $wago = array();
+	/** SPS_IN_RUN gedreht */
+	public static $wagoTurned = array();
+}
+
+if(file_exists('conf.psys')) include('conf.psys');
+/** @} */
+?>

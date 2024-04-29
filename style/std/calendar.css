@@ -1,0 +1,28 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 20.12.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 505                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: calendar.css 505 2021-05-07 21:55:45Z checker            $ #
+//#                                                                                 #
+//###################################################################################
+?> calendar */
+
+#calendar { max-width:950px; margin:auto; }
+#calendar h1 { text-align:center; }
+#calendar h2 { text-align:left; padding-left:25px; }
+#calendar span.ps-input { display:inline-block; float:left; width:125px; text-align:center; }
+#calendar span.desc { display:inline-block; float:left; padding:4px 5px; margin:2px 5px; line-height:16px; }
+#calendar li span.ps-checkbox { float:right; display:block; width:75px; padding:5px 5px 5px 25px; background-position:5px 5px; }
+#calendar li a.right { float:right; display:block; width:75px; text-align:center; }
+
+#calendar .p-tree-child { padding-left:50px; }
+

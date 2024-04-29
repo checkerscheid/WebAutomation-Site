@@ -1,0 +1,356 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 582                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: dpactive.req 582 2024-04-10 06:45:45Z                    $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\std;
+
+use system\Helper\wpDatabase;
+use system\std;
+use system\Helper\wpConvert;
+use system\WebCom;
+
+class dpactive {
+
+	//###################################################################################
+	const c_newdpnamespace = 'newdpnamespace';
+	public static function newdpnamespace() {
+		header(wpJSON_HEADER);
+		$database = self::getDatabase();
+		$name = wpConvert::cleanName(std::posts('name'), false);
+		$description = wpConvert::cleanName(std::posts('description'));
+		if($name != '') {
+			$database->query("INSERT INTO [dpnamespace] ([name], [description]) VALUES
+				('" . $name . "', '" . $description . "')");
+			$lastid = $database->lastid();
+			echo '{"erg": "S_OK", "html": "
+<li class=\"dpgroups' . $lastid . '\" data-dpnamespace=\"' . $lastid . '\">
+	<span class=\"ps-tree-parent dpnamespace\" title=\"' . $lastid . '\">
+		<span class=\"boldfont\">' . $name . '</span><br />
+		<span class=\"smallfont\">' . $description . '</span>
+	</span>
+	<div class=\"buttonContainer dpnamespacecontainer\">
+		<span class=\"ps-hover-noborder ps-image-button ps-add\" title=\"neue Datenpunktgruppe anlegen\">' . wpHTML_EMPTY . '</span>
+		<span class=\"ps-hover-noborder ps-image-button ps-edit\" title=\"Schreibrechte bearbeiten\">' . wpHTML_EMPTY . '</span>
+		<span class=\"ps-hover-noborder ps-image-button ps-refresh\" title=\"Namespace umbenennen\">' . wpHTML_EMPTY . '</span>
+		<span class=\"ps-hover-noborder ps-image-button ps-delete\" title=\"Namespace löschen\">' . wpHTML_EMPTY . '</span>
+	</div>
+</li>
+<li class=\"dpgroups dpgroups' . $lastid . '\" data-dpgroups=\"' . $lastid . '\"></li>
+<li class=\"dpgroups' . $lastid . '\"><hr  /></li>"}';
+		} else {
+			echo '{"erg": "S_ERROR", "message": "Der Name darf nicht leer sein"}';
+		}
+	}
+
+	//###################################################################################
+	const c_renamedpnamespacepopup = 'renamedpnamespacepopup';
+	public static function renamedpnamespacepopup() {
+		$iddpnamespace = std::posts('iddpnamespace');
+		$database = self::getDatabase();
+		$database->query('SELECT [name], [description] FROM [dpnamespace] WHERE [id_dpnamespace] = ' . $iddpnamespace);
+		$erg = $database->fetch();
+		echo '
+<table data-dpnamespace="' . $iddpnamespace . '">
+	<tr>
+		<td><label for="UpdateDpNamespaceName">Name:</label></td>
+		<td><input type="text" class="ps-input" id="UpdateDpNamespaceName" value="' . $erg['name'] . '" /></td>
+	</tr>
+	<tr>
+		<td><label for="UpdateDpNamespaceDescription">Beschreibung:</label></td>
+		<td><input type="text" class="ps-input" id="UpdateDpNamespaceDescription" value="' . $erg['description'] . '" /></td>
+	</tr>
+</table>';
+	}
+
+	//###################################################################################
+	const c_renamedpnamespace = 'renamedpnamespace';
+	public static function renamedpnamespace() {
+		$database = self::getDatabase();
+		$iddpnamespace = std::posts('iddpnamespace');
+		$name = wpConvert::cleanName(std::posts('name'), false);
+		$description = wpConvert::cleanName(std::posts('description'));
+		$database->query("UPDATE [dpnamespace] SET
+			[name] = '" . $name . "', [description] = '" . $description . "'
+			WHERE [id_dpnamespace] = " . $iddpnamespace);
+		echo '{"erg": "S_OK"}';
+	}
+
+	//###################################################################################
+	const c_deletedpnamespace = 'deletedpnamespace';
+	public static function deletedpnamespace() {
+		$database = self::getDatabase();
+		$iddpnamespace = std::posts('iddpnamespace');
+		$database->query("SELECT [g].[name], COUNT([dp].[id_dp]) AS [dps]
+FROM  [dpgroup] [g]
+INNER JOIN [dp] ON [g].[id_dpgroup] = [dp].[id_dpgroup]
+WHERE [g].[id_dpnamespace] = " . $iddpnamespace . "
+GROUP BY [g].[id_dpgroup], [g].[name]");
+		if(std::posts('force') != 'True' && $database->hasRows()) {
+			echo '{
+				"erg":"S_CK",
+				"message":"
+	<p>';
+			while($erg = $database->fetch()) {
+				echo '
+		Es befinden sich noch ' . $erg['dps'] . ' Datenpunkte in der Gruppe ' . $erg['name'] . '<br />';
+			}
+			echo '
+	</p>
+				"}';
+		} else {
+			$database->query("DELETE FROM [dpnamespace] WHERE [id_dpnamespace] = " . $iddpnamespace);
+			$WebCom = new WebCom();
+			$WebCom->send('DeleteDpnamespace', $iddpnamespace);
+			echo '{"erg": "S_OK"}';
+		}
+	}
+
+	//###################################################################################
+	const c_getdpgroups = 'getdpgroups';
+	public static function getdpgroups() {
+		self::getWritelevel();
+		$database = self::getDatabase();
+		$database->query('SELECT
+			[grp].[id_dpgroup], [grp].[name], [grp].[description], [grp].[usergroupwrite] AS [groupwrite],
+			ISNULL([grp].[usergroupwrite], ISNULL([ns].[usergroupwrite], 100)) AS [usergroupwrite],
+			[grp].[active],
+			ISNULL([grp].[usergroupwrite], -1) AS [fromgrp],
+			ISNULL([ns].[usergroupwrite], -1) AS [fromsrv]
+			FROM [dpgroup] [grp]
+			INNER JOIN [dpnamespace] [ns] ON [grp].[id_dpnamespace] = [ns].[id_dpnamespace]
+			WHERE [grp].[id_dpnamespace] = '.std::posts('iddpnamespace').' ORDER BY [grp].[name]');
+		echo '
+<ul>';
+		while($erg = $database->fetch()) {
+			$inheritted = 'default';
+			if($erg['fromsrv'] != '-1') $inheritted = 'from namespace';
+			if($erg['fromgrp'] != '-1') $inheritted = 'self';
+			$cssactive = ($erg['active'] == 1) ? '' : ' inactive';
+			echo '
+	<li><hr /></li>
+	<li data-dpgroup="'.$erg['id_dpgroup'].'"'.$cssactive.'>
+		<span class="ps-tree-parent dpgroup" title="' . $erg['id_dpgroup'] . '">
+			<span class="boldfont">'.$erg['description'].'</span><br />
+			<span class="smallfont">' . $erg['name'] . '</span>
+		</span>
+		<div class="buttonContainer">
+			<span class="ps-hover-noborder ps-image-button ps-add" title="neuen Datenpunkt anlegen">' . wpHTML_EMPTY . '</span>
+			<span class="ps-hover-noborder ps-image-button ps-edit" data-writelevel="'.$erg['groupwrite'].'"
+				data-writegroup="'.std::arrays(self::$usergroup, $erg['usergroupwrite'], $erg['usergroupwrite']).' ('.$erg['usergroupwrite'].', '.$inheritted.')"
+				title="Schreibrechte bearbeiten, aktuell: '.std::arrays(self::$usergroup, $erg['usergroupwrite'], $erg['usergroupwrite']).' ('.$erg['usergroupwrite'].', '.$inheritted.')">'.wpHTML_EMPTY.'</span>
+			<span class="ps-hover-noborder ps-image-button ps-refresh" title="Gruppe umbenennen">'.wpHTML_EMPTY.'</span>
+			<span class="ps-hover-noborder ps-image-button ps-active" title="'.(($erg['active'] == 1) ? 'deaktivieren' : 'aktivieren').'">'.wpHTML_EMPTY.'</span>
+			<span class="ps-hover-noborder ps-image-button ps-delete" title="Gruppe löschen">'.wpHTML_EMPTY.'</span>
+		</div>
+	</li>
+	<li class="dps'.$cssactive.'" data-dps="'.$erg['id_dpgroup'].'"></li>';
+		}
+		echo '
+</ul>';
+	}
+
+	//###################################################################################
+	const c_newdpgroup = 'newdpgroup';
+	public static function newdpgroup() {
+
+	}
+
+	//###################################################################################
+	const c_getdp = 'getdp';
+	public static function getdp() {
+		$database = self::getDatabase();
+		$sql = "
+SELECT
+	[dp].[id_dp], [dp].[name], [dp].[description], [dp].[unit], [dp].[nks], [dp].[factor], [dp].[min], [dp].[max], [a].[id_alarm], [t].[id_trend], [c].[id_calendar], [r].[id_router],
+	[dp].[usergroupwrite] AS [groupwrite],
+	ISNULL([dp].[usergroupwrite], ISNULL([grp].[usergroupwrite], ISNULL([ns].[usergroupwrite], 100))) AS [usergroupwrite],
+	ISNULL([dp].[usergroupwrite], -1) AS [fromdp],
+	ISNULL([grp].[usergroupwrite], -1) AS [fromgrp],
+	ISNULL([ns].[usergroupwrite], -1) AS [fromns],
+	[dp].[id_opcdatapoint], [dp].[id_mqtttopic], [dp].[active]
+FROM [dp]
+INNER JOIN [dpgroup] [grp] ON [dp].[id_dpgroup] = [grp].[id_dpgroup]
+INNER JOIN [dpnamespace] [ns] ON [grp].[id_dpnamespace] = [ns].[id_dpnamespace]
+LEFT JOIN [alarm] [a] ON [a].[id_dp] = [dp].[id_dp]
+LEFT JOIN [trend] [t] ON [t].[id_dp] = [dp].[id_dp]
+LEFT JOIN [calendar] [c] ON [c].[id_dp] = [dp].[id_dp]
+LEFT JOIN [router] [r] ON [r].[id_dp] = [dp].[id_dp]
+WHERE [dp].[id_dpgroup] = ".std::posts('iddpgroup')."
+ORDER BY [dp].[name]";
+		$database->query($sql);
+		echo '
+<table>
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Wert</th>
+			<th>Beschreibung</th>
+			<th>Rohwert</th>
+			<th>letzte Änderung</th>
+			<th>Einheit</th>
+			<th>NKS</th>
+			<th>Faktor</th>
+			<th>min</th>
+			<th>max</th>
+			<th>Plug Ins</th>
+			<th>Treiber</th>
+			<th>aktiv</th>
+		</tr>
+	</thead>
+	<tbody>';
+		while($erg = $database->fetch()) {
+			$erg = array_map(function($item) {
+				return wpDatabase::sqlDebug($item);
+			}, $erg);
+			echo '
+		<tr data-id="' . $erg['id_dp'] . '">
+			<td title="' . $erg['id_dp'] . '">
+				<span class="ps-checkbox">' . $erg['name'] . '</span>
+				<div class="buttonContainer">
+					<span class="ps-hover-noborder ps-image-button ps-edit">' . wpHTML_EMPTY . '</span>
+				</div>
+			</td>
+			<td>
+				<span data-ws="' . $erg['name'] . '" title="' . $erg['usergroupwrite'] . ' - ' . $_SESSION[SESSION_ID]['LEVEL'] . '">-</span>
+				<div class="buttonContainer">';
+			if($erg['usergroupwrite'] <= $_SESSION[SESSION_ID]['LEVEL']) {
+				echo '
+					<span class="ps-hover-noborder ps-image-button ps-write">' . wpHTML_EMPTY . '</span>';
+			}
+			echo '
+				</div>
+			</td>
+			<td>
+				<span class="wpDescriptionValue">' . $erg['description'] . '</span>
+				<div class="buttonContainer">
+					<span class="ps-hover-noborder ps-image-button ps-edit wpDescription">' . wpHTML_EMPTY . '</span>
+				</div>
+			</td>
+			<td>
+				<span data-wsroh="' . $erg['name'] . '">-</span>
+			</td>
+			<td>
+				<span data-wslastchange="' . $erg['name'] . '">-</span>
+			</td>
+			<td>
+				<span class="dpunit">' . $erg['unit'] . '</span>
+				<div class="buttonContainer">
+					<span class="ps-hover-noborder ps-image-button ps-edit">' . wpHTML_EMPTY . '</span>
+				</div>
+			</td>
+			<td>
+				<span>' . $erg['nks'] . '</span>
+				<div class="buttonContainer">
+					<span class="ps-hover-noborder ps-image-button ps-edit">' . wpHTML_EMPTY . '</span>
+				</div>
+			</td>
+			<td>
+				<span>' . $erg['factor'] . '</span>
+				<div class="buttonContainer">
+					<span class="ps-hover-noborder ps-image-button ps-edit">' . wpHTML_EMPTY . '</span>
+				</div>
+			</td>
+			<td>
+				<span>' . $erg['min'] . '</span>
+				<div class="buttonContainer">
+					<span class="ps-hover-noborder ps-image-button ps-edit">' . wpHTML_EMPTY . '</span>
+				</div>
+			</td>
+			<td>
+				<span>' . $erg['max'] . '</span>
+				<div class="buttonContainer">
+					<span class="ps-hover-noborder ps-image-button ps-edit">' . wpHTML_EMPTY . '</span>
+				</div>
+			</td>
+			<td>
+				<span class="ps-image-status alarm' . ($erg['id_alarm'] == '-' ? '-ia' : '" title="' . $erg['id_alarm']) . '">' . wpHTML_EMPTY . '</span>
+				<span class="ps-image-status trend' . ($erg['id_trend'] == '-' ? '-ia' : '" title="' . $erg['id_trend']) . '">' . wpHTML_EMPTY . '</span>
+				<span class="ps-image-status calendar' . ($erg['id_calendar'] == '-' ? '-ia' : '" title="' . $erg['id_calendar']) . '">' . wpHTML_EMPTY . '</span>
+				<span class="ps-image-status route' . ($erg['id_router'] == '-' ? '-ia' : '" title="' . $erg['id_router']) . '">' . wpHTML_EMPTY . '</span>
+			</td>
+			<td>
+				<span class="' . ($erg['id_opcdatapoint'] != '-' ? 'ps-green" title="' . $erg['id_opcdatapoint'] . '"' : 'ps-grey"') . '">OPC</span>
+				<span class="' . ($erg['id_mqtttopic'] != '-' ? 'ps-green" title="' . $erg['id_mqtttopic'] . '"' : 'ps-grey"') . '">MQTT</span>
+			</td>
+			<td>
+				<span>' . $erg['active'] . '</span>
+				<div class="buttonContainer">
+					<span class="ps-hover-noborder ps-image-button ps-edit">' . wpHTML_EMPTY . '</span>
+				</div>
+			</td>
+		</tr>';
+			//std::test_array($erg);
+		}
+		echo '
+	</tbody>
+</table>';
+	}
+
+	//###################################################################################
+	const c_writedp = 'writedp';
+	public static function writedp() {
+		$WebCom = new WebCom();
+		echo $WebCom->send('WriteDP', $_SESSION[SESSION_ID]['LEVEL'].'%~%'.std::posts('dpid').'%~%'.std::posts('value'));
+	}
+
+	//###################################################################################
+	private static $usergroup;
+	private static function getWritelevel() {
+		$database = self::getDatabase();
+		$database->query("SELECT [name], [order] FROM [usergroup]");
+		self::$usergroup[100] = 'niemand';
+		while($erg = $database->fetch()) {
+			self::$usergroup[$erg['order']] = $erg['name'];
+		}
+	}
+
+	//###################################################################################
+	private static $db;
+	private static function getDatabase() {
+		if(!isset(self::$db)) self::$db = new wpDatabase();
+		return self::$db;
+	}
+}
+
+switch(std::gets('param1')) {
+	case dpactive::c_newdpnamespace:
+		dpactive::newdpnamespace();
+		break;
+	case dpactive::c_renamedpnamespacepopup:
+		dpactive::renamedpnamespacepopup();
+		break;
+	case dpactive::c_renamedpnamespace:
+		dpactive::renamedpnamespace();
+		break;
+	case dpactive::c_deletedpnamespace:
+		dpactive::deletedpnamespace();
+		break;
+	case dpactive::c_getdpgroups:
+		dpactive::getdpgroups();
+		break;
+	case dpactive::c_newdpgroup:
+		dpactive::newdpgroup();
+		break;
+	case dpactive::c_getdp:
+		dpactive::getdp();
+		break;
+	case dpactive::c_writedp:
+		dpactive::writedp();
+		break;
+	default:
+		\system\html::default();
+		break;
+}
+?>

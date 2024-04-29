@@ -1,0 +1,505 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 582                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: opcactive.req 582 2024-04-10 06:45:45Z                    $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\std;
+use system\Helper\wpDatabase;
+use system\std, system\WebCom, system\TCPencode;
+class opcactive {
+	const c_getgroups = 'getgroups';
+	const c_getitems = 'getitems';
+	const c_renameopcserver = 'renameopcserver';
+	const c_editopcserver = 'editopcserver';
+	const c_deleteopcserver = 'deleteopcserver';
+	const c_infoopcserver = 'infoopcserver';
+	const c_newopcgroup = 'newopcgroup';
+	const c_renameopcgroup = 'renameopcgroup';
+	const c_deleteopcgroup = 'deleteopcgroup';
+	const c_editopcgroup = 'editopcgroup';
+	const c_infoopcgroup = 'infoopcgroup';
+	const c_activeopcgroup = 'activeopcgroup';
+	const c_selectgrouptomoveitem = 'selectgrouptomoveitem';
+	const c_moveopcitem = 'moveopcitem';
+	const c_renameopcitem = 'renameopcitem';
+	const c_descriptionitem = 'descriptionitem';
+	const c_deleteopcitem = 'deleteopcitem';
+	const c_editopcitem = 'editopcitem';
+	const c_typeopcitempopup = 'typeopcitempopup';
+	const c_typeopcitem = 'typeopcitem';
+	const c_tasterdefaultboolpopup = 'tasterdefaultboolpopup';
+	const c_tasterdefaultitem = 'tasterdefaultitem';
+}
+
+switch(std::gets('param1')) {
+//###################################################################################
+	case opcactive::c_getgroups:
+		$_SESSION[SESSION_ID]['POINTS'] = array();
+		$database = new wpDatabase();
+		$database->query("SELECT [name], [order] FROM [usergroup]");
+		$database->query('SELECT [id_opcgroup], [name], [active]
+				FROM [opcgroup]
+				WHERE [id_opcserver] = '.std::posts('server').' ORDER BY [name]');
+		echo '<ul>';
+		while($erg = $database->fetch()) {
+			$cssactive = ($erg['active'] == 1) ? '' : ' class="inactive"';
+			echo '<li><hr /></li>';
+			echo '<li data-group="'.$erg['id_opcgroup'].'"'.$cssactive.' title="'.$erg['id_opcgroup'].'">';
+			echo '<span class="ps-tree-parent">'.$erg['name'].'</span>';
+			echo '<span class="p-dpbutton p-dpdelete ps-hover-noborder p-displayright deletegroup" title="OPC Gruppe löschen">'.wpHTML_EMPTY.'</span>';
+			echo '<span class="p-dpbutton p-dpactive ps-hover-noborder p-displayright activegroup" title="'.(($erg['active'] == 1) ? 'deaktivieren' : 'aktivieren').'">'.wpHTML_EMPTY.'</span>';
+			echo '<span class="p-dpbutton p-dprefresh ps-hover-noborder p-displayright renamegroup" title="OPC Gruppe umbenennen">'.wpHTML_EMPTY.'</span>';
+			echo '<span class="p-dpbutton p-dpinfo ps-hover-noborder p-displayright infogroup" title="OPC Gruppe Informationen">'.wpHTML_EMPTY.'</span>';
+			echo '</li>';
+			echo '<li data-items="'.$erg['id_opcgroup'].'"'.$cssactive.'></li>';
+		}
+		echo '</ul>';
+		break;
+//###################################################################################
+	case opcactive::c_getitems:
+		$_SESSION[SESSION_ID]['POINTS'] = array();
+		$points = array();
+		$database = new wpDatabase();
+		$database->query("SELECT [odp].[id_opcdatapoint], [odp].[name], [odp].[opcname], [odp].[description], [odp].[forcetype], [odp].[active]
+				FROM [opcdatapoint] [odp]
+				WHERE [odp].[id_opcgroup] = ".std::posts('group')." ORDER BY [odp].[name]");
+		echo '<ul><li><div class="table">';
+		echo '<div class="tr">';
+		echo '<div class="th"><span class="showdpnames">Datenpunktname</span></div>';
+		echo '<div class="th">Wert</div>';
+		echo '<div class="th">Beschreibung</div>';
+		echo '<div class="th"></div>';
+		echo '<div class="th">Qualität</div>';
+		echo '<div class="th">letzte Aktualisierung</div>';
+		echo '<div class="th">Datentyp</div>';
+		echo '</div>';
+		while($erg = $database->fetch()) {
+			$erg = array_map(function($item) {
+				return wpDatabase::sqlDebug($item);
+			}, $erg);
+
+			$points[$erg['name']] = $erg['name'];
+			echo '<div class="tr'.($erg['active'] == '1' ? '' : ' inactive').(std::posts('mark') == $erg['id_opcdatapoint'] ? ' foundlink' : '').'" data-item="'.$erg['id_opcdatapoint'].'" data-name="'.$erg['name'].'">';
+			echo '<div class="td maxw ps-taright">';
+			echo '<a name="id'.$erg['id_opcdatapoint'].'"><span title="Name: '.$erg['name'].' - OPC Name: '.$erg['opcname'].'" data-opcname="'.$erg['opcname'].'">'.$erg['name'].'</span></a>';
+			echo '<span class="p-dpbutton p-dprefresh ps-hover-noborder renameitem" title="OPC Datenpunkt umbenennen">'.wpHTML_EMPTY.'</span>';
+			echo '</div>';
+			echo '<div class="td maxw ps-taright">';
+			echo '<span data-value="'.$erg['name'].'" class="fixw">undefined</span>';
+			echo '<span class="p-dpbutton" data-point="'.$erg['name'].'">'.wpHTML_EMPTY.'</span>';
+			echo '</div>';
+			echo '<div class="td maxw ps-taright">';
+			echo '<span>'.($erg['description'] == '' ? wpHTML_EMPTY : $erg['description']) .'</span>';
+			echo '<span class="p-dpbutton p-dpedit ps-hover-noborder descriptionitem" title="Beschreibung bearbeiten">'.wpHTML_EMPTY.'</span>';
+			echo '</div>';
+			echo '<div class="td">';
+			echo '<span class="p-dpbutton p-dpdelete ps-hover-noborder deleteitem" title="OPC Datenpunkt löschen">'.wpHTML_EMPTY.'</span>';
+			echo '<span class="p-dpbutton p-dpmove ps-hover-noborder moveitem" title="OPC Datenpunkt in andere OPC Gruppe verschieben">'.wpHTML_EMPTY.'</span>';
+			echo '</div>';
+			echo '<div class="td maxw"><span data-quality="'.$erg['name'].'" class="fixw">undefined</span></div>';
+			echo '<div class="td maxw"><span data-timestamp="'.$erg['name'].'">undefined</span></div>';
+			echo '<div class="td maxw ps-taright">';
+			$csstype = ($erg['forcetype'] == '') ? '' : ' class="neg"';
+			echo '<span data-type="'.$erg['name'].'"'.$csstype.'>undefined</span>';
+			echo '<span class="p-dpbutton p-dpedit ps-hover-noborder typeitem" title="OPC Datentyp bearbeiten">'.wpHTML_EMPTY.'</span>';
+			echo '</div>';
+			echo '</div>';
+		}
+		echo '</div></li></ul>';
+		new \system\RegisterSignals($points);
+		break;
+//###################################################################################
+// Server
+//###################################################################################
+	case opcactive::c_renameopcserver:
+		if(std::posts('serverid') != '' && std::posts('newname') != '') {
+			$newname = preg_replace('/[^a-zA-Z0-9_ ]/', '_', std::posts('newname'));
+			$database = new wpDatabase();
+			if($database->query("UPDATE [opcserver] SET [name] = '$newname' WHERE [id_opcserver] = ".std::posts('serverid'))) {
+				$WebCom = new WebCom();
+				$returns = $WebCom->send('RenameOPCServer', std::posts('serverid').'%~%'.$newname);
+				if($returns != 'S_OK') echo $returns;
+				echo 'S_OK';
+			} else {
+				echo 'Query mistake';
+			}
+		} else {
+			echo '<span class="neg">Der Name darf nicht leer sein</span>';
+		}
+		break;
+//###################################################################################
+	case opcactive::c_editopcserver:
+		if(std::posts('serverid') != '') {
+			$database = new wpDatabase();
+			if(std::posts('defaultvalue') == 'True') {
+				if(std::posts('forcewritelevel') == 'True') {
+					$database->query('UPDATE [opcdatapoint]
+						SET [opcdatapoint].[usergroupwrite] = NULL
+						FROM [opcgroup] [g]
+						INNER JOIN [opcdatapoint] ON [opcdatapoint].[id_opcgroup] = [g].[id_opcgroup]
+						WHERE [g].[id_opcserver] = '.std::posts('serverid'));
+					$database->query('UPDATE [opcgroup]
+						SET [usergroupwrite] = NULL
+						WHERE [id_opcserver] = '.std::posts('serverid'));
+					$database->query('UPDATE [opcserver]
+						SET [usergroupwrite] = NULL
+						WHERE [id_opcserver] = '.std::posts('serverid'));
+				} else {
+					$database->query('UPDATE [opcserver] SET [usergroupwrite] = NULL WHERE [id_opcserver] = '.std::posts('serverid'));
+				}
+			} else {
+				$writelevel = std::posts('value');
+				if($writelevel > 100) $writelevel = 100;
+				if($writelevel < 0) $writelevel = 0;
+				if(std::posts('forcewritelevel') == 'True') {
+					$database->query('UPDATE [opcdatapoint]
+						SET [opcdatapoint].[usergroupwrite] = '.$writelevel.'
+						FROM [opcgroup] [g]
+						INNER JOIN [opcdatapoint] ON [opcdatapoint].[id_opcgroup] = [g].[id_opcgroup]
+						WHERE [g].[id_opcserver] = '.std::posts('serverid'));
+					$database->query('UPDATE [opcgroup]
+						SET [usergroupwrite] = '.$writelevel.'
+						WHERE [id_opcserver] = '.std::posts('serverid'));
+					$database->query('UPDATE [opcserver]
+						SET [usergroupwrite] = '.$writelevel.'
+						WHERE [id_opcserver] = '.std::posts('serverid'));
+				} else {
+					$database->query('UPDATE [opcserver] SET [usergroupwrite] = '.$writelevel.' WHERE [id_opcserver] = '.std::posts('serverid'));
+				}
+			}
+			$WebCom = new WebCom();
+			$returns = $WebCom->send('ChangeOPCServerWriteLevel', std::posts('serverid'));
+			if($returns != 'S_OK') echo $returns;
+			echo 'S_OK';
+		} else {
+			echo '<span class="neg">OPC Server wurde nicht gefunden</span>';
+		}
+		break;
+//###################################################################################
+	case opcactive::c_deleteopcserver:
+		$WebCom = new WebCom();
+		echo $WebCom->send('RemoveOPCServer', std::posts('serverid'));
+		break;
+//###################################################################################
+	case opcactive::c_infoopcserver:
+		$database = new wpDatabase();
+		$database->query("Select
+				ISNULL([usergroupwrite], 100) AS [usergroupwrite],
+				ISNULL([usergroupwrite], 0) AS [fromsrv]
+				FROM [opcserver] WHERE [id_opcserver] = ".std::posts('serverid'));
+		$erg = $database->fetch();
+		$inheritted = 'default';
+		if($erg['fromsrv'] != '0') $inheritted = 'self';
+		$WebCom = new WebCom();
+		$TheObject = new TCPencode($WebCom->send('OPCServerDetails', std::posts('serverid')));
+		$TheArray = $TheObject->getArray();
+		echo '<div class="popup">';
+		echo '<h1>'.std::arrays($TheArray, 'OPCServerName').'</h1>';
+		echo '<table summary="">';
+		echo '<tr><td colspan="2"><hr /></td></tr>';
+		echo '<tr><td class="ps-taleft">OPC Gruppen:</td><td>'.std::arrays($TheArray, 'OPCGruppen').'</td></tr>';
+		echo '<tr><td class="ps-taleft">Status:</td><td>'.std::arrays($TheArray, 'State').'</td></tr>';
+		echo '<tr><td class="ps-taleft">Hersteller:</td><td>'.std::arrays($TheArray, 'Vendor').'</td></tr>';
+		echo '<tr><td class="ps-taleft">Version:</td><td>'.std::arrays($TheArray, 'Version').'</td></tr>';
+		echo '<tr><td class="ps-taleft">benötigtes Schreiblevel:</td><td>'.$erg['usergroupwrite'].' ('.$inheritted.')</td></tr>';
+		echo '<tr><td class="ps-taleft">gestartet:</td><td>'.std::arrays($TheArray, 'Start').'</td></tr>';
+		echo '<tr><td class="ps-taleft">letztes Update:</td><td>'.std::arrays($TheArray, 'Update').'</td></tr>';
+		echo '<tr><td class="ps-taleft">Server Zeit:</td><td>'.std::arrays($TheArray, 'Time').'</td></tr>';
+		echo '<tr><td class="ps-taleft">ProgID:</td><td>'.std::arrays($TheArray, 'ProgID').'</td></tr>';
+		echo '<tr><td class="ps-taleft">ClsID:</td><td>'.std::arrays($TheArray, 'ClsID').'</td></tr>';
+		echo '</table>';
+		echo '
+			<hr />
+			<table summary="" class="opcgroupdetails">
+				<thead>
+					<tr>
+						<th>Gruppenname</th>
+						<th>Anzahl</th>
+						<th colspan="2"></th>
+					</tr>
+					<tr>
+						<th></th>
+						<th>Datenpunkte</th>
+						<th>Verbunden</th>
+						<th>ohne Fehler</th>
+					</tr>
+				</thead>
+				<tbody>';
+		if(std::arrays($TheArray, 'OpcGroupDetails') != '') {
+			foreach($TheArray['OpcGroupDetails'] as $groupDetails) {
+				echo '
+					<tr>
+						<td><span class="'.(($groupDetails['Active'] == 'True') ? 'pos' : 'neg').'">'.$groupDetails['Name'].'</span></td>
+						<td>'.$groupDetails['ItemCount'].'</td>
+						<td><span class="'.(($groupDetails['ItemCount'] == $groupDetails['itemstates']['S_OK']) ? 'pos' : 'neg').'">'.$groupDetails['itemstates']['S_OK'].'</span></td>
+						<td><span class="'.(($groupDetails['itemstates']['S_OK'] == $groupDetails['itemquality']['S_OK']) ? 'pos' : 'neg').'">'.$groupDetails['itemquality']['S_OK'].'</span></td>
+					</tr>';
+			}
+		}
+		echo '
+				</tbody>
+			</table>';
+		echo '</div>';
+		break;
+//###################################################################################
+	case opcactive::c_newopcgroup:
+		$database = new wpDatabase();
+		$database->query("INSERT INTO [opcgroup] ([id_opcserver], [name], [active]) VALUES (" . std::posts('serverid') . ", '" . std::posts('newname') . "', 'True')");
+		echo 'S_OK';
+		break;
+//###################################################################################
+// Gruppen
+//###################################################################################
+	case opcactive::c_renameopcgroup:
+		if(std::posts('idgroup') != '' && std::posts('newname') != '') {
+			$newname = preg_replace('/[^a-zA-Z0-9_]/', '_', std::posts('newname'));
+			$database = new wpDatabase();
+			if($database->query("UPDATE [opcgroup] SET [name] = '".$newname."' WHERE [id_opcgroup] = ".std::posts('idgroup'))) {
+				$WebCom = new WebCom();
+				$returns = $WebCom->send('RenameOPCGroup', std::posts('idgroup').'%~%'.$newname);
+				if($returns != 'S_OK') echo $returns;
+				echo 'S_OK';
+			} else {
+				echo 'Query mistake';
+			}
+		} else {
+			echo '<span class="neg">Der Name darf nicht leer sein</span>';
+		}
+		break;
+//###################################################################################
+	case opcactive::c_deleteopcgroup:
+		$WebCom = new WebCom();
+		echo $WebCom->send('RemoveOPCGroup', std::posts('groupid'));
+		break;
+//###################################################################################
+	case opcactive::c_editopcgroup:
+		if(std::posts('groupid') != '') {
+			$database = new wpDatabase();
+			if(std::posts('defaultvalue') == 'True') {
+				if(std::posts('forcewritelevel') == 'True') {
+					$database->query('UPDATE [opcdatapoint]
+						SET [usergroupwrite] = NULL
+						WHERE [id_opcgroup] = '.std::posts('groupid'));
+					$database->query('UPDATE [opcgroup]
+						SET [usergroupwrite] = NULL
+						WHERE [id_opcgroup] = '.std::posts('groupid'));
+				} else {
+					$database->query('UPDATE [opcgroup] SET [usergroupwrite] = NULL WHERE [id_opcgroup] = '.std::posts('groupid'));
+				}
+			} else {
+				$writelevel = std::posts('value');
+				if($writelevel > 100) $writelevel = 100;
+				if($writelevel < 0) $writelevel = 0;
+				if(std::posts('forcewritelevel') == 'True') {
+					$database->query('UPDATE [opcdatapoint]
+						SET [usergroupwrite] = '.$writelevel.'
+						WHERE [id_opcgroup] = '.std::posts('groupid'));
+					$database->query('UPDATE [opcgroup]
+						SET [usergroupwrite] = '.$writelevel.'
+						WHERE [id_opcgroup] = '.std::posts('groupid'));
+				} else {
+					$database->query('UPDATE [opcgroup] SET [usergroupwrite] = '.$writelevel.' WHERE [id_opcgroup] = '.std::posts('groupid'));
+				}
+			}
+			$WebCom = new WebCom();
+			$returns = $WebCom->send('ChangeOPCGroupWriteLevel', std::posts('groupid'));
+			if($returns != 'S_OK') echo $returns;
+			echo 'S_OK';
+		} else {
+			echo '<span class="neg">OPC Gruppe wurde nicht gefunden</span>';
+		}
+		break;
+//###################################################################################
+	case opcactive::c_infoopcgroup:
+		$database = new wpDatabase();
+		$database->query("Select TOP 1
+				ISNULL([grp].[usergroupwrite], ISNULL([srv].[usergroupwrite], 100)) AS [usergroupwrite],
+				ISNULL([grp].[usergroupwrite], 0) AS [fromgrp],
+				ISNULL([srv].[usergroupwrite], 0) AS [fromsrv]
+				FROM [opcgroup] [grp]
+				INNER JOIN [opcserver] [srv] ON [grp].[id_opcserver] = [srv].[id_opcserver]
+				WHERE [id_opcgroup] = ".std::posts('groupid'));
+		$erg = $database->fetch();
+		$inheritted = 'default';
+		if($erg['fromsrv'] != 0) $inheritted = 'from server';
+		if($erg['fromgrp'] != 0) $inheritted = 'self';
+		$WebCom = new WebCom();
+		$TheObject = new TCPencode($WebCom->send('OPCGroupDetails', std::posts('groupid')));
+		$TheArray = $TheObject->getArray();
+
+		echo '<div class="popup">';
+		echo '<h1>'.$TheArray['Name'].'</h1>';
+		echo '<table summary="">';
+		echo '<tr><td colspan="2"><hr /></td></tr>';
+		echo '<tr><td class="ps-taleft">Aktiv:</td><td>'.$TheArray['Active'].'</td></tr>';
+		echo '<tr><td class="ps-taleft">UpdateRate:</td><td>'.$TheArray['Update'].' ms</td></tr>';
+		echo '<tr><td class="ps-taleft">angeforderte Rate:</td><td>'.$TheArray['RequestUpdate'].' ms</td></tr>';
+		echo '<tr><td class="ps-taleft">benötigtes Schreiblevel:</td><td>'.$erg['usergroupwrite'].' ('.$inheritted.')</td></tr>';
+		echo '<tr><td class="ps-taleft">registrierte Items (connected):</td><td>'.$TheArray['ItemCount'].'</td></tr>';
+		echo '<tr><td class="ps-taleft">davon connected:</td><td>'.$TheArray['itemstates']['S_OK'].'</td></tr>';
+		echo '<tr><td class="ps-taleft">davon Good:</td><td>'.$TheArray['itemquality']['S_OK'].'</td></tr>';
+		if(count($TheArray['itemstates']) > 1) {
+			echo '<tr><td colspan="2"><hr /></td></tr>';
+			echo '<tr><th colspan="2">Items nicht connected:</th></tr>';
+			foreach($TheArray['itemstates'] as $opcitem => $state) {
+				if($opcitem == 'S_OK') continue;
+				echo '<tr><td class="ps-taleft">'.$opcitem.'</td><td class="neg">'.$state.'</td></tr>';
+			}
+		}
+		if(count($TheArray['itemquality']) > 1) {
+			echo '<tr><td colspan="2"><hr /></td></tr>';
+			echo '<tr><th colspan="2">fehlerhafte Items:</th></tr>';
+			foreach($TheArray['itemquality'] as $opcitem => $state) {
+				if($opcitem == 'S_OK') continue;
+				echo '<tr><td class="ps-taleft">'.$opcitem.'</td><td class="neg">'.$state.'</td></tr>';
+			}
+		}
+		echo '</table>';
+		echo '</div>';
+		// std::test_array($TheArray);
+		break;
+//###################################################################################
+	case opcactive::c_activeopcgroup:
+		$WebCom = new WebCom();
+		echo $WebCom->send('OPCGroupActive', std::posts('groupid'));
+		break;
+//###################################################################################
+// Items
+//###################################################################################
+	case opcactive::c_selectgrouptomoveitem:
+		$database = new wpDatabase();
+		$database->query('SELECT [id_opcgroup], [name] FROM [opcgroup] WHERE [id_opcserver] = '.std::posts('idserver').' ORDER BY [name]');
+		echo '<p>'.std::posts('namepoint').' verschieben</p>';
+		echo '<span>Neue Gruppe:</span>';
+		echo '<select class="opcgrouptomoveto">';
+		while($erg = $database->fetch()) {
+			if($erg['id_opcgroup'] != std::posts('idgroup')) {
+				echo '<option value="'.$erg['id_opcgroup'].'">'.$erg['name'].'</option>';
+			}
+		}
+		echo '</select>';
+		break;
+//###################################################################################
+	case opcactive::c_moveopcitem:
+		$WebCom = new WebCom();
+		echo $WebCom->send('MoveOPCItem', std::posts('itemid').'%~%'.std::posts('groupid'));
+		break;
+//###################################################################################
+	case opcactive::c_renameopcitem:
+		if(std::posts('itemid') != '' && std::posts('newname') != '') {
+			$TheItem = preg_replace('/[^a-zA-Z0-9_ äöüÄÖÜß]/', '_', std::posts('newname'));
+			$database = new wpDatabase();
+			if($database->query("UPDATE [opcdatapoint] set [name] = '".$TheItem."' WHERE [id_opcdatapoint] = ".std::posts('itemid'))) {
+				echo 'S_OK';
+			} else {
+				echo 'Query mistake';
+			}
+		} else {
+			echo '<span class="neg">Der Name darf nicht leer sein</span>';
+		}
+		break;
+//###################################################################################
+	case opcactive::c_descriptionitem:
+		if(std::posts('itemid') != '' && std::posts('newname') != '') {
+			$TheItem = preg_replace('/[^a-zA-Z0-9_ äöüÄÖÜß]/', '_', std::posts('newname'));
+			$database = new wpDatabase();
+			if($database->query("UPDATE [opcdatapoint] set [description] = '".$TheItem."' WHERE [id_opcdatapoint] = ".std::posts('itemid'))) {
+				echo 'S_OK';
+			} else {
+				echo 'Query mistake';
+			}
+		} else {
+			echo '<span class="neg">Der Name darf nicht leer sein</span>';
+		}
+		break;
+//###################################################################################
+	case opcactive::c_deleteopcitem:
+		$WebCom = new WebCom();
+		echo $WebCom->send('RemoveOPCItem', std::posts('itemid'));
+		break;
+//###################################################################################
+	case opcactive::c_typeopcitempopup:
+		$dbtype = array(
+			'default' => 'den Server bestimmen lassen',
+			'VT_BOOL' => 'Boolean (True | False)',
+			'VT_I1' => 'Integer mit Vorzeichen (8 Bit)',
+			'VT_I2' => 'Integer mit Vorzeichen (16 Bit)',
+			'VT_I4' => 'Integer mit Vorzeichen (32 Bit)',
+			'VT_I8' => 'Integer mit Vorzeichen (64 Bit)',
+			'VT_INT' => 'Integer mit Vorzeichen',
+			'VT_UI1' => 'Integer (8 Bit)',
+			'VT_UI2' => 'Integer (16 Bit)',
+			'VT_UI4' => 'Integer (32 Bit)',
+			'VT_UI8' => 'Integer (64 Bit)',
+			'VT_UNIT' => 'Integer',
+			'VT_R4' => 'Real (32 Bit)',
+			'VT_R8' => 'Real (64 Bit)',
+			'VT_DECIMAL' => 'Real',
+			'VT_BSTR' => 'String',
+			'VT_DATE' => 'Datum',
+			'VT_VARIANT' => 'unbestimmter Datetype'
+		);
+		echo '<table>';
+		echo '<tr><td colspan=2"><hr /></td></tr>';
+		echo '<tr><th colspan="2"><span class="neg">fehlerhafte Einstellungen können zum Verbindungsversagen f&uuml;hren!!!</span></th></tr>';
+		echo '<tr><td colspan=2"><hr /></td></tr>';
+		echo '<tr><th>Datentype</th><th>Beschreibung</th></tr>';
+		foreach($dbtype as $type => $desc) {
+			echo '<tr>';
+			echo '<td class="ps-taleft"><span class="ps-checkbox p-checkboxgroup" data-checkboxgroup="EnumType">'.$type.'</span></td>';
+			echo '<td>'.$desc.'</td>';
+			echo '</tr>';
+		}
+		echo '</table>';
+		break;
+//###################################################################################
+	case opcactive::c_typeopcitem:
+		$WebCom = new WebCom();
+		echo $WebCom->send('ChangeOPCItemType', std::posts('itemid').'%~%'.std::posts('newtype'));
+		break;
+//###################################################################################
+// default
+//###################################################################################
+	default:
+		\system\html::default();
+		break;
+}
+//###################################################################################
+function facet($test, $type){
+	$test = trim($test);
+	switch($type) {
+		case 'boolean':
+			if(preg_match('/^True:.*;False:.*$/', $test) > 0) {
+				return 'S_OK';
+			};
+			break;
+		case 'nAuswahl':
+			if(preg_match('/^(-?(\d){1,}:(.*);){1,}$/', $test) > 0 ) {
+				return 'S_OK';
+			}
+			break;
+		case 'unit':
+			return 'S_OK';
+			break;
+		case 'vorlage':
+			return 'S_OK';
+			break;
+		default:
+			return 'S_ERROR';
+			break;
+	}
+	return 'S_ERROR';
+}
+
+?>

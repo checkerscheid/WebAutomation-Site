@@ -1,0 +1,22 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 09.12.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 509                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: sys_codesys.css 509 2021-06-07 16:54:26Z checker         $ #
+//#                                                                                 #
+//###################################################################################
+?> codesys */
+
+#codesys h1, #codesys h2, #codesys h3 { text-align:center; }
+#codesys { margin:0 20px; }
+#codesys .ps-input { min-width:150px; }
+#codesys .serverinfo { position:fixed; top:85px; right:25px; color:#FFF; font-size:7pt; }

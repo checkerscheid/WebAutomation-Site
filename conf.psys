@@ -1,0 +1,37 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 575                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: conf.psys 575 2024-03-22 16:39:56Z                       $ #
+//#                                                                                 #
+//###################################################################################
+use system\wpInit;
+wpInit::$PDebug = false;
+wpInit::$db['server'] = '.';
+wpInit::$db['database'] = 'WebAutomation';
+wpInit::$AutoLogin = false;
+wpInit::$StartseiteStd = false;
+wpInit::$PageName = 'Freaka<span class="fzz">Z</span>one';
+wpInit::$AlarmsToShow = 2;
+wpInit::$menuorder = array(
+	'wohnzimmer', 'schlafzimmer', 'buero', 'kueche', 'bad', 'kinderzimmer'
+);
+wpInit::$systemmenuorder['webvisucs']['Plug Ins'] = array( 'trendselect', 'calendar', 'calendarscene', 'opcrouter' );
+wpInit::$systemmenuorder['webvisucs']['Sonstiges'] = array('weather', 'betriebsstunden', 'kamera');
+wpInit::$systemmenuorder['system']['Systeminformationen'] = array('sys_codesys');
+wpInit::$systemmenuorder['system']['Entwicklung'] = array('websockets');
+wpInit::$noStdPageInSystem = array('betriebsstunden', 'websockets', 'kamera');
+wpInit::$stdpoints = array('AT' => '_GA_RT');
+wpInit::$showATinFooter = 'AT';
+wpInit::$weathercode = '2804554';
+wpInit::$weatherkey = '08bbfef5eea9504adfb37366f9d970fb';
+

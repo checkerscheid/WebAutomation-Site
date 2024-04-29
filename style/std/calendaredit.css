@@ -1,0 +1,47 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 09.05.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 570                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: calendaredit.css 570 2024-03-13 18:22:21Z                $ #
+//#                                                                                 #
+//###################################################################################
+?> calendaredit */
+
+#calendar h1 { text-align:center; margin-bottom:0px; }
+
+.th { text-align:left; }
+.ps-operable { cursor:pointer; color:#004caf; }
+#aktvalue .ps-input { min-width:156px; }
+
+#fullcalendar { width:75%; float:left; }
+#calendartemplates { width:20%; float:right; }
+#calendartemplates li { margin:4px 10px; padding:4px 10px; border:1px solid #CCC; cursor:pointer; }
+#calendartemplates .ps-navi-button { float:left; }
+
+#calendarnumpad { width:250px; }
+#calendarnumpad .ps-button { float:left; }
+div.popup div.table { float:left; margin:10px; }
+div.popup input.ps-input { display:inline-block; width:150px; text-align:center; }
+div.popup select.ps-input { display:inline-block; width:150px; }
+div.popup select.startd, div.popup select.endd { display:inline-block; width:75px; }
+div.popup input.starth, div.popup input.startm, div.popup input.endh, div.popup input.endm { display:inline-block; width:30px; }
+div.popup .max-height { max-height:150px; overflow:auto; }
+div.popup .max-height div.table { float:none; }
+div.popup span.reminder-add { width:auto; }
+.calendareditinfo p { margin:5px 0px; }
+#calendarnumpad .ps-button { width:50px; height:25px; line-height:25px; text-align:center; font-size:14px; }
+#fullcalendar .fc-event * { color:#000; }
+.fc-event { min-height:30px; }
+#dialog .errinerung { text-align:right; border:solid 1px black; }
+#dialog .errinerung select.ps-input { width:130px; }
+#dialog .errinerung input.ps-input { width:125px; }
+#dialog .ps-button-errinerrung { width:25px; height:8px; display:flex; align-items:center; justify-content:center; }

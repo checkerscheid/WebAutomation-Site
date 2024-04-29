@@ -1,0 +1,99 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 26.01.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 585                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: project.css 585 2024-04-15 22:57:57Z                     $ #
+//#                                                                                 #
+//###################################################################################
+?> projekt */
+
+#error { top:90px; left:-550px; width:500px; padding:5px 15px; line-height:30px; }
+
+#content span.fzz { color:#A91919; margin:0px; padding:0px; font-weight:bolder; }
+#header, .Balken_rechts, .Balken_links, .Balken, .wpBalken { height:35px; }
+
+.wpBalken { padding-left:0px; background:none; }
+	
+/* Project Elements */
+
+.page .ps-zimmer-info * { position:relative; }
+.page .ps-zimmer-info { width:220px; }
+.page .ps-zimmer-info span.right, .page .ps-zimmer-info a.right { float:right; }
+.page .ps-zimmer-info span.hand { display:inline-block; background:transparent url(images/visuelemente/hand.png) center center no-repeat; width:25px; height:25px; }
+
+.page .ps-vt span { display:inline-block; }
+.page .ps-vt span.hand { top:-2px; left:-35px; width:25px; height:25px;
+	background:transparent url(images/visuelemente/hand.png) center center no-repeat; }
+.page .ps-vt span.hk { top:17px; left:-109px; width:125px; height:70px;
+	background:transparent url(images/heizkoerper.png) center center no-repeat; }
+.page .ps-vt span.vt { top:10px; left:-20px; width:25px; height:25px;
+	background:transparent url(images/visuelemente/Ventile.png) 0 -50px no-repeat; }
+
+.pagecontent .page .fkrt { top:45px; }
+.pagecontent .page .fklu { top:70px; }
+
+.page .bedienbar { cursor:pointer; }
+.page .ps-button.bm { color:#111; border-color:#333; box-shadow:0px 0px 5px 0px #dd9d1e; }
+.page .ps-button.bm:hover { border-color:#888; color:#000; }
+.page .ps-button.bm:active { box-shadow:inset 1px 1px 5px 0px #333; color:#888; }
+.page span.left { width:70px; line-height:25px; white-space:nowrap; }
+.page span.sw { color:#00F; }
+
+.page .ps-button, .page .ps-input, .parampage .ps-button, .parampage .ps-input, .popup .ps-input, .popup.bedienung .ps-button { display:inline-block; min-width:100px; text-align:center; }
+
+.parampage { padding-top:30px; }
+.parampage .ps-container { width:500px; margin:0 auto 10px; }
+.parampage table { margin:auto; }
+.parampage h1 { text-align:center; padding:10px; }
+.parampage div { padding:10px; }
+
+span.p-regler { cursor:pointer; }
+#popupTrend { float:left; width:550px; height:340px; }
+
+@media screen and (min-width:1024px) {
+	html.black .page .darkcolor { color:#333; }
+}
+/* black */
+html.black { background:#606060 url(images/layout/black/main-border.png) repeat-y right top; }
+.black body { background-color:#000;
+	background:transparent url(images/layout/black/main-border.png) repeat-y left top; }
+.black * { color:#ececfb; }
+.black .ui-button-text { color:#000; }
+.black .pagecontent { background-color:#606060; }
+.black #header { background-color:#000; }
+.black #footerLinks { background:transparent url(images/layout/black/footer-left.png) top left no-repeat; }
+.black #footerRechts { background:transparent url(images/layout/black/footer-right.png) top right no-repeat; }
+.black #footer { background:#606060 url(images/layout/black/footer-center.png) top left repeat-x; }
+.black .wpBalken .menuentry { color:#A91919; }
+.black .wpBalken .dropdownmenu { color:#A91919; }
+.black .wpBalken .dropdownmenu span { color:#A91919; }
+.black .wpBalken .menudiv { background:rgba(38, 38, 38, 0.85); box-shadow: 6px 6px 8px 0px #222; border: 1px solid #CCC; }
+.black .wpBalken .menudiv ul a { color:#ececfb; }
+.black .wpBalken .menudiv ul a:hover { border-color:#ececfb; }
+.black .menudiv h3 { color:#A91919; }
+.black .menuentry.active { color:#CCC; }
+.black .pagemenuleft { background:transparent url(images/layout/black/navi-left.png) no-repeat; }
+.black .pagemenuright { background:transparent url(images/layout/black/navi-right.png) no-repeat; }
+.black .pagemenucontent { background:transparent url(images/layout/black/navi-center.png) repeat-x; }
+.black .footermenucontent { background:transparent url(images/layout/black/footer-center.png) 0px -15px repeat-x; }
+.black .pos, .black .ps-fontgreen { color:#0F0; }
+.black .neg, .black .ps-fontred { color:#A91919; }
+.black .warn, .black .ps-fontyellow { color:#FFBF00; }
+.black .info, .black .ps-fontblue { color:#00F; }
+.black .ps-grey { color:#808080; }
+.black .ps-input, .black .ps-input * { color:#000; }
+.black .ps-tree-parent:hover { background-color:#888; border-radius:2px; }
+html.black .ps-navi-button { color:#636363; }
+.black .ps-container { background-image:linear-gradient(rgba(50,50,50,0.7) 25%, rgba(21,21,21,0.7) 100%); }
+.black .pagecontent table.dataTable td, .black .pagecontent table.dataTable td * { color:#4a4a4a; }
+.black .ps-input.ps-param, .black .ps-input.ps-parambool { cursor:pointer; color:#004caf; }
+.black .alarmsettingspopup { background:transparent linear-gradient(rgba(50,50,50,0.9) 25%, rgba(21,21,21,0.7) 100%); box-shadow: 6px 6px 8px 0px #222; border: 1px solid #CCC; }

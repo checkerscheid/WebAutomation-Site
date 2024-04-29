@@ -1,0 +1,28 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 505                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: alarmhistorics.css 505 2021-05-07 21:55:45Z checker      $ #
+//#                                                                                 #
+//###################################################################################
+?> alarmhistorics */
+
+#alarmhistorics .tac { text-align:center; }
+#alarmhistorics .ps-loading { background-position:center top; }
+#alarmhistorics .floatr { float:left; padding-right:20px; }
+/*#alarmhistorics td { border:1px solid #ccc; padding:1px 5px; }*/
+#historictable td { color:#222; }
+table.dataTable thead th.noborder { border:none; }
+
+h1 { text-align:center; }
+
+#false { cursor:pointer; }

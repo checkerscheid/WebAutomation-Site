@@ -1,0 +1,608 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: alarmpointcfg.req 550 2023-12-25 03:02:54Z               $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\std;
+use system\Helper\wpDatabase;
+use system\std, system\WebCom, system\TCPencode;
+//! TODO Alarm delay Einstellungen
+
+class alarmpointcfg {
+	const c_addalarm = 'addalarm';
+	const c_savenewalarm = 'savenewalarm';
+	const c_savenewalarms = 'savenewalarms';
+	const c_getonealarm = 'getonealarm';
+	const c_getavailablegroups = 'getavailablegroups';
+	const c_getavailablegroups1 = 'getavailablegroups1';
+	const c_getavailablegroups2 = 'getavailablegroups2';
+	const c_getavailablegroups3 = 'getavailablegroups3';
+	const c_getavailablegroups4 = 'getavailablegroups4';
+	const c_getavailablegroups5 = 'getavailablegroups5';
+	const c_getavailabletypes = 'getavailabletypes';
+	const c_getavailableconditions = 'getavailableconditions';
+	const c_saveonealarm = 'saveonealarm';
+	const c_deleteonealarm = 'deleteonealarm';
+	const c_saveallgroup = 'saveallgroup';
+
+	const c_saveallgroup1 = 'saveallgroup1';
+	const c_saveallgroup2 = 'saveallgroup2';
+	const c_saveallgroup3 = 'saveallgroup3';
+	const c_saveallgroup4 = 'saveallgroup4';
+	const c_saveallgroup5 = 'saveallgroup5';
+
+	const c_savealltype = 'savealltype';
+	const c_saveallcondition = 'saveallcondition';
+	const c_deleteall = 'deleteall';
+}
+
+switch(std::gets('param1')) {
+//###################################################################################
+	case alarmpointcfg::c_addalarm:
+		$database = new wpDatabase();
+		$database->query('SELECT [d].[id_opcdatapoint], [d].[name]
+				FROM [opcdatapoint] [d]
+				LEFT OUTER JOIN [alarm] [a] ON [d].[id_opcdatapoint] = [a].[id_opcdatapoint]
+				WHERE [a].[id_alarm] IS NULL ORDER BY [d].[name]');
+		echo '<span>Filter:</span><input type="text" class="ps-input newdpfilter" />';
+		echo '<span class="markall ps-button">alle markieren</span>';
+		echo '<hr />';
+		echo '<ul id="SelectNewAlarms">';
+		while($erg = $database->fetch()) {
+			echo '<li class="ps-checkbox" data-value="'.$erg['id_opcdatapoint'].'">
+					'.$erg['name']. '</li>';
+		}
+		echo '</ul>';
+		break;
+		//###################################################################################
+	case alarmpointcfg::c_savenewalarm:
+		if(std::posts('newAlarm') != '') {
+			$database = new wpDatabase();
+			$database->query('INSERT INTO [alarm] ([id_opcdatapoint], [name], [text])
+					SELECT TOP 1 '.std::posts('newAlarm').', [opcdatapoint].[name], ISNULL([description], [name]) AS [text]
+					FROM [opcdatapoint] WHERE [opcdatapoint].[id_opcdatapoint] = '.std::posts('newAlarm').'
+			');
+			echo $database->lastid('alarm');
+		}
+		break;
+//###################################################################################
+	case alarmpointcfg::c_savenewalarms:
+		if(std::posts('newAlarms') != '') {
+			if(count(std::posts('newAlarms')) > 0) {
+				$database = new wpDatabase();
+				foreach(std::posts('newAlarms') as $newAlarm) {
+					$database->query('INSERT INTO [alarm] ([id_opcdatapoint], [name], [text])
+							SELECT TOP 1 '.$newAlarm.', [opcdatapoint].[name], ISNULL([description], [name]) AS [text]
+							FROM [opcdatapoint] WHERE [opcdatapoint].[id_opcdatapoint] = '.$newAlarm.'
+					');
+				}
+			}
+			echo 'S_OK';
+		}
+		break;
+//###################################################################################
+	case alarmpointcfg::c_getonealarm:
+		$database = new wpDatabase();
+		$database->query('SELECT [name], [text], [link], [id_alarmgroup],
+				[id_alarmgroups1], [id_alarmgroups2], [id_alarmgroups3], [id_alarmgroups4], [id_alarmgroups5],
+				[id_alarmtype], [id_alarmcondition], [min], [max], [delay]
+				FROM [alarm] WHERE [id_alarm] = '.std::posts('id'));
+		$erg = $database->fetch();
+		$database->query('SELECT DISTINCT [text]
+			FROM [alarm] ORDER BY [text]');
+		$description = array();
+		while($desc = $database->fetch()) {
+			$description[] = $desc['text'];
+		}
+?>
+
+<div class="table">
+	<div class="tr">
+		<div class="th">Alarm für:</div>
+		<div class="td"><?=std::posts('name')?></div>
+	</div>
+
+	<div class="tr">
+		<div class="td">
+			<br />
+		</div>
+	</div>
+	<div class="tr">
+		<div class="td">
+			<label for="c-description">Beschreibung</label>
+			<input type="hidden" value="<?=std::posts('id')?>" />
+		</div>
+		<div class="td">
+			<span class="ps-checkbox checked p-checkboxgroup c-dropdescription" data-checkboxgroup="descriptiopn">
+				<select class="ps-input" id="c-dropdescription">
+<?
+	foreach($description as $descr) {
+		$option = $descr == $erg['text'] ? ' selected="selected"' : '';
+		echo '<option value="'.$descr.'"'.$option.'>'.$descr.'</option>';
+	}
+?>
+				</select>
+			</span><br />
+			<span class="ps-checkbox p-checkboxgroup c-description" data-checkboxgroup="descriptiopn">
+			<input type="text" id="c-description" value="<?=$erg['text']?>" class="ps-input" />
+			</span>
+		</div>
+	</div>
+	<div class="tr">
+		<div class="td">
+			<label for="c-link">Link</label>
+		</div>
+		<div class="td">
+			<input type="text" id="c-link" value="<?=$erg['link']?>" class="ps-input" />
+		</div>
+	</div>
+<?
+	getAlarmGroups(5, $erg['id_alarmgroups5']);
+	getAlarmGroups(4, $erg['id_alarmgroups4']);
+	getAlarmGroups(3, $erg['id_alarmgroups3']);
+	getAlarmGroups(2, $erg['id_alarmgroups2']);
+	getAlarmGroups(1, $erg['id_alarmgroups1']);
+	getGroups($erg['id_alarmgroup']);
+	getTypes($erg['id_alarmtype']);
+	getConditions(std::posts('type'), $erg['min'], $erg['max'], $erg['id_alarmcondition']);
+?>
+	<div class="tr">
+		<div class="td">
+			<label for="c-description">Verz&ouml;gerung [sek]</label>
+		</div>
+		<div class="td">
+			<input type="text" id="c-delay" value="<?=$erg['delay']?>" class="ps-input" />
+		</div>
+	</div>
+</div>
+<?
+		break;
+//###################################################################################
+	case alarmpointcfg::c_getavailablegroups:
+		echo '<hr />';
+		echo '<div class="table">';
+		getGroups();
+		echo '</div>';
+		break;
+	//###################################################################################
+	case alarmpointcfg::c_getavailablegroups1:
+		echo '<hr />';
+		echo '<div class="table">';
+		getGroups1();
+		echo '</div>';
+		break;
+	//###################################################################################
+	case alarmpointcfg::c_getavailablegroups2:
+		echo '<hr />';
+		echo '<div class="table">';
+		getGroups2();
+		echo '</div>';
+		break;
+	//###################################################################################
+	case alarmpointcfg::c_getavailablegroups3:
+		echo '<hr />';
+		echo '<div class="table">';
+		getGroups3();
+		echo '</div>';
+		break;
+	//###################################################################################
+	case alarmpointcfg::c_getavailablegroups4:
+		echo '<hr />';
+		echo '<div class="table">';
+		getGroups4();
+		echo '</div>';
+		break;
+	//###################################################################################
+	case alarmpointcfg::c_getavailablegroups5:
+		echo '<hr />';
+		echo '<div class="table">';
+		getGroups5();
+		echo '</div>';
+		break;
+//###################################################################################
+	case alarmpointcfg::c_getavailabletypes:
+		echo '<hr />';
+		echo '<div class="table">';
+		getTypes();
+		echo '</div>';
+		break;
+//###################################################################################
+	case alarmpointcfg::c_getavailableconditions:
+		echo '<hr />';
+		echo '<div class="table">';
+		getConditions(std::posts('bool') == 'True' ? 'VT_BOOL' : '');
+		echo '</div>';
+		break;
+//###################################################################################
+	case alarmpointcfg::c_saveonealarm:
+		$database = new wpDatabase();
+		$database->query("UPDATE [alarm] SET
+				[id_alarmgroup] = ".std::posts('group').",
+				".(std::posts('groups1') != '' ? "[id_alarmgroups1] = ".std::posts('groups1')."," : "")."
+				".(std::posts('groups2') != '' ? "[id_alarmgroups2] = ".std::posts('groups2')."," : "")."
+				".(std::posts('groups3') != '' ? "[id_alarmgroups3] = ".std::posts('groups3')."," : "")."
+				".(std::posts('groups4') != '' ? "[id_alarmgroups4] = ".std::posts('groups4')."," : "")."
+				".(std::posts('groups5') != '' ? "[id_alarmgroups5] = ".std::posts('groups5')."," : "")."
+				[id_alarmtype] = ".std::posts('type').",
+				[id_alarmcondition] = ".std::posts('condition').",
+				[text] = '".std::posts('description')."',
+				[link] = '".std::posts('link')."',
+				[min] = '".std::posts('min')."',
+				[max] = ".(std::posts('max') == '' ? 'NULL' : "'".std::posts('max')."'").",
+				[delay] = ".(is_numeric(std::posts('delay')) ? std::posts('delay') : '0')."
+				WHERE [id_alarm] = ".std::posts('id'));
+		$TCP = new WebCom();
+		new TCPencode($TCP->send('UpdateAlarm', std::posts('id')));
+		echo 'S_OK';
+		//std::test_array($encode->getArray());
+		break;
+//###################################################################################
+	case alarmpointcfg::c_deleteonealarm:
+		$WebCom = new WebCom();
+		$WebCom->send('DeleteAlarm', std::posts('id'));
+
+		echo 'S_OK';
+		break;
+//###################################################################################
+	case alarmpointcfg::c_saveallgroup:
+		$where = '';
+		$fortcp = '';
+		foreach($_POST['ids'] as $ids) {
+			$where .= '[id_alarm] = '.$ids.' OR ';
+			$fortcp .= $ids.'%~%';
+		}
+		$database = new wpDatabase();
+		$database->query('UPDATE [alarm] SET
+				[id_alarmgroup] = '.std::posts('newgroup').'
+				WHERE '.substr($where, 0, -4));
+		$TCP = new WebCom();
+		new TCPencode($TCP->send('UpdateAlarms', substr($fortcp, 0, -3)));
+		echo 'S_OK';
+		break;
+//###################################################################################
+	case alarmpointcfg::c_saveallgroup1:
+		$where = '';
+		$fortcp = '';
+		foreach($_POST['ids'] as $ids) {
+			$where .= '[id_alarm] = '.$ids.' OR ';
+			$fortcp .= $ids.'%~%';
+		}
+		$database = new wpDatabase();
+		$database->query('UPDATE [alarm] SET
+			[id_alarmgroups1] = '.std::posts('newgroup1').'
+			WHERE '.substr($where, 0, -4));
+		$TCP = new WebCom();
+		new TCPencode($TCP->send('UpdateAlarms', substr($fortcp, 0, -3)));
+		echo 'S_OK';
+		break;
+//###################################################################################
+	case alarmpointcfg::c_saveallgroup2:
+		$where = '';
+		$fortcp = '';
+		foreach($_POST['ids'] as $ids) {
+			$where .= '[id_alarm] = '.$ids.' OR ';
+			$fortcp .= $ids.'%~%';
+		}
+		$database = new wpDatabase();
+		$database->query('UPDATE [alarm] SET
+		[id_alarmgroups2] = '.std::posts('newgroup2').'
+		WHERE '.substr($where, 0, -4));
+		$TCP = new WebCom();
+		new TCPencode($TCP->send('UpdateAlarms', substr($fortcp, 0, -3)));
+		echo 'S_OK';
+		break;
+//###################################################################################
+	case alarmpointcfg::c_saveallgroup3:
+		$where = '';
+		$fortcp = '';
+		foreach($_POST['ids'] as $ids) {
+			$where .= '[id_alarm] = '.$ids.' OR ';
+			$fortcp .= $ids.'%~%';
+		}
+		$database = new wpDatabase();
+		$database->query('UPDATE [alarm] SET
+			[id_alarmgroups3] = '.std::posts('newgroup3').'
+			WHERE '.substr($where, 0, -4));
+		$TCP = new WebCom();
+		new TCPencode($TCP->send('UpdateAlarms', substr($fortcp, 0, -3)));
+		echo 'S_OK';
+		break;
+//###################################################################################
+	case alarmpointcfg::c_saveallgroup4:
+		$where = '';
+		$fortcp = '';
+		foreach($_POST['ids'] as $ids) {
+			$where .= '[id_alarm] = '.$ids.' OR ';
+			$fortcp .= $ids.'%~%';
+		}
+		$database = new wpDatabase();
+		$database->query('UPDATE [alarm] SET
+			[id_alarmgroups4] = '.std::posts('newgroup4').'
+			WHERE '.substr($where, 0, -4));
+		$TCP = new WebCom();
+		new TCPencode($TCP->send('UpdateAlarms', substr($fortcp, 0, -3)));
+		echo 'S_OK';
+		break;
+//###################################################################################
+	case alarmpointcfg::c_saveallgroup5:
+		$where = '';
+		$fortcp = '';
+		foreach($_POST['ids'] as $ids) {
+			$where .= '[id_alarm] = '.$ids.' OR ';
+			$fortcp .= $ids.'%~%';
+		}
+		$database = new wpDatabase();
+		$database->query('UPDATE [alarm] SET
+			[id_alarmgroups5] = '.std::posts('newgroup5').'
+			WHERE '.substr($where, 0, -4));
+		$TCP = new WebCom();
+		new TCPencode($TCP->send('UpdateAlarms', substr($fortcp, 0, -3)));
+		echo 'S_OK';
+		break;
+//###################################################################################
+	case alarmpointcfg::c_savealltype:
+		$where = '';
+		$fortcp = '';
+		foreach($_POST['ids'] as $ids) {
+			$where .= '[id_alarm] = '.$ids.' OR ';
+			$fortcp .= $ids.'%~%';
+		}
+		$database = new wpDatabase();
+		$database->query('UPDATE [alarm] SET
+				[id_alarmtype] = '.std::posts('newtype').'
+				WHERE '.substr($where, 0, -4));
+		$TCP = new WebCom();
+		new TCPencode($TCP->send('UpdateAlarms', substr($fortcp, 0, -3)));
+		echo 'S_OK';
+		break;
+//###################################################################################
+	case alarmpointcfg::c_saveallcondition:
+		$where = '';
+		$fortcp = '';
+		foreach($_POST['ids'] as $ids) {
+			$where .= '[id_alarm] = '.$ids.' OR ';
+			$fortcp .= $ids.'%~%';
+		}
+		$sql = "UPDATE [alarm] SET
+				[id_alarmcondition] = ".$_POST['newcondition']['condition'].",
+				[min] = '".$_POST['newcondition']['min']."',
+				[max] = ".($_POST['newcondition']['max'] == '' ? 'NULL' : "'".$_POST['newcondition']['max']."'")."
+				WHERE ".substr($where, 0, -4);
+		$database = new wpDatabase();
+		$database->query($sql);
+		$WebCom = new WebCom();
+		$WebCom->send('UpdateAlarms', substr($fortcp, 0, -3));
+		echo 'S_OK';
+		break;
+//###################################################################################
+	case alarmpointcfg::c_deleteall:
+		$fortcp = '';
+		foreach($_POST['ids'] as $ids) {
+			$fortcp .= $ids.'%~%';
+		}
+		$WebCom = new WebCom();
+		$WebCom->send('DeleteAlarms', substr($fortcp, 0, -3));
+
+		echo 'S_OK';
+		break;
+//###################################################################################
+	default:
+		std::test_array($_POST);
+		echo '<span class="neg">Ubekannter Befehl</span>';
+		break;
+}
+
+//###################################################################################
+function getGroups($defaultValue = 0) {
+	$groups = array('NULL' => 'deaktiviert');
+	$database = new wpDatabase();
+	$database->query('SELECT [id_alarmgroup], [name] FROM [alarmgroup] ORDER BY [name]');
+	while($erg = $database->fetch()) $groups[$erg['id_alarmgroup']] = $erg['name'];
+?>
+	<div class="tr">
+		<div class="td"><label for="c-group">Alarmgruppe</label></div>
+		<div class="td">
+			<select id="c-group" class="ps-input">
+			<?=createDropDown($groups, $defaultValue)?>
+			</select>
+		</div>
+	</div>
+<?
+}
+//###################################################################################
+function getGroups1($defaultValue = 0) {
+	global $system;
+
+	$database = new wpDatabase();
+	$database->query('SELECT [id_alarmgroups1], [name] FROM [alarmgroups1] ORDER BY [name]');
+	while($erg = $database->fetch()) $groups[$erg['id_alarmgroups1']] = $erg['name'];
+	?>
+	<div class="tr">
+		<div class="td"><label for="c-group1"><?echo $system->nameAlarmGroup1()?></label></div>
+		<div class="td">
+			<select id="c-group1" class="ps-input">
+			<?=createDropDown($groups, $defaultValue)?>
+			</select>
+		</div>
+	</div>
+<?
+}
+//###################################################################################
+function getGroups2($defaultValue = 0) {
+	global $system;
+
+	$database = new wpDatabase();
+	$database->query('SELECT [id_alarmgroups2], [name] FROM [alarmgroups2] ORDER BY [name]');
+	while($erg = $database->fetch()) $groups[$erg['id_alarmgroups2']] = $erg['name'];
+	?>
+	<div class="tr">
+		<div class="td"><label for="c-group2"><?echo $system->nameAlarmGroup2()?></label></div>
+		<div class="td">
+			<select id="c-group2" class="ps-input">
+			<?=createDropDown($groups, $defaultValue)?>
+			</select>
+		</div>
+	</div>
+<?
+}
+//###################################################################################
+function getGroups3($defaultValue = 0) {
+	global $system;
+
+	$database = new wpDatabase();
+	$database->query('SELECT [id_alarmgroups3], [name] FROM [alarmgroups3] ORDER BY [name]');
+	while($erg = $database->fetch()) $groups[$erg['id_alarmgroups3']] = $erg['name'];
+	?>
+	<div class="tr">
+		<div class="td"><label for="c-group3"><?echo $system->nameAlarmGroup3()?></label></div>
+		<div class="td">
+			<select id="c-group3" class="ps-input">
+			<?=createDropDown($groups, $defaultValue)?>
+			</select>
+		</div>
+	</div>
+<?
+}
+//###################################################################################
+function getGroups4($defaultValue = 0) {
+	global $system;
+
+	$database = new wpDatabase();
+	$database->query('SELECT [id_alarmgroups4], [name] FROM [alarmgroups4] ORDER BY [name]');
+	while($erg = $database->fetch()) $groups[$erg['id_alarmgroups4']] = $erg['name'];
+	?>
+	<div class="tr">
+		<div class="td"><label for="c-group4"><?echo $system->nameAlarmGroup4()?></label></div>
+		<div class="td">
+			<select id="c-group4" class="ps-input">
+			<?=createDropDown($groups, $defaultValue)?>
+			</select>
+		</div>
+	</div>
+<?
+}
+//###################################################################################
+function getGroups5($defaultValue = 0) {
+	global $system;
+
+	$database = new wpDatabase();
+	$database->query('SELECT [id_alarmgroups5], [name] FROM [alarmgroups5] ORDER BY [name]');
+	while($erg = $database->fetch()) $groups[$erg['id_alarmgroups5']] = $erg['name'];
+	?>
+	<div class="tr">
+		<div class="td"><label for="c-group5"><?echo $system->nameAlarmGroup5()?></label></div>
+		<div class="td">
+			<select id="c-group5" class="ps-input">
+			<?=createDropDown($groups, $defaultValue)?>
+			</select>
+		</div>
+	</div>
+<?
+}
+//###################################################################################
+function getAlarmGroups($Nr, $defaultValue = 0) {
+	$groups = array('NULL' => 'leer');
+	$database = new wpDatabase();
+	$database->query("SELECT [key], [value] FROM [cfg]
+			WHERE [key] = 'usealarmgroup".$Nr."' OR [key] = 'namealarmgroup".$Nr."'");
+	$usegroup = false;
+	$namegroup = '';
+	while($erg = $database->fetch()) {
+		switch($erg['key']) {
+			case 'usealarmgroup'.$Nr:
+				$usegroup = $erg['value'] == 'True';
+				break;
+			case 'namealarmgroup'.$Nr:
+				$namegroup = $erg['value'];
+				break;
+		}
+	}
+	if($usegroup) {
+		$database->query('SELECT [id_alarmgroups'.$Nr.'], [name] FROM [alarmgroups'.$Nr.'] ORDER BY [name]');
+		while($erg = $database->fetch()) if($erg['name'] != '') $groups[$erg['id_alarmgroups'.$Nr]] = $erg['name'];
+?>
+	<div class="tr">
+		<div class="td"><label for="c-groups<?=$Nr?>"><?=$namegroup?></label></div>
+		<div class="td">
+			<select id="c-groups<?=$Nr?>" class="ps-input">
+			<?=createDropDown($groups, $defaultValue)?>
+			</select>
+		</div>
+	</div>
+<?
+	}
+}
+
+//###################################################################################
+function getTypes($defaulValue = 0) {
+	$type = array();
+	$database = new wpDatabase();
+	$database->query('SELECT [id_alarmtype], [name] FROM [alarmtype] ORDER BY [name]');
+	while($erg = $database->fetch()) $type[$erg['id_alarmtype']] = $erg['name'];
+?>
+	<div class="tr">
+		<div class="td"><label for="c-type">Alarmtyp</label></div>
+		<div class="td">
+			<select id="c-type" class="ps-input">
+				<?=createDropDown($type, $defaulValue)?>
+			</select>
+		</div>
+	</div>
+<?
+}
+
+//###################################################################################
+function getConditions($type = '', $min = 'True', $max = '', $defaultValue = 0) {
+	$condition = array();
+	$database = new wpDatabase();
+	$database->query('SELECT [id_alarmcondition], [description] FROM [alarmcondition] ORDER BY [description]');
+	$boolarray = array('gleich', 'ungleich');
+	while($erg = $database->fetch()) {
+		if($type == 'VT_BOOL' && in_array($erg['description'], $boolarray)) {
+			$condition[$erg['id_alarmcondition']] = $erg['description'];
+		}
+		if($type != 'VT_BOOL') {
+			$condition[$erg['id_alarmcondition']] = $erg['description'];
+		}
+	}
+?>
+	<div class="tr" data-isbool="<?=($type == 'VT_BOOL' ? 'True' : 'False')?>">
+		<div class="td"><label for="c-condition">Bedingung</label></div>
+		<div class="td">
+			<select id="c-condition" class="ps-input">
+				<?=createDropDown($condition, $defaultValue)?>
+			</select><br />
+
+			<select id="c-mindd" class="ps-input<?=($type == 'VT_BOOL' ? '' : ' ps-hidden')?>">
+				<option value="True"<?=($min == 'True' ? ' selected="selected"' : '')?>>True</option>
+				<option value="False"<?=($min == 'False' ? ' selected="selected"' : '')?>>False</option>
+			</select>
+
+			<input type="text" id="c-min" value="<?=$min?>" class="ps-input<?=($type == 'VT_BOOL' ? ' ps-hidden' : '')?>" /><br />
+			<input type="text" id="c-max" value="<?=$max?>" class="ps-input<?=(($defaultValue == 5 || $defaultValue == 6) && $type != 'VT_BOOL' ? '' : ' ps-hidden')?>" />
+
+		</div>
+	</div>
+<?
+}
+//###################################################################################
+function createDropDown($array, $active = 0) {
+	$html = '';
+	foreach($array as $key => $value) {
+		$selected = $active == $key ? ' selected="selected"' : '';
+		$html .= '<option value="'.$key.'"'.$selected.'>'.$value.'</option>';
+	}
+	return $html;
+}
+?>

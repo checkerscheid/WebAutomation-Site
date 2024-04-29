@@ -1,0 +1,149 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: userhistorics.req 550 2023-12-25 03:02:54Z               $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\std;
+use system\helper\wpDatabase;
+use system\Helper\wpConvert;
+use system\std;
+
+class userhistorics {
+	const c_getactivitytable = 'getactivitytable';
+	const c_optionusername = 'optionusername';
+	const c_optiondatenpunkt = 'optiondatenpunkt';
+}
+
+switch(std::gets('param1')) {
+//###################################################################################
+	case userhistorics::c_getactivitytable:
+		$where = '';
+		if(std::posts('from') != '' && std::posts('to') == '') {
+			$where = "WHERE [writetime] > '".std::posts('from')."T00:00:00'";
+		}
+		if(std::posts('from') == '' && std::posts('to') != '') {
+			$where = "WHERE [writetime] < '".std::posts('to')."T23:59:59'";
+		}
+		if(std::posts('from') != '' && std::posts('to') != '') {
+			$where = "WHERE [writetime] > '".std::posts('from')."T00:00:00' AND [writetime] < '".std::posts('to')."T23:59:59'";
+		}
+		getTable($where, $_POST['flusername'], $_POST['fldatenpunkt']);
+		break;
+//###################################################################################
+	case userhistorics::c_optionusername:
+		$where = 'WHERE ';
+		if(std::posts('from') != '' && std::posts('to') == '') {
+			$where .= "[writetime] > '".std::posts('from')."T00:00:00'";
+		}
+		if(std::posts('from') == '' && std::posts('to') != '') {
+			$where .= "[writetime] < '".std::posts('to')."T23:59:59'";
+		}
+		if(std::posts('from') != '' && std::posts('to') != '') {
+			$where .= "[writetime] > '".std::posts('from')."T00:00:00' AND [writetime] < '".std::posts('to')."T23:59:59'";
+		}
+		if($_POST['fldatenpunkt'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['fldatenpunkt'] as $filter) {
+				$where .= " [datapoint] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($where == 'WHERE ') $where = '';
+		$database = new wpDatabase();
+		$database->query('SELECT DISTINCT([username]) AS [username] FROM [useractivity] '.$where.' ORDER BY [username] DESC');
+		while($erg = $database->fetch()) {
+			$checked = '';
+			if($_POST['flusername'][0] == 'All' || in_array($erg['username'], $_POST['flusername'])) {
+				$checked = ' checked';
+			}
+			echo '<li class="ps-checkbox'.$checked.'">'.$erg['username'].'</li>';
+		}
+		break;
+//###################################################################################
+	case userhistorics::c_optiondatenpunkt:
+		$where = 'WHERE ';
+		if(std::posts('from') != '' && std::posts('to') == '') {
+			$where .= "[writetime] > '".std::posts('from')."T00:00:00'";
+		}
+		if(std::posts('from') == '' && std::posts('to') != '') {
+			$where .= "[writetime] < '".std::posts('to')."T23:59:59'";
+		}
+		if(std::posts('from') != '' && std::posts('to') != '') {
+			$where .= "[writetime] > '".std::posts('from')."T00:00:00' AND [writetime] < '".std::posts('to')."T23:59:59'";
+		}
+		if($_POST['flusername'][0] != 'All') {
+			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
+			foreach($_POST['flusername'] as $filter) {
+				$where .= " [username] = '".$filter."' OR";
+			}
+			$where = substr($where, 0, -3).')';
+		}
+		if($where == 'WHERE ') $where = '';
+		$database = new wpDatabase();
+		$database->query('SELECT DISTINCT([datapoint]) AS [datapoint] FROM [useractivity] '.$where.' ORDER BY [datapoint] DESC');
+		while($erg = $database->fetch()) {
+			$checked = '';
+			if($_POST['fldatenpunkt'][0] == 'All' || in_array($erg['datapoint'], $_POST['fldatenpunkt'])) {
+				$checked = ' checked';
+			}
+			echo '<li class="ps-checkbox'.$checked.'">'.$erg['datapoint'].'</li>';
+		}
+		break;
+//###################################################################################
+	default:
+		\system\html::default();
+		break;
+}
+
+function getTable($where, $arrayUser, $arrayDatenpunkt) {
+	echo '
+		<table id="historictable" class="stripe hover">
+			<thead>
+				<tr>
+					<th>Zeit</th>
+					<th' . ($arrayUser[0] == 'All' ? '' : ' class="neg"') . '>Benutzername</th>
+					<th' . ($arrayDatenpunkt[0] == 'All' ? '' : ' class="neg"') . '>Datenpunkt</th>
+					<th>alter Wert</th>
+					<th>neuer Wert</th>
+				</tr>
+			</thead>
+			<tbody>';
+	$scriptstart = microtime(true);
+	$database = new wpDatabase();
+	$database->query('SELECT [username], [datapoint], [writetime], [oldvalue], [newvalue] FROM [useractivity] '.$where.' ORDER BY [writetime] DESC');
+	$count = $database->hasRows();
+	while($erg = $database->fetch()) {
+		if(
+				($arrayUser[0] == 'All' || in_array($erg['username'], $arrayUser)) &&
+				($arrayDatenpunkt[0] == 'All' || in_array($erg['datapoint'], $arrayDatenpunkt))
+			) {
+			echo '
+				<tr>
+					<td>'.wpConvert::getdeDateTimeFromDB($erg['writetime']).'</td>
+					<td>'.$erg['username'].'</td>
+					<td>'.$erg['datapoint'].'</td>
+					<td>'.$erg['oldvalue'].'</td>
+					<td>'.$erg['newvalue'].'</td>
+				</tr>';
+		}
+	}
+	echo '
+			</tbody>
+		</table>';
+	//if(intval($count) >= 1000) echo '<span>Ihre Abfrage erzeugte 1000 Datens&auml;tze. Es sind vielleicht weitere Daten vorhanden. Bitte spezifizieren Sie Ihre Suchanfrage.</span>';
+	echo '
+		<!-- Eintraege: '.$count.' -->
+		<!-- Dauer:'.(microtime(true) - $scriptstart).' -->';
+}
+?>

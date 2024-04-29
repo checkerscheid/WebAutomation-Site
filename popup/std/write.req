@@ -1,0 +1,50 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 08.02.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 578                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: write.req 578 2024-03-22 21:53:46Z                       $ #
+//#                                                                                 #
+//###################################################################################
+/** @var Type $m */
+namespace popup\std;
+use system\std;
+
+?>
+
+<div class="popup">
+	<h1><?=std::posts('headline')?></h1>
+	<table summary="">
+		<tr>
+			<td>
+				<span>Sollwert:</span>
+			</td>
+			<td>
+<?
+if(preg_match_all('/(\d+):([^;]+)/', std::posts('unit'), $m) > 0) {
+	echo '<select class="newDpVal">';
+	for($i = 0; $i < count($m[0]); $i++) {
+		echo '<option value="' . $m[1][$i] . '">' . $m[2][$i] . '</option>';
+	}
+	echo '</select>';
+} else if(preg_match_all('/(True|False):([^;]+)/', std::posts('unit'), $m) > 0) {
+	for($i = 0; $i < count($m[0]); $i++) {
+		echo '<span class="ps-button" data-write="' . $m[1][$i] . '">' . $m[2][$i] . '</span>';
+	}
+} else {
+	echo '<input type="text" class="ps-input newDpVal" />';
+}
+?>
+			</td>
+		</tr>
+
+	</table>
+</div>

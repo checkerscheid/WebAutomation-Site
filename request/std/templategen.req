@@ -1,0 +1,161 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 15.12.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 582                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: templategen.req 582 2024-04-10 06:45:45Z                 $ #
+//#                                                                                 #
+//###################################################################################
+/** @var Type $matches */
+namespace request\std;
+use system\Helper\wpDatabase;
+use system\std;
+class templategen {
+	const c_gettemplates = 'gettemplates';
+	const c_gettemplatesoptions = 'gettemplatesoptions';
+	const c_gettemplate = 'gettemplate';
+	const c_savetemplateposition = 'savetemplateposition';
+	const c_savetemplatesize = 'savetemplatesize';
+	const c_savetemplateclass = 'savetemplateclass';
+	const c_deletetemplateclass = 'deletetemplateclass';
+}
+
+switch(std::gets('param1')) {
+//###################################################################################
+	case templategen::c_gettemplates:
+		$database = new wpDatabase();
+		if(std::posts('id') == 'NULL') {
+			$database->query('SELECT [t].[id_template], [t].[name] FROM [template] [t]
+					LEFT OUTER JOIN [templategroup] [tg] ON [tg].[id_templategroup] = [t].[id_templategroup] WHERE [t].[id_templategroup] IS NULL ORDER BY [t].[name]');
+		} else {
+			$database->query('SELECT [t].[id_template], [t].[name] FROM [template] [t]
+					INNER JOIN [templategroup] [tg] ON [tg].[id_templategroup] = [t].[id_templategroup] WHERE [t].[id_templategroup] = '.std::posts('id').' ORDER BY [t].[name]');
+		}
+		echo '<ul>';
+		while($erg = $database->fetch()) {
+			echo '<li data-template="'.$erg['id_template'].'">';
+			echo '<span class="templatename">'.$erg['name'].'</span>';
+			echo '<span class="ps-hover-noborder p-dpbutton p-dpedit">'.wpHTML_EMPTY.'</span>';
+			echo '<span class="ps-hover-noborder p-dpbutton p-dpdelete">'.wpHTML_EMPTY.'</span>';
+			echo '</li>';
+		}
+		echo '</ul>';
+		break;
+//###################################################################################
+	case templategen::c_gettemplatesoptions:
+		$database = new wpDatabase();
+		$database->query('SELECT [id], [key], [value] FROM [templatecss] WHERE [id_template] = "'.std::posts('id').'" AND ([id] = "handbetrieb" OR [id] = "vorort" OR [id] = "parent")');
+		$hidden = array();
+		$width = 100;
+		$height = 100;
+		while($erg = $database->fetch()) {
+			if($erg['id'] == 'parent') {
+				preg_match_all('!\d+!', $erg['value'], $matches);
+				$out =  (int)implode('', $matches[0]);
+				if($out > 0) $$erg['key'] = $out;
+			} else {
+				$hidden[$erg['id']] = $erg['value'];
+			}
+		}
+		echo '<hr />';
+		echo '<div class="optionsrow">Gr&ouml;&szlig;e: <input type="text" class="ps-input templatewidth" value="'.$width.'" /> x <input type="text" class="p-input templateheight" value="'.$height.'" /><input type="button" id="templatesetsize" value="V" /></div>';
+		echo '<div class="optionsrow"><span class="ps-checkbox templatehand'.((std::arrays($hidden, 'handbetrieb') != 'ps-hidden')?' checked':'').'">Handbedienung</span></div>';
+		echo '<div class="optionsrow"><span class="ps-checkbox templatevorort'.((std::arrays($hidden, 'vorort') != 'ps-hidden')?' checked':'').'">vor Ort Bedienung</span></div>';
+		echo '<div class="optionsrow"><span class="ps-checkbox">bedienbar</span></div>';
+		echo '<h1>Elemente</h1>';
+		echo '<hr />';
+		echo '<ul class="sortable">';
+		echo '<li><span class="p-element">handbetrieb</span></li>';
+		echo '<li><span class="p-element">vorort</span></li>';
+		echo '<li><span class="p-element">div1</span></li>';
+		echo '<li><span class="p-element">div2</span></li>';
+		echo '</ul>';
+		echo '<hr />';
+		echo '<h1>Neues Element</h1>';
+		echo '<div class="optionsrow"><span class="ps-button">div</span></div>';
+		echo '<div class="optionsrow"><span class="ps-button">input</span></div>';
+		echo '<div class="optionsrow"><span class="ps-button">img</span></div>';
+		echo '</ul>';
+		break;
+//###################################################################################
+	case templategen::c_gettemplate:
+		$database = new wpDatabase();
+		$database->query('SELECT [id], [key], [value] FROM [templatecss] WHERE [id_template] = '.std::posts('id'));
+		$cssid = array();
+		$cssclass = array();
+		while($erg = $database->fetch()) {
+			if($erg['id'] != '') {
+				if($erg['key'] != 'class') {
+					if(std::arrays($cssid, $erg['id']) == '') $cssid[$erg['id']] = '';
+					$cssid[$erg['id']] .= $erg['key'].':'.$erg['value'].';';
+				} else {
+					if(std::arrays($cssclass, $erg['id']) == '') $cssclass[$erg['id']] = '';
+					$cssclass[$erg['id']] .= $erg['value'].' ';
+				}
+			}
+		}
+		if(count($cssclass) > 0) foreach($cssclass as $key => $value) {
+			if(strlen($cssclass[$key]) > 0) $cssclass[$key] = ' class="'.substr($cssclass[$key], 0, -1).'"';
+			$value;
+		}
+		echo '<div id="templateraster" data-id="'.std::posts('id').'" style="'.((std::arrays($cssid, 'parent') != '')?$cssid['parent']:'width:100px;height:100px;').'background:transparent url(\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gwPDzopFTQrgAAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAAK0lEQVQY02PcvHnzfwYiAAsDAwODj48PIz5FW7ZsYWBiIBKMTIUssHAiBABKWAhN6/fzLAAAAABJRU5ErkJggg==\') repeat -1px -1px; border:1px solid #CCC;">';
+		echo '<img alt="Handbetrieb" src="images/visuelemente/hand.png" id="handbetrieb"'.((std::arrays($cssid, 'handbetrieb') != '')?' style="'.$cssid['handbetrieb'].'"':'').std::arrays($cssclass, 'handbetrieb').' />';
+		echo '<img alt="VorOrtBetrieb" src="images/visuelemente/vorOrt.png" id="vorort"'.((std::arrays($cssid, 'vorort') != '')?' style="'.$cssid['vorort'].'"':'').std::arrays($cssclass, 'vorort').' />';
+		echo '<div id="div1"'.((std::arrays($cssid, 'div1') != '')?' style="'.$cssid['div1'].'"':'').'></div>';
+		echo '<div id="div2"'.((std::arrays($cssid, 'div2') != '')?' style="'.$cssid['div2'].'"':'').'></div>';
+		echo '</div>';
+		break;
+//###################################################################################
+	case templategen::c_savetemplateposition:
+		$database = new wpDatabase();
+		if($database->query('INSERT INTO [templatecss] SET
+				[id_template] = '.std::posts('dbid').', [id] = "'.std::posts('cssid').'", [key] = "top", [value] = "'.$_POST['p']['top'].'px"
+				ON DUPLICATE KEY UPDATE [value] = "'.$_POST['p']['top'].'px"') &&
+				$database->query('INSERT INTO [templatecss] SET
+					[id_template] = '.std::posts('dbid').', [id] = "'.std::posts('cssid').'", [key] = "left", [value] = "'.$_POST['p']['left'].'px"
+					ON DUPLICATE KEY UPDATE [value] = "'.$_POST['p']['left'].'px"')) {
+			echo 'S_OK';
+		}
+		break;
+//###################################################################################
+	case templategen::c_savetemplatesize:
+		$database = new wpDatabase();
+		if($database->query('INSERT INTO [templatecss] SET
+				[id_template] = '.std::posts('dbid').', [id] = "'.std::posts('cssid').'", [key] = "width", [value] = "'.$_POST['s']['width'].'px"
+				ON DUPLICATE KEY UPDATE [value] = "'.$_POST['s']['width'].'px"') &&
+				$database->query('INSERT INTO [templatecss] SET
+					[id_template] = '.std::posts('dbid').', [id] = "'.std::posts('cssid').'", [key] = "height", [value] = "'.$_POST['s']['height'].'px"
+					ON DUPLICATE KEY UPDATE [value] = "'.$_POST['s']['height'].'px"')) {
+			echo 'S_OK';
+		}
+		break;
+//###################################################################################
+	case templategen::c_savetemplateclass:
+		$database = new wpDatabase();
+		if($database->query('INSERT INTO [templatecss] SET
+			[id_template] = '.std::posts('dbid').', [id] = "'.std::posts('cssid').'", [key] = "class", [value] = "'.std::posts('value').'"
+			ON DUPLICATE KEY UPDATE [value] = "'.std::posts('value').'"')) {
+			echo 'S_OK';
+		}
+		break;
+//###################################################################################
+	case templategen::c_deletetemplateclass:
+		$database = new wpDatabase();
+		if($database->query('DELETE FROM [templatecss] WHERE
+			[id_template] = '.std::posts('dbid').' AND [id] = "'.std::posts('cssid').'" AND [key] = "class"')) {
+			echo 'S_OK';
+		}
+		break;
+//###################################################################################
+	default:
+		\system\html::default();
+		break;
+}

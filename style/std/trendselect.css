@@ -1,0 +1,39 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 542                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: trendselect.css 542 2023-12-14 04:13:23Z checker         $ #
+//#                                                                                 #
+//###################################################################################
+?> trendselect */
+
+#trendselect { display:flex; }
+#trendselect span.text { line-height:30px; }
+#trendselect span.description { display:inline-block; width:140px; }
+#trendselect .trend { width:300px; }
+#trendexists .ps-button { float:right; }
+#choosentrend .ps-button { float:left; }
+#trendexists, #trendconfig, #trendusercfg { float:left; border:1px solid #CCC; padding:5px; margin:10px; width:350px; }
+#trendcontainer { padding:10px 50px; position:relative; overflow:hidden; }
+#trendlegendcontainer .selectedtime { padding-left:20px; }
+#erg { height:0px; width:100%; overflow:hidden; }
+
+#trendexists ul ul, #trendusercfg ul ul { margin-left:30px; }
+
+#trendusercfg span.ps-tree-parent { display:inline-block; height:30px; }
+#trendusercfg span.ps-bold { cursor:pointer; }
+#trendusercfg .ps-displayright { float:right; }
+#trendusercfg .ps-dpbutton { display:inline-block; width:27px; height:27px; padding:0 2px; margin:0 3px; cursor:pointer; }
+#trendusercfg .ps-dpdelete { background:transparent url(images/layout/ic_menu_delete.png) center center no-repeat; }
+#trendusercfg .ps-dprefresh { background:transparent url(images/layout/ic_menu_refresh.png) center center no-repeat; }
+
+h1 { text-align:center; }

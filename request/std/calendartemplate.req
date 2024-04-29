@@ -1,0 +1,153 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 15.05.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 582                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: calendartemplate.req 582 2024-04-10 06:45:45Z            $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\std;
+use system\Helper\wpDatabase;
+use system\std;
+class calendartemplate {
+	const c_menunewtemplate = 'menunewtemplate';
+	const c_menutemplates= 'menutemplates';
+	const c_savetemplate = 'savetemplate';
+	const c_renametemplate = 'renametemplate';
+	const c_deletetemplate  ='deletetemplate';
+	const c_updatetemplate = 'updatetemplate';
+	const c_updateevent = 'updateevent';
+	const c_deleteevent = 'deleteevent';
+}
+
+switch(std::gets('param1')) {
+//###################################################################################
+// Menueeintraege
+//###################################################################################
+	case calendartemplate::c_menunewtemplate:
+?>
+		<h1>Neue Ereignisvorlage anlegen</h1>
+		<hr />
+		<div id="newtemplate">
+		</div>
+		<div id="templatesave">
+			<span>Vorlagenname:</span>
+			<input type="text" class="ps-input" id="templatename" />
+			<span class="ps-button" id="savetemplate">speichern</span>
+		</div>
+<?
+		break;
+//###################################################################################
+	case calendartemplate::c_menutemplates:
+		$database = new wpDatabase();
+?>
+		<h1>Ereignisvorlage bearbeiten</h1>
+		<hr />
+		<ul id="listtemplates">
+<?
+		$database->query('SELECT [id_calendartemplate], [summary] FROM [calendartemplate] WHERE [id_calendar] = ' . std::posts('id') . ' ORDER BY [summary]');
+		while($erg = $database->fetch()) {
+			echo '
+			<li data-template="'.$erg['id_calendartemplate'].'">
+				<span class="p-ttext">' . $erg['summary'] . '</span>
+				<span class="ps-hover-noborder p-tbutton p-trefresh" title="umbenennen">' . wpHTML_EMPTY . '</span>
+				<span class="ps-hover-noborder p-tbutton p-tedit" title="Zeiten bearbeiten">' . wpHTML_EMPTY . '</span>
+				<span class="ps-hover-noborder p-tbutton p-tdelete" title="löschen">' . wpHTML_EMPTY . '</span>
+			</li>';
+		}
+?>
+		</ul>
+		<div id="edittemplatecalendar">
+		</div>
+<?
+		break;
+//###################################################################################
+	case  calendartemplate::c_renametemplate:
+		if(std::posts('newname') != '') {
+			$database = new wpDatabase();
+			$database->query("UPDATE [calendartemplate] SET [summary] = '" . std::posts('newname') . "' WHERE [id_calendartemplate] = " . std::posts('templateid'));
+			echo 'S_OK';
+		} else {
+			echo '<span class="neg">Der Name darf nicht leer sein.</span>';
+		}
+		break;
+//###################################################################################
+	case  calendartemplate::c_deletetemplate:
+		$database = new wpDatabase();
+		$database->query("DELETE FROM [calendartemplate] WHERE [id_calendartemplate] = " . std::posts('templateid'));
+		echo 'S_OK';
+		break;
+//###################################################################################
+	case calendartemplate::c_savetemplate:
+		if(std::posts('name') != '') {
+			$database = new wpDatabase();
+			$database->query("INSERT INTO [calendartemplate] ([id_calendar], [summary]) VALUES
+				(" . std::posts('idCalendar') . ", '" . std::posts('name') . "')
+			");
+			$newID = $database->lastid('calendartemplate');
+			$sql = "INSERT INTO [calendartemplateevent] ([id_calendartemplate], [tstart], [vstart], [tend], [vend]) VALUES ";
+			$checker = 0;
+			foreach(std::arrays($_POST, 'ev', array()) as $val) {
+				if($val['end'] == '00:00' || $val['end'] == '00:00:00' || $val['end'] == '24:00' || $val['end'] == '24:00:00') $val['end'] = '23:59:59';
+				if($val['vstart'] == 'NULL') $val['vstart'] = 'NULL';
+				else $val['vstart'] = "'" .  $val['vstart'] . "'";
+				if($val['vend'] == 'NULL') $val['vend'] = 'NULL';
+				else $val['vend'] = "'" .  $val['vend'] . "'";
+				$sql .= "(" . $newID. ", '" . $val['start'] . "', " . $val['vstart'] . ", '" . $val['end'] . "', " . $val['vend'] . "), ";
+				$checker++;
+			}
+			if($checker > 0) $database->query(substr($sql, 0, -2));
+			echo 'S_OK';
+		} else {
+			echo '<span class="neg">Der Name darf nicht leer sein.</span>';
+		}
+		break;
+//###################################################################################
+	case calendartemplate::c_updatetemplate:
+		$database = new wpDatabase();
+		$sql = "INSERT INTO [calendartemplateevent] ([id_calendartemplate], [tstart], [vstart], [tend], [vend]) VALUES ";
+		$checker = 0;
+		foreach(std::arrays($_POST, 'ev', array()) as $val) {
+			if($val['end'] == '00:00' || $val['end'] == '00:00:00' || $val['end'] == '24:00' || $val['end'] == '24:00:00') $val['end'] = '23:59:59';
+			if($val['vstart'] == 'NULL') $val['vstart'] = 'NULL';
+			else $val['vstart'] = "'" .  $val['vstart'] . "'";
+			if($val['vend'] == 'NULL') $val['vend'] = 'NULL';
+			else $val['vend'] = "'" .  $val['vend'] . "'";
+			$sql .= "(" . std::posts('idCalendarTemplate'). ", '" . $val['start'] . "', " . $val['vstart'] . ", '" . $val['end'] . "', " . $val['vend'] . "), ";
+			$checker++;
+		}
+		if($checker > 0) $database->query(substr($sql, 0, -2));
+		echo 'S_OK';
+		break;
+//###################################################################################
+	case calendartemplate::c_updateevent:
+		//std::test_array($_POST);
+		$database = new wpDatabase();
+		$ende = ($_POST['ev']['end'] == '00:00' || $_POST['ev']['end'] == '00:00:00' ||
+			$_POST['ev']['end'] == '24:00' || $_POST['ev']['end'] == '24:00:00') ? '23:59:59' : $_POST['ev']['end'];
+		$sql = "UPDATE [calendartemplateevent] SET [tstart] = '" . $_POST['ev']['start']. "', [vstart] = '" . $_POST['ev']['vstart'] . "',
+ 			[tend] = '" . $ende . "', [vend] = '" . $_POST['ev']['vend']. "' WHERE [id_calendartemplateevent] = " . std::posts('idevent');
+		$database->query($sql);
+		echo 'S_OK';
+		break;
+//###################################################################################
+	case calendartemplate::c_deleteevent:
+		//std::test_array($_POST);
+		$database = new wpDatabase();
+		$sql = "DELETE FROM [calendartemplateevent] WHERE [id_calendartemplateevent] = " . std::posts('idevent');
+		$database->query($sql);
+		echo 'S_OK';
+		break;
+//###################################################################################
+	default:
+		\system\html::default();
+		break;
+}

@@ -1,0 +1,35 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 20.12.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 544                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: navigation.css 544 2023-12-22 01:39:09Z                  $ #
+//#                                                                                 #
+//###################################################################################
+?> navigation */
+
+#navigation { max-width:1200px; margin:auto; }
+#navigation h1 { text-align:center; margin-bottom:0px; }
+#navigation ul.sortable { margin-left:10px; margin-bottom:5px; padding:1px 1px 20px 1px; border-radius:4px; }
+#navigation ul.sortable.empty { padding:1px 1px 20px 1px; border:1px dotted #A91919; }
+#navigation ul.sortable.empty, #navigation ul.sortable li { box-shadow:inset 2px 2px 4px 0px #222; }
+#navigation .ps-container { width:45%; }
+#navigation li { min-width:250px; margin:2px 2px; padding:2px 5px; border:1px solid #CCC; border-radius:4px; background-color:#FFF; cursor:move; }
+html.black #navigation li { background-color:#777; }
+#navigation .ps-active { background-color:#FFF; }
+#navigation .id_webpage { line-height:20px; }
+
+#navigation .clapthisin, #navigation .deletethis { float:right; font-weight:bold; padding:0px 5px; border:1px solid #CCC; cursor:pointer; border-radius:2px; }
+#navigation .thisisclapped * { color:#F00; }
+#navigation .mini { height:0px; display:none; overflow:hidden; }
+#navigation #availableSites li>ul { display:none; }
+
+#navigation .ps-container { text-align:left; }

@@ -1,0 +1,48 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 561                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: opcbrowse.css 561 2024-01-16 02:06:50Z                   $ #
+//#                                                                                 #
+//###################################################################################
+?> opcbrowse */
+
+#submenu { height:20px; padding:0 0 5px 50px; }
+#submenu li { float:left; }
+#erg { padding:10px 0; }
+#forItems { overflow:auto; height:325px; border-top:1px solid #CCC; }
+#forGroup { overflow:auto; height:325px; }
+
+#opcbrowse { margin-left:50px; }
+#opcbrowse ul { margin-left:20px; }
+#opcbrowse .ulcontainer { padding:5px; height:198px; }
+#opcbrowse li.HeadLine { padding:3px 0; font-size:14px; }
+#opcbrowse li.GroupHeadLine { font-size:14px; font-weight:bold; }
+#opcbrowse .getItems { cursor:pointer; }
+#opcbrowse .divopcserver { margin:3px 30px; }
+#opcbrowse .divopcserver .opcserver { line-height:27px; height:27px; display:inline-block; padding:0 7px; overflow:hidden; }
+#opcbrowse .nosubgroup { padding:3px 3px 3px 30px; background:transparent url(images/layout/forward_enabled.png) left center no-repeat; }
+#opcbrowse span.ps-tree-parent { display:inline-block; height:25px; }
+#opcbrowse .ps-hover-noborder { padding:3px 8px; }
+#opcbrowse #forGroup, #opcbrowse #ItemContainer { border:1px solid #CCC; overflow:auto; border-radius:2px; }
+#opcbrowse .exists { background-color:#CEF6CE; }
+#opcbrowse .p-dpbutton { display:inline-block; width:27px; height:27px; padding:0 2px; margin:0 3px; cursor:pointer; overflow:hidden; }
+#opcbrowse .p-dpsearch { background:transparent url(images/layout/menu_search.png) center center no-repeat; }
+#opcbrowse .ps-itemsactive { background-color:#DDD; }
+#opcbrowse .ps-loading { min-height:25px; background-position:50px 5px; }
+
+html.black #opcbrowse .exists { background-color:#888; }
+html.black #opcbrowse .ps-itemsactive { background-color:#888; }
+
+#dialog .ps-input { width:200px; }
+#dialog .ps-input.ps-big { width:400px; }
+/*#opcserverbutton { display:none; }*/

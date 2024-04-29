@@ -1,0 +1,117 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 16.12.2019                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 582                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: shelly.psys 582 2024-04-10 06:45:45Z                     $ #
+//#                                                                                 #
+//###################################################################################
+namespace system\Helper;
+/**
+ * ermittelt den Shelly Type und ordnet ihn zu (Gen, relay, light usw.)
+ * @author Checker
+ */
+class shelly {
+	/** Door Window */
+	const DW = 'SHDW';
+	/** Sensorball */
+	const HT = 'SHHT-1';
+	const HT_Plus = 'PlusHT';
+	const HT_3 = 'HTG3';
+	/** Relay (blau, rund) */
+	const SW = 'SHSW';
+	/** Relay und Powermeter (rot, rund) */
+	const PM = 'SHSW-PM';
+	/** Relay und Powermeter Gen 2 */
+	const PM_Plus = 'Plus1PM';
+	const PM2_Plus = 'Plus2PM';
+	/** Relay und Powermeter Mini */
+	const PM_Mini = 'Mini1PM';
+	/** Relay und Powermeter Mini Gen 3 */
+	const PM_Mini_3 = 'Mini1PMG3';
+	/** Steckdose */
+	const PLG = 'SHPLG-S';
+	/** Energiezähler */
+	const EM = 'SHEM';
+	/** Dimmer */
+	const DIMMER = 'SHDM-1';
+	/** Dimmer Version 2 */
+	const DIMMER2 = 'SHDM-2';
+	const RGBW = 'SHRGBW';
+	const RGBW2 = 'SHRGBW2';
+	/** Batteriebetrieben */
+	const bat = array(self::DW, self::HT, self::HT_Plus, self::HT_3);
+	/** Relay */
+	const relay = array(self::SW, self::PM, self::PM_Plus, self::PM2_Plus, self::PM_Mini, self::PM_Mini_3, self::PLG, self::EM);
+	/** light */
+	const light = array(self::DIMMER, self::DIMMER2, self::RGBW, self::RGBW2);
+	/** Generation 1 */
+	const gen1 = array(self::SW, self::PM, self::PLG, self::DIMMER, self::DIMMER2, self::RGBW, self::RGBW2, self::EM);
+	/** Generation 2 */
+	const gen2 = array(self::PM_Plus, self::PM2_Plus, self::PM_Mini, self::PM_Mini_3);
+	/** Shelly ist Batteriebetrieben */
+	public static function hasBat($type) {
+		$type = self::getTypeFromJson($type);
+		if(in_array($type, self::bat)) return true;
+		return false;
+	}
+	/** Shelly reagiert auf relay */
+	public static function isRelay($type) {
+		$type = self::getTypeFromJson($type);
+		if(in_array($type, self::relay)) return true;
+		return false;
+	}
+	/** Shelly reagiert auf light */
+	public static function isLight($type) {
+		$type = self::getTypeFromJson($type);
+		if(in_array($type, self::light)) return true;
+		return false;
+	}
+	/** Shelly ist Gneration 1 */
+	public static function isGen1($type) {
+		$type = self::getTypeFromJson($type);
+		if(in_array($type, self::gen1)) return true;
+		return false;
+	}
+	/** Shelly ist Gneration 2 */
+	public static function isGen2($type) {
+		$type = self::getTypeFromJson($type);
+		if(in_array($type, self::gen2)) return true;
+		return false;
+	}
+	public static function relaySqlWhere($tableAlias = '') {
+		$returns = '';
+		$prepend = '';
+		$tableAlias = $tableAlias == '' ? '' : '[' . $tableAlias . '].';
+		foreach(self::relay as $t) {
+			$returns .= $prepend . $tableAlias . "[type] = '" . $t . "'";
+			$prepend = " OR ";
+		}
+		return $returns;
+	}
+	public static function lightSqlWhere($tableAlias = '') {
+		$returns = '';
+		$prepend = '';
+		$tableAlias = $tableAlias == '' ? '' : '[' . $tableAlias . '].';
+		foreach(self::light as $t) {
+			$returns .= $prepend . $tableAlias . "[type] = '" . $t . "'";
+			$prepend = " OR ";
+		}
+		return $returns;
+	}
+	/** responsed /shelly */
+	private static function getTypeFromJson($Json) {
+		if(isset($Json->type)) return $Json->type;
+		if(isset($Json->app)) return $Json->app;
+		return $Json;
+	}
+}
+?>

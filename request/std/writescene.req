@@ -1,0 +1,70 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 21.07.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 552                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: writescene.req 552 2024-01-06 13:56:24Z                  $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\std;
+use system\Helper\wpDatabase;
+use system\Helper\wpConvert;
+use system\std, system\WebCom;
+class writescene {
+	const c_set = 'set';
+	const c_setid = 'setid';
+	const c_save = 'save';
+}
+
+switch(std::gets('param1')) {
+	//###################################################################################
+	case writescene::c_set:
+		$database = new wpDatabase();
+		$database->query('SELECT [id_opcdatapoint], [value] FROM [scenevalue] WHERE [id_scene] = '.std::posts('id'));
+		$points = array();
+		while($erg = $database->fetch()) {
+			$points[$erg['id_opcdatapoint']] = $erg['value'];
+		}
+		$sWebCom = '';
+		$sSQL = '';
+		$i = 0;
+		foreach($points as $point => $value) {
+			foreach($_SESSION[SESSION_ID]['POINTS'] as $pagename => $obj) {
+				if($obj->id == $point) break;
+			}
+			$sWebCom .= '%~%'.$point.'%~%'.$value;
+			if(std::arrays($_SESSION[SESSION_ID], 'POINTS') != '' &&
+					count($_SESSION[SESSION_ID]['POINTS']) > 0) {
+				$sSQL .= '("'.$_SESSION[SESSION_ID]['USER'].'", "'.$_SESSION[SESSION_ID]['POINTS'][$pagename]->opcname.' (scene)", "'.wpConvert::getDateTime().'", "'.$_SESSION[SESSION_ID]['POINTS'][$pagename]->value.'", "'.$value.'")';
+				if(++$i < count($points)) $sSQL .= ',';
+			}
+		}
+		$WebCom = new WebCom();
+		$WebCom->send('WriteMultiDP', $_SESSION[SESSION_ID]['LEVEL'].$sWebCom);
+		if(strlen($sSQL) > 0) {
+			$database->query('INSERT INTO [useractivity] ([username], [datapoint], [writetime], [oldvalue], [newvalue]) VALUES '.$sSQL);
+		}
+		break;
+	//###################################################################################
+	case writescene::c_setid:
+		$WebCom = new WebCom();
+		echo $WebCom->send('WriteSceneDP', $_SESSION[SESSION_ID]['USER'].'%~%'.std::posts('id'));
+		break;
+	//###################################################################################
+	case writescene::c_save:
+
+		break;
+	//###################################################################################
+	default:
+		\system\html::default();
+		break;
+}
+?>

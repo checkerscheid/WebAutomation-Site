@@ -1,0 +1,53 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 20.12.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 552                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: weather.css 552 2024-01-06 13:56:24Z                     $ #
+//#                                                                                 #
+//###################################################################################
+?> wetter */
+
+#wetter h1 { text-align:center; margin-bottom:0px; }
+#wetter .ps-container { margin-left:auto; margin-right:auto; }
+
+.weathercontainer .condition { width:420px; }
+.weathercontainer .forecast { width:950px; }
+
+.weathercontainer .condition .big { font-size:65px; font-weight:bold; padding-left:135px; padding-top:10px;
+	float:left; text-shadow:0 0 3px #FFF; }
+.weathercontainer .condition .big sup { font-size:32px; font-weight:bold; }
+.weathercontainer .condition .location { font-size:22px; font-weight:bold; padding-left:135px; float:left;
+	text-shadow:0 0 3px #FFF; }
+.weathercontainer .condition .sonne { padding-left:20px; padding-top:20px; float:left; }
+.weathercontainer .condition .sonne span { line-height:32px; height:32px; display:inline-block;
+	padding-left:5px; }
+.weathercontainer .condition .sonne .sunrise { width:35px; height:32px;
+	background:transparent url(images/layout/sunrise.png) center top no-repeat; }
+.weathercontainer .condition .sonne .sunset { width:35px; height:32px;
+	background:transparent url(images/layout/sunset.png) center top no-repeat; }
+.weathercontainer .condition .wind, .weathercontainer .condition .atm { font-size:12px; text-align:right; }
+.weathercontainer .condition .lastbuild { font-size:9px; text-align:right; }
+.weathercontainer .condition .yahoo { width:30px; height:18px; display:inline-block; margin-left:5px;
+	background:transparent url(images/layout/yahoo.png); }
+
+.weathercontainer .forecast div.days { float:left; width:100px; text-align:center; overflow:hidden; border:1px solid #555; padding:3px; margin:5px;
+	border-radius:5px; box-shadow:0px 0px 12px #8c8c8c; }
+.weathercontainer .forecast div.daysempty { float:left; width:100px; padding:4px; margin:5px; }
+.weathercontainer .forecast img.wind { width:15px; height:15px; }
+.weathercontainer .forecast .high { font-size:10px; color:#FF6969; text-shadow:0 0 3px #000; }
+.weathercontainer .forecast .low { font-size:10px; color:#167BFF; text-shadow:0 0 3px #000; }
+.weathercontainer .forecast .ps-bold { font-size:16px; }
+.weathercontainer .forecast .clearboth { margin:10px; }
+
+.black .weathercontainer .condition .big { text-shadow:0 0 3px #000; }
+.black .weathercontainer .condition .location { text-shadow:0 0 3px #000; }
+.black .weathercontainer .forecast div.days { border:1px solid #AAA; box-shadow:2px 2px 8px #000; }

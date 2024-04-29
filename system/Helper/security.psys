@@ -1,0 +1,475 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 562                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: security.psys 562 2024-01-16 02:08:14Z                   $ #
+//#                                                                                 #
+//###################################################################################
+namespace system\Helper;
+use system\std;
+use system\wpInit;
+/**
+ * @author C_Scheid
+ */
+class security {
+	/**  */
+	const besucher = 2;
+	/**  */
+	const benutzer = 3;
+	/**  */
+	const administrator = 4;
+	/**  */
+	const entwickler = 5;
+	/**  */
+	const SESSION_STARTED = true;
+	/**  */
+	const SESSION_NOT_STARTED = false;
+	/**  */
+	private $sessionState = self::SESSION_NOT_STARTED;
+	/**  */
+	private static $instance;
+	/**
+	 * Kontruktor
+	 */
+	public function __construct() {
+	}
+	/**
+	 *
+	 * @return security
+	 */
+	public static function getInstance() {
+		if(!isset(self::$instance)) {
+			self::$instance = new self;
+		}
+		self::$instance->startSession();
+		return self::$instance;
+	}
+	/**
+	 *
+	 * @return string
+	 */
+	public function startSession() {
+		while($this->sessionState == self::SESSION_NOT_STARTED) {
+			$this->sessionState = @session_start();
+			if($this->sessionState == self::SESSION_NOT_STARTED) {
+				sleep(1);
+			}
+		}
+		if(std::arrays($_SESSION, SESSION_ID) == '') $_SESSION[SESSION_ID] = array();
+		return $this->sessionState;
+	}
+	/**
+	 *
+	 * @param $name
+	 * @param $value
+	 */
+	public function __set($name, $value) {
+		$_SESSION[SESSION_ID][$name] = $value;
+	}
+	/**
+	 *
+	 * @param $name
+	 */
+	public function __get($name) {
+		if(isset($_SESSION[SESSION_ID][$name])) {
+			return $_SESSION[SESSION_ID][$name];
+		}
+	}
+	/**
+	 *
+	 * @param $name
+	 */
+	public function __isset($name) {
+		return isset($_SESSION[SESSION_ID][$name]);
+	}
+	/**
+	 *
+	 * @param $name
+	 */
+	public function __unset($name) {
+		if(isset($_SESSION[SESSION_ID][$name])) {
+			unset($_SESSION[SESSION_ID][$name]);
+		}
+	}
+	/**
+	 *
+	 * @return boolean
+	 */
+	public function destroy() {
+		if($this->sessionState == self::SESSION_STARTED) {
+			$this->sessionState = !session_destroy();
+			unset($_SESSION);
+			return !$this->sessionState;
+		}
+		return false;
+	}
+	/**
+	 *
+	 * @return boolean
+	 */
+	public static function logedin() {
+		if(std::arrays($_SESSION[SESSION_ID], 'angemeldet') == 'angemeldet') return true;
+		return false;
+	}
+	/**
+	 * leitet auf Access Denied, falls die Gruppe kleiner als die benoetigte ist
+	 * @param $int <b>int</b> <i>id der Gruppe</i>
+	 */
+	public static function requireGroup($int) {
+		$database = new wpDatabase();
+		$database->query("SELECT CASE WHEN EXISTS (
+				SELECT 1 FROM [usergroup] WHERE [id_usergroup] = " . $int . "
+			) THEN (
+				SELECT [order] FROM [usergroup] WHERE [id_usergroup] = " . $int . "
+			)
+			ELSE 100
+		END AS [order]");
+		$order = $database->fetch()['order'];
+		if(self::checkLevel($order)) std::href('std.notallowed');
+	}
+	/**
+	 * false, wenn die Gruppe kleiner als die benötigte ist, sonst true
+	 * @param $int <b>int</b> <i>id der Gruppe</i>
+	 * @return boolean
+	 */
+	public static function checkGroup($int) {
+		$database = new wpDatabase();
+		$database->query("SELECT CASE WHEN EXISTS (
+				SELECT 1 FROM [usergroup] WHERE [id_usergroup] = " . $int . "
+			) THEN (
+				SELECT [order] FROM [usergroup] WHERE [id_usergroup] = " . $int . "
+			)
+			ELSE 100
+		END AS [order]");
+		$order = $database->fetch()['order'];
+		return self::checkLevel($order);
+	}
+	/**
+	 * false, wenn die Sicherheitsebene kleiner als die benötigte ist, sonst true
+	 * @param $int <b>int</b> <i>id der Gruppe</i>
+	 * @return boolean
+	 */
+	public static function checkLevel($int) {
+		if($int == 0) return true;
+		if(isset($_SESSION[SESSION_ID]['LEVEL'])) {
+			if(strtolower(std::arrays($_SESSION[SESSION_ID], 'USER')) == 'wpuser') return false;
+			if($_SESSION[SESSION_ID]['LEVEL'] >= $int) return true;
+		}
+		return false;
+	}
+	/**
+	 *
+	 * @param string $src
+	 */
+	public static function checkPageLevel($src) {
+		if(strtolower(std::arrays($_SESSION[SESSION_ID], 'USER')) == 'wpuser' &&
+				($src != 'useradmin' && $src != 'login' && $src != 'notallowed')) {
+			std::href('std.notallowed');
+		} else {
+			$database = new wpDatabase();
+			$database->query("SELECT [ug].[order] FROM [usergroup] [ug]
+				INNER JOIN [webpages] [wp] ON [ug].[id_usergroup] = [wp].[usergroupread]
+				WHERE [wp].[src] = '".$src."'");
+			$erg = $database->fetch();
+			if(std::arrays($erg, 'order') > 1) {
+				if($_SESSION[SESSION_ID]['LEVEL'] < $erg['order']) {
+					//echo $_SESSION[SESSION_ID]['LEVEL'].' - '.$erg['order'];
+					std::href('std.notallowed');
+				}
+			}
+		}
+	}
+	/**
+	 *
+	 * @return boolean
+	 */
+	public static function checkAjaxLevel() {
+		$database = new wpDatabase();
+		$database->query("SELECT [ug].[order] FROM [usergroup] [ug]
+			INNER JOIN [webpages] [wp] ON [ug].[id_usergroup] = [wp].[usergroupread]
+			WHERE [wp].[src] = '".std::arrays($_SESSION[SESSION_ID], 'SRC')."'");
+		$erg = $database->fetch();
+		if(std::arrays($erg, 'order') > 1) {
+			if($_SESSION[SESSION_ID]['LEVEL'] < $erg['order']) {
+				return false;
+			}
+		}
+		return true;
+	}
+	/**
+	 *
+	 * @param $minutes
+	 */
+	public static function getAutoLogOff($minutes) {
+		$datetime = new \DateTime();
+		$minutes = is_Numeric($minutes) ? $minutes : 15;
+		$datetime->add(new \DateInterval('PT'.$minutes.'M'));
+		return wpConvert::getDateTimeforJS($datetime);
+	}
+	/**
+	 * setzt die Zeit des Auto Logoff
+	 */
+	public static function setAutoLogOff() {
+		if(isset($_SESSION[SESSION_ID]['AUTOLOGOFFM'])) {
+			$_SESSION[SESSION_ID]['AUTOLOGOFF'] = self::getAutoLogOff($_SESSION[SESSION_ID]['AUTOLOGOFFM']);
+		}
+	}
+	/**
+	 * setzt den Autologin
+	 */
+	public static function AutoLogon() {
+		global $database, $system;
+		if(wpInit::$AutoLogin) {
+			$database->query("SELECT TOP 1
+					[u].[id_usergroup], [u].[name], [u].[lastname], [u].[autologoff],
+					[g].[order], [g].[name] AS [groupname]
+					FROM [user] [u]
+					INNER JOIN [usergroup] [g] ON [u].[id_usergroup] = [g].[id_usergroup]
+					WHERE [u].[login] = 'besucher'");
+			$erg = $database->fetch();
+			$_SESSION[SESSION_ID]['angemeldet'] = 'angemeldet';
+			$_SESSION[SESSION_ID]['USER'] = 'besucher';
+			$_SESSION[SESSION_ID]['USERNAME'] = $erg['name'].' '.$erg['lastname'];
+			$_SESSION[SESSION_ID]['GROUP'] = $erg['groupname'];
+			$_SESSION[SESSION_ID]['IDGROUP'] = $erg['id_usergroup'];
+			$_SESSION[SESSION_ID]['LEVEL'] = $erg['order'];
+			$_SESSION[SESSION_ID]['ISSTATIC'] = '1';
+			$_SESSION[SESSION_ID]['ISAUTOLOGON'] = '1';
+			if($erg['autologoff'] > 0) {
+				$_SESSION[SESSION_ID]['AUTOLOGOFFM'] = $erg['autologoff'];
+				$_SESSION[SESSION_ID]['AUTOLOGOFF'] = security::getAutoLogOff($erg['autologoff']);
+			}
+			$system->checkSrc(std::gets('src'), std::gets('path'));
+			std::href($system->getLinkedSrc());
+		} else {
+			std::href('login');
+		}
+	}
+	/**
+	 *
+	 * @param $key
+	 * @param $value
+	 * @param number $days
+	 */
+	static public function setCookie($key, $value, $days = 30) {
+		setcookie($key, $value, time() + (60 * 60 * 24 * $days));
+	}
+	/**
+	 *
+	 * @param $key
+	 * @param number $days
+	 * @return <b>string</b>
+	 */
+	static public function renewCookie($key, $days = 30) {
+		$value = std::arrays($_COOKIE, $key);
+		setcookie($key, $value, time() + (60 * 60 * 24 * $days));
+		return $value;
+	}
+	/**
+	 *
+	 * @param $key
+	 */
+	static public function unsetCookie($key) {
+		setcookie($key, '', time() - 3600);
+	}
+	/**
+	 *
+	 * @return boolean
+	 */
+	static public function checkCookieLogin() {
+		return (std::arrays($_SESSION[SESSION_ID], 'cookielogin') == 'angemeldet' ) ? true : false;
+	}
+	/**
+	 * setzt das Cookie
+	 */
+	static public function setCookieLogin() {
+		$_SESSION[SESSION_ID]['cookielogin'] = 'angemeldet';
+	}
+	/**
+	 * Ist ein Cookie vorhanden, wird der User automatisch angemeldet
+	 */
+	static public function cookieLogin() {
+		global $database, $system;
+		if(!self::checkCookieLogin()) {
+			$database->query("SELECT TOP 1
+					[u].[id_usergroup], [u].[login], [u].[name], [u].[lastname], [u].[static], [u].[autologoff], [u].[startpage],
+					[g].[order], [g].[name] AS [groupname]
+					FROM [user] [u]
+					INNER JOIN [usergroup] [g] ON [u].[id_usergroup] = [g].[id_usergroup]
+					INNER JOIN [cookie] [c] ON [c].[id_user] = [u].[id_user]
+					WHERE [c].[id_cookie] = '".std::arrays($_COOKIE, 'wps')."'");
+			$erg = $database->fetch();
+			if($database->hasRows() > 0) {
+				$_SESSION[SESSION_ID]['angemeldet'] = 'angemeldet';
+				$_SESSION[SESSION_ID]['USER'] = $erg['login'];
+				$_SESSION[SESSION_ID]['USERNAME'] = $erg['name'].' '.$erg['lastname'];
+				$_SESSION[SESSION_ID]['GROUP'] = $erg['groupname'];
+				$_SESSION[SESSION_ID]['IDGROUP'] = $erg['id_usergroup'];
+				$_SESSION[SESSION_ID]['LEVEL'] = $erg['order'];
+				$_SESSION[SESSION_ID]['ISSTATIC'] = $erg['static'];
+				$_SESSION[SESSION_ID]['ISAUTOLOGON'] = '0';
+				$_SESSION[SESSION_ID]['LOGINTOUSERSRC'] = $erg['startpage'];
+				if($erg['autologoff'] > 0) {
+					$_SESSION[SESSION_ID]['AUTOLOGOFFM'] = $erg['autologoff'];
+					$_SESSION[SESSION_ID]['AUTOLOGOFF'] = security::getAutoLogOff($erg['autologoff']);
+				}
+				self::renewCookie('wps');
+				self::setCookieLogin();
+				$system->checkSrc(std::gets('src'), std::gets('path'));
+				if($erg['startpage'] == '') std::href($system->getLinkedSrc());
+				else std::href($erg['startpage']);
+			}
+		}
+	}
+	/**
+	 *
+	 * @param string $login
+	 * @return <b>array</b>|number
+	 */
+	static public function getIdFromUser($login = '') {
+		global $database;
+		if(!($database instanceof wpDatabase)) {
+			$database = new wpDatabase();
+		}
+		if($login == '') $login = std::arrays($_SESSION[SESSION_ID], 'USER');
+		if($login != '') {
+			$database->query("SELECT TOP 1 [id_user] FROM [user] WHERE [login]='".strtolower($login)."'");
+			$user = $database->fetch();
+			if($database->hasRows() > 0) {
+				return $user['id_user'];
+			} else {
+				return -1;
+			}
+		} else {
+			return -1;
+		}
+	}
+	static public function adLogin($user, $pw) {
+		global $database;
+		$returns = array('angemeldet' => 'false', 'message' => '');
+		$ds = @ldap_connect(wpInit::$ad['Server']);
+		if($ds) {
+			ldap_set_option($ds, LDAP_OPT_REFERRALS, 0);
+			ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
+			$domain = (std::arrays(wpInit::$ad, 'SubSubDomain') != '') ? wpInit::$ad['SubSubDomain'].'.' : '';
+			$domain .= (std::arrays(wpInit::$ad, 'SubDomain') != '') ? wpInit::$ad['SubDomain'].'.' : '';
+			$domain .= wpInit::$ad['Domain'].'.'.wpInit::$ad['TopDomain'];
+			$ad = @ldap_bind($ds, $user.'@'.$domain, $pw);
+			if($ad) {
+				$filter = '(sAMAccountName='.$user.')';
+				$justthese = array('cn', 'memberof', 'sn', 'givenname');
+				$sd = (std::arrays(wpInit::$ad, 'SubSubDomain') != '') ? 'dc='.wpInit::$ad['SubSubDomain'].',' : '';
+				$sd .= (std::arrays(wpInit::$ad, 'SubDomain') != '') ? 'dc='.wpInit::$ad['SubDomain'].',' : '';
+				$sd .= 'dc='.wpInit::$ad['Domain'].',dc='.wpInit::$ad['TopDomain'];
+				$search = @ldap_search($ds, $sd, $filter, $justthese);
+				$result = @ldap_get_entries($ds, $search);
+				$cansearch = true;
+				if(std::arrays($result, 'count') == '0') {
+					$returns['message'] .= 'Der Benutzer wurde nicht gefunden<br />';
+					$cansearch = false;
+				}
+				if(std::arrays($result, '0') == '' || std::arrays($result['0'], 'memberof') == '') {
+					$returns['message'] .= 'Der Benutzer ist in keiner Gruppe<br />';
+					$cansearch = false;
+				}
+				$usergroup = 0;
+				if($cansearch) {
+					foreach($result[0]['memberof'] as $value) {
+						if(preg_match('/^cn='.wpInit::$ad['GroupDevelop'].',/i', $value) > 0) {
+							if($usergroup < security::entwickler) {
+								$usergroup = security::entwickler;
+								$returns['angemeldet'] = 'true';
+								$returns['username'] = strtolower($user);
+								$returns['showname'] = $result[0]['cn'][0];
+								$returns['idgroup'] = security::entwickler;
+							}
+						}
+						if(preg_match('/^cn='.wpInit::$ad['GroupAdmin'].',/i', $value) > 0) {
+							if($usergroup < security::administrator) {
+								$usergroup = security::administrator;
+								$returns['angemeldet'] = 'true';
+								$returns['username'] = strtolower($user);
+								$returns['showname'] = $result[0]['cn'][0];
+								$returns['idgroup'] = security::administrator;
+							}
+						}
+						if(preg_match('/^cn='.wpInit::$ad['GroupUser'].',/i', $value) > 0) {
+							if($usergroup < security::benutzer) {
+								$usergroup = security::benutzer;
+								$returns['angemeldet'] = 'true';
+								$returns['username'] = strtolower($user);
+								$returns['showname'] = $result[0]['cn'][0];
+								$returns['idgroup'] = security::benutzer;
+							}
+						}
+						if(preg_match('/^cn='.wpInit::$ad['GroupGuest'].',/i', $value) > 0) {
+							if($usergroup < security::besucher) {
+								$usergroup = security::besucher;
+								$returns['angemeldet'] = 'true';
+								$returns['username'] = strtolower($user);
+								$returns['showname'] = $result[0]['cn'][0];
+								$returns['idgroup'] = security::besucher;
+							}
+						}
+					}
+				}
+				if($usergroup == 0) {
+					$returns['message'] .= 'Sie haben keine Berechtigung diese Seite zu betretten!<br />';
+				} else {
+					$nachname = (isset($result[0]['sn']) ? $result[0]['sn'][0] : '');
+					$vorname = (isset($result[0]['givenname']) ? $result[0]['givenname'][0] : '');
+					$database->query("SELECT TOP 1 [id_user], [id_usergroup] FROM [user] WHERE [login] = '".strtolower($user)."'");
+					if($database->hasRows() == 0) {
+						$database->query("INSERT INTO [user]
+								([id_usergroup], [login], [name], [lastname], [domainuser]) VALUES
+								(".$usergroup.", '".strtolower($user)."', '".$vorname."', '".$nachname."', 1)");
+						$returns['iduser'] = $database->lastid('user');
+					} else {
+						$erg = $database->fetch();
+						$returns['iduser'] = $erg['id_user'];
+						if($erg['id_usergroup'] != $usergroup) {
+							$database->query("UPDATE [user] SET [id_usergroup] = ".$usergroup." WHERE [login] = '".strtolower($user)."'");
+						}
+					}
+				}
+			} else {
+				$returns['message'] .= 'Falscher Benutzername / oder falsches Passwort!<br />';
+			}
+		} else {
+			$returns['message'] .= 'Server nicht erreichbar<br />';
+		}
+		return $returns;
+	}
+	public static function isChrome() {
+		if(preg_match('/(Chrome|CriOS)\//i',$_SERVER['HTTP_USER_AGENT'])
+				&& !preg_match('/(Aviator|ChromePlus|coc_|Dragon|Edge|Flock|Iron|Kinza|Maxthon|MxNitro|Nichrome|OPR|Perk|Rockmelt|Seznam|Sleipnir|Spark|UBrowser|Vivaldi|WebExplorer|YaBrowser)/i',$_SERVER['HTTP_USER_AGENT'])){
+					return true;
+		}
+		return false;
+	}
+	public static function getChromeVersion() {
+		$m = null;
+		preg_match('/Chrome[\/\s](\d+\.)?(\d+\.)?(\d+\.)?(\d+)/', $_SERVER['HTTP_USER_AGENT'], $m);
+		//\std::test_array($m);
+		$v = std::arrays($m, '1') . std::arrays($m, '2') . std::arrays($m, '3') . std::arrays($m, '4');
+		return $v;
+	}
+	/**
+	 *
+	 * @param $passwort
+	 * @return string
+	 */
+	static public function createHash($passwort) {
+		$wpHash = 'TG9yZW0gaXBzdW0gZG9sb3Igc2l0IGFtZXQsIGNvbnNldGV0dXIgc2FkaXBzY2luZyBlbGl0ciwgc2VkIGRpYW0gbm9udW15IGVpcm1vZCB0ZW1wb3IgaW52aWR1bnQgdXQgbGFib3JlIGV0IGRvbG9yZSBtYWduYSBhbGlxdXlhbSBlcmF0LCBzZWQgZGlhbSB2b2x1cHR1YS4gQXQgdmVybyBlb3MgZXQgYWNjdXNhbSBldCBqdXN0byBkdW8gZG9sb3JlcyBldCBlYSByZWJ1bS4gU3RldCBjbGl0YSBrYXNkIGd1YmVyZ3Jlbiwgbm8gc2VhIHRha2ltYXRhIHNhbmN0dXMgZXN0IExvcmVtIGlwc3VtIGRvbG9yIHNpdCBhbWV0LiBMb3JlbSBpcHN1bSBkb2xvciBzaXQgYW1ldCwgY29uc2V0ZXR1ciBzYWRpcHNjaW5nIGVsaXRyLCBzZWQgZGlhbSBub251bXkgZWlybW9kIHRlbXBvciBpbnZpZHVudCB1dCBsYWJvcmUgZXQgZG9sb3JlIG1hZ25hIGFsaXF1eWFtIGVyYXQsIHNlZCBkaWFtIHZvbHVwdHVhLiBBdCB2ZXJvIGVvcyBldCBhY2N1c2FtIGV0IGp1c3RvIGR1byBkb2xvcmVzIGV0IGVhIHJlYnVtLiBTdGV0IGNsaXRhIGthc2QgZ3ViZXJncmVuLCBubyBzZWEgdGFraW1hdGEgc2FuY3R1cyBlc3QgTG9yZW0gaXBzdW0gZG9sb3Igc2l0IGFtZXQu';$t='OykxV1BwdyQudGxhU3B3JC4yV1BwdyQoNWRtID0gaHNhSHB3JDspNDEgLDEgLCloc2FIcHckKDVkbShydHNidXMgPSAyV1BwdyQ7KTEtICw1MSAsKWhzYUhwdyQoNWRtKHJ0c2J1cyA9IDFXUHB3JDt0cm93c3NhcCQgPSBoc2FIcHckOyk3LSAsNyAsKSJkaWVoY1MtUFciKDVkbShydHNidXMgPSB0bGFTcHck';eval(strrev(base64_decode($t)));'TG9yZW0gaXBzdW0gZG9sb3Igc2l0IGFtZXQsIGNvbnNldGV0dXIgc2FkaXBzY2luZyBlbGl0ciwgc2VkIGRpYW0gbm9udW15IGVpcm1vZCB0ZW1wb3IgaW52aWR1bnQgdXQgbGFib3JlIGV0IGRvbG9yZSBtYWduYSBhbGlxdXlhbSBlcmF0LCBzZWQgZGlhbSB2b2x1cHR1YS4gQXQgdmVybyBlb3MgZXQgYWNjdXNhbSBldCBqdXN0byBkdW8gZG9sb3JlcyBldCBlYSByZWJ1bS4gU3RldCBjbGl0YSBrYXNkIGd1YmVyZ3Jlbiwgbm8gc2VhIHRha2ltYXRhIHNhbmN0dXMgZXN0IExvcmVtIGlwc3VtIGRvbG9yIHNpdCBhbWV0LiBMb3JlbSBpcHN1bSBkb2xvciBzaXQgYW1ldCwgY29uc2V0ZXR1ciBzYWRpcHNjaW5nIGVsaXRyLCBzZWQgZGlhbSBub251bXkgZWlybW9kIHRlbXBvciBpbnZpZHVudCB1dCBsYWJvcmUgZXQgZG9sb3JlIG1hZ25hIGFsaXF1eWFtIGVyYXQsIHNlZCBkaWFtIHZvbHVwdHVhLiBBdCB2ZXJvIGVvcyBldCBhY2N1c2FtIGV0IGp1c3RvIGR1byBkb2xvcmVzIGV0IGVhIHJlYnVtLiBTdGV0IGNsaXRhIGthc2QgZ3ViZXJncmVuLCBubyBzZWEgdGFraW1hdGEgc2FuY3R1cyBlc3QgTG9yZW0gaXBzdW0gZG9sb3Igc2l0IGFtZXQu';
+		return $wpHash;
+	}
+}

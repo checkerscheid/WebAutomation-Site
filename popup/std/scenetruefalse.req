@@ -1,0 +1,58 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Hans-Martin Herb                                                 #
+//# Date         : 16.05.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: scenetruefalse.req 550 2023-12-25 03:02:54Z              $ #
+//#                                                                                 #
+//###################################################################################
+/** @var Type $m */
+namespace popup\std;
+use system\Helper\wpDatabase;
+use system\std;
+$database = new wpDatabase();
+$database->query("SELECT [unit] FROM [opcdatapoint] WHERE name = '".std::posts('id')."'");
+$erg = $database->fetch();
+?>
+
+<div class="popup">
+	<h1><?=std::posts('headline')?></h1>
+	<table summary="" id="truefalse" data-elem="<?=std::posts('elem')?>" data-id="<?=std::posts('id')?>">
+		<tr>
+			<td colspan="2">
+				<hr />
+			</td>
+		</tr>
+<?
+if(is_null($erg['unit'])) $erg['unit'] = '';
+if(preg_match('/^True:(.*);False:(.*);$/', $erg['unit'], $m) > 0){
+	echo'<tr>
+			<td>
+				<span class="ps-button" data-wert="True">'.$m[1].'</span>
+			</td>
+			<td>
+				<span class="ps-button" data-wert="False">'.$m[2].'</span>
+			</td>
+		</tr>';
+} else {
+	echo'<tr>
+			<td>
+				<span class="ps-button" data-wert="True">True</span>
+			</td>
+			<td>
+				<span class="ps-button" data-wert="False">False</span>
+			</td>
+		</tr>';
+}
+
+?>
+	</table>
+</div>

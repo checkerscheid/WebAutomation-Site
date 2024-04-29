@@ -1,0 +1,335 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 582                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: opcbrowse.req 582 2024-04-10 06:45:45Z                   $ #
+//#                                                                                 #
+//###################################################################################
+/**
+ * @var Type $level
+ * @var Type $id
+ */
+namespace request\std;
+use system\Helper\wpDatabase;
+use system\std, system\WebCom, system\TCPencode;
+class opcbrowse {
+	const c_opcserver = 'opcserver';
+	const c_opcgroup = 'opcgroup';
+	const c_browsegroup = 'browsegroup';
+	const c_opcitem = 'opcitem';
+	const c_additems = 'additems';
+	const c_additemspopup = 'additemspopup';
+}
+set_time_limit(100);
+switch(std::gets('param1')) {
+//###################################################################################
+	case opcbrowse::c_opcserver:
+		$WebCom = new WebCom(90);
+		$remoteopcserver = std::posts('remoteopcserver');
+		if($remoteopcserver == '') {
+			$answer = new TCPencode($WebCom->send('BrowseOPCServer'));
+		} else {
+			$answer = new TCPencode($WebCom->send('BrowseOPCServer', $remoteopcserver));
+		}
+		$TheArray = $answer->getArray();
+		if(count($TheArray['OPCServer']) > 0) {
+			foreach($TheArray['OPCServer'] as $opcserver => $setting) {
+				echo '
+<div class="divopcserver">
+	<span class="ps-hover-noborder p-dpsearch p-dpbutton opcsearch" title="'.$opcserver.' durchsuchen" data-progid="'.$setting['ProgID'].'" data-clsid="'.$setting['ClsID'].'">'.wpHTML_EMPTY.'</span>
+	<span class="opcserver">'.$opcserver.'</span>
+</div>';
+			}
+		} else {
+			echo '
+<div class="divopcserver">
+	<span>keine OPC Server gefunden</span>
+</div>';
+		}
+		break;
+//###################################################################################
+	case opcbrowse::c_opcgroup:
+		$level = 0;
+		$id = 0;
+		$WebCom = new WebCom(120);
+		$remoteopcserver = std::posts('remoteopcserver');
+		if($remoteopcserver == '') {
+			$answer = new TCPencode($WebCom->send('BrowseOPCGroup', std::posts('id')));
+		} else {
+			$answer = new TCPencode($WebCom->send('BrowseOPCGroup', std::posts('id').'%~%'.$remoteopcserver));
+		}
+
+		$TheArray = $answer->getArray();
+		echo '
+<div class="forGroup ps-50percleft">
+	<div class="ulcontainer">
+		<ul>
+			<li class="HeadLine">
+				'.std::posts('id').'
+				<hr />
+			</li>';
+		if(std::arrays($TheArray, 'Root') != '') {
+			createOPCSubGroup($TheArray['Root'], 'Root');
+		} else {
+			echo '
+			<li class="noGroup" data-group="nogroup">OPC Flat - keine Gruppen</li>';
+		}
+		echo '
+		</ul>
+	</div>
+</div>
+<div class="ItemContainer ps-50percleft">
+	<div class="ulcontainer">
+		<span class="headlineopcgroup ps-bold">Selected OPC Group</span>
+		<hr />
+		<span>Filter:</span>
+		<input type="text" class="FilterText ps-input" /><br />
+		<span class="existsout ps-button">vorhandene ausblenden</span>
+		<span class="removefilter ps-button">Filter entfernen</span>
+		<hr />
+		<span class="markall ps-button">Alle selektieren</span>
+		<span class="markno ps-button">Selektierung aufheben</span>
+		<hr />
+		<span class="additems ps-button">Datenpunkte hinzufügen</span>';
+		if(std::arrays($TheArray, 'FLAT') != '') {
+			$count = count($TheArray['FLAT']['OPCITEMS']);
+			echo '
+		<p>
+			<span class="opccountflt">'.$count.'</span> von <span class="opccount">'.$count.'</span> Datenpunkte
+		</p>';
+		} else {
+			echo '
+		<p>
+			<span class="opccountflt">0</span> von <span class="opccount">0</span> Datenpunkte
+		</p>';
+		}
+		echo '
+	</div>
+	<div class="forItems">';
+		if(std::arrays($TheArray, 'FLAT') != '') {
+			getOPCItems($TheArray['FLAT']['OPCITEMS'], getExists(std::posts('id'), $remoteopcserver));
+		} else {
+			echo '
+		<h2>OPC Datenpunkte</h2>';
+		}
+		echo '
+	</div>
+</div>';
+		break;
+//###################################################################################
+	case opcbrowse::c_browsegroup:
+		$WebCom = new WebCom(120);
+		$remoteopcserver = std::posts('remoteopcserver');
+		$group = std::posts('path');
+		$answer = new TCPencode($WebCom->send('BrowseOPCSubGroup', std::posts('id').'%~%'.$remoteopcserver.'%~%'.$group));
+		$TheArray = $answer->getArray();
+		createOPCSubGroup($TheArray, $group);
+		break;
+//###################################################################################
+	case opcbrowse::c_opcitem:
+		$WebCom = new WebCom(90);
+		$remoteopcserver = std::posts('remoteopcserver');
+		if($remoteopcserver == '') {
+			$debugTest = $WebCom->send('BrowseOPCItem', std::posts('id').'%~%'.std::posts('group'));
+		} else {
+			$debugTest = $WebCom->send('BrowseOPCItem', std::posts('id').'%~%'.std::posts('group').'%~%'.$remoteopcserver);
+		}
+		//echo '//'.$debugTest;
+		$answer = new TCPencode($debugTest);
+		$TheArray = $answer->getArray();
+		if(std::arrays($TheArray, 'OPCITEMS') != '') getOPCItems($TheArray['OPCITEMS'], getExists(std::posts('id'), $remoteopcserver));
+		else echo 'keine Items in dieser Gruppe';
+		break;
+//###################################################################################
+	case opcbrowse::c_additems:
+		if(std::posts('progid') != '') {
+			$database = new wpDatabase();
+			if(std::posts('remoteopcserver') == '') {
+				$database->query("SELECT [id_opcserver] FROM [opcserver]
+					WHERE [progid] = '".$_POST['progid']."' AND [server] IS NULL");
+			} else {
+				$database->query("SELECT [id_opcserver] FROM [opcserver]
+					WHERE [progid] = '".$_POST['progid']."'
+					AND [server] = '".std::posts('remoteopcserver')."'");
+			}
+			if($database->hasRows() > 0) {
+				$erg = $database->fetch();
+				$idserver = $erg['id_opcserver'];
+			} else {
+				if(std::posts('remoteopcserver') == '') {
+ 					$database->query("INSERT INTO [opcserver]
+ 						([name], [progid], [clsid], [active]) VALUES
+ 						('".$_POST['progid']."', '".$_POST['progid']."', '".$_POST['clsid']."', 1)");
+				} else {
+					$database->query("INSERT INTO [opcserver]
+						([name], [progid], [clsid], [server], [active]) VALUES
+						('".$_POST['progid']."', '".$_POST['progid']."', '".$_POST['clsid']."', '".std::posts('remoteopcserver')."', 1");
+				}
+				$idserver = $database->lastid();
+				$WebCom = new WebCom();
+				$WebCom->send('ActivateServer', $idserver);
+			}
+			$TheGroup = cleanName(std::posts('group'));
+			if($TheGroup != '') {
+				$database->query("SELECT [id_opcgroup] FROM [opcgroup]
+					WHERE [name] = '".$TheGroup."' AND [id_opcserver] = ".$idserver);
+				if($database->hasRows() > 0) {
+					$erg = $database->fetch();
+					$idgroup = $erg['id_opcgroup'];
+				} else {
+					$database->query("INSERT INTO [opcgroup]
+						([id_opcserver], [name], [active], [duration]) VALUES
+						(".$idserver.", '".$TheGroup."', 1, 1000)");
+					$idgroup = $database->lastid();
+					$WebCom = new WebCom();
+					$WebCom->send('ActivateGroup', $idgroup);
+				}
+				if(is_array($_POST['items']) && count($_POST['items']) > 0) {
+					$sqlbuilder = 'INSERT INTO [opcdatapoint]
+						([id_opcgroup], [active], [name], [opcname]) VALUES ';
+					foreach($_POST['items'] as $opcname => $item) {
+						$TheItem = cleanName($item);
+						$TheOPC = preg_replace('/\(/', '[', preg_replace('/\)/', ']', $opcname));
+						if($TheItem != '') $sqlbuilder .= "($idgroup, 1, '$TheItem', '$TheOPC'),";
+					}
+					$database->query(substr($sqlbuilder, 0, -1));
+					$WebCom = new WebCom();
+					$WebCom->send('ActivateItems', $idgroup);
+					echo 'S_OK';
+				}
+			}
+		}
+		break;
+//###################################################################################
+	case opcbrowse::c_additemspopup:
+		$database = new wpDatabase();
+		$database->query("SELECT [name] FROM [opcgroup]
+			WHERE [id_opcserver] = (
+			SELECT TOP 1 [id_opcserver] FROM [opcserver] WHERE
+			[progid] = '".std::posts('progid')."' AND
+			[server] ".((std::posts('remote') == 'false') ? "IS NULL" : " = '".std::posts('remote')."'").") ORDER BY [name]");
+		$option = '';
+		while($erg = $database->fetch()) {
+			$option .= '<option value="'.$erg['name'].'">'.$erg['name'].'</option>';
+		}
+
+		$cleangroup = cleanName(std::posts('group'));
+		echo '
+<table>
+	<thead>
+		<tr>
+			<th><label for="newgroupToAdd" class="newgrouptoadd">Neue Gruppe erzeugen:</label></th>
+			<th><input type="text" id="newgroupToAdd" value="'.$cleangroup.'" class="ps-input" /></th>
+		</tr>
+		<tr>
+			<th><label for="existgroupToAdd" class="existgrouptoadd ps-checkbox">In existierende Gruppe:</label></th>
+			<th>
+				<select id="existgroupToAdd" class="ps-input">
+					' . $option . '
+				</select>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td colspan="2">
+				<hr />
+			</td>
+		</tr>';
+		$items = std::posts('items');
+		for($i = 0; $i < count($items); $i++) {
+			$cleanitem = cleanName($items[$i]);
+			echo '
+		<tr>
+			<td><label for="id'.$i.'">'.$items[$i].'</label></td>
+			<td><input type="text" id="id'.$i.'" value="'.$cleanitem.'" class="ps-input ps-big" /></td>
+		</tr>';
+		}
+		echo '
+	<tbody>
+</table>';
+		break;
+//###################################################################################
+	default:
+		echo 'unbekannter Befehl';
+		break;
+}
+//###################################################################################
+function createOPCSubGroup($TheArray, $Path) {
+	$i = 0;
+	if(is_array($TheArray)) {
+		foreach($TheArray as $opcgroup => $setting) {
+			$id = uniqid('p').$i++;
+			if(is_array($setting)) {
+				echo '
+<li class="GroupHeadLine">
+	<span class="ps-tree-parent" data-id="'.$id.'" data-path="'.$Path.'\\'.$opcgroup.'">'.wpHTML_EMPTY.'</span>
+	<span class="getItems ps-hover-noborder" data-path="'.$Path.'\\'.$opcgroup.'">'.$opcgroup.'</span></li>
+	<li class="ul'.$id.'">
+		<ul>
+		</ul>
+	</li>';
+			} else {
+				createOPCGroup($opcgroup, $Path.'\\'.$opcgroup);
+			}
+		}
+	} else {
+		createOPCGroup($TheArray);
+	}
+}
+//###################################################################################
+function createOPCGroup($TheGroup, $Path) {
+	echo '
+<li class="nosubgroup">
+	<span class="getItems ps-hover-noborder" data-path="'.$Path.'">'.$TheGroup.'</span>
+</li>';
+}
+//###################################################################################
+function getOPCItems($TheArray, $exists = array()) {
+	echo '
+<ul>';
+	if(is_array($TheArray) && count($TheArray) > 0) {
+		foreach($TheArray as $Item => $name) {
+			if (isset($exists[$Item])) {
+				echo '
+	<li class="ps-checkbox exists" data-item="' . $Item . '">' . $Item . ' - Gespeichert in Gruppe: ' . $exists[$Item] . '</li>';
+			} else {
+				echo '
+	<li class="ps-checkbox" data-item="' . $Item . '">'.$Item.'</li>';
+			}
+			$name;
+		}
+	} else {
+		echo '
+	<li>Keine Datenpunkte definiert</li>';
+	}
+	echo '
+</ul>';
+}
+//###################################################################################
+function getExists($progid, $remoteopcdb = '') {
+	$remoteopc = ($remoteopcdb == '') ? '' : " AND [server] = '".$remoteopcdb."'";
+	// fix for big Databases
+	ini_set('sqlsrv.ClientBufferMaxKBSize', '524288');
+	$database = new wpDatabase();
+	$database->query("SELECT [p].[opcname], [g].[name]
+			FROM [opcdatapoint] [p]
+			INNER JOIN [opcgroup] [g] ON [p].[id_opcgroup] = [g].[id_opcgroup]
+			INNER JOIN [opcserver] [s] ON [g].[id_opcserver] = [s].[id_opcserver]
+			WHERE [s].[progid] = '".std::posts('id')."'".$remoteopc);
+	$opcdatapoints = array();
+	while($erg = $database->fetch()) {
+		$opcdatapoints[$erg['opcname']] = $erg['name'];
+	}
+	return $opcdatapoints;
+}
+?>

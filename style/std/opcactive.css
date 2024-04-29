@@ -1,0 +1,68 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 561                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: opcactive.css 561 2024-01-16 02:06:50Z                    $ #
+//#                                                                                 #
+//###################################################################################
+?> opcactive */
+
+#opcactive ul { margin-left:30px; }
+#opcactive div.table { border-spacing:5px; }
+#opcactive div.th { padding:2px 5px; overflow:hidden; white-space:nowrap; }
+#opcactive div.tr.foundlink .td { border-color:#A91919; }
+#opcactive div.td { padding:2px 5px; overflow:hidden; white-space:nowrap; border:1px solid #CCC; text-align:center; vertical-align:middle; }
+#opcactive div.td.maxw { max-width:150px; }
+#opcactive span.fixw { display:inline-block; width:70px; }
+#opcactive div.td.ps-taright { text-align:right; }
+#opcactive .datawrite { color:#060; }
+html.black #opcactive .datawrite { color:#0F0; }
+#opcactive span { display:inline-block; height:27px; line-height:27px; }
+#opcactive span.alarm, #opcactive span.trend, #opcactive span.calendar, span.route,
+#opcactive span.alarm-ia, #opcactive span.trend-ia, #opcactive span.calendar-ia, span.route-ia { display:inline-block; width:24px; height:24px; margin-left:2px; }
+#opcactive span.alarm, #opcactive span.trend, #opcactive span.alarm-ia, #opcactive span.trend-ia { cursor:pointer; }
+#opcactive span.alarm { background:transparent url(images/layout/mini_alarm.png) no-repeat; }
+#opcactive span.trend { background:transparent url(images/layout/mini_trend.png) no-repeat; }
+#opcactive span.calendar { background:transparent url(images/layout/mini_calendar.png) no-repeat; }
+#opcactive span.route { background:transparent url(images/layout/mini_route.png) no-repeat; }
+#opcactive span.alarm-ia { background:transparent url(images/layout/mini_alarm_ia.png) no-repeat; }
+#opcactive span.trend-ia { background:transparent url(images/layout/mini_trend_ia.png) no-repeat; }
+#opcactive span.calendar-ia { background:transparent url(images/layout/mini_calendar_ia.png) no-repeat; }
+#opcactive span.route-ia { background:transparent url(images/layout/mini_route_ia.png) no-repeat; }
+span.ps-tree-parent, span.ps-tree-disabled { display:inline-block; }
+
+#opcactive .p-displayright { float:right; }
+#opcactive .p-dpbutton { display:inline-block; width:27px; height:27px; padding:0 2px; margin:0 3px; cursor:pointer; }
+#opcactive .p-dpedit { background:transparent url(images/layout/ic_menu_edit.png) center center no-repeat; }
+#opcactive .p-dpedit-inactive { background:transparent url(images/layout/ic_menu_edit_inactive.png) center center no-repeat; cursor:default; }
+#opcactive .p-dpdelete { background:transparent url(images/layout/ic_menu_delete.png) center center no-repeat; }
+#opcactive .p-dprefresh { background:transparent url(images/layout/ic_menu_refresh.png) center center no-repeat; }
+#opcactive .p-dpmove { background:transparent url(images/layout/menu_back.png) center center no-repeat; }
+#opcactive .p-dpwrite { background:transparent url(images/layout/menu_login.png) center center no-repeat; }
+#opcactive .p-dpwrite-inactive { background:transparent url(images/layout/menu_login_inactive.png) center center no-repeat; cursor:default; }
+html.black #opcactive .p-dpwrite { background:transparent url(images/layout/menu_login_inactive.png) center center no-repeat; }
+html.black #opcactive .p-dpwrite-inactive { background:transparent url(images/layout/menu_login.png) center center no-repeat; }
+#opcactive .p-dpinfo { background:transparent url(images/layout/menu_search.png) center center no-repeat; }
+#opcactive .p-dpinfo-inactive { background:transparent url(images/layout/menu_search_inactive.png) center center no-repeat; cursor:default; }
+#opcactive .p-dpactive { background:transparent url(images/layout/menu_logout.png) center center no-repeat; }
+#opcactive .p-dpadd { background:transparent url(images/layout/ic_menu_add.png) center center no-repeat; }
+#opcactive .inactive * { color:#AAA; }
+#opcactive .showdpnames { cursor:pointer; }
+
+#h1 { text-align:center; }
+
+#dialog .tasterdefaultpopup table { width:100%; text-align:left; }
+#dialog .tasterdefaultpopup span.ps-checkbox { margin-left:40px; }
+#dialog table.opcgroupdetails td, #dialog table.opcgroupdetails th { padding:1px 5px; }
+#dialog select { width:170px; }
+
+#osk .ps-input { width:90%; height:25px; }

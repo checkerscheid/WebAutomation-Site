@@ -1,0 +1,461 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 15.05.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 582                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: shellycfg.req 582 2024-04-10 06:45:45Z                   $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\std;
+use system\helper\wpDatabase;
+use system\std;
+
+class shellycfg {
+	// Menüeinträge
+	const c_menushellygroup = 'menushellygroup';
+	const c_menushellynew = 'menushellynew';
+	const c_menushellyedit = 'menushellyedit';
+	// shellygroup
+	const c_groupupdate = 'groupupdate';
+	const c_groupinsert = 'groupinsert';
+	const c_groupdelete = 'groupdelete';
+	// shellynew
+	const c_insertshelly = 'insertshelly';
+	const c_updateshellytype = 'updateshellytype';
+	const c_updateshellymac = 'updateshellymac';
+	const c_updateshellycreds = 'updateshellycreds';
+	const c_deleteshelly = 'deleteshelly';
+
+	const c_getshellyingroup = 'getshellyingroup';
+	const c_saveshellyname = 'saveshellyname';
+	const c_saveshellyip = 'saveshellyip';
+	const c_shellyactive = 'shellyactive';
+	// popups
+	const c_popgroupselect = 'popgroupselect';
+	const c_savegroupselect = 'savegroupselect';
+	const c_popactive = 'popactive';
+	const c_saveactive = 'saveactive';
+	const c_popdelete = 'popdelete';
+	const c_savedelete = 'savedelete';
+}
+switch(std::gets('param1')) {
+	//###################################################################################
+	// Menueeintraege
+	//###################################################################################
+	case shellycfg::c_menushellygroup:
+		$database = new wpDatabase();
+		echo '
+			<div id="shellygroup">
+				<h1>Shellygruppen</h1>
+				<span>Filter:</span>
+				<input type="text" class="ps-input FilterText" id="FilterGroup" />
+				<hr />
+				<div class="divupdate">';
+		$database->query('SELECT [id_shellygroup], [name]
+			FROM [shellygroup] ORDER BY [name]');
+		while($erg = $database->fetch()) {
+			echo '
+					<div>
+						<input type="hidden" value="'.$erg['id_shellygroup'].'" />
+						<input type="text" value="'.$erg['name'].'" class="ps-input" />
+						<input type="button" value="speichern" class="groupupdate ps-button">
+						<input type="button" value="entfernen" class="groupdelete ps-button">
+					</div>';
+			//std::test_array($erg);
+		}
+		echo '
+				</div>
+				<p>Neue Gruppe anlegen:</p>
+				<div class="divinsert">
+					<input type="text" class="ps-input" />
+					<input type="button" value="speichern" class="groupinsert ps-button">
+				</div>
+			</div>';
+		break;
+	//###################################################################################
+	case shellycfg::c_menushellynew:
+		echo '
+			<div id="shellynew">
+				<h1>Neue Shelly suchen / anlegen</h1>
+				<hr />
+				<div>
+					Scan: <input type="text" class="ps-input ShellyIpNet" value="192.168.80" />.<input type="text" class="ps-input ShellyIpFrom" value="30" /> To <input type="text" class="ps-input ShellyIpTo" value="39" />
+					<span class="ps-button do-scan" data-method="do-scan">scan</span>
+					<hr />
+					<div id="ergScan" class="table shellylist">
+						<div class="tr firstRow">
+							<div class="th">Name</div>
+							<div class="th">Status</div>
+							<div class="th">Type</div>
+							<div class="th">ShellyIp</div>
+							<div class="th">MAC</div>
+							<div class="th">Auth</div>
+							<div class="th">FW</div>
+							<div class="th">Outputs</div>
+						</div>
+					</div>
+					<div class="scanLoader"></div>
+				</div>
+			</div>';
+		break;
+	//###################################################################################
+	case shellycfg::c_menushellyedit:
+		$database = new wpDatabase();
+		echo '
+			<div id="shellyedit">
+				<h1>bekannte Shelly Geräte</h1>
+				<span class="ps-button setShellydefault">set Shelly default</span>
+				<hr />
+				<ul id="shellyadmin">';
+		$database->query('SELECT [id_shellygroup], [name] FROM [shellygroup] ORDER BY [name]');
+		while($erg = $database->fetch()) {
+			echo '
+					<li class="ps-tree-parent" data-group="'.$erg['id_shellygroup'].'">'.$erg['name'].'</li>
+					<li data-shelly="'.$erg['id_shellygroup'].'"></li>';
+		}
+		echo '
+					<li class="ps-tree-parent" data-group="NULL">Shellys ohne Gruppe</li>
+					<li data-shelly="NULL"></li>
+				</ul>
+			</div>';
+		break;
+	//###################################################################################
+	// shellygroup
+	//###################################################################################
+	case shellycfg::c_groupupdate:
+		if(std::posts('id') != '' && std::posts('name') != '') {
+			$database = new wpDatabase();
+			$database->query("UPDATE [shellygroup] SET
+				[name] = '".wpDatabase::getString(std::posts('name'))."'
+				WHERE [id_shellygroup] = ".std::posts('id'));
+			echo 'S_OK';
+		} else {
+			echo 'Daten konnten nicht gespeichert werden';
+		}
+		break;
+	//###################################################################################
+	case shellycfg::c_groupinsert:
+		if(std::posts('name') != '') {
+			$database = new wpDatabase();
+			$database->query("INSERT INTO [shellygroup] ([name]) VALUES ('".std::posts('name')."')");
+			echo '
+				S_OK:
+				<div>
+					<input type="hidden" value="'.$database->lastid().'" />
+					<input type="text" value="'.wpDatabase::getString(std::posts('name')).'" class="ps-input" />
+					<input type="button" value="speichern" class="groupupdate ps-button">
+					<input type="button" value="entfernen" class="groupupdelete ps-button">
+				</div>';
+		} else {
+			echo 'Daten konnten nicht gespeichert werden';
+		}
+		break;
+	//###################################################################################
+	case shellycfg::c_groupdelete:
+		if(std::posts('id') != '') {
+			$database = new wpDatabase();
+			if(std::posts('force') == 'true') {
+				$database->query('DELETE FROM [shellygroup] WHERE [id_shellygroup] = '.std::posts('id'));
+				echo 'S_OK';
+			} else {
+				$database->query('SELECT COUNT(*) AS [anzahl] FROM [shelly] WHERE [id_shellygroup] = '.std::posts('id'));
+				$erg = $database->fetch();
+				if($erg['anzahl'] == 0) {
+					$database->query('DELETE FROM [shellygroup] WHERE [id_shellygroup] = '.std::posts('id'));
+					echo 'S_OK';
+				} else {
+					echo 'S_CK'.$erg['anzahl'];
+				}
+			}
+		}
+		break;
+	//###################################################################################
+	// shellynew
+	//###################################################################################
+	case shellycfg::c_insertshelly:
+		$database = new wpDatabase();
+		if($database->query("INSERT INTO [shelly]
+			([name], [type], [mac], [ip]) VALUES
+			('" . trim(std::posts('ip')) . "', '" . trim(std::posts('type')) . "', '" . trim(std::posts('mac')) . "', '" . trim(std::posts('ip')) . "')"))
+			echo 'S_OK';
+		break;
+	//###################################################################################
+	case shellycfg::c_updateshellytype:
+		$database = new wpDatabase();
+		if($database->query("UPDATE [shelly] SET [type] = '" . trim(std::posts('type')) . "' WHERE [id_shelly] = " . trim(std::posts('id'))))
+			echo 'S_OK';
+		break;
+	//###################################################################################
+	case shellycfg::c_updateshellymac:
+		$database = new wpDatabase();
+		if($database->query("UPDATE [shelly] SET [mac] = '" . trim(std::posts('mac')) . "' WHERE [id_shelly] = " . trim(std::posts('id'))))
+			echo 'S_OK';
+		break;
+	//###################################################################################
+	case shellycfg::c_updateshellycreds:
+		$database = new wpDatabase();
+		if($database->query("UPDATE [shelly] SET [un] = 'wpLicht', [pw] = 'turner' WHERE [id_shelly] = " . trim(std::posts('id'))))
+			echo 'S_OK';
+		break;
+	//###################################################################################
+	case shellycfg::c_deleteshelly:
+		$database = new wpDatabase();
+		if($database->query("DELETE FROM [shelly] WHERE [id_shelly] = " . trim(std::posts('id'))))
+			echo 'S_OK';
+		break;
+	//###################################################################################
+	case shellycfg::c_shellyactive:
+		$database = new wpDatabase();
+		if($database->query("UPDATE [shelly] SET [active] = 1 WHERE [id_shelly] = " . trim(std::posts('id'))))
+			echo 'S_OK';
+		break;
+	//###################################################################################
+	// Shelly Admin
+	//###################################################################################
+	case shellycfg::c_getshellyingroup:
+		$database = new wpDatabase();
+		echo '
+			<ul class="shellyingroup" data-group="'.std::posts('group').'">
+				<li><hr /></li>
+				<li>
+					<div class="table forall">
+						<div class="tr">
+							<div class="td"><span>Markierung:</span></div>
+							<div class="td">
+								<span class="ps-button markall">alle</span>
+								<span class="ps-button markno">keine</span>
+							</div>
+						</div>
+						<div class="tr">
+							<div class="td"><span>markierte:</span></div>
+							<div class="td">
+								<span class="ps-button allgroup" title="in Gruppe verschieben">Gruppe</span>
+								<span class="ps-button allactive" title="aktivieren / deaktivieren">aktivieren</span>
+								<span class="ps-button alldelete">l&ouml;schen</span>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li><hr /></li>
+				<li>
+					<table class="shellylist">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Names</th>
+								<th>IP Adresse</th>
+								<th>Type</th>
+								<th>MAC</th>
+								<th><?=wpHTML_EMPTY ?></th>
+								<th>Signal</th>
+								<th>Update</th>
+								<th>On / Off</th>
+								<th>Temp</th>
+								<th>Feuchte</th>
+								<th>Lux</th>
+							</tr>
+						</thead>
+						<tbody>';
+		$where = (std::posts('group') == 'NULL') ? "WHERE [s].[id_shellygroup] IS NULL" : "WHERE [s].[id_shellygroup] = ".std::posts('group');
+		$database->query("SELECT
+			[s].[id_shelly], [s].[name], [s].[ip], [s].[type], [s].[mac], [s].[un], [s].[pw], [s].[active],
+			[d1].[id_opcdatapoint] AS [idonoff], [d2].[id_opcdatapoint] AS [idtemp], [d3].[id_opcdatapoint] AS [idfeuchte], [d4].[id_opcdatapoint] AS [idlux],
+			[d1].[name] AS [onoff], [d2].[name] AS [temp], [d3].[name] AS [feuchte], [d4].[name] AS [lux]
+			FROM [shelly] [s]
+			LEFT JOIN [opcdatapoint] [d1] ON [s].[id_onoff] = [d1].[id_opcdatapoint]
+			LEFT JOIN [opcdatapoint] [d2] ON [s].[id_temp] = [d2].[id_opcdatapoint]
+			LEFT JOIN [opcdatapoint] [d3] ON [s].[id_feuchte] = [d3].[id_opcdatapoint]
+			LEFT JOIN [opcdatapoint] [d4] ON [s].[id_lux] = [d4].[id_opcdatapoint]
+			" . $where . " ORDER BY [active] DESC, [name]");
+		while($erg = $database->fetch()) {
+			$creds = ($erg['un'] != '' && $erg['pw'] != '') ? $erg['un'] . ':' . $erg['pw'] . '@' : '';
+			echo '
+							<tr data-id="' . $erg['id_shelly'] . '">
+								<td class="tar">
+									<div class="shelly-flex">
+										<span class="ps-checkbox sh-name ' . ($erg['active'] ? 'ps-green' : 'ps-yellow') . '" title="' . ($erg['active'] ? '' : 'in') . 'aktiv">' . $erg['name'] . '</span>
+										<span class="ps-image-button ps-edit sh-editname" title="Name">&nbsp;</span>
+									</div>
+								</td>
+								<td class="sh-infopopup ps-names">
+									<div class="shelly-flex"></div>
+								</td>
+								<td class="tar">
+									<div class="shelly-flex">
+										<a href="http://' . $creds.$erg['ip'] . '" target="_blank"><span class="sh-ip">' . $erg['ip'] . '</span></a>
+										<span class="ps-image-button ps-edit sh-editip" title="IP Adresse">&nbsp;</span>
+									</div>
+								</td>
+								<td><span class="sh-type">' . $erg['type'] . '</span></td>
+								<td>' . $erg['mac'] . '</td>
+								<td class="tar">
+									<div class="shelly-flex">
+										<span class="ps-image-button ps-refresh" title="Reboot">&nbsp;</span>
+										<span class="ps-image-button ps-import" title="Update">&nbsp;</span>
+										<span class="ps-image-button ps-info" title="Info">&nbsp;</span>
+										<span class="ps-image-button ps-export" title="Default">&nbsp;</span>
+										<span class="ps-image-button ps-active" title="Aktivieren">&nbsp;</span>
+									</div>
+								</td>
+								<td class="sh-infopopup ps-signal">
+									<div class="shelly-flex"><span class="sh-rssi rssioff">?</span></div>
+								</td>
+								<td class="sh-infopopup ps-update">
+									<div class="shelly-flex"><span class="sh-update">?</span></div>
+								</td>
+								<td class="tar">
+									<div class="shelly-flex">
+										<span class="description" title="'.$erg['idonoff'].'">'.$erg['onoff'].'</span>
+										<span class="ps-image-button ps-edit sh-editonoff" title="DP On / Off">&nbsp;</span>
+									</div>
+								</td>
+								<td class="tar">
+									<div class="shelly-flex">
+										<span class="description" title="'.$erg['idtemp'].'">'.$erg['temp'].'</span>
+										<span class="ps-image-button ps-edit sh-edittemp" title="DP Temperatur">&nbsp;</span>
+									</div>
+								</td>
+								<td class="tar">
+									<div class="shelly-flex">
+										<span class="description" title="'.$erg['idfeuchte'].'">'.$erg['feuchte'].'</span>
+										<span class="ps-image-button ps-edit sh-editfeuchte" title="DP Feuchte">&nbsp;</span>
+									</div>
+								</td>
+								<td class="tar">
+									<div class="shelly-flex">
+										<span class="description" title="'.$erg['idlux'].'">'.$erg['lux'].'</span>
+										<span class="ps-image-button ps-edit sh-editlux" title="DP Lux">&nbsp;</span>
+									</div>
+								</td>
+							</tr>';
+		}
+		echo '
+						</tbody>
+					</table>
+				</li>
+			</ul>';
+		break;
+	//###################################################################################
+	case shellycfg::c_saveshellyname:
+		header('Content-Type: application/json');
+		$database = new wpDatabase();
+		$resText = '{"newName":{';
+
+		$database->query("SELECT [ip], [type] FROM [shelly] WHERE [id_shelly] = " . std::posts('id'));
+		$erg = $database->fetch();
+		$resText .= '"Set Name":' . file_get_contents('http://wpLicht:turner@' . $erg['ip'] . '/settings?name=' . urlencode(trim(std::posts('newText')))) . ',';
+		if($erg['type'] == 'SHSW-PM') {
+			$resText .= '"Set relay Name":' . file_get_contents('http://wpLicht:turner@' . $erg['ip'] . '/settings/relay/0?name=' . urlencode(trim(std::posts('newText')))) . ',';
+		}
+		if($erg['type'] == 'SHDM-1' || $erg['type'] == 'SHDM-2') {
+			$resText .= '"Set light Name":' . file_get_contents('http://wpLicht:turner@' . $erg['ip'] . '/settings/light/0?name=' . urlencode(trim(std::posts('newText')))) . ',';
+		}
+		$check = $database->query("UPDATE [shelly] SET [name] = '" . trim(std::posts('newText')) . "' WHERE [id_shelly] = " . std::posts('id'));
+		$resText .= '"DB":' . ($check ? '"S_OK"' : '"Error: ' . $check . '"');
+		echo $resText . '}}';
+		break;
+	//###################################################################################
+	case shellycfg::c_saveshellyip:
+		$database = new wpDatabase();
+		$check = $database->query("UPDATE [shelly] SET [ip] = '" . std::posts('newText') . "' WHERE [id_shelly] = " . std::posts('id'));
+		if($check) echo 'S_OK';
+		else echo $check;
+		break;
+	//###################################################################################
+	case shellycfg::c_popgroupselect:
+		$database = new wpDatabase();
+		$where = '[id_shelly] = ' . implode(' OR [id_shelly] = ', std::posts('ids'));
+		$database->query("SELECT [name], [type] FROM [shelly] WHERE " . $where . " ORDER BY [name]");
+		echo '
+			<h3>Diese Shelly\'s:</h3>
+			<ul>';
+		while($erg = $database->fetch()) {
+			echo '
+				<li><span>'.$erg['name'] . ' (' . $erg['type'] . ')</span></li>';
+		}
+		echo '
+			</ul>
+			<hr />
+			<h3>in diese Gruppe verschieben:</h3>';
+		$sql = "SELECT [id_shellygroup], [name] FROM [shellygroup] ORDER BY [name]";
+		$database->query($sql);
+		echo '
+				<select class="ps-input movetogroup">';
+		while($erg = $database->fetch()) {
+			echo '
+					<option value="' . $erg['id_shellygroup'] . '"' . (std::posts('groupid') == $erg['id_shellygroup'] ? ' selected="selected"' : '') . '>' . $erg['name'] . '</option>';
+		}
+		echo '
+				</select>';
+		break;
+	//###################################################################################
+	case shellycfg::c_savegroupselect:
+		$database = new wpDatabase();
+		$where = '[id_shelly] = ' . implode(' OR [id_shelly] = ', std::posts('ids'));
+		$sql = "UPDATE [shelly] SET [id_shellygroup] = '" . std::posts('shellygroup') . "' where " . $where;
+		$check = $database->query($sql);
+		if($check) echo 'S_OK';
+		else echo $check;
+		break;
+	//###################################################################################
+	case shellycfg::c_popactive:
+		$database = new wpDatabase();
+		$where = '[id_shelly] = ' . implode(' OR [id_shelly] = ', std::posts('ids'));
+		$database->query("SELECT [name], [type] FROM [shelly] WHERE " . $where . " ORDER BY [name]");
+		$html = '
+			<ul>';
+		while($erg = $database->fetch()) {
+			$html .= '
+				<li><span>'.$erg['name'] . ' (' . $erg['type'] . ')</span></li>';
+		}
+		echo $html . '
+			</ul>';
+		break;
+	//###################################################################################
+	case shellycfg::c_saveactive:
+		$database = new wpDatabase();
+		$where = '[id_shelly] = ' . implode(' OR [id_shelly] = ', std::posts('ids'));
+		$sql = "UPDATE [shelly] SET [active] = '" . std::posts('active') . "' where " . $where;
+		$check = $database->query($sql);
+		if($check) echo 'S_OK';
+		else echo $check;
+		break;
+	//###################################################################################
+	case shellycfg::c_popdelete:
+		$database = new wpDatabase();
+		$where = '[id_shelly] = ' . implode(' OR [id_shelly] = ', std::posts('ids'));
+		$database->query("SELECT [name], [type] FROM [shelly] WHERE " . $where . " ORDER BY [name]");
+		$html = '
+			<h2>wirklich diese Shelly\'s löschen</h2>
+			<ul>';
+		while($erg = $database->fetch()) {
+			$html .= '
+				<li><span>'.$erg['name'] . ' (' . $erg['type'] . ')</span></li>';
+		}
+		echo $html . '
+			</ul>';
+		break;
+	//###################################################################################
+	case shellycfg::c_savedelete:
+		$database = new wpDatabase();
+		$where = '[id_shelly] = ' . implode(' OR [id_shelly] = ', std::posts('ids'));
+		$sql = "DELETE FROM [shelly] where " . $where;
+		$check = $database->query($sql);
+		if($check) echo 'S_OK';
+		else echo $check;
+		break;
+	//###################################################################################
+	default:
+		\system\html::default();
+		break;
+}
+?>
+

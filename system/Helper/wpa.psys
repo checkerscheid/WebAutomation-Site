@@ -1,0 +1,33 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 08.06.2021                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 587                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: wpa.psys 587 2024-04-15 23:04:17Z                        $ #
+//#                                                                                 #
+//###################################################################################
+namespace system\Helper;
+
+class wpa {
+	public static $GreyGreen = 'wpa-GreyGreen';
+	public static $GreyYellow = 'wpa-GreyGreen';
+	public static $GreyRed = 'wpa-GreyRed';
+	public static $GreenRed = 'wpa-GreenRed';
+	public static $RedGreen = 'wpa-RedGreen';
+	public static $BlueYellow = 'wpa-BlueYellow';
+	public static $rssi = 'wpa-rssi';
+	public static $indikator = 'wpa-indikator';
+	public static $indikatorTemp = 'wpa-indikator indikator-temp';
+	public static $indikatorHum = 'wpa-indikator indikator-hum';
+	public static $formatdate = 'wpa-formatdate';
+	public static $formattime = 'wpa-formattime';
+	public static $formatdatetime = 'wpa-formatdatetime';
+}

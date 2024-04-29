@@ -1,0 +1,259 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: pageadmin.req 550 2023-12-25 03:02:54Z                   $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\std;
+use system\Helper\wpDatabase;
+use system\Helper\wpConvert;
+use system\std;
+class pageadmin {
+	const c_savenewpage = 'savenewpage';
+	const c_updatepage = 'updatepage';
+	const c_deletepage = 'deletepage';
+
+	const c_newoverviewsite = 'newOverviewsite';
+	const c_newemptysite = 'newEmptysite';
+}
+
+switch(std::gets('param1')) {
+//###################################################################################
+	case pageadmin::c_savenewpage:
+		if(std::posts('src') != '' && std::posts('name') != '') {
+			$database = new wpDatabase();
+			$database->query("INSERT INTO [webpages]
+					([src], [id_src], [name], [usergroupread]) VALUES
+					('".std::posts('src')."', '".wpConvert::cleanName(std::posts('src'), false)."', '".std::posts('name')."', ".std::posts('group').")");
+			echo 'S_OK';
+		} else {
+			echo 'Der Dateiname darf nicht leer sein!';
+		}
+		break;
+//###################################################################################
+	case pageadmin::c_updatepage:
+		if(std::posts('name') != '') {
+			$database = new wpDatabase();
+			$database->query("UPDATE [webpages] SET
+					[name] = '".std::posts('name')."',
+					[usergroupread] = ".std::posts('order').",
+					[inwork] = ".(std::posts('inwork') == 'True' ? '1' : '0')."
+					WHERE [id_webpages] = '".std::posts('id')."'");
+			echo 'S_OK';
+		}
+		break;
+//###################################################################################
+	case pageadmin::c_deletepage:
+		if(std::posts('id') != '') {
+			$database = new wpDatabase();
+			$database->query("DELETE FROM [webpages]
+					WHERE [id_webpages] = '".std::posts('id')."'");
+			if(file_exists('script/'.std::posts('src').'.js')) unlink('script/'.std::posts('src').'.js');
+			if(file_exists('style/'.std::posts('src').'.css')) unlink('style/'.std::posts('src').'.css');
+			echo 'S_OK';
+		}
+		break;
+//###################################################################################
+	case pageadmin::c_newoverviewsite:
+		$src = strtolower(wpConvert::cleanName(std::posts('src'), false));
+		if($src != '' && std::posts('name') != '') {
+			$username = str_pad($_SESSION[SESSION_ID]['USERNAME'], 65, ' ');
+			$datei = fopen('pages/' . $src . '.inc', 'w');
+			$text = '<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : ' . $username . '#
+//# Date         : ' . date('d.m.Y') . '                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: pageadmin.req 550 2023-12-25 03:02:54Z                   $ #
+//#                                                                                 #
+//###################################################################################
+?>
+<div id="page">
+	<h1><? html::getPageHeadline();?></h1>
+	<div class="center">
+		<div class="navigationImages">
+			<!--img src="images/background/jpg/[dateiname].jpg" alt="" usemap="#image-map" /-->
+			<map name="image-map">
+<?
+				//html::getAreaButton(\'[dateiname]\', \'123,456,789\');
+?>
+			</map>
+		</div>
+		<? html::getUebersichtMenu();?>
+	</div>
+</div>
+';
+			fwrite($datei, $text);
+			fclose($datei);
+
+			$datei = fopen('script/' . $src . '.js', 'w');
+			$text = '/*<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : ' . $username . '#
+//# Date         : ' . date('d.m.Y') . '                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: pageadmin.req 550 2023-12-25 03:02:54Z                   $ #
+//#                                                                                 #
+//###################################################################################
+?> ' . $src . ' */
+p.page.load = function() {
+	p.menuStd.init();
+	p.getValues();
+};
+';
+			fwrite($datei, $text);
+			fclose($datei);
+
+			$datei = fopen('style/' . $src . '.css', 'w');
+			$text = '/*<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : ' . $username . '#
+//# Date         : ' . date('d.m.Y') . '                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: pageadmin.req 550 2023-12-25 03:02:54Z                   $ #
+//#                                                                                 #
+//###################################################################################
+?> ' . $src . ' */
+div.center { position:relative; width:1860px; margin:auto; margin-top:15px; }
+';
+			fwrite($datei, $text);
+			fclose($datei);
+			$database = new wpDatabase();
+			$database->query("INSERT INTO [webpages]
+					([src], [id_src], [name], [usergroupread]) VALUES
+					('".$src."', '".$src."', '".std::posts('name')."', ".std::posts('order').")");
+			echo 'S_OK';
+		} else {
+			echo 'Der Dateiname darf nicht leer sein!';
+		}
+		break;
+//###################################################################################
+	case pageadmin::c_newemptysite:
+		$src = strtolower(wpConvert::cleanName(std::posts('src'), false));
+		if($src != '' && std::posts('name') != '') {
+			$username = str_pad($_SESSION[SESSION_ID]['USERNAME'], 65, ' ');
+			$datei = fopen('pages/' . $src . '.inc', 'w');
+			$text = '<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : ' . $username . '#
+//# Date         : ' . date('d.m.Y') . '                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: pageadmin.req 550 2023-12-25 03:02:54Z                   $ #
+//#                                                                                 #
+//###################################################################################
+?>
+<div id="page">
+	<h1><? html::getPageHeadline();?></h1>
+	<div class="center">
+	</div>
+</div>
+';
+			fwrite($datei, $text);
+			fclose($datei);
+
+			$datei = fopen('script/' . $src . '.js', 'w');
+			$text = '/*<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : ' . $username . '#
+//# Date         : ' . date('d.m.Y') . '                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: pageadmin.req 550 2023-12-25 03:02:54Z                   $ #
+//#                                                                                 #
+//###################################################################################
+?> ' . $src . ' */
+p.page.load = function() {
+	p.getValues();
+};
+';
+			fwrite($datei, $text);
+			fclose($datei);
+
+			$datei = fopen('style/' . $src . '.css', 'w');
+			$text = '/*<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : ' . $username . '#
+//# Date         : ' . date('d.m.Y') . '                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: pageadmin.req 550 2023-12-25 03:02:54Z                   $ #
+//#                                                                                 #
+//###################################################################################
+?> ' . $src . ' */
+div.center { position:relative; width:1860px; margin:auto; margin-top:15px; }
+div.center * { position:absolute; }
+';
+			fwrite($datei, $text);
+			fclose($datei);
+			$database = new wpDatabase();
+			$src = strtolower(wpConvert::cleanName(std::posts('src'), false));
+			$database->query("INSERT INTO [webpages]
+					([src], [id_src], [name], [usergroupread]) VALUES
+					('".$src."', '".$src."', '".std::posts('name')."', ".std::posts('order').")");
+			echo 'S_OK';
+		} else {
+			echo 'Der Dateiname darf nicht leer sein!';
+		}
+		break;
+//###################################################################################
+	default:
+		\system\html::default();
+		break;
+}
+?>

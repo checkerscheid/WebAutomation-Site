@@ -1,0 +1,156 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 26.04.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 582                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: d1mini.psys 582 2024-04-10 06:45:45Z                     $ #
+//#                                                                                 #
+//###################################################################################
+namespace system\Helper;
+/**
+ * ermittelt den D1 Mini CompiledWith und ordnet ihm MQTT und Datenpunkte zu
+ * @author Checker
+ */
+class d1mini {
+	const DHT = 'DHT';
+	const LDR = 'LDR';
+	const Light = 'Light';
+	const BM = 'BM';
+	const Rain = 'Rain';
+	const Distance = 'Distance';
+	/** responsed /shelly */
+	private static function insertValues($Json) {
+		$database = new wpDatabase();
+		$idMqttBroker = 1;
+		$idDBGroup = 1;
+		$idTrendGroup = 1;
+		$Name = $Json->FreakaZoneDevice->DeviceName;
+		$Description = $Json->FreakaZoneDevice->DeviceDescription;
+
+		$sql = "INSERT INTO [mqtttopic] ([id_mqttbroker], [topic]) VALUES (" . $idMqttBroker . ", '" . $Name . "/info/WiFi/RSSI')";
+		if($database->query($sql)) {
+			$sql = "INSERT INTO [db] " .
+				"([id_dpgroup], [id_mqtttopic], [name], [description], [unit], [nks], [min], [max], [active]) VALUES ".
+				`({$idDBGroup}, {$database->lastid('mqtttopic')}, '{$Name}_Rssi', '{$Description} Signal', 'db', 0, -130, 0, 1)`;
+			if($database->query($sql)) {
+				$sql = "INSERT INTO [trend] " .
+					"([id_dp], [id_trendgroup], [name], [intervall], [active]) VALUES " .
+					`({$database->lastid('db')}, {$idTrendGroup}, '{$Description} Signal', 120, 1)`;
+				$database->query($sql);
+			}
+		}
+
+		if(isset($Json->FreakaZoneDevice->HT)) {
+
+			$sql = "INSERT INTO [mqtttopic] ([id_mqttbroker], [topic]) VALUES (" . $idMqttBroker . ", '" . $Name . "/Temperature')";
+			if($database->query($sql)) {
+				$sql = "INSERT INTO [db] " .
+						"([id_dpgroup], [id_mqtttopic], [name], [description], [unit], [nks], [min], [max], [active]) VALUES ".
+						`({$idDBGroup}, {$database->lastid('mqtttopic')}, '{$Name}_Temp', '{$Description} Temperatur', '°C', 1, -50, 100, 1)`;
+				if($database->query($sql)) {
+					$sql = "INSERT INTO [trend] " .
+							"([id_dp], [id_trendgroup], [name], [active]) VALUES " .
+							`({$database->lastid('db')}, {$idTrendGroup}, '{$Description} Temperatur', 1)`;
+					$database->query($sql);
+				}
+			}
+
+			$sql = "INSERT INTO [mqtttopic] ([id_mqttbroker], [topic]) VALUES (" . $idMqttBroker . ", '" . $Name . "/Humidity')";
+			if($database->query($sql)) {
+				$sql = "INSERT INTO [db] " .
+						"([id_dpgroup], [id_mqtttopic], [name], [description], [unit], [nks], [min], [max], [active]) VALUES ".
+						`({$idDBGroup}, {$database->lastid('mqtttopic')}, '{$Name}_Hum', '{$Description} Feuchte', '%rF', 0, 0, 100, 1)`;
+				if($database->query($sql)) {
+					$sql = "INSERT INTO [trend] " .
+							"([id_dp], [id_trendgroup], [name], [active]) VALUES " .
+							`({$database->lastid('db')}, {$idTrendGroup}, '{$Description} Feuchte', 1)`;
+					$database->query($sql);
+				}
+			}
+		}
+
+		if(isset($Json->FreakaZoneDevice->LDR)) {
+
+			$sql = "INSERT INTO [mqtttopic] ([id_mqttbroker], [topic]) VALUES (" . $idMqttBroker . ", '" . $Name . "/LDR')";
+			if($database->query($sql)) {
+				$sql = "INSERT INTO [db] " .
+						"([id_dpgroup], [id_mqtttopic], [name], [description], [unit], [nks], [min], [max], [active]) VALUES ".
+						`({$idDBGroup}, {$database->lastid('mqtttopic')}, '{$Name}_LDR', '{$Description} LDR', 'lux', 0, 0, 1024, 1)`;
+				if($database->query($sql)) {
+					$sql = "INSERT INTO [trend] " .
+							"([id_dp], [id_trendgroup], [name], [active]) VALUES " .
+							`({$database->lastid('db')}, {$idTrendGroup}, '{$Description} LDR', 1)`;
+					$database->query($sql);
+				}
+			}
+		}
+
+		if(isset($Json->FreakaZoneDevice->Light)) {
+
+			$sql = "INSERT INTO [mqtttopic] ([id_mqttbroker], [topic]) VALUES (" . $idMqttBroker . ", '" . $Name . "/Light')";
+			if($database->query($sql)) {
+				$sql = "INSERT INTO [db] " .
+						"([id_dpgroup], [id_mqtttopic], [name], [description], [unit], [nks], [min], [max], [active]) VALUES ".
+						`({$idDBGroup}, {$database->lastid('mqtttopic')}, '{$Name}_Light', '{$Description} Licht', 'lux', 0, 0, 65535, 1)`;
+				if($database->query($sql)) {
+					$sql = "INSERT INTO [trend] " .
+							"([id_dp], [id_trendgroup], [name], [active]) VALUES " .
+							`({$database->lastid('db')}, {$idTrendGroup}, '{$Description} Licht', 1)`;
+					$database->query($sql);
+				}
+			}
+		}
+
+		if(isset($Json->FreakaZoneDevice->BM)) {
+
+			$sql = "INSERT INTO [mqtttopic] ([id_mqttbroker], [topic]) VALUES (" . $idMqttBroker . ", '" . $Name . "/BM')";
+			if($database->query($sql)) {
+				$sql = "INSERT INTO [db] " .
+						"([id_dpgroup], [id_mqtttopic], [name], [description], [unit], [active]) VALUES ".
+						`({$idDBGroup}, {$database->lastid('mqtttopic')}, '{$Name}_BM', '{$Description} Bewegung', '1:Bewegung;0:Stille;', 1)`;
+				$database->query($sql);
+			}
+		}
+
+		if(isset($Json->FreakaZoneDevice->Rain)) {
+
+			$sql = "INSERT INTO [mqtttopic] ([id_mqttbroker], [topic]) VALUES (" . $idMqttBroker . ", '" . $Name . "/Rain')";
+			if($database->query($sql)) {
+				$sql = "INSERT INTO [db] " .
+						"([id_dpgroup], [id_mqtttopic], [name], [description], [unit], [nks], [min], [max], [active]) VALUES ".
+						`({$idDBGroup}, {$database->lastid('mqtttopic')}, '{$Name}_Rain', '{$Description} Regen', 'l/min', 3, 0, 10, 1)`;
+				if($database->query($sql)) {
+					$sql = "INSERT INTO [trend] " .
+							"([id_dp], [id_trendgroup], [name], [active]) VALUES " .
+							`({$database->lastid('db')}, {$idTrendGroup}, '{$Description} Regen', 1)`;
+					$database->query($sql);
+				}
+			}
+		}
+
+		if(isset($Json->FreakaZoneDevice->Distance)) {
+
+			$sql = "INSERT INTO [mqtttopic] ([id_mqttbroker], [topic]) VALUES (" . $idMqttBroker . ", '" . $Name . "/Volume')";
+			if($database->query($sql)) {
+				$sql = "INSERT INTO [db] " .
+						"([id_dpgroup], [id_mqtttopic], [name], [description], [unit], [nks], [min], [max], [active]) VALUES ".
+						`({$idDBGroup}, {$database->lastid('mqtttopic')}, '{$Name}_Vol', '{$Description} Volume', 'l', 0, 0, 10000, 1)`;
+				if($database->query($sql)) {
+					$sql = "INSERT INTO [trend] " .
+							"([id_dp], [id_trendgroup], [name], [active]) VALUES " .
+							`({$database->lastid('db')}, {$idTrendGroup}, '{$Description} Volume', 1)`;
+					$database->query($sql);
+				}
+			}
+		}
+	}
+}
+?>

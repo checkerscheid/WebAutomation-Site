@@ -1,0 +1,24 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 505                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: emailcfg.css 505 2021-05-07 21:55:45Z checker            $ #
+//#                                                                                 #
+//###################################################################################
+?> emailcfg */
+
+#submenu { height:20px; padding:0 0 5px 50px; }
+#submenu li { float:left; }
+
+h2.editorder { cursor:pointer; }
+span.ps-tree-parent { display:inline-block; }
+#erg ul { margin-left:20px; }

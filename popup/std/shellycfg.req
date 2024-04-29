@@ -1,0 +1,43 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 15.05.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: shellycfg.req 550 2023-12-25 03:02:54Z                   $ #
+//#                                                                                 #
+//###################################################################################
+namespace popup\std;
+use system\Helper\security;
+use system\std;
+class shellycfg {
+	const c_edittext = 'edittext';
+}
+
+switch(std::gets('param1')) {
+	//###################################################################################
+	// Menueeintraege
+	//###################################################################################
+	case shellycfg::c_edittext:
+?>
+		<div class="table">
+			<div class="tr">
+				<div class="td"><span><?=std::posts('description')?>:</span></div>
+				<div class="td"><input type="text" class="ps-input" value="<?=std::posts('value')?>" /></div>
+			</div>
+		</div>
+<?
+		break;
+	//###################################################################################
+	default:
+		echo '<span class="neg">Command not found</span>';
+		if(security::checkGroup(security::entwickler)) std::test_array($_POST);
+		break;
+}

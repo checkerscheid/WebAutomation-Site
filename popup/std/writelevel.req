@@ -1,0 +1,90 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 20.12.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: writelevel.req 550 2023-12-25 03:02:54Z                  $ #
+//#                                                                                 #
+//###################################################################################
+namespace popup\std;
+use system\Helper\wpDatabase;
+use system\std;
+$writelevel = std::posts('writelevel');
+$writegroup = std::posts('writegroup');
+$prepend = '';
+$apend = '';
+if($writelevel == '100') $writelevel = '';
+switch(std::posts('type')) {
+	case 'setdefault':
+		$prepend .= '<tr>';
+		$prepend .= '<td colspan="2" class="ps-taleft"><span class="ps-checkbox null'.($writelevel == '' ? ' checked' : '').'">Einstellung der Gruppe verwenden</span></td>';
+		$prepend .= '</tr>';
+
+		$prepend .= '<tr><td colspan="2"><hr /></td></tr>';
+
+		break;
+	case 'setdefaultforcegroup':
+		$prepend .= '<tr>';
+		$prepend .= '<td colspan="2" class="ps-taleft"><span class="ps-checkbox null'.($writelevel == '' ? ' checked' : '').'">Einstellung des Servers verwenden</span></td>';
+		$prepend .= '</tr>';
+
+		$prepend .= '<tr><td colspan="2"><hr /></td></tr>';
+
+
+		$apend .= '<tr>';
+		$apend .= '<td colspan="2" class="ps-taleft"><span class="ps-checkbox force'.($writelevel == '' ? ' ps-disabled' : '').'">auf alle Datenpunkte in dieser Gruppe übertragen</span></td>';
+		$apend .= '</tr>';
+
+		break;
+	case 'setdefaultforceserver':
+		$prepend .= '<tr>';
+		$prepend .= '<td colspan="2" class="ps-taleft"><span class="ps-checkbox null'.($writelevel == '' ? ' checked' : '').'">Grundeinstellung verwenden</span></td>';
+		$prepend .= '</tr>';
+
+		$prepend .= '<tr><td colspan="2"><hr /></td></tr>';
+
+		$apend .= '<tr>';
+		$apend .= '<td colspan="2" class="ps-taleft"><span class="ps-checkbox force'.($writelevel == '' ? ' ps-disabled' : '').'">auf alle OPC Gruppen und Datenpunkte in diesem Server übertragen</span></td>';
+		$apend .= '</tr>';
+
+		break;
+	default:
+		break;
+}
+
+?>
+
+<div class="popup writelevel">
+	<h1><?=std::posts('headline')?></h1>
+	<table id="numpad" summary="">
+		<tr><td colspan="2"><hr /></td></tr>
+		<tr><td colspan="2">aktuell: <?=$writegroup?></td></tr>
+		<tr><td colspan="2"><hr /></td></tr>
+		<?=$prepend?>
+		<tr>
+			<td>Benutzergruppe:</td>
+			<td>
+				<select id="oskinput" class="ps-input<?=($writelevel == '' ? ' inactive' :'' )?>"<?=($writelevel == '' ? ' disabled="disabled"' : '')?>>
+<?
+$database = new wpDatabase();
+$sql = "SELECT [name], [order] FROM [usergroup] ORDER BY [order]";
+$database->query($sql);
+while ($erg = $database->fetch()) {
+	echo '<option value="'.$erg['order'].'"'.($erg['order'] == $writelevel ? ' selected="selected"' : '').'>'.$erg['name'].'</option>';
+}
+?>
+					<option value="100"<?=(100 == $writelevel ? ' selected="selected"' : '')?>>niemand</option>
+				</select>
+			</td>
+		</tr>
+		<?=$apend?>
+	</table>
+</div>

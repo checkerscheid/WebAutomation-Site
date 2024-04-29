@@ -1,0 +1,49 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 582                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: uebersicht.req 582 2024-04-10 06:45:45Z                  $ #
+//#                                                                                 #
+//###################################################################################
+namespace request;
+use system\WebCom;
+use system\std;
+class uebersicht {
+	const c_writedp = 'writedp';
+	const c_getd1minisettings = 'getd1minisettings';
+	const c_getshellystatus = 'getshellystatus';
+}
+
+switch(std::gets('param1')) {
+	//###################################################################################
+	case uebersicht::c_writedp:
+		$WebCom = new WebCom();
+		echo $WebCom->send('WriteDP', $_SESSION[SESSION_ID]['LEVEL'].'%~%'.std::posts('dpid').'%~%'.std::posts('value'));
+		break;
+	//###################################################################################
+	case uebersicht::c_getd1minisettings:
+		header('Content-Type: application/json');
+		$WebCom = new WebCom();
+		echo $WebCom->send('getD1MiniSettings');
+		break;
+	//###################################################################################
+	case uebersicht::c_getshellystatus:
+		header('Content-Type: application/json');
+		$WebCom = new WebCom();
+		echo '{"erg":"' . $WebCom->send('GetShellyStatus') . '"}';
+		break;
+	//###################################################################################
+	default:
+		\system\html::default();
+		break;
+}
+?>

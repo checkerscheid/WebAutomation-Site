@@ -1,0 +1,67 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 20.12.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 582                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: sceneosk.req 582 2024-04-10 06:45:45Z                    $ #
+//#                                                                                 #
+//###################################################################################
+namespace popup\std;
+use system\std;
+$keyboard = array(
+	0 => array('1', '2', '3', '4', '5', '6', '7', '8', '9', '0'),
+	1 => array('q', 'w', 'e', 'r', 't', 'z', 'u', 'i', 'o', 'p'),
+	2 => array('a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', '<-'),
+	3 => array('shift', 'y', 'x', 'c', 'v', 'b', 'n', 'm', 'ß'),
+	4 => array('-', '@', 'space', ',', '.', 'OK')
+);
+
+?>
+
+<div class="popup">
+	<table id="osk" summary="" data-elem="<?=std::posts('elem')?>" data-id="<?=std::posts('id')?>">
+		<tr>
+			<td colspan="<?=count($keyboard[1])?>">
+				<input id="oskinput" class="ps-input" value="<?=wpHTML_EMPTY?>" />
+			</td>
+		</tr>
+	<?
+		foreach($keyboard as $row) {
+			echo '<tr>';
+			$counter = 1;
+			foreach($row as $button) {
+				switch($button) {
+					case 'shift':
+						$counter += 2;
+						echo '<td colspan="2"><span class="ps-button column2">'.$button.'</span></td>';
+						break;
+					case 'space':
+						$counter += 5;
+						echo '<td colspan="5"><span class="ps-button column5">'.$button.'</span></td>';
+						break;
+					case 'OK':
+						$counter++;
+						echo '<td><span class="ps-button" data-sname="'.std::posts('dp').'">'.$button.'</span></td>';
+						break;
+					default:
+						$counter++;
+						echo '<td><span class="ps-button">'.$button.'</span></td>';
+						break;
+				}
+			}
+			for($i = $counter; $i <= 10; $i++) {
+				echo '<td></td>';
+			}
+			echo '</tr>';
+		}
+	?>
+	</table>
+</div>

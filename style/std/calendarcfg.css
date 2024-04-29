@@ -1,0 +1,39 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 15.05.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 505                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: calendarcfg.css 505 2021-05-07 21:55:45Z checker         $ #
+//#                                                                                 #
+//###################################################################################
+?> calendarcfg */
+
+#calendarcfgcontainer h1 { text-align:center; }
+
+#submenu { height:20px; padding:0 0 5px 50px; }
+#submenu li { float:left; }
+#calendarcfg { margin:10px 50px; }
+
+#calendarcfg ul { margin-left:30px; }
+#calendarcfg div.td, #calendarcfg div.th { padding:2px 5px; }
+h2.editorder { cursor:pointer; }
+
+div.divupdate div, div.divinsert { border:1px solid #CCC; padding:3px 5px; margin:3px; display:inline-block; border-radius:6px; }
+div.forall span.ps-button { width:75px; text-align:center; }
+
+div.td { padding:2px 5px; }
+div.tr { margin:2px; }
+div.table-bold { font-weight:bold; }
+div.table-head { border:1px solid #FFF; }
+div.table-group { padding-left:10px; font-weight:bold; }
+div.table-item { padding-left:25px; }
+span.ps-tree-parent { display:inline-block; }
+#erg input.neg { border-color:#A91919; color:#A91919; }

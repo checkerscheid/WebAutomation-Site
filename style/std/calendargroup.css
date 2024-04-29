@@ -1,0 +1,33 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 21.05.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 570                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: calendargroup.css 570 2024-03-13 18:22:21Z               $ #
+//#                                                                                 #
+//###################################################################################
+?> calendargroup */
+
+#legende { float:right; }
+#legende a { padding:2px 5px; margin:5px; text-decoration:none; display:inline-block;
+	color:#000; text-shadow:0px 0px 4px #fff; font-weight:bold;
+	border-radius:2px; box-shadow:0px 0px 7px 1px #ccc; border:1px solid #666; }
+/*#calendargroup .ps-button { float:left; }*/
+#calendargroup .fc-event { cursor:pointer; }
+#calendargroup .fc-event * { color:#000; }
+#calendargroup .CalendarEventBold { z-index:100 !important; border:1px solid #000 !important; right:5% !important; left:5% !important; box-shadow:0px 0px 5px 5px #ccc; }
+#calendargroup .CalendarEventBold * { font-weight:bold; font-size:1.1em; text-shadow:0px 0px 6px #FFF; }
+div.popup { width:290px; text-align:center; }
+div.popup table { width:100%; }
+div.popup input.ps-input { display:inline-block; width:150px; text-align:center; }
+div.popup select.ps-input { display:inline-block; width:150px; }
+div.popup select.startd, div.popup select.endd { display:inline-block; width:75px; }
+div.popup input.starth, div.popup input.startm, div.popup input.endh, div.popup input.endm { display:inline-block; width:30px; }

@@ -1,0 +1,26 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 505                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: userhistorics.css 505 2021-05-07 21:55:45Z checker       $ #
+//#                                                                                 #
+//###################################################################################
+?> userhistorics */
+
+#userhistorics .tac { text-align:center; }
+#userhistorics .ps-loading { background-position:center top; }
+#userhistorics .floatr { float:left; padding-right:20px; }
+/*#userhistorics td { border:1px solid #ccc; padding:1px 5px; }*/
+#historictable td { color:#222; }
+table.dataTable thead th.noborder { border:none; }
+
+h1 { text-align:center; }

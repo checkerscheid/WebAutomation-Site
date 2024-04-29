@@ -1,0 +1,97 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 20.12.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: schieberegler.req 550 2023-12-25 03:02:54Z               $ #
+//#                                                                                 #
+//###################################################################################
+namespace popup\std;
+use system\std;
+class schieberegler {
+	const c_ohneHandAuto = 'ohneHandAuto';
+}
+switch(std::posts('type')) {
+	case 'ohneHandAuto':
+		$handauto = '';
+		break;
+	default:
+		$handauto = '
+		<tr>
+			<td colspan="2">
+				<hr />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<span>Hand / Auto:</span>
+			</td>
+			<td>
+				<span class="ps-input pa-HandAuto" data-value="'.std::posts('elem').'_Hand">undefined</span>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<span class="ps-button" data-point="'.std::posts('elem').'_Hand" data-write="False">Automatik</span>
+			</td>
+			<td>
+				<span class="ps-button" data-point="'.std::posts('elem').'_Hand" data-write="True">Hand</span>
+			</td>
+		</tr>';
+		break;
+	}
+?>
+
+<div class="popup bedienung">
+	<h1><?=std::posts('headline')?></h1>
+	<table summary="">
+		<tr>
+			<td colspan="2">
+				<hr />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<span>Status:</span>
+			</td>
+			<td>
+				<span class="ps-input" data-value="<?=std::posts('elem')?>">undefined</span>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<span>Automatik:</span>
+			</td>
+			<td>
+				<span class="ps-input" data-value="<?=std::posts('elem')?>_AutoWert">undefined</span>
+			</td>
+		</tr>
+<?=$handauto?>
+		<tr>
+			<td colspan="2">
+				<hr />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<span>Handvorwahl:</span>
+			</td>
+			<td>
+				<span class="ps-input pa-param" data-value="<?=std::posts('elem')?>_HandWert">undefined</span>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<div class="pa-slider" data-value="<?=std::posts('elem')?>_HandWert"></div>
+			</td>
+		</tr>
+	</table>
+</div>

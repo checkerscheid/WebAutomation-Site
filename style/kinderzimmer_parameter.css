@@ -1,0 +1,21 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 26.01.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 518                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: kinderzimmer_parameter.css 518 2021-07-06 16:12:24Z chec#$ #
+//#                                                                                 #
+//###################################################################################
+?> kinderzimmer_parameter */
+
+@media screen and (min-width:1024px) {
+	.parampage { background:transparent url(images/kinderzimmer.png) center top no-repeat; position:relative; margin:auto; }
+}

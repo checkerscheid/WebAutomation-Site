@@ -1,0 +1,31 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: regler.req 550 2023-12-25 03:02:54Z                      $ #
+//#                                                                                 #
+//###################################################################################
+namespace popup\std;
+use system\std;
+?>
+
+<div class="popup trendpopup">
+	<h1><?=std::posts('headline')?></h1>
+	<div class="settings">
+		<div id="trendpopup"></div>
+	</div>
+	<div class="settings2">
+		<span class="selectedtime"></span>
+		<div id="reglertrendlegend">
+		</div>
+	</div>
+</div>

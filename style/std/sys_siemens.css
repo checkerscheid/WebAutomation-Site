@@ -1,0 +1,31 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 28.06.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 505                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: sys_siemens.css 505 2021-05-07 21:55:45Z checker            $ #
+//#                                                                                 #
+//###################################################################################
+?> siemens */
+
+#siemens h1, #siemens h2, #siemens h3 { text-align:center; }
+#siemens { margin:0 20px; }
+
+#siemens span { display:inline-block; width:100px; text-align:center; }
+#siemens .besch { width:200px; padding:5px 0; float:left; text-align:left; }
+#siemens .ps-input { width:150px; }
+#siemens .ps-container { width:400px; }
+#siemens .height0 { height:0px; overflow:hidden; }
+#siemens .ps-container h2 { cursor:pointer; }
+#siemens .write { cursor:pointer; }
+#siemens .neg { background-color:#A91919; color:#FFF; }
+#siemens .pos { background-color:#0F0; color:#000; }
+#siemens .serverinfo { position:fixed; top:85px; right:25px; color:#FFF; font-size:7pt; }

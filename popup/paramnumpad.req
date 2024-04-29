@@ -1,0 +1,84 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 20.12.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: paramnumpad.req 550 2023-12-25 03:02:54Z                 $ #
+//#                                                                                 #
+//###################################################################################
+namespace popup;
+use system\std;
+use system\Helper\wpDatabase;
+$database = new wpDatabase();
+$database->query("SELECT [unit] FROM [opcdatapoint] WHERE name = '".$_SESSION[SESSION_ID]['POINTS'][std::posts('elem')]->name."'");
+$erg = $database->fetch();
+
+$minmax = '';
+if(std::arrays($_SESSION[SESSION_ID]['POINTS'], std::posts('elem'))) {
+	$minmax .= '<tr><td colspan="3"><hr /></td></tr><tr><td colspan="3" class="ps-taright">min: ';
+	$minmax .= $_SESSION[SESSION_ID]['POINTS'][std::posts('elem')]->min.' '.$_SESSION[SESSION_ID]['POINTS'][std::posts('elem')]->unit;
+	$minmax .= '</td></tr><tr><td colspan="3" class="ps-taright">max: ';
+	$minmax .= $_SESSION[SESSION_ID]['POINTS'][std::posts('elem')]->max.' '.$_SESSION[SESSION_ID]['POINTS'][std::posts('elem')]->unit;
+	$minmax .= '</td></tr>';
+}
+
+$keyboard = array(
+	0 => array('1', '2', '3'),
+	1 => array('4', '5', '6'),
+	2 => array('7', '8', '9'),
+	3 => array('.', '0', '<-')
+);
+
+?>
+
+<div class="popup">
+	<h2><?=std::posts('headline')?></h2>
+	<table id="numpad" summary="" data-elem="<?=std::posts('elem')?>" data-id="<?=std::posts('id')?>">
+		<?=$minmax?>
+
+	<?
+if(preg_match('/((\d){1,}:.*;){1,}/', $erg['unit'])> 0) {
+	echo '<tr>
+			<td colspan="'.count($keyboard[1]).'"><h1>'.std::posts('id').'<h1></td>
+		</tr>
+		<tr>
+			<td colspan="'.count($keyboard[1]).'"><hr /></td>
+		</tr>';
+	$unit = substr($erg['unit'], 0, -1);
+	$arr = explode(';', $unit);
+	echo '<tr><td colspan="'.count($keyboard[1]).'"><select class="nAuswahl ps-input">';
+	foreach($arr as $state) {
+		echo '<option data-wert="'.trim(strstr($state, ':', true)).'">';
+		echo str_replace(':', '', strstr($state, ':'));
+		echo '</option>';
+	}
+	echo '</select></td></tr>';
+} else {
+	echo '<tr>
+			<td colspan="'.count($keyboard[1]).'">
+				<input id="oskinput" class="ps-input" type="text" />
+			</td>
+		</tr>';
+	foreach($keyboard as $row) {
+		echo '<!--tr>';
+		foreach($row as $button) {
+			if($button == '') {
+				echo '<td></td>';
+			} else {
+				echo '<td><span class="ps-button">'.$button.'</span></td>';
+			}
+		}
+		echo '</tr-->';
+	}
+}
+	?>
+	</table>
+</div>

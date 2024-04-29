@@ -1,0 +1,37 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 05.12.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 505                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: useralarmcfg.css 505 2021-05-07 21:55:45Z checker        $ #
+//#                                                                                 #
+//###################################################################################
+?> useralarmcfg */
+
+#useralarmcfg .p-tabs { width:600px; margin:auto; }
+#useralarmcfg h1, #useralarmcfg p { text-align:center; }
+#useralarmcfg fieldset { width:500px; padding:20px; margin:10px auto 0; border-radius:6px; }
+#useralarmcfg legend { padding:3px 30px; }
+#useralarmcfg input { width:230px; float:right; }
+#useralarmcfg label { display:inline-block; width:230px; text-align:right; }
+#useralarmcfg div.row { height:25px; clear:both; }
+#useralarmcfg div.error { text-align:center; color:#A91919; }
+#useralarmcfg div.entry { clear:both; }
+#useralarmcfg #filter .ps-checkbox { margin-left:250px; }
+#useralarmcfg .active { color:#339933; }
+
+#useralarmcfg .p-dpbutton { display:inline-block; width:27px; height:27px; padding:0 2px; margin:0 3px; cursor:pointer; }
+#useralarmcfg .p-dpdelete { background:transparent url(images/layout/ic_menu_delete.png) center center no-repeat; }
+#useralarmcfg .p-dpadd { background:transparent url(images/layout/ic_menu_add.png) center center no-repeat; }
+#useralarmcfg .p-dpsave { background:transparent url(images/layout/ic_menu_save.png) center center no-repeat; }
+#useralarmcfg .p-accordion { margin-left:30px; }
+
+#useralarmcfg .ps-button { float:right; }

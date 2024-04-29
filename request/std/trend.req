@@ -1,0 +1,306 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 591                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: trend.req 591 2024-04-24 20:57:52Z                       $ #
+//#                                                                                 #
+//###################################################################################
+/**
+ * @var Type $minmax
+ * @var Type $yaxes
+ * @var Type $datahasbool
+ */
+namespace request\std;
+require_once 'system/Helper/wpDateTime.psys';
+use system\std;
+use system\wpInit;
+use system\Helper\wpDatabase;
+use system\Helper\wpDateTime;
+// workarround
+ini_set('max_execution_time', 240);
+header(wpJSON_HEADER);
+class trend {
+	private $id;
+	private $name;
+	private $dbmin;
+	private $dbmax;
+	private $min;
+	private $max;
+	private $unit;
+	private $nks;
+	private $isbool;
+	private $filename;
+	private $tablename;
+	private $data;
+	private $dataarray;
+	public function __construct($id, $name) {
+		$this->id = $id;
+		$this->name = $name.' =<br />- ';
+		$this->data = '';
+		$this->dataarray = array();
+		$this->isbool = null;
+	}
+	public function setMinMaxUnit($min, $max, $unit, $nks) {
+		$this->dbmin = $min;
+		$this->dbmax = $max;
+		$this->unit = $unit;
+		$this->nks = $nks;
+	}
+	public function setData($time, $value) {
+		if($this->isbool === null) {
+			if(strtolower($value) == 'true' || strtolower($value) == 'false') {
+				$this->isbool = true;
+			} else {
+				$this->isbool = false;
+				$this->dataarray[] = str_replace(',','.',strtolower($value));
+			}
+		}
+		if(str_replace(',','.',$value) > $this->max || $this->max == null) {
+			$this->max = str_replace(',','.',$value);
+		}
+		if(str_replace(',','.',$value) < $this->min || $this->min == null) {
+			$this->min = str_replace(',','.',$value);
+		}
+		$data = '['.($time->getTimestamp() * 1000).', '.str_replace(',','.',strtolower($value)).'],';
+		$this->data .= $data;
+	}
+	public function setFilename($id, $filename) {
+		$this->filename = $id . ' - ' . $filename . '.csv';
+		$this->tablename = 'tmp' . $filename;
+	}
+	public function isBool() {
+		if($this->isbool === true) return true;
+		return false;
+	}
+	public function getName() {
+		return $this->name.$this->unit;
+	}
+	public function getData() {
+		return '['.substr($this->data, 0, -1).']';
+	}
+	public function getMinMax() {
+		$minmax = array('min' => -0.1, 'max' => 10);
+		if(!$this->isbool) {
+			$internalmin = (double)str_replace(',','.',strtolower($this->min));
+			$internalmax = (double)str_replace(',','.',strtolower($this->max));
+			if(std::posts('useminmax') == 'frompoint') {
+				$min = $internalmin - (($internalmax - $internalmin) / 5);
+				$max = $internalmax + (($internalmax - $internalmin) / 5);
+			} else {
+				$min = ($this->dbmin == '') ? $internalmin - (($internalmax - $internalmin) / 5) : $this->dbmin;
+				$max = ($this->dbmax == '') ? $internalmax + (($internalmax - $internalmin) / 5) : $this->dbmax;
+			}
+			$minmax = array('min' => $min, 'max' => $max);
+		}
+		return $minmax;
+	}
+	public function getdbMinMax() {
+		if(!$this->isbool) {
+			$_min = str_replace(',','.',strtolower($this->min));
+			$_max = str_replace(',','.',strtolower($this->max));
+			return ', "minPoint": '.($_min==''?'0':$_min).', "maxPoint": '.($_max==''?'0':$_max);
+		}
+		return '';
+	}
+	public function getUnit() {
+		return $this->unit;
+	}
+	public function getNks() {
+		return $this->nks;
+	}
+	public function getFilename() {
+		return $this->filename;
+	}
+	public function getTablename() {
+		return $this->tablename;
+	}
+}
+
+//********************
+// HTML get / POST
+//********************
+if(std::posts('choosen') == 'fromto' && std::posts('from') != '' && std::posts('to') != '') {
+	$datefrom = date(wpDateTime::forDB, std::posts('from'));
+	$dateto = date(wpDateTime::forDB, strtotime('+1 day', std::posts('to')));
+	$sqlwheretime = "[time] > '" . $datefrom . "' AND [time] < '" . $dateto . "'";
+} else if(std::posts('choosen') == 'trendday' && std::posts('day') != '') {
+	$datefrom = date(wpDateTime::forDB, std::posts('day'));
+	$dateto = date(wpDateTime::forDB, strtotime('+1 day', std::posts('day')));
+	$sqlwheretime = "[time] > '" . $datefrom . "' AND [time] < '" . $dateto . "'";
+} else {
+	switch(std::posts('time')) {
+		case 'last1Hours':
+			$datefrom = date(wpDateTime::forDB, strtotime('-1 hours'));
+			break;
+		case 'last2Hours':
+			$datefrom = date(wpDateTime::forDB, strtotime('-2 hours'));
+			break;
+		case 'last3Hours':
+			$datefrom = date(wpDateTime::forDB, strtotime('-3 hours'));
+			break;
+		case 'last6Hours':
+			$datefrom = date(wpDateTime::forDB, strtotime('-6 hours'));
+			break;
+		case 'last12Hours':
+			$datefrom = date(wpDateTime::forDB, strtotime('-12 hours'));
+			break;
+		case 'last24Hours':
+			$datefrom = date(wpDateTime::forDB, strtotime('-1 day'));
+			break;
+		case 'last2days':
+			$datefrom = date(wpDateTime::forDB, strtotime('-2 day'));
+			break;
+		case 'last3days':
+			$datefrom = date(wpDateTime::forDB, strtotime('-3 day'));
+			break;
+		case 'last7days':
+			$datefrom = date(wpDateTime::forDB, strtotime('-7 day'));
+			break;
+		case 'last14days':
+			$datefrom = date(wpDateTime::forDB, strtotime('-14 day'));
+			break;
+		case 'last30days':
+			$datefrom = date(wpDateTime::forDB, strtotime('-30 day'));
+			break;
+		default:
+			$datefrom = date(wpDateTime::forDB, strtotime('-1 day'));
+			break;
+	}
+	$sqlwheretime = "[time] > '".$datefrom."'";
+	$dateto = date(wpDateTime::forDB);
+}
+
+$ids = std::posts('ids');
+$minmax = array();
+$yaxes = '{"min":-0.5,"max":10,"position":"right","ticks": [[0, "Aus"], [1, "Betrieb"]]}';
+if($ids != '' && count($ids) > 0) {
+	$only1Axes = std::posts('only1axes') == 'True' ? true : false;
+	//********************
+	// SQL WHERE
+	//********************
+	$sqlwhere = '';
+	foreach($ids as $trendid) {
+		$sqlwhere .= '[id_trend] = '.$trendid.' OR ';
+	}
+	$sqlwhere = substr($sqlwhere, 0, -4);
+
+	//********************
+	// create trends
+	//********************
+	$trends = array();
+	$database = new wpDatabase();
+	$database->query('SELECT [t].[id_trend], [t].[name], [dp].[id_dp], [dp].[name] AS [filename], [dp].[min], [dp].[max], [dp].[unit], [dp].[nks] FROM [trend] [t]
+		INNER JOIN [dp] ON [t].[id_dp] = [dp].[id_dp]
+		WHERE '.$sqlwhere.' ORDER BY [t].[name]');
+	//echo $sqlwheretime;
+	while($ergTrend = $database->fetch()) {
+		$trends[$ergTrend['id_trend']] = new trend($ergTrend['id_trend'], $ergTrend['name']);
+		$trends[$ergTrend['id_trend']]->setMinMaxUnit($ergTrend['min'], $ergTrend['max'], $ergTrend['unit'], $ergTrend['nks']);
+		$trends[$ergTrend['id_trend']]->setFilename($ergTrend['id_dp'], $ergTrend['filename']);
+	}
+
+	//********************
+	// fill trends
+	//********************
+	$trendFolder = wpInit::$ProjektNumber;
+	$trendFolder .= (wpInit::$ProjektName != '' ? ' - ' . wpInit::$ProjektName : '');
+	foreach($trends as $idfordata => $trendfordata) { // wegen 1 GB RAM beschraenkung in MSSQL Express
+		$database->query("IF OBJECT_ID('" . $trendfordata->getTablename(). "') IS NOT NULL DROP TABLE " . $trendfordata->getTablename());
+		$database->query("SELECT DATA.* INTO " . $trendfordata->getTablename() . " FROM (
+			SELECT [time], [value]
+			FROM [trendvalue] WHERE ".$sqlwheretime." AND [id_trend] = ".$idfordata."
+			) AS DATA");
+
+		$begin = new \DateTime($datefrom);
+		$end   = new \DateTime($dateto);
+
+		for($i = $begin; $i <= $end; $i->modify('+1 day')){
+			$tmpfilename = wpInit::$trendBasePath . '\\' . $trendFolder . '\\' . $i->format('Y') . '\\' . $i->format('m') . '\\' . $i->format('d') . '\\' . $trendfordata->getFilename();
+			//echo $tmpfilename;
+			if(file_exists($tmpfilename)) {
+				$database->query("INSERT INTO " . $trendfordata->getTablename(). " SELECT  DATA.* FROM OPENROWSET(
+					BULK '" . $tmpfilename. "',
+					FORMATFILE = '" . wpInit::$trendBasePath . "\\trendvalue.fmt'
+					) AS DATA");
+			}
+		}
+
+		$database->query("SELECT [time], [value] FROM " . $trendfordata->getTablename() . ' ORDER BY [time]');
+
+		while($ergData = $database->fetch()) {
+			$trends[$idfordata]->setData($ergData['time'], $ergData['value']);
+		}
+		$database->query("IF OBJECT_ID('" . $trendfordata->getTablename(). "') IS NOT NULL DROP TABLE " . $trendfordata->getTablename());
+	}
+}
+function getyAxes($pointminmax) {
+	global $minmax, $yaxes;
+	$min = $pointminmax['min'];
+	$max = $pointminmax['max'];
+	$i = 0;
+	for($i = 0; $i < count($minmax); $i++) {
+		if($minmax[$i]['min'] == $min && $minmax[$i]['max'] == $max ) {
+			return $i + 2;
+		}
+	}
+	$minmax[$i]['min'] = $min;
+	$minmax[$i]['max'] = $max;
+	$yaxes .= ',{"min":'.$min.',"max":'.$max.'}';
+
+	return $i + 2;
+}
+
+?>
+{
+	"plotdata": [
+<?
+	if(isset($trends) && count($trends) > 0) {
+		$datahasbool = false;
+		$i = 0;
+		$minaxes = NULL;
+		$maxaxes = NULL;
+		$AxesNumber = 2;
+		if($only1Axes) {
+			foreach($trends as $id => $object) {
+				if(!$object->isBool()) {
+					$minmaxTemp = $object->getMinMax();
+					if($minmaxTemp['min'] < $minaxes || is_null($minaxes)) {
+						$minaxes = $minmaxTemp['min'];
+					}
+					if($minmaxTemp['max'] > $maxaxes || is_null($maxaxes)) {
+						$maxaxes = $minmaxTemp['max'];
+					}
+				}
+			}
+			$yaxes .= ',{"min":'.$minaxes.',"max":'.$maxaxes.'}';
+		}
+		foreach($trends as $id => $object) {
+			if($object->isBool()) {
+				echo '{"data": '.$object->getData().', "lines": { "show": true, "steps": true, "fill": true }, "points": { "show": false }, "yaxis": 1, "label": "'.$object->getName().'", "id": '.$id.' }';
+				//$datahasbool = true;
+			} else {
+				if(!$only1Axes) $AxesNumber = getyAxes($object->getMinMax());
+				echo '{"data": '.$object->getData().', "lines": { "show": true }, "points": { "show": false }, "yaxis": '.$AxesNumber.', "label": "'.$object->getName().'", "id": '.$id.', "unit": "'.$object->getUnit().'", "nks": "'.$object->getNks().'"'.$object->getdbMinMax().' }';
+			}
+			if(++$i < count($trends)) echo ',';
+		}
+	}
+?>
+	],"plotoptions": {
+		"yaxes":[<?=(isset($yaxes) ? $yaxes : '')?>],
+		"xaxis":{"mode":"time","timezone":"Europe/Berlin"},
+		"selection":{"mode":"x"},
+		"crosshair":{"mode":"xy"},
+		"grid":{"hoverable":true, "clickable":true},
+		"legend": {"container":"#trendlegend"}
+	}
+}

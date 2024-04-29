@@ -1,0 +1,151 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 568                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: wpDatabase.psys 568 2024-01-24 07:36:18Z                 $ #
+//#                                                                                 #
+//###################################################################################
+namespace system\Helper;
+
+use system\std;
+use system\wpInit;
+
+/**
+ * Klasse fuer Datenbankzugriff und Abfragen der MySQL DB
+ * @author ScheidC
+ */
+class wpDatabase {
+	/** return von mysql_connect */
+	protected $connect;
+	/** return von mysql_select_db */
+	protected $select;
+	/** return von mysql_query */
+	protected $result;
+	/** Anzahl der Zeilen eines query */
+	protected $counter;
+	/**
+	 * Kontruktor
+	 */
+	public function __construct() {
+		$connectionOptions = array('Database' => wpInit::$db['database'], 'CharacterSet' => 'UTF-8');
+		$this->connect = sqlsrv_connect(wpInit::$db['server'], $connectionOptions)
+		or die(ERROR_DATABASE_SERVER_OFFLINE.
+				((wpInit::$PDebug)?'<br />'.std::test_array(sqlsrv_errors()):''));
+	}
+	/**
+	 * Destruktor
+	 */
+	public function __destruct() {
+		if(is_resource($this->connect)) sqlsrv_close($this->connect);
+	}
+	/**
+	 * MySQL query() und setzt den Zeilencounter zurueck
+	 * @param $query <b>string</b> <i>MySQL query string</i>
+	 * @return bool
+	 */
+	public function query($query) {
+		$this->result = sqlsrv_query($this->connect, $query, array(), array('Scrollable' => 'buffered'));
+		if($this->result === false) {
+			$sqlerror = sqlsrv_errors();
+			$error = std::arrays($sqlerror, '0');
+			if(std::arrays($error, 'code') != '3604') {
+				die(ERROR_QUERY_NOT_VALID .
+						((wpInit::$PDebug) ?
+								'<br />' . $query . '<br />' . std::test_array(sqlsrv_errors()) :
+								'<br /><br />' . std::arrays($error, 'message')));
+			}
+		}
+		$this->counter = null;
+		if(!$this->result) return false;
+		return true;
+	}
+	/**
+	 * ermittelt die groesse der einzelnen Tabellen
+	 * @return <b>array</b> <i>die groesse der einzelnen Tabellen</i>
+	 */
+	public function getSize() {
+		//! TODO mssql
+		$this->query('SHOW TABLE STATUS FROM `'.wpInit::$db['database'].'`');
+		$dbSize = array();
+		while($erg = $this->fetch()) {
+			$dbSize[$erg['Name']] = array(
+					'rows' => $erg['Rows'],
+					'increment' => $erg['Auto_increment'],
+					'length' => $erg['Data_length'],
+					'index' => $erg['Index_length']
+			);
+		}
+		return $dbSize;
+	}
+	/**
+	 * MySQL fetch()
+	 * @return <b>array</b> <i>Datenbankabfrage Ergebniss</i>
+	 */
+	public function fetch() {
+		return sqlsrv_fetch_array($this->result);
+	}
+	/**
+	 * Gibt die Anzahl der Zeilen des letzen query zurueck
+	 * @return <b>int</b> <i>Anzahl der Zeilen</i>
+	 */
+	public function hasRows() {
+		if($this->counter == null) {
+			$this->counter = sqlsrv_num_rows($this->result);
+		}
+		if($this->counter === false) $this->counter = 0;
+		return $this->counter;
+	}
+	/**
+	 * gibt die zuletzt eingefuegte ID zurück
+	 * @return <b>int</b> || <b>string</b> <i>LAST_INSERT_ID</i>
+	 */
+	public function lastid($table = '') {
+		if($table == '')
+			$this->query("SELECT SCOPE_IDENTITY() AS [LastId]");
+		else
+			$this->query("SELECT IDENT_CURRENT('".$table."') AS [LastId]");
+		$erg = $this->fetch();
+		return $erg['LastId'];
+	}
+	/**
+	 * ueberprueft, ob die angegebene Tabelle existiert
+	 * @param $table <b>string</b> <i>Name der zu testenden Tabelle</i>
+	 * @return <b>bool</b>
+	 */
+	public function TableExists($table) {
+		//! TODO mssql
+		$this->query('SHOW TABLES FROM `'.wpInit::$db['page'].'`');
+		while ($erg = $this->fetch()) {
+			std::test_array($erg);
+			if ($erg == $table) return true;
+		}
+		return false;
+	}
+
+	public static function checkID($int) {
+		if(is_numeric($int) && intval($int) > 0) return true;
+		return false;
+	}
+	public static function getString($string) {
+		return trim(preg_replace('/[^a-zA-Z0-9_ \-\.,äöüÄÖÜß]/', '_', $string));
+	}
+	public static function sqlDebug($item) {
+		if($item === '.00') return '0.00';
+		if($item == '') return '-';
+		return $item;
+	}
+	public static function addSlash($value) {
+		if(strtolower($value) == 'null') return 'NULL';
+		return "'" . $value . "'";
+	}
+}
+?>

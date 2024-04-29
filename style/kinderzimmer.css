@@ -1,0 +1,41 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 26.01.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 533                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: kinderzimmer.css 533 2022-10-08 13:30:30Z checker        $ #
+//#                                                                                 #
+//###################################################################################
+?> kinderzimmer */
+
+@media screen and (min-width:1024px) {
+	.page { background:transparent url(images/kinderzimmer.png) center top no-repeat; width:993px; height:409px; position:relative; margin:auto; }
+	.page * { position:absolute; }
+	.page .ps-zimmer-info { bottom:20px; left:20px; }
+	.page .ps-button { padding:8px 25px; }
+
+	#RT { top:136px; left:511px; background:transparent url(images/visuelemente/Fuehler.png) -200px 0px no-repeat; height:25px; width:25px; }
+	#RT span { left:20px; }
+	#RT span.sw { top:25px; }
+	#RT span.iw { top:0px; }
+
+	#VTContainer { top:291px; left:704px; }
+
+	.FK .ps-input { top:20px; }
+	#FK_LI { top:240px; left:704px; }
+	#FK_RE { top:240px; left:506px; }
+
+	#LI { top:69px; left:596px; }
+	#LI_SL { top:184px; left:654px; }
+}
+
+#FK_LI { top:325px; left:714px; } /* new: checker 2021-12-03T08:02:54 */
+#FK_RE { top:325px; left:466px; } /* new: checker 2021-12-03T08:02:57 */

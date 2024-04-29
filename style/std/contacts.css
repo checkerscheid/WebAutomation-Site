@@ -1,0 +1,31 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Matthias Kotulla                                                 #
+//# Date         : 21.03.2016                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 505                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: contacts.css 505 2021-05-07 21:55:45Z checker            $ #
+//#                                                                                 #
+//###################################################################################
+?> contacts */
+
+#h1 { text-align:center; }
+
+#contacts { margin:10px 50px; }
+
+div.tr { margin:2px; }
+
+#contacts div.emptable { border-spacing:5px; }
+#contacts div.emptable div.th { padding:2px 5px; overflow:hidden; white-space:nowrap; }
+#contacts div.emptable div.td { padding:2px 5px; overflow:hidden; white-space:nowrap; border:1px solid #CCC; text-align:center; vertical-align:middle; }
+#contacts div.emptable div.td.maxw { max-width:150px; }
+
+#contacts .email-edit { display:inline-block; width:27px; height:27px; line-height:27px; padding:0 2px; margin:0 3px; cursor:pointer; background:transparent url(images/layout/ic_menu_edit.png) center center no-repeat; }
+#contacts .email-delete { display:inline-block; width:27px; height:27px; line-height:27px; padding:0 2px; margin:0 3px; cursor:pointer; background:transparent url(images/layout/ic_menu_delete.png) center center no-repeat; }

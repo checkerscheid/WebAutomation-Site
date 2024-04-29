@@ -1,0 +1,30 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 552                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: setsession.req 552 2024-01-06 13:56:24Z                  $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\std;
+use system\Helper\security;
+use system\std;
+if(security::logedin()) {
+	if(std::posts('key') != '' && std::posts('value') != '') {
+		if(std::posts('group') != '') {
+			$_SESSION[SESSION_ID][std::posts('group')][std::posts('key')] = std::posts('value');
+		} else {
+			$_SESSION[SESSION_ID][std::posts('key')] = std::posts('value');
+		}
+	}
+}
+
+?>

@@ -1,0 +1,33 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 05.12.2018                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: dummy.psys 550 2023-12-25 03:02:54Z                      $ #
+//#                                                                                 #
+//###################################################################################
+namespace system;
+class dummy {}
+/**
+ * Dummy WebCom
+ */
+// class WebCom {
+// 	public function __construct($timeout = 1) {}
+// 	public function send($befehl, $param = '') {}
+// }
+/**
+ * Dummy TCPencode
+ */
+// class TCPencode {
+// 	public function __construct($text) {}
+// 	public function getArray() {}
+// }
+?>

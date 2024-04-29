@@ -1,0 +1,62 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 562                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: cfg.psys 562 2024-01-16 02:08:14Z                        $ #
+//#                                                                                 #
+//###################################################################################
+namespace system\Helper;
+/**
+ * @author C_Scheid
+ */
+class cfg {
+	/**  */
+	const facilityname = 'facilityname';
+	/**  */
+	const showfacility = 'showfacility';
+	/**  */
+	const allpages = 'allpages';
+	/**  */
+	const coldelim = 'coldelim';
+	/**  */
+	const rowdelim = 'rowdelim';
+	/**  */
+	const textqual = 'textqual';
+	/**  */
+	const sortdate = 'sortdate';
+	/**  */
+	const sortdatexml = 'sortdatexml';
+	/**  */
+	const alarmtable_filtertype = 'alarmtable_filtertype';
+	/**  */
+	const alarmtable_filtergroup = 'alarmtable_filtergroup';
+	/**  */
+	const alarmtable_filtergroup1 = 'alarmtable_filtergroup1';
+	/**  */
+	const alarmtable_filtergroup2 = 'alarmtable_filtergroup2';
+	/**  */
+	const alarmtable_filtergroup3 = 'alarmtable_filtergroup3';
+	/**  */
+	const alarmtable_filtergroup4 = 'alarmtable_filtergroup4';
+	/**  */
+	const alarmtable_filtergroup5 = 'alarmtable_filtergroup5';
+	/**  */
+	public static $alarmtype = array(
+			1 => 'Alarm',
+			2 => 'Störung',
+			3 => 'Meldung',
+			4 => 'Handbetrieb',
+			5 => 'Nothandebene',
+			6 => 'gefallen'
+	);
+}
+?>

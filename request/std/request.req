@@ -1,0 +1,266 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 582                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: request.req 582 2024-04-10 06:45:45Z                     $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\std;
+use system\std;
+use system\WebCom;
+use system\TCPencode;
+use system\getScript;
+use system\Helper\wpDatabase;
+use system\Helper\wpConvert;
+class request {
+	const c_activedp = 'activedp';
+	const c_activealarm = 'activealarm';
+	const c_activedpalarm = 'activedpalarm';
+	const c_activedpextended = 'activedpextended';
+	const c_activesystem = 'activesystem';
+	const c_writedp = 'writedp';
+	const c_writemultidp = 'writemultidp';
+	const c_togglewrite = 'togglewrite';
+	const c_ForceMqttUpdate = 'ForceMqttUpdate';
+	const c_BrowseMqtt = 'BrowseMqtt';
+	const c_getBrowseMqtt = 'getBrowseMqtt';
+	const c_wpGetDebug = 'wpGetDebug';
+	const c_wpSetDebug = 'wpSetDebug';
+	const c_readdp = 'readdp';
+	const c_increment = 'increment';
+	const c_decrement = 'decrement';
+	const c_opendoor = 'opendoor';
+	const c_closebrowserwindow = 'closebrowserwindow';
+}
+
+switch(std::gets('param1')) {
+//###################################################################################
+	case request::c_activedp:
+		getScript::getActivePoints();
+		break;
+//###################################################################################
+	case request::c_activealarm:
+		getScript::getActiveAlarms(std::gets('param2'));
+		break;
+//###################################################################################
+	case request::c_activedpalarm:
+		getScript::getActivePoints();
+		getScript::getActiveAlarms();
+		break;
+//###################################################################################
+	case request::c_activedpextended:
+		getScript::getActivePointsExtended();
+		break;
+//###################################################################################
+	case request::c_activesystem:
+		getScript::getActiveSystem();
+		break;
+//###################################################################################
+	case request::c_writedp:
+		if(gettype(std::arrays($_SESSION[SESSION_ID]['POINTS'], std::posts('item'))) == 'object') {
+			$doku = std::posts('doku') != 'False' ? true : false;
+			$WebCom = new WebCom();
+			$dpid = $_SESSION[SESSION_ID]['POINTS'][std::posts('item')]->id;
+			$oldvalue = $_SESSION[SESSION_ID]['POINTS'][std::posts('item')]->value;
+			$req = $WebCom->send('WriteDP', $_SESSION[SESSION_ID]['LEVEL'].'%~%'.$dpid.'%~%'.std::posts('value'));
+// 			if($_SESSION[SESSION_ID]['POINTS'][std::posts('item')]->tasterdefault != '') {
+// 				$WebCom = new WebCom();
+// 				$WebCom->send('WriteDP', $_SESSION[SESSION_ID]['LEVEL'].'%~%'.$dpid.'%~%'.$_SESSION[SESSION_ID]['POINTS'][std::posts('item')]->tasterdefault);
+// 			}
+			if($req == 'S_OK' && $doku) {
+				$database = new wpDatabase();
+				$database->query("INSERT INTO [useractivity]
+						([username], [datapoint], [writetime], [oldvalue], [newvalue]) VALUES
+						('".$_SESSION[SESSION_ID]['USER']."',
+						'".$_SESSION[SESSION_ID]['POINTS'][std::posts('item')]->opcname."',
+						'".wpConvert::getDateTime()."',
+						'".$oldvalue."', '".std::posts('value')."')");
+			}
+			echo $req;
+		} else {
+			echo 'Dieser Datenpunkt existiert nicht';
+		}
+		break;
+//###################################################################################
+	case request::c_writemultidp:
+		if(is_array(std::posts('item')) &&
+			(is_array(std::posts('value')) && count(std::posts('item')) == count(std::posts('value'))) ||
+			count(std::posts('value')) == 1) {
+			$doku = std::posts('doku') != 'False' ? true : false;
+			$items = std::posts('item');
+			if(count(std::posts('value')) == 1) {
+				for($i = 0; $i < count(std::posts('item')); $i++) $values[$i] = std::posts('value');
+			} else {
+				$values = std::posts('value');
+			}
+			$sWebCom = '';
+			$sSQL = '';
+			for($i = 0; $i < count(std::posts('item')); $i++) {
+				$sWebCom .= '%~%'.$_SESSION[SESSION_ID]['POINTS'][$items[$i]]->id.'%~%'.$values[$i];
+				$sSQL .= "('".$_SESSION[SESSION_ID]['USER']."', '".$_SESSION[SESSION_ID]['POINTS'][$items[$i]]->opcname."', '".wpConvert::getDateTime()."', '".$_SESSION[SESSION_ID]['POINTS'][$items[$i]]->value."', '".$values[$i]."')";
+				if($i < count(std::posts('item')) - 1) $sSQL .= ',';
+			}
+			$WebCom = new WebCom();
+			$req = $WebCom->send('WriteMultiDP', $_SESSION[SESSION_ID]['LEVEL'].$sWebCom);
+			if($req == 'S_OK' && $doku) {
+				$database = new wpDatabase();
+				$database->query('INSERT INTO [useractivity] ([username], [datapoint], [writetime], [oldvalue], [newvalue]) VALUES '.$sSQL);
+			}
+			echo $req;
+		} else {
+			echo 'not allowed:';
+			std::test_array(std::posts('item'));
+			std::test_array(std::posts('value'));
+		}
+		break;
+//###################################################################################
+	case request::c_togglewrite:
+		$dp = std::posts('datapoint');
+		$req = '';
+		$newValue = '';
+		if($dp != '') {
+			$dpid = $_SESSION[SESSION_ID]['POINTS'][$dp]->id;
+			$oldValue = $_SESSION[SESSION_ID]['POINTS'][$dp]->value;
+			if($oldValue == 'True') {
+				$newValue = 'False';
+				$WebCom = new WebCom();
+				$req = $WebCom->send('WriteDP', $_SESSION[SESSION_ID]['LEVEL'].'%~%'.$dpid.'%~%False');
+			}
+			if($oldValue == 'False') {
+				$newValue = 'True';
+				$WebCom = new WebCom();
+				$req = $WebCom->send('WriteDP', $_SESSION[SESSION_ID]['LEVEL'].'%~%'.$dpid.'%~%True');
+			}
+		}
+		if($req == 'S_OK') {
+			$database = new wpDatabase();
+			$database->query("INSERT INTO [useractivity]
+					([username], [datapoint], [writetime], [oldvalue], [newvalue]) VALUES
+					('".$_SESSION[SESSION_ID]['USER']."',
+					'".$_SESSION[SESSION_ID]['POINTS'][$dp]->opcname."',
+					'".wpConvert::getDateTime()."',
+					'".$oldValue."', '".$newValue."')");
+		}
+		echo $req;
+		break;
+//###################################################################################
+	case request::c_ForceMqttUpdate:
+		$req = '';
+		$WebCom = new WebCom();
+		$req = $WebCom->send('ForceMqttUpdate');
+		echo $req;
+		break;
+//###################################################################################
+	case request::c_BrowseMqtt:
+		$WebCom = new WebCom();
+		echo $WebCom->send('setBrowseMqtt');
+		break;
+		//###################################################################################
+	case request::c_getBrowseMqtt:
+		$WebCom = new WebCom();
+		echo $WebCom->send('getBrowseMqtt');
+		break;
+//###################################################################################
+	case request::c_wpGetDebug:
+		header(wpJSON_HEADER);		$req = '';
+		$WebCom = new WebCom();
+		$req = $WebCom->send('wpGetDebug');
+		echo $req;
+		break;
+//###################################################################################
+	case request::c_wpSetDebug:
+		header(wpJSON_HEADER);
+		$req = '';
+		$WebCom = new WebCom();
+		$req = $WebCom->send('wpSetDebug', std::posts('wpDebug'));
+		echo $req;
+		break;
+//###################################################################################
+	case request::c_readdp:
+		$dp = std::posts('item');
+		$req = '';
+		if($dp != '') {
+			$dpid = $_SESSION[SESSION_ID]['POINTS'][$dp]->id;
+			$WebCom = new WebCom();
+			$req = $WebCom->send('ReadItem', $_SESSION[SESSION_ID]['LEVEL'].'%~%'.$dpid);
+		}
+		echo $req;
+		break;
+//###################################################################################
+	case request::c_increment:
+		$dp = std::posts('datapoint');
+		$req = '';
+		$newValue = '';
+		if($dp != '') {
+			$dpid = $_SESSION[SESSION_ID]['POINTS'][$dp]->id;
+			$oldValue = $_SESSION[SESSION_ID]['POINTS'][$dp]->value;
+			$oldValue = is_numeric($oldValue) ? $oldValue : 0;
+			$newValue = $oldValue + 1;
+			$WebCom = new WebCom();
+			$req = $WebCom->send('WriteDP', $_SESSION[SESSION_ID]['LEVEL'].'%~%'.$dpid.'%~%'.$newValue);
+		}
+		if($req == 'S_OK') {
+			$database = new wpDatabase();
+			$database->query("INSERT INTO [useractivity]
+					([username], [datapoint], [writetime], [oldvalue], [newvalue]) VALUES
+					('".$_SESSION[SESSION_ID]['USER']."',
+					'".$_SESSION[SESSION_ID]['POINTS'][$dp]->opcname."',
+					'".wpConvert::getDateTime()."',
+					'".$oldValue."', '".$newValue."')");
+		}
+		echo $req;
+		break;
+//###################################################################################
+	case request::c_decrement:
+		$dp = std::posts('datapoint');
+		$req = '';
+		$newValue = '';
+		if($dp != '') {
+			$dpid = $_SESSION[SESSION_ID]['POINTS'][$dp]->id;
+			$oldValue = $_SESSION[SESSION_ID]['POINTS'][$dp]->value;
+			$oldValue = is_numeric($oldValue) ? $oldValue : 0;
+			$newValue = $oldValue - 1;
+			$WebCom = new WebCom();
+			$req = $WebCom->send('WriteDP', $_SESSION[SESSION_ID]['LEVEL'].'%~%'.$dpid.'%~%'.$newValue);
+		}
+		if($req == 'S_OK') {
+			$database = new wpDatabase();
+			$database->query("INSERT INTO [useractivity]
+					([username], [datapoint], [writetime], [oldvalue], [newvalue]) VALUES
+					('".$_SESSION[SESSION_ID]['USER']."',
+					'".$_SESSION[SESSION_ID]['POINTS'][$dp]->opcname."',
+					'".wpConvert::getDateTime()."',
+					'".$oldValue."', '".$newValue."')");
+		}
+		echo $req;
+		break;
+//###################################################################################
+	case request::c_opendoor:
+		$WebCom = new WebCom();
+		echo $WebCom->send('OpenDoor', $_SESSION[SESSION_ID]['USER'].'%~%'.std::posts('id'));
+		break;
+//###################################################################################
+	case request::c_closebrowserwindow:
+		$WebCom = new WebCom();
+		echo $WebCom->send('CloseBrowserWindow', $_SESSION[SESSION_ID]['USER'].'%~%'.std::posts('browser'));
+		break;
+//###################################################################################
+	default:
+		$WebCom = new WebCom();
+		$answer = new TCPencode($WebCom->send(std::gets('param1')));
+		echo '<pre>';
+		print_r($answer->getArray());
+		echo '</pre>';
+		break;
+}
+
+?>

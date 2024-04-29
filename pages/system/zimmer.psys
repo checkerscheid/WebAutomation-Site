@@ -1,0 +1,330 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 26.01.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 549                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: zimmer.psys 549 2023-12-24 10:00:17Z                     $ #
+//#                                                                                 #
+//###################################################################################
+namespace pages\system;
+class zimmer {
+	private $s_kurz;
+	private $s_name;
+	private $s_html;
+	private $a_points;
+
+	private $b_fussboden;
+	private $b_heizung;
+	private $a_fenster;
+	private $a_licht;
+
+	private $s_trendId;
+	private $s_scheduleId;
+	public function __construct($kurz, $name) {
+		$this->s_kurz = $kurz;
+		$this->s_name = $name;
+		$this->s_html = '';
+		$this->a_points = array();
+
+		$this->b_fussboden = false;
+		$this->b_heizung = false;
+		$this->a_fenster = array();
+		$this->a_licht = array();
+
+		$this->s_trendId = '';
+		$this->s_scheduleId = '';
+	}
+	public function setFussboden() {
+		$this->b_fussboden = true;
+	}
+	public function setHeizung() {
+		$this->b_heizung = true;
+	}
+	public function setTrendIds(array $ids) {
+		$this->s_trendId = implode(',', $ids);
+	}
+	public function setScheduleId($id) {
+		$this->s_scheduleId = $id;
+	}
+	public function addFenster($kurz = 'FK', $name = 'Fenster') {
+		$this->a_fenster[$kurz] = '
+			<div id="' . $kurz . '" class="FK dragthis">
+				<span class="left darkcolor">'. $name .':</span>
+				<span class="ps-input pa-Meldung right" data-value="' . $kurz . '">undefined</span>
+				<span class="ps-input fkrt" data-value="' . $kurz . '_RT">undefined</span>
+				<span class="ps-input fklu" data-value="' . $kurz . '_LU">undefined</span>
+			</div>
+		';
+	}
+	public function addLicht($kurz = 'LI', $name = 'Licht') {
+		$this->a_licht[$kurz] = '
+			<span id="'.$kurz.'" class="ps-button pa-Meldung dragthis" data-value="'.$kurz.'_DO" data-bm="'.$kurz.'_DO" data-sm="'.$kurz.'_SM" data-write="True" data-point="'.$kurz.'" data-true="'.$name.'" data-false="'.$name.'">'.$name.'</span>
+		';
+	}
+	public function addShelly($kurz = 'LI', $name = 'Licht') {
+		$this->a_licht[$kurz] = '
+			<span id="'.$kurz.'" class="ps-button pa-Meldung ShellyDirect dragthis" data-value="'.$kurz.'_BM" data-bm="'.$kurz.'_BM" data-sm="'.$kurz.'_SM" data-true="'.$name.'" data-false="'.$name.'">'.$name.'</span>
+		';
+	}
+	private function make_temperature() {
+		$this->a_points['RT']	= '_' . $this->s_kurz . '_RT';
+		$this->a_points['SW']	= '_' . $this->s_kurz . '_RT_SW';
+		$this->s_html .= '
+			<div id="RT" class="dragthis">
+				<h2 class="ps-sm-show">Temperatur</h2>
+				<div class="FK">
+					<span class="left ps-sm-show">Temperatur:</span>
+					<span class="ps-input iw' . (($this->s_trendId == '') ? '' : ' ps-regler') . '" data-value="RT"' . (($this->s_trendId == '') ? '' : ' data-headline="' . $this->s_name . ' Trend" data-id="' . $this->s_trendId . '"') . '>undefined</span>
+				</div>
+				<div class="FK">
+					<span class="left ps-sm-show">Sollwert:</span>
+					<span class="ps-input sw" data-value="SW" id="SW">undefined</span>
+				</div>
+			</div>
+		';
+	}
+	private function make_occupied() {
+		$this->a_points['ZP']	= '_' . $this->s_kurz . '_ZP';
+		$this->a_points['LED']	= '_DO_' . $this->s_kurz . '_LED';
+		$this->a_points['ZPov']	= '_' . $this->s_kurz . '_TA';
+		$this->s_html .= '
+			<div class="ps-zimmer-info ps-container">
+				<span class="left">Zeitprogramm:</span>';
+		if($this->s_scheduleId == '') {
+			$this->s_html .= '<span class="ps-input pa-MeldungNeg right" id="ZP" data-value="ZP">undefined</span>';
+		} else {
+			$this->s_html .= '<a href="std.calendaredit.' . $this->s_scheduleId . '.htm" class="ps-input pa-MeldungNeg right" id="ZP" data-value="ZP">undefined</a>';
+		}
+		$this->s_html .= '
+				<hr />
+				<span class="left">Anwesenheit:</span>
+				<span class="ps-input pa-MeldungNeg right" id="LED" data-value="LED">undefined</span>
+				<span class="ps-button right" data-point="ZPov" data-write="True">überschreiben</span>
+				<div class="clearboth"></div>';
+		if($this->b_fussboden) {
+			$this->a_points['FB']			= '_DO_' . $this->s_kurz . '_FB';
+			$this->a_points['FB_Hand']		= '_' . $this->s_kurz . '_FB_Hand';
+			$this->a_points['FB_HandWert']	= '_' . $this->s_kurz . '_FB_HandWert';
+			$this->a_points['FB_AutoWert']	= '_' . $this->s_kurz . '_FB_AutoWert';
+
+			$this->s_html .= '
+				<hr />
+				<span class="left">Fussboden:</span>
+				<span class="ps-input right pa-AufZu bedienbar" id="FB" data-value="FB" data-popup="Wohnzimmer Fussboden">undefined</span>
+				<span class="hand right pa-hide" data-value="FB_Hand"></span>
+			';
+		}
+		$this->s_html .= '
+			</div>
+		';
+	}
+	private function make_heating() {
+		$this->a_points['VT']			= '_' . $this->s_kurz . '_VT';
+		$this->a_points['VT_Hand']		= '_' . $this->s_kurz . '_VT_Hand';
+		$this->a_points['VT_HandWert']	= '_' . $this->s_kurz . '_VT_HandWert';
+		$this->a_points['VT_AutoWert']	= '_' . $this->s_kurz . '_VT_AutoWert';
+
+		$this->s_html .= '
+			<div id="VTContainer" class="ps-vt dragthis">
+				<h2 class="ps-sm-show">Heizung</h2>
+				<span class="hk ps-sm-hide"></span>
+				<span class="left ps-sm-show">Ventil</span>
+				<span class="vt ps-sm-hide"></span>
+				<span class="ps-input Ventil bedienbar" id="VT" data-value="VT" data-popup="' . $this->s_name . ' Heizkörper">undefined</span>
+				<span class="hand pa-hide" data-value="VT_Hand"></span>
+			</div>
+		';
+	}
+	private function make_window() {
+		$this->s_html .= '<div><h2 class="ps-sm-show">Fenster</h2>';
+		//$this->s_html .= '<div class="ps-zimmer-info">';
+		foreach($this->a_fenster as $id => $html) {
+			$this->a_points[$id] = '_' . $this->s_kurz . '_' . $id;
+			$this->a_points[$id . '_RT'] = '_' . $this->s_kurz . '_' . $id . '_RT';
+			$this->a_points[$id . '_LU'] = '_' . $this->s_kurz . '_' . $id . '_LU';
+			$this->s_html .= $html;
+		}
+		//$this->s_html .= '</div>';
+		$this->s_html .= '</div>';
+	}
+	private function make_light() {
+		$this->s_html .= '<div><h2 class="ps-sm-show">Licht</h2>';
+		//$this->s_html .= '<div class="ps-zimmer-info">';
+		foreach($this->a_licht as $id => $html) {
+			$this->a_points[$id] = '_' . $this->s_kurz . '_TA_' . $id;
+			$this->a_points[$id . '_DO'] = '_DO_' . $this->s_kurz . '_' . $id;
+			$this->a_points[$id . '_BM'] = '_' . $this->s_kurz . '_BM_' . $id;
+			$this->a_points[$id . '_SM'] = '_' . $this->s_kurz . '_SM_' . $id;
+			$this->s_html .= $html;
+		}
+		//$this->s_html .= '</div>';
+		$this->s_html .= '</div>';
+	}
+	private function make() {
+		$this->make_temperature();
+		$this->make_occupied();
+		if($this->b_heizung) $this->make_heating();
+		$this->make_window();
+		$this->make_light();
+	}
+	public function print() {
+		//return '<h1>'.$this->s_name.'</h1>'.$this->s_html;
+		return $this->s_html;
+	}
+	public function getDatapoints() {
+		$this->make();
+		return $this->a_points;
+	}
+}
+
+class zimmer_parameter {
+	private $s_kurz;
+	private $s_name;
+	private $s_html;
+	private $a_points;
+
+	private $b_fussboden;
+	private $b_heizung;
+	public function __construct($kurz, $name) {
+		$this->s_kurz = $kurz;
+		$this->s_name = $name;
+		$this->s_html = '';
+		$this->a_points = array();
+
+		$this->b_fussboden = false;
+		$this->b_heizung = false;
+	}
+	public function setFussboden() {
+		$this->b_fussboden = true;
+	}
+	public function setHeizung() {
+		$this->b_heizung = true;
+	}
+	private function make_setting() {
+		$this->a_points['SW_Tag']	= '_' . $this->s_kurz . '_SW_Belegt';
+		$this->a_points['SW_Nacht']	= '_' . $this->s_kurz . '_SW_Hyst_Unbel';
+		$this->s_html .= '
+	<div class="ps-container">
+		<table>
+			<tbody>
+				<tr>
+					<th colspan="2">' . $this->s_name . ' Einstellungen</th>
+				</tr>
+				<tr>
+					<td>Sollwert Normalbetrieb:</td>
+					<td><span data-value="SW_Tag" data-popup="Sollwert belegt" id="SW_Tag" class="ps-input ps-param">undefined</span></td>
+				</tr>
+				<tr>
+					<td>Hysterese Absenkbetrieb:</td>
+					<td><span data-value="SW_Nacht" data-popup="Sollwert unbelegt" id="SW_Nacht" class="ps-input ps-param">undefined</span></td>
+				</tr>';
+		if($this->b_fussboden) {
+			$this->a_points['Hyst']	= '_' . $this->s_kurz . '_FB_Hyst';
+			$this->s_html .= '
+				<tr><td colspan="2"><hr /></td></tr>
+				<tr>
+					<td>Hysterese Fussboden:</td>
+					<td><span data-value="Hyst" data-popup="Hysterese" id="Hyst" class="ps-input ps-param">undefined</span></td>
+				</tr>
+				';
+		}
+		if($this->b_heizung) {
+			$this->a_points['HK_Hyst'] = '_' . $this->s_kurz . '_HK_Hyst';
+			$this->a_points['KP'] = '_' . $this->s_kurz . '_KP';
+			$this->a_points['TN'] = '_' . $this->s_kurz . '_TN';
+			$this->s_html .= '
+				<tr><td colspan="2"><hr /></td></tr>';
+			if($this->s_kurz != 'KZ') {
+				$this->s_html .= '
+				<tr>
+					<td>Hysterese Heizkörper:</td>
+					<td><span data-value="HK_Hyst" data-popup="Hysterese" id="HK_Hyst" class="ps-input ps-param">undefined</span></td>
+				</tr>';
+			}
+			$this->s_html .= '
+				<tr>
+					<td>Verstärkung Heizkörper:</td>
+					<td><span data-value="KP" data-popup="Hysterese" id="KP" class="ps-input ps-param">undefined</span></td>
+				</tr>
+				<tr>
+					<td>Nachlaufzeit Heizkörper:</td>
+					<td><span data-value="TN" data-popup="Hysterese" id="TN" class="ps-input ps-param">undefined</span></td>
+				</tr>
+				';
+		}
+		$this->s_html .= '
+			</tbody>
+		</table>
+	</div>
+		';
+	}
+	private function make_temperature() {
+		$this->a_points['RT_Roh']	= '_' . $this->s_kurz . '_RT_Roh';
+		$this->a_points['RT_Add']	= '_' . $this->s_kurz . '_RT_SENS_Add';
+		$this->a_points['RT']		= '_' . $this->s_kurz . '_RT';
+		$this->s_html .= '
+	<div class="ps-container">
+		<table>
+			<tbody>
+				<tr>
+					<th colspan="2">Temperaturmessung</th>
+				</tr>
+				<tr>
+					<td>Temperatur Rohwert:</td>
+					<td><span data-value="RT_Roh" class="ps-input">undefined</span></td>
+				</tr>
+				<tr>
+					<td>Temperaturoffset:</td>
+					<td><span data-value="RT_Add" data-popup="Temperaturoffset" id="RT_Add" class="ps-input ps-param">undefined</span></td>
+				</tr>
+				<tr>
+					<td>Temperatur:</td>
+					<td><span data-value="RT" class="ps-input">undefined</span></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+		';
+	}
+	private function make_window() {
+		$this->a_points['Verzoegerung']	= '_' . $this->s_kurz . '_FK_Verzoegerung';
+		$this->a_points['Regeneration']	= '_' . $this->s_kurz . '_FK_Regeneration';
+		$this->s_html .= '
+	<div class="ps-container">
+		<table>
+			<tr>
+				<th colspan="2">Fenster</th>
+			</tr>
+			<tr>
+				<td>Verzögerung Sollwertabsenkung:</td>
+				<td><span data-value="Verzoegerung" data-popup="Verzögerung Sollwertabsenkung" id="Verzoegerung" class="ps-input ps-param">undefined</span></td>
+			</tr>
+			<tr>
+				<td>Raumregeneration:</td>
+				<td><span data-value="Regeneration" data-popup="Raumregeneration" id="Regeneration" class="ps-input ps-param">undefined</span></td>
+			</tr>
+		</table>
+	</div>
+		';
+	}
+	private function make() {
+		$this->make_setting();
+		$this->make_temperature();
+		$this->make_window();
+	}
+	public function print() {
+		return $this->s_html;
+	}
+	public function getDatapoints() {
+		$this->make();
+		return $this->a_points;
+	}
+}

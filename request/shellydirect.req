@@ -1,0 +1,38 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 20.12.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: shellydirect.req 550 2023-12-25 03:02:54Z                $ #
+//#                                                                                 #
+//###################################################################################
+namespace request;
+header('Content-Type: application/json');
+require_once 'system/helper/shelly.psys';
+use system\helper\shelly as ShellyDevice;
+use system\helper\wpDatabase;
+use system\std;
+$name = $_SESSION[SESSION_ID]['POINTS'][std::posts('bm')]->name;
+$onoff = $_SESSION[SESSION_ID]['POINTS'][std::posts('bm')]->value == 'True' ? 'off' : 'on';
+$light = '';
+
+$database = new wpDatabase();
+$database->query("SELECT [s].[ip], [s].[type]
+	FROM [shelly] [s]
+	INNER JOIN [opcdatapoint] [d] ON [s].[id_onoff] = [d].[id_opcdatapoint]
+	WHERE [d].[name] = '".$name."'");
+$erg = $database->fetch();
+if(ShellyDevice::isLight($erg['type'])) $light = 'light';
+if(ShellyDevice::isRelay($erg['type'])) $light = 'relay';
+if($light != '') {
+	$http = file_get_contents('http://wpLicht:turner@'.$erg['ip'].'/'.$light.'/0?turn='.$onoff);
+	echo $http;
+}

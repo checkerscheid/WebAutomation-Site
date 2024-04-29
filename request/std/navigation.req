@@ -1,0 +1,74 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 05.02.2021                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: navigation.req 550 2023-12-25 03:02:54Z                  $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\std;
+use system\Helper\wpDatabase;
+use system\std;
+class navigation {
+	const c_saveitem = 'saveitem';
+	const c_deleteitem = 'deleteitem';
+	const c_availablesites = 'availablesites';
+}
+
+switch(std::gets('param1')) {
+	//###################################################################################
+	case navigation::c_saveitem:
+		$database = new wpDatabase();
+		$sql = "UPDATE [webpages] SET [id_parent_webpage] = " . std::posts('parentid') . " WHERE [id_webpages] = " . std::posts('id');
+		$database->query($sql);
+		foreach(std::posts('pos') as $id => $pos) {
+			$sql = "UPDATE [webpages] SET [position] = " . $pos . " WHERE [id_webpages] = " . $id;
+			$database->query($sql);
+		}
+		break;
+	//###################################################################################
+	case navigation::c_deleteitem:
+		$database = new wpDatabase();
+		$todelete = array(std::posts('id') => std::posts('id'));
+		$todelete += getSubItem(std::posts('id'));
+		$sql = "UPDATE [webpages] SET [id_parent_webpage] = NULL, [position] = NULL WHERE [id_webpages] = " . implode(' OR [id_webpages] = ', $todelete);
+		$database->query($sql);
+		break;
+	//###################################################################################
+	case navigation::c_availablesites:
+		$database = new wpDatabase();
+		$database->query("SELECT [id_webpages], [id_parent_webpage], [src], [name] FROM [webpages] WHERE [static] = 'False' AND [id_parent_webpage] IS NULL");
+		while($erg = $database->fetch()) {
+?>
+				<li>
+					<span class="id_webpage" data-id="<?=$erg['id_webpages']?>" title="<?=$erg['id_webpages']?>"><span class="ps-bold"><?=\system\html::getUebersichtPagename($erg['name'])?></span> <span class="ps-smallfont">(<?=$erg['src']?>)</span></span>
+					<ul class="sortable connectedSortable" data-parentid="<?=$erg['id_parent_webpage']?>">
+					</ul>
+				</li>
+<?
+		}
+		break;
+	//###################################################################################
+	default:
+		\system\html::default();
+		break;
+}
+function getSubItem($parentID) {
+	$database = new wpDatabase();
+	$sql = "SELECT [id_webpages] FROM [webpages] WHERE [id_parent_webpage] = " . $parentID;
+	$database->query($sql);
+	$todelete = array();
+	while($erg = $database->fetch()) {
+		$todelete[$erg['id_webpages']] = $erg['id_webpages'];
+		$todelete += getSubItem($erg['id_webpages']);
+	}
+	return $todelete;
+}

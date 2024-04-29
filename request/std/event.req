@@ -1,0 +1,1311 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 27.11.2017                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 570                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: event.req 570 2024-03-13 18:22:21Z                       $ #
+//#                                                                                 #
+//###################################################################################
+/** @var Type $m */
+namespace request\std;
+use system\Helper\wpDatabase;
+use system\std, system\WebCom, DateTime;
+require_once 'system/Helper/event.psys';
+
+class event {
+	const c_saverrule = 'saverrule';
+	const c_updaterrule = 'updaterrule';
+	const c_getevents = 'getevents';
+	const c_renewevents = 'renewevents';
+	const c_updatebydrop = 'updatebydrop';
+	const c_delete = 'delete';
+	const c_deleteex = 'deleteex';
+	const c_gettemplateevents = 'gettemplateevents';
+	const c_savetemplateevent = 'savetemplateevent';
+	const c_syncrequired = 'syncrequired';
+	const c_neueerrinerung = 'neueerrinerung';
+	const c_geterrinerungen = 'geterrinerungen';
+	const c_selectcalendar = 'selectcalendar';
+	const c_importevents = 'importevents';
+}
+
+switch(std::gets('param1')) {
+	//###################################################################################
+	case event::c_saverrule:
+// 		std::test_array($_POST);
+		$id_calendar = std::posts('idCalendar');
+		$id_gsync = std::posts('idGSync');
+
+		$database = new wpDatabase();
+
+		$sql = "SELECT [id_scenegroup]
+				FROM [calendar]
+				WHERE [id_calendar] = " . $id_calendar;
+		$database->query($sql);
+		while ($erg=$database->fetch()) {
+			if ($erg['id_scenegroup'] == '') {
+				$isScene = false;
+			} else {
+				$isScene = true;
+			}
+		}
+
+		$norepeat = std::arrays(std::posts('rrule'), 'norepeat');
+		$summary = std::arrays(std::posts('EventData'), 'summary');
+		// WERTE
+		$startVal = std::arrays(std::posts('EventData'), 'startval');
+		$endVal = std::arrays(std::posts('EventData'), 'endval');
+
+		$starth = std::arrays(std::posts('EventData'), 'starth');
+		$startm = std::arrays(std::posts('EventData'), 'startm');
+		$endhPOST = std::arrays(std::posts('EventData'), 'endh');
+		$endmPOST = std::arrays(std::posts('EventData'), 'endm');
+
+		$timeon_d = $starth.':'.(strlen($startm) == 2 ? $startm : '0'.$startm);
+		//$timeon_i = $starth.', '.$startm.', 0';
+		$timeon = $timeon_d.':00';
+
+		$endh = $endhPOST == '00' || $endhPOST == '0' ? '24' : $endhPOST;
+		$timeoff_d = $endh.':'.(strlen($endmPOST) == 2 ? $endmPOST : '0'.$endmPOST);
+		//$timeoff_i = $endh.', '.$endmPOST.', 0';
+		$timeoff = $timeoff_d.':00';
+
+		$day = substr(std::posts('day'), 0, 10);
+
+		$uid = uniqid('freakazone');
+
+		if ($isScene == false) {
+			$database->query("INSERT INTO [calendarevent]
+					([id_calendarevent], [id_calendar], [dtstart], [dtend], [vstart], [vend], [summary])
+					VALUES ('" . $uid . "', " . $id_calendar . ", '" . $day . 'T' . $timeon . "', '" . $day . 'T' . $timeoff . "', " . wpDatabase::addSlash($startVal) . ", " . wpDatabase::addSlash($endVal) . ", '" . $summary . "')");
+		} else {
+			$database->query("INSERT INTO [calendarevent]
+					([id_calendarevent], [id_calendar], [dtstart], [dtend], [sstart], [send], [summary])
+					VALUES ('" . $uid . "', " . $id_calendar . ", '" . $day . 'T' . $timeon . "', '" . $day . 'T' . $timeoff . "', " . $startVal . ", " . $endVal . ", '" . $summary . "')");
+		}
+
+		$columns = "[id_calendarevent], [freq]";
+		$values = "'" . $uid . "', '" . $_POST['rrule']['freq'] . "'";
+		if (isset($_POST['rrule']['intervall'])) {
+			$columns .= ", [intervall]";
+			$values .= ", " . $_POST['rrule']['intervall'];
+		}
+		if (isset($_POST['rrule']['until'])) {
+			$columns .= ", [until]";
+			$values .= ", '" . $_POST['rrule']['until'] . "'";
+		}
+		if (isset($_POST['rrule']['count'])) {
+			$columns .= ", [count]";
+			$values .= ", " . $_POST['rrule']['count'];
+		}
+
+		if (isset($_POST['rrule']['byday'])) {
+			$byday = "";
+			foreach ($_POST['rrule']['byday'] as $day) {
+				$byday .= $day . ', ';
+			}
+			$byday = substr($byday, 0, -2);
+			$columns .= ", [byday]";
+			$values .= ", '" . $byday . "'";
+		}
+		if ($norepeat != 'true') {
+			$database->query("INSERT INTO [calendarrrule] (" . $columns . ") VALUES (" . $values . ")");
+		}
+
+		// saving errinerungen
+		//$model = new Model($database);
+		//$model->saveErrinerung($uid, $isScene);
+
+		$WebCom = new WebCom();
+		if($id_gsync != '') echo $WebCom->send('GSyncCreate', $id_gsync . '%~%' . $uid);
+		echo $WebCom->send('CalendarRenew', $id_calendar);
+
+		break;
+		//###################################################################################
+	case event::c_updaterrule:
+		$weekDays[1] = 'MO';
+		$weekDays[2] = 'TU';
+		$weekDays[3] = 'WE';
+		$weekDays[4] = 'TH';
+		$weekDays[5] = 'FR';
+		$weekDays[6] = 'SA';
+		$weekDays[7] = 'SO';
+
+		$id_calendar = std::posts('idCalendar');
+		$id_gsync = std::posts('idGSync');
+
+		$database = new wpDatabase();
+
+		$sql = "SELECT [id_scenegroup]
+				FROM [calendar]
+				WHERE [id_calendar] = " . $id_calendar;
+		$database->query($sql);
+		while ($erg=$database->fetch()) {
+			if ($erg['id_scenegroup'] == '') {
+				$isScene = false;
+			} else {
+				$isScene = true;
+			}
+		}
+
+		$norepeat = std::arrays(std::posts('rrule'), 'norepeat');
+		$summary = std::arrays(std::posts('EventData'), 'summary');
+		// WERTE
+		$startVal = std::arrays(std::posts('EventData'), 'startval');
+		$endVal = std::arrays(std::posts('EventData'), 'endval');
+
+		$starth = std::arrays(std::posts('EventData'), 'starth');
+		$startm = std::arrays(std::posts('EventData'), 'startm');
+		$endhPOST = std::arrays(std::posts('EventData'), 'endh');
+		$endmPOST = std::arrays(std::posts('EventData'), 'endm');
+
+		$timeon_d = $starth.':'.(strlen($startm) == 2 ? $startm : '0'.$startm);
+		//$timeon_i = $starth.', '.$startm.', 0';
+		$timeon = $timeon_d.':00';
+
+		$endh = $endhPOST == '00' || $endhPOST == '0' ? '24' : $endhPOST;
+		$timeoff_d = $endh.':'.(strlen($endmPOST) == 2 ? $endmPOST : '0'.$endmPOST);
+		//$timeoff_i = $endh.', '.$endmPOST.', 0';
+		$timeoff = $timeoff_d.':00';
+
+		$day = substr(std::posts('day'), 0, 11);
+
+		$originalUID = std::posts('id');
+		$uid = uniqid('freakazone');
+
+		switch (std::posts('update')) {
+			case 'day':
+				if ($isScene == false) {
+					$sql = "INSERT INTO [calendarevent]
+						([id_calendarevent], [id_calendar], [dtstart], [dtend], [vstart], [vend], [summary])
+						VALUES ('" . $uid . "', '" . $id_calendar . "', '" . $day . $timeon . "', '" . $day . $timeoff . "', " . wpDatabase::addSlash($startVal) . ", " . wpDatabase::addSlash($endVal) . ", '" . $summary . "')";
+				} else {
+					$sql = "INSERT INTO [calendarevent]
+						([id_calendarevent], [id_calendar], [dtstart], [dtend], [sstart], [send], [summary])
+						VALUES ('" . $uid . "', '" . $id_calendar . "', '" . $day . $timeon . "', '" . $day . $timeoff . "', " . $startVal . ", " . $endVal . ", '" . $summary . "')";
+				}
+
+				$database->query($sql);
+
+				$calendarrruleID = '';
+				$sql = "SELECT [id_calendarrrule]
+						FROM [calendarrrule]
+						WHERE [id_calendarevent] = '" . $originalUID . "'";
+				$database->query($sql);
+				while ($erg = $database->fetch()) {
+					$calendarrruleID = $erg['id_calendarrrule'];
+				}
+				if ($calendarrruleID != '') {
+					$sql = "INSERT INTO [calendarexdate]
+						([id_calendarrrule],[datetime])
+						VALUES ('" . $calendarrruleID . "', '" . $day . "00:00:00.000')";
+					$database->query($sql);
+				} else {
+					$sql = "DELETE FROM [calendarevent]
+						WHERE [id_calendarevent] = '" . $originalUID . "'";
+					$database->query($sql);
+				}
+				break;
+			case 'weekday':
+				$clickedDay = new DateTime($day . $timeon);
+				$weekDay = $clickedDay->format('N');
+
+				if ($isScene == false) {
+					$sql = "INSERT INTO [calendarevent]
+						([id_calendarevent], [id_calendar], [dtstart], [dtend], [vstart], [vend], [summary])
+						VALUES ('" . $uid . "', '" . $id_calendar . "', '" . $day . $timeon . "', '" . $day . $timeoff . "', " . wpDatabase::addSlash($startVal) . ", " . wpDatabase::addSlash($endVal) . ", '" . $summary . "')";
+				} else {
+					$sql = "INSERT INTO [calendarevent]
+						([id_calendarevent], [id_calendar], [dtstart], [dtend], [sstart], [send], [summary])
+						VALUES ('" . $uid . "', '" . $id_calendar . "', '" . $day . $timeon . "', '" . $day . $timeoff . "', " . $startVal . ", " . $endVal . ", '" . $summary . "')";
+				}
+
+				$database->query($sql);
+
+				$sql = "INSERT INTO [calendarrrule] ([id_calendarevent], [freq], [byday])
+						VALUES ('" . $uid . "', 'weekly', '" . $weekDays[$weekDay] . "')";
+				$database->query($sql);
+
+				$sql = "SELECT [byday]
+						FROM [calendarrrule]
+						WHERE [id_calendarevent] = '" . $originalUID . "'";
+				$database->query($sql);
+
+				while ($erg = $database->fetch()) {
+					$byday = $erg['byday'];
+				}
+				$byday = str_replace(', ' . $weekDays[$weekDay], '', $byday);
+				$byday = str_replace($weekDays[$weekDay], '', $byday);
+
+				$sql = "UPDATE [calendarrrule]
+						SET [byday] = '" . $byday . "'
+						WHERE [id_calendarevent] = '" . $originalUID . "'";
+
+				$database->query($sql);
+
+				break;
+			case 'all';
+				$sql = "SELECT [c].[dtstart], [cr].[id_calendarrrule]
+						FROM [calendarevent] [c]
+						LEFT OUTER JOIN [calendarrrule] [cr] ON [cr].[id_calendarevent] = [c].[id_calendarevent]
+						WHERE [c].[id_calendarevent] = '" . $originalUID . "'";
+				$database->query($sql);
+				while ($erg = $database->fetch()) {
+					$dtstart = $erg['dtstart'];
+					$idcalendarrrule = $erg['id_calendarrrule'];
+				}
+				$day = $dtstart->format('Y-m-d');
+
+				if ($isScene == false) {
+					$sql = "UPDATE [calendarevent] SET
+							[dtstart] = '" . $day . "T" . $timeon . "',
+							[dtend] = '" . $day . "T" . $timeoff . "',
+							[vstart] = " . wpDatabase::addSlash($startVal) . ",
+							[vend] = " . wpDatabase::addSlash($endVal) . ",
+							[summary] = '" . $summary . "'
+						WHERE [id_calendarevent] = '" . $originalUID . "'";
+				} else {
+					$sql = "UPDATE [calendarevent] SET
+							[dtstart] = '" . $day . "T" . $timeon . "',
+							[dtend] = '" . $day . "T" . $timeoff . "',
+							[sstart] = " . $startVal . ",
+							[send] = " . $endVal . ",
+							[summary] = '" . $summary . "'
+						WHERE [id_calendarevent] = '" . $originalUID . "'";
+				}
+
+				$database->query($sql);
+
+				if ($idcalendarrrule != '') {
+					$sql2 = "UPDATE [calendarrrule]
+							SET ";
+					if (isset($_POST['rrule']['freq'])) {
+						$sql2 .= "[freq] = '" . $_POST['rrule']['freq'] . "', ";
+					} else {
+						$sql2 .= "[freq] = NULL, ";
+					}
+					if (isset($_POST['rrule']['intervall'])) {
+						$sql2 .= "[intervall] = '" . $_POST['rrule']['intervall'] . "', ";
+					} else {
+						$sql2 .= "[intervall] = NULL, ";
+					}
+					if (isset($_POST['rrule']['until'])) {
+						$sql2 .= "[until] = '" . $_POST['rrule']['until'] . "', ";
+					} else {
+						$sql2 .= "[until] = NULL, ";
+					}
+					if (isset($_POST['rrule']['count'])) {
+						$sql2 .= "[count] = '" . $_POST['rrule']['count'] . "', ";
+					} else {
+						$sql2 .= "[count] = NULL, ";
+					}
+					if (isset($_POST['rrule']['byday'])) {
+						$byday = "";
+						foreach ($_POST['rrule']['byday'] as $day) {
+							$byday .= $day . ', ';
+						}
+						$byday = substr($byday, 0, -2);
+
+						$sql2 .= "[byday] = '" . $byday . "', ";
+					} else {
+						$sql2 .= "[byday] = NULL, ";
+					}
+					$sql2 = substr($sql2, 0, -2);
+
+					$sql2 .= " WHERE [id_calendarevent] = '" . $originalUID . "'";
+
+					if ($norepeat != 'true') {
+						$database->query($sql2);
+					} else {
+						$database->query("DELETE FROM [calendarrrule] WHERE [id_calendarevent] = '" . $originalUID . "'");
+					}
+				} else {
+					$columns = "[id_calendarevent], [freq]";
+					$values = "'" . $originalUID . "', '" . $_POST['rrule']['freq'] . "'";
+					if (isset($_POST['rrule']['intervall'])) {
+						$columns .= ", [intervall]";
+						$values .= ", " . $_POST['rrule']['intervall'];
+					}
+					if (isset($_POST['rrule']['until'])) {
+						$columns .= ", [until]";
+						$values .= ", '" . $_POST['rrule']['until'] . "'";
+					}
+					if (isset($_POST['rrule']['count'])) {
+						$columns .= ", [count]";
+						$values .= ", " . $_POST['rrule']['count'];
+					}
+
+					if (isset($_POST['rrule']['byday'])) {
+						$byday = "";
+						foreach ($_POST['rrule']['byday'] as $day) {
+							$byday .= $day . ', ';
+						}
+						$byday = substr($byday, 0, -2);
+						$columns .= ", [byday]";
+						$values .= ", '" . $byday . "'";
+					}
+					if ($norepeat != 'true') {
+						$database->query("INSERT INTO [calendarrrule] (" . $columns . ") VALUES (" . $values . ")");
+					}
+				}
+
+				$WebCom = new WebCom();
+				if($id_gsync != '') $WebCom->send('GSyncUpdate', $id_gsync . '%~%' . $originalUID);
+				break;
+			case 'from';
+				$sql = "UPDATE [calendarrrule]
+						SET [until] = '" . $day . "00:00:00.000'" . "
+						WHERE [id_calendarevent] = '" . $originalUID . "'";
+				$database->query($sql);
+
+				if ($isScene == false) {
+					$sql = "INSERT INTO [calendarevent]
+						([id_calendarevent], [id_calendar], [dtstart], [dtend], [vstart], [vend], [summary])
+						VALUES ('" . $uid . "', '" . $id_calendar . "', '" . $day . $timeon . "', '" . $day . $timeoff . "', " . wpDatabase::addSlash($startVal) . ", " . wpDatabase::addSlash($endVal) . ", '" . $summary . "')";
+				} else {
+					$sql = "INSERT INTO [calendarevent]
+						([id_calendarevent], [id_calendar], [dtstart], [dtend], [sstart], [send], [summary])
+						VALUES ('" . $uid . "', '" . $id_calendar . "', '" . $day . $timeon . "', '" . $day . $timeoff . "', " . $startVal . ", " . $endVal . ", '" . $summary . "')";
+				}
+				$database->query($sql);
+				$columns = "[id_calendarevent], [freq]";
+				$values = "'" . $uid . "', '" . $_POST['rrule']['freq'] . "'";
+				if (isset($_POST['rrule']['intervall'])) {
+					$columns .= ", [intervall]";
+					$values .= ", " . $_POST['rrule']['intervall'];
+				}
+				if (isset($_POST['rrule']['until'])) {
+					$columns .= ", [until]";
+					$values .= ", '" . $_POST['rrule']['until'] . "'";
+				}
+				if (isset($_POST['rrule']['count'])) {
+					$columns .= ", [count]";
+					$values .= ", " . $_POST['rrule']['count'];
+				}
+
+				if (isset($_POST['rrule']['byday'])) {
+					$byday = "";
+					foreach ($_POST['rrule']['byday'] as $day) {
+						$byday .= $day . ', ';
+					}
+					$byday = substr($byday, 0, -2);
+					$columns .= ", [byday]";
+					$values .= ", '" . $byday . "'";
+				}
+
+				$database->query("INSERT INTO [calendarrrule] (" . $columns . ") VALUES (" . $values . ")");
+
+				break;
+		}
+
+		// saving errinerungen
+		//$model = new Model($database);
+		//$model->saveErrinerung($uid, $isScene);
+
+		$WebCom = new WebCom();
+		echo $WebCom->send('CalendarRenew', $id_calendar);
+
+		break;
+	//###################################################################################
+	case event::c_getevents:
+		$database = new wpDatabase();
+		$database2 = new wpDatabase();
+
+		$database->query("UPDATE [calendarevent] SET [dtend] = DATEADD([HH], 1, [dtstart])
+				WHERE [dtend] < [dtstart] AND DATEPART([HH], [dtstart]) < 23 AND [id_calendar] = " . std::posts('id_calendar'));
+
+		$database->query("SELECT
+			[ce].[id_calendarevent], [ce].[dtstart], [ce].[vstart], [ce].[dtend], [ce].[vend], [ce].[sstart], [ce].[send],
+			[ce].[summary],
+			[cr].[id_calendarrrule], [cr].[freq], [cr].[intervall], [cr].[until], [cr].[count], [cr].[byday],
+			[c].[id_scenegroup], [c].[id_dp]
+			FROM [calendarevent] [ce]
+			INNER JOIN [calendar] [c] ON [c].[id_calendar] = [ce].[id_calendar]
+			LEFT OUTER JOIN [calendarrrule] [cr] ON [ce].[id_calendarevent] = [cr].[id_calendarevent]
+			WHERE [ce].[id_calendar] = " . std::posts('id_calendar'));
+
+		if(strlen(std::posts('start')) <= 10) {
+			$displaystart = new DateTime(std::posts('start') . 'T00:00:00');
+			$displaystart->sub(new \DateInterval('PT1S'));
+			$displayend = new DateTime(std::posts('end') . 'T23:59:59');
+		} else {
+			$displaystart = new DateTime(substr(std::posts('start'), 0, 10) . 'T00:00:00');
+			$displaystart->sub(new \DateInterval('PT1S'));
+			$displayend = new DateTime(substr(std::posts('end'), 0, 10) . 'T23:59:59');
+		}
+		echo '[';
+		$sb = '';
+		while($erg = $database->fetch()) {
+			$idSceneGroup = $erg['id_scenegroup'];
+			$idDp = $erg['id_dp'];
+
+			if ($idDp != '') {
+				$useUnitFromDB = false;
+				$database2->query('SELECT [unit] FROM [dp] WHERE [id_dp] = ' . $idDp);
+				while($erg2 = $database2->fetch()) {
+					if(is_null($erg2['unit'])) $erg2['unit'] = '';
+					$unitString = $erg2['unit'];
+				}
+				if(preg_match_all('/(\d+):([^;]+);/', $unitString, $m) > 0) {
+					for($i = 0; $i < count($m[0]); $i++) {
+						$units[$m[1][$i]] = $m[2][$i];
+					}
+				} else if(preg_match_all('/(True|False):([^;]+)/', $unitString, $m) > 0) {
+					for($i = 0; $i < count($m[0]); $i++) {
+						$units[$m[1][$i]] = $m[2][$i];
+					}
+				} else {
+					$useUnitFromDB = true;
+				}
+			}
+			if ($idSceneGroup != '') {
+				$startScene = '';
+				if($erg['sstart'] != '') {
+					$database2->query('SELECT [name] FROM [scene] WHERE [id_scene] = ' . $erg['sstart']);
+					while($erg2 = $database2->fetch()) {
+						$startScene = $erg2['name'];
+					}
+				}
+				$endScene = '';
+				if($erg['send'] != '') {
+					$database2->query('SELECT [name] FROM [scene] WHERE [id_scene] = ' . $erg['send']);
+					while($erg2 = $database2->fetch()) {
+						$endScene = $erg2['name'];
+					}
+				}
+			}
+
+			$exdatetime = array();
+			if($erg['id_calendarrrule'] != '') {
+				$database2->query('SELECT [datetime] FROM [calendarexdate] WHERE [id_calendarrrule] = ' . $erg['id_calendarrrule']);
+				while($erg2 = $database2->fetch()) {
+					$exdatetime[] = $erg2['datetime'];
+				}
+			}
+			$checkEx = new DateTime($erg['dtstart']->format('Y-m-d'));
+			if($displaystart < $erg['dtstart'] && $displayend > $erg['dtend'] &&
+					!in_array($checkEx, $exdatetime)) { // einzelnes event
+				$sb .= '{';
+
+				$dtStart = new DateTime($erg['dtstart']->format('Y-m-d H:i:s'));
+				$dtEnd = new DateTime($erg['dtend']->format('Y-m-d H:i:s'));
+				$diff = $dtStart->diff($dtEnd);
+				$summary = ($erg['summary'] == '') ? '' : '<br />' . $erg['summary'];
+				if($diff->format("%d") >= 1) {
+					$sb .= '"title": "' . $summary . '",';
+				} else {
+					if ($erg['id_calendarrrule'] == '') {
+						if ($idSceneGroup != '') {
+							$sb .= '"title": "(Einzelereignis)' . $summary .
+							(($startScene != '') ? '<br />Einschaltwert: ' . $startScene : '') .
+							(($endScene != '') ? '<br />Ausschaltwert: ' . $endScene : '') . '",';
+						} else {
+							if ($useUnitFromDB == true) {
+								$sb .= '"title": "(Einzelereignis)' . $summary .
+								(($erg['vstart'] != '') ? '<br />Einschaltwert: ' . $erg['vstart'] . ' ' . $unitString : '') .
+								(($erg['vend'] != '') ? '<br />Ausschaltwert: ' . $erg['vend'] . ' ' . $unitString : '') . '",';
+							} else {
+								$sb .= '"title": "(Einzelereignis)' . $summary .
+								(($erg['vstart'] != '') ? '<br />Einschaltwert: ' . std::arrays($units, $erg['vstart']) : '') .
+								(($erg['vend'] != '') ? '<br />Ausschaltwert: ' . std::arrays($units, $erg['vend']) : '') . '",';
+							}
+						}
+					} else {
+						if ($idSceneGroup != '') {
+							$sb .= '"title": "(Ereignisserie)' . $summary .
+							(($startScene != '') ? '<br />Einschaltwert: ' . $startScene : '') .
+							(($endScene != '') ? '<br />Ausschaltwert: ' . $endScene : '') . '",';
+						} else {
+							if ($useUnitFromDB == true) {
+								$sb .= '"title": "(Ereignisserie)' . $summary .
+								(($erg['vstart'] != '') ? '<br />Einschaltwert: ' . $erg['vstart'] . ' ' . $unitString : '') .
+								(($erg['vend'] != '') ? '<br />Ausschaltwert: ' . $erg['vend'] . ' ' . $unitString : '') . '",';
+							} else {
+								$sb .= '"title": "(Ereignisserie)' . $summary .
+								(($erg['vstart'] != '') ? '<br />Einschaltwert: ' . std::arrays($units, $erg['vstart']) : '') .
+								(($erg['vend'] != '') ? '<br />Ausschaltwert: ' . std::arrays($units, $erg['vend']) : '') . '",';
+							}
+						}
+					}
+				}
+
+				$sb .= '"id": "' . $erg['id_calendarevent'] . '",';
+				$sb .= $diff->format("%d") >= 1 ? '"allDay": true,' : "";
+				$sb .= $diff->format("%d") >= 1 ? '"color": "#ff00ff",' : "";
+				$sb .= '"start": "' . $erg['dtstart']->format('Y-m-d H:i:s') . '",';
+				$sb .= '"end": "' . $erg['dtend']->format('Y-m-d H:i:s') . '"';
+				$sb .= '},';
+			}
+			if($erg['id_calendarrrule'] != '') {
+				$rule = new rrule($erg['dtstart'], $erg['dtend'], $displaystart, $displayend, $erg['freq']);
+				$rule->setExDates($exdatetime);
+				if($erg['intervall'] != '') $rule->setIntervall($erg['intervall']);
+				if($erg['until'] != '') $rule->setUntil($erg['until']);
+				if($erg['count'] != '') $rule->setCount($erg['count']);
+				if($erg['byday'] != '') $rule->setByday($erg['byday']);
+				foreach($rule->getDates() as $date) {
+					$summary = ($erg['summary'] == '') ? '' : $erg['summary'] . '<br />';
+					$sb .= '{';
+					if ($idSceneGroup != '') {
+						$sb .= '"title": "' . $summary .
+						(($startScene != '') ? 'Einschaltwert: ' . $startScene : '') .
+						(($endScene != '') ? '<br />Ausschaltwert: ' . $endScene : '') . '",';
+					} else {
+						if ($useUnitFromDB == true) {
+							$sb .= '"title": "' . $summary .
+							(($erg['vstart'] != '') ? 'Einschaltwert: ' . $erg['vstart'] . ' ' . $unitString : '') .
+							(($erg['vend'] != '') ? '<br />Ausschaltwert: ' . $erg['vend'] . ' ' . $unitString : '') . '",';
+						} else {
+							$sb .= '"title": "' . $summary .
+							(($erg['vstart'] != '') ? 'Einschaltwert: ' . std::arrays($units, $erg['vstart']) : '') .
+							(($erg['vend'] != '') ? '<br />Ausschaltwert: ' . std::arrays($units, $erg['vend']) : '') . '",';
+						}
+					}
+
+					$dtStart = new DateTime($erg['dtstart']->format('Y-m-d H:i:s'));
+					$dtEnd = new DateTime($erg['dtend']->format('Y-m-d H:i:s'));
+					$diff = $dtStart->diff($dtEnd);
+
+					$sb .= '"id": "' . $erg['id_calendarevent'] . '",';
+					$sb .= $diff->format("%d") >= 1 ? '"allDay": true,' : "";
+					$sb .= '"start": "' . $date['start']->format('Y-m-d\TH:i:s') . '",';
+					$sb .= '"end": "' . $date['end']->format('Y-m-d\TH:i:s') . '"';
+					$sb .= '},';
+				}
+			}
+		}
+		if(strlen($sb) > 0) echo substr($sb, 0, -1) . ']';
+		else echo ']';
+		break;
+	//###################################################################################
+	case event::c_renewevents:
+		$WebCom = new WebCom();
+		$WebCom->send('CalendarRenew', std::posts('id'));
+		break;
+	//###################################################################################
+	case event::c_updatebydrop:
+		$id_calendar = std::posts('idCalendar');
+
+		$database = new wpDatabase();
+		$sql = "SELECT [c].[dtstart]
+				FROM [calendarevent] [c]
+				WHERE [c].[id_calendarevent] = '" . std::posts('idevent') . "'";
+		$database->query($sql);
+		while ($erg = $database->fetch()) {
+			$dtstart = $erg['dtstart'];
+		}
+		$day = $dtstart->format('Y-m-d');
+
+		$ende = (std::posts('end') == '00:00' || std::posts('end') == '00:00:00' || std::posts('end') == '24:00' || std::posts('end') == '24:00:00') ? '23:59:59' : std::posts('end');
+		$sql = "UPDATE [calendarevent] SET [dtstart] = '" . $day . "T" . std::posts('start') . "', [dtend] = '" . $day . "T" . $ende . "' WHERE [id_calendarevent] = '" . std::posts('idevent') . "'";
+		$database->query($sql);
+
+		$WebCom = new WebCom();
+		echo $WebCom->send('CalendarRenew', $id_calendar);
+
+		break;
+	//###################################################################################
+	case event::c_delete:
+		$weekDays[1] = 'MO';
+		$weekDays[2] = 'TU';
+		$weekDays[3] = 'WE';
+		$weekDays[4] = 'TH';
+		$weekDays[5] = 'FR';
+		$weekDays[6] = 'SA';
+		$weekDays[7] = 'SO';
+
+		$id_calendar = std::posts('idCalendar');
+		$id_gsync = std::posts('idGSync');
+
+		$day = substr(std::posts('day'), 0, 11);
+		$originalUID = std::posts('id');
+
+		$clickedDay = new DateTime($day . "00:00:00.000");
+		$weekDay = $clickedDay->format('N');
+
+		$database = new wpDatabase();
+		switch (std::posts('delete')) {
+			case 'day':
+				$sql = "SELECT [id_calendarrrule]
+						FROM [calendarrrule]
+						WHERE [id_calendarevent] = '" . $originalUID . "'";
+
+				$database->query($sql);
+				$calendarrruleID = '';
+				while ($erg = $database->fetch()) {
+					$calendarrruleID = $erg['id_calendarrrule'];
+				}
+
+				if ($calendarrruleID != '') {
+					$sql = "INSERT INTO [calendarexdate]
+						([id_calendarrrule],[datetime])
+						VALUES ('" . $calendarrruleID . "', '" . $day . "00:00:00.000')";
+					$database->query($sql);
+				} else {
+					$sql = "DELETE FROM [calendarevent]
+						WHERE [id_calendarevent] = '" . $originalUID . "'";
+					$database->query($sql);
+				}
+
+				break;
+			case 'weekday':
+				$sql = "SELECT [byday]
+						FROM [calendarrrule]
+						WHERE [id_calendarevent] = '" . $originalUID . "'";
+				$database->query($sql);
+
+				while ($erg = $database->fetch()) {
+					$byday = $erg['byday'];
+				}
+				$byday = str_replace(', ' . $weekDays[$weekDay], '', $byday);
+				$byday = str_replace($weekDays[$weekDay], '', $byday);
+
+				$sql = "UPDATE [calendarrrule]
+						SET [byday] = '" . $byday . "'
+						WHERE [id_calendarevent] = '" . $originalUID . "'";
+
+				$database->query($sql);
+
+				break;
+			case 'all':
+				$sql = "DELETE FROM [calendarevent]
+						WHERE [id_calendarevent] = '" . $originalUID . "'";
+				$database->query($sql);
+
+				break;
+		}
+
+		$WebCom = new WebCom();
+		if($id_gsync != '') echo $WebCom->send('GSyncDelete', $id_gsync . '%~%' . $originalUID);
+		echo $WebCom->send('CalendarRenew', $id_calendar);
+
+		break;
+	//###################################################################################
+	case event::c_deleteex:
+		$database = new wpDatabase();
+		$database->query("DELETE FROM [calendarexdate] WHERE [id_calendarexdate] = " . std::posts('exid'));
+		$WebCom = new WebCom();
+		echo $WebCom->send('CalendarRenew', std::posts('idc'));
+		break;
+	//###################################################################################
+	case event::c_gettemplateevents:
+		$database = new wpDatabase();
+		$database->query("SELECT
+			[ct].[summary], [cte].[id_calendartemplateevent], [cte].[tstart], [cte].[tend], [cte].[vstart], [cte].[vend],
+			[dp].[unit], [dp].[id_dp], [sc].[id_scenegroup]
+			FROM [calendartemplate] [ct]
+			INNER JOIN [calendartemplateevent] [cte] ON [ct].[id_calendartemplate] = [cte].[id_calendartemplate]
+			INNER JOIN [calendar] [c] ON [ct].[id_calendar] = [c].[id_calendar]
+			LEFT OUTER JOIN [dp] ON [c].[id_dp] = [dp].[id_dp]
+			LEFT OUTER JOIN [scenegroup] [sc] ON [c].[id_scenegroup] = [sc].[id_scenegroup]
+			WHERE [ct].[id_calendartemplate] = " . std::posts('id_calendartemplate'));
+
+		$displaystart = new DateTime('1990-01-01T00:00:00');
+		$displayend = new DateTime('1990-01-01T23:59:59');
+
+		echo '[';
+		$sb = '';
+		while($erg = $database->fetch()) {
+			if(is_null($erg['unit'])) $erg['unit'] = '';
+			$ustart = $erg['vstart'];
+			$uend = $erg['vend'];
+			if(preg_match_all('/(\d+):([^;]+)/', $erg['unit'], $m) > 0) {
+				for($i = 0; $i < count($m[0]); $i++) {
+					if($erg['vstart'] == $m[1][$i]) $ustart = $m[2][$i];
+					if($erg['vend'] == $m[1][$i]) $uend = $m[2][$i];
+				}
+			}
+			if(preg_match_all('/(True|False):([^;]+)/', $erg['unit'], $m) > 0) {
+				for($i = 0; $i < count($m[0]); $i++) {
+					if($erg['vstart'] == $m[1][$i]) $ustart = $m[2][$i];
+					if($erg['vend'] == $m[1][$i]) $uend = $m[2][$i];
+				}
+			}
+			$dtstart = new DateTime('1990-01-01T' . $erg['tstart']->format('H:i:s'));
+			$dtend = new DateTime('1990-01-01T' . $erg['tend']->format('H:i:s'));
+			if($ustart != '') $ustart = 'Einschaltwert: ' . $ustart;
+			if($uend != '') $uend = 'Ausschaltwert: ' . $uend;
+			if($displaystart <= $dtstart && $displayend >= $dtend) { // einzelnes event
+				$sb .= '{';
+				$sb .= '"title": "' . $ustart . ($ustart != '' && $uend != '' ? ', ' : '') . $uend . '",';
+				$sb .= '"id": "' . $erg['id_calendartemplateevent'] . '",';
+				$sb .= '"start": "' . $dtstart->format('Y-m-d\TH:i:s') . '",';
+				$sb .= '"vstart": "' . $erg['vstart'] . '",';
+				$sb .= '"end": "' . $dtend->format('Y-m-d\TH:i:s') . '",';
+				$sb .= '"vend": "' . $erg['vend'] . '"';
+				$sb .= '},';
+			}
+		}
+		if(strlen($sb) > 0) echo substr($sb, 0, -1) . ']';
+		else echo ']';
+		break;
+	//###################################################################################
+	case event::c_savetemplateevent:
+
+		$database = new wpDatabase();
+		$database2 = new wpDatabase();
+		$dateToAdd = new DateTime(std::posts('date'));
+		$id_gsync = std::posts('idGSync');
+		$database->query('SELECT TOP 1 [id_calendar], [summary] FROM [calendartemplate] WHERE [id_calendartemplate] = ' . std::posts('id'));
+		$erg = $database->fetch();
+		$idc = $erg['id_calendar'];
+		$summary = $erg['summary'];
+
+		$database->query("SELECT [ce].[id_calendarevent] FROM [calendarevent] [ce]
+			LEFT OUTER JOIN [calendarrrule] [cr] ON [cr].[id_calendarevent] = [ce].[id_calendarevent]
+			WHERE
+			[cr].[id_calendarrrule] IS NULL AND
+			[ce].[dtstart] > '" . $dateToAdd->format('Y-m-d\T00:00:00') . "' AND [ce].[dtend] < '" . $dateToAdd->format('Y-m-d\T23:59:59') . "' AND
+			[ce].[id_calendar] = " . $idc
+		);
+
+		while($erg = $database->fetch()) {
+			$database2->query("DELETE FROM [calendarevent] WHERE [id_calendarevent] = '" . $erg['id_calendarevent'] . "'");
+		}
+
+		$database->query('SELECT [id_scenegroup] FROM [calendar] WHERE [id_calendar] = ' . $idc);
+		$idsg = $database->fetch()['id_scenegroup'];
+
+		$database->query('SELECT [tstart], [vstart], [tend], [vend] FROM [calendartemplateevent] WHERE [id_calendartemplate] = ' . std::posts('id'));
+		$iChecker = 0;
+		if ($idsg == '') {
+			$sql = 'INSERT [calendarevent] ([id_calendarevent], [id_calendar], [summary], [dtstart], [vstart], [dtend], [vend]) VALUES ';
+		} else {
+			$sql = 'INSERT [calendarevent] ([id_calendarevent], [id_calendar], [summary], [dtstart], [sstart], [dtend], [send]) VALUES ';
+		}
+		$uniqid = array();
+		while($erg = $database->fetch()) {
+			$dtstart = new DateTime($dateToAdd->format('Y-m-d\T') . $erg['tstart']->format('H:i:s'));
+			$dtend = new DateTime($dateToAdd->format('Y-m-d\T') . $erg['tend']->format('H:i:s'));
+			$uid = uniqid('freakazone').$iChecker;
+			$uniqid[] = $uid;
+			$sql .= "(
+				'" . $uid . "',
+				" . $idc . ",
+				'" . $summary . "',
+				'" . $dtstart->format('Y-m-d\TH:i:s') . "',
+				'" . $erg['vstart'] . "',
+				'" . $dtend->format('Y-m-d\TH:i:s') . "',
+				'" . $erg['vend'] . "'
+			),";
+			$iChecker++;
+		}
+		if($iChecker > 0) $database->query(substr($sql, 0, -1));
+		$database->query('SELECT [cr].[id_calendarrrule] FROM [calendarrrule] [cr]
+			INNER JOIN [calendarevent] [ce] ON [cr].[id_calendarevent] = [ce].[id_calendarevent]
+			WHERE [ce].[id_calendar] = ' . $idc . '
+		');
+		$iChecker = 0;
+		$sql = 'INSERT [calendarexdate] ([id_calendarrrule], [datetime]) VALUES ';
+		while($erg = $database->fetch()) {
+			$iChecker++;
+			$sql .= "(" . $erg['id_calendarrrule'] . ", '" . $dateToAdd->format('Y-m-d\T00:00:00'). "'),";
+		}
+		if($iChecker > 0) $database->query(substr($sql, 0, -1));
+
+		if($id_gsync != '') {
+			foreach($uniqid as $uid) {
+				$WebCom = new WebCom();
+				$WebCom->send('GSyncCreate', $id_gsync . '%~%' . $uid);
+			}
+		}
+		$WebCom = new WebCom();
+		echo $WebCom->send('CalendarRenew', $idc);
+
+		break;
+	//###################################################################################
+	case event::c_syncrequired:
+		$id_gsync = std::posts('idGSync');
+		if($id_gsync != '') {
+			$WebCom = new WebCom();
+			echo $WebCom->send('GSyncRequired', $id_gsync . '%~%' . std::posts('dt'));
+		} else {
+			echo 'False';
+		}
+		break;
+	//###################################################################################
+	case event::c_neueerrinerung:
+		echo '
+		<div class="table">
+			<div class="tr errinerung">
+				<div class="td">
+					<span>Schaltwert:</span>
+				</div>
+				<div class="td">
+					<input type="text" class="ps-input remindvalue" />
+				</div>
+				<div class="td">
+				</div>
+			</div>
+			<div class="tr">
+				<div class="td">
+					<span>Minuten vorher:</span>
+				</div>
+				<div class="td">
+					<input type="text" class="ps-input remindtime" />
+				</div>
+				<div class="td">
+					<span class="ps-button reminddelete">Eintrag löschen</span>
+				</div>
+			</div>
+		</div>
+';
+		break;
+	//###################################################################################
+	case event::c_geterrinerungen:
+		$isScene = Reminder::isScene();
+		$minutes = 'minutes';
+		$columnToFill = $isScene ? 'sreminder' : 'vreminder';
+		$database = new wpDatabase();
+		$database->query("SELECT [" . $minutes . "], [".$columnToFill."]".
+			" FROM [calendareventreminder]".
+			" WHERE id_calendarevent = '" . std::posts ('eventid') . "'");
+		$model = new Reminder();
+		$html = '';
+		while($row = $database->fetch()){
+			if($isScene){
+				$html .= View::Erinnerung($model->getSceneDropDown($row[$columnToFill]), $row[$minutes]);
+			}else{
+				$html .= View::Erinnerung($model->getValuesDropDown($row[$columnToFill], std::posts('idCalendar')), $row[$minutes]);
+			}
+		}
+		echo $html;
+	break;
+	//###################################################################################
+	case event::c_selectcalendar :
+		echo '<h1> Bitte wählen Sie eine Calendar Datei aus: </h1> <br>' .
+				 '<input id="file" type="file" name="datei" accept=".ics" \></br>';
+		break;
+	//###################################################################################
+	case event::c_importevents :
+		if($_FILES['datei']['error'] != UPLOAD_ERR_OK){
+			echo 'error while loading the file';
+			break;
+		}
+
+		$database = new wpDatabase();
+		$columns = "";
+		if(!Reminder::isSzene($database, $_POST['calendarid'])){
+			$columns = "[id_calendarevent], [id_calendar], [dtstart], [vstart], [dtend], [vend], [summary]";
+		}else{
+			$columns = "[id_calendarevent], [id_calendar], [dtstart], [sstart], [dtend], [send], [summary]";
+		}
+
+		$values = '';
+		$parser = new \system\Helper\ParserIcs($_FILES['datei']['tmp_name']);
+		$events = $parser->prepareEvents();
+		$uid = uniqid('freakazone');
+
+		$sql = 'INSERT INTO [dbo].[calendarevent] ('.$columns.') VALUES ' ;
+		for($index = 0; $index < count($events); $index++){
+			$query = $sql."('".$uid.$index . "'," . $_POST["calendarid"] . ", '" .
+			$events[$index]->getDtStart() . "', NULL, '" . $events[$index]->getDtEnd() .
+			"', NULL, '" . $events[$index]->getSummary() ."')";
+			$database->query($query);
+		}
+
+		echo 'die Kalender Ereignisse wurden erfolgreich gespeichert';
+
+		break;
+	default:
+		\system\html::default();
+		break;
+}
+
+class rrule {
+	private $dtstart;
+	private $dtend;
+	private $dpstart;
+	private $dpend;
+	private $dates;
+	private $freq;
+	private $intervall;
+	private $h_intervall;
+	private $until;
+	private $h_until;
+	private $count;
+	private $h_count;
+	private $byday;
+	private $h_byday;
+	private $exDates;
+	public function __construct($_dtstart, $_dtend, $_dpstart, $_dpend, $_freq) {
+		$this->dtstart = clone $_dtstart;
+		$this->dtend = clone $_dtend;
+		$this->dpstart = $_dpstart;
+		$this->dpend = $_dpend;
+		$this->dates = array();
+		$this->freq= strtolower($_freq);
+		$this->h_intervall = false;
+		$this->h_until = false;
+		$this->h_count = false;
+		$this->h_byday = false;
+		$this->until = new DateTime('9999-12-31');
+		$this->exDates = array();
+	}
+	public function setIntervall($_intervall) {
+		$this->intervall = $_intervall;
+		//if($this->intervall > 0) $this->intervall -= 1;
+		$this->h_intervall = true;
+	}
+	public function setUntil($_until) {
+		$this->until = $_until;
+		$this->until->add(new \DateInterval('P1D'));
+		$this->h_until = true;
+		$this->h_count = false; // important
+	}
+	public function setCount($_count) {
+		$this->count = $_count;
+		if($this->count > 0) $this->count -= 1;
+		$this->h_count = true;
+		$this->h_until = false; // important
+	}
+	public function setByday($_byday) {
+		if($this->freq == 'weekly') {
+			$this->byday = $this->getBydayArray($_byday);
+			if(count($this->byday) > 0) $this->h_byday = true;
+		}
+	}
+	public function setExDates($_exDates) {
+		$this->exDates = $_exDates;
+		foreach($_exDates as $dates) {
+			if($dates->format('H:i:s') != '00:00:00') $this->exDates[] = new DateTime($dates->format('Y-m-d'));
+		}
+// 		std::test_array($this->exDates);
+	}
+	public function getDates() {
+		$this->calcDates();
+		return $this->dates;
+	}
+	private function calcDates() {
+		switch($this->freq) {
+			case 'yearly':
+				$this->getSchedule('Y');
+				break;
+			case 'monthly':
+				$this->getSchedule('M');
+				break;
+			case 'weekly':
+				if($this->h_byday) {
+					$this->getBydaySchedule();
+				} else {
+					$this->getSchedule('D', 7);
+				}
+				break;
+			case 'daily':
+				$this->getSchedule('D');
+				break;
+		}
+	}
+	private function getSchedule($_add, $_toadd = 1) {
+		$toadd = $_toadd;
+		$dts = $this->dtstart;
+		$ds = new DateTime($this->dtstart->format('Y-m-d'));
+		// monthly Problem
+		$originalDay = $dts->format('d');
+		$dte = $this->dtend;
+		if($this->h_intervall) $toadd *= $this->intervall;
+		$di = new \DateInterval('P' . $toadd . $_add);
+		if($this->h_count) {
+			for($i = 0; $i < $this->count; $i++) {
+				$dts->add($di);
+				$ds->add($di);
+				$dte->add($di);
+				if($_add == 'M' && $dts->format('d') != $originalDay) { // monthly Problem
+					$diDay = new \DateInterval('P1D');
+					while($dts->format('d') < $originalDay) {
+						$dts->add($diDay);
+						$ds->add($diDay);
+						$dte->add($diDay);
+					}
+				}
+				if($dts > $this->dpstart && $dts < $this->dpend && $dts < $this->until) {
+					if(!in_array($dts, $this->exDates) && !in_array($ds, $this->exDates)) {
+						$this->dates[] = array(
+							'start' => clone $dts,
+							'end' => clone $dte
+						);
+					}
+				}
+			}
+		} else {
+			while($dts < $this->dpend) {
+				$dts->add($di);
+				$ds->add($di);
+				$dte->add($di);
+				if($_add == 'M' && $dts->format('d') != $originalDay) { // monthly Problem
+					$diDay = new \DateInterval('P1D');
+					while($dts->format('d') < $originalDay) {
+						$dts->add($diDay);
+						$ds->add($diDay);
+						$dte->add($diDay);
+					}
+				}
+				if($dts > $this->dpstart && $dts < $this->dpend && $dts < $this->until) {
+					if(!in_array($dts, $this->exDates) && !in_array($ds, $this->exDates)) {
+						$this->dates[] = array(
+							'start' => clone $dts,
+							'end' => clone $dte
+						);
+					}
+				}
+			}
+		}
+	}
+	private function getBydaySchedule() {
+		$tempintervall = 1;
+		$dts = clone $this->dtstart;
+		$wds = $dts->format('w') + 1;
+		//echo 'wds:' . $wds;
+		$ds = new DateTime($this->dtstart->format('Y-m-d'));
+		$dte = clone $this->dtend;
+		if($this->h_count) {
+			for($i = 0; $i <= $this->count; $i++) {
+				//foreach($this->byday as $wd) {
+				for($iday = $wds; $iday < 7; $iday++) {
+					if(in_array($iday, $this->byday)) {
+						$dts->add($this->getIntervall($dts, $iday));
+						$ds->add($this->getIntervall($ds, $iday));
+						$dte->add($this->getIntervall($dte, $iday));
+						if($dts > $this->dpstart && $dts < $this->dpend && $dts < $this->until) {
+							if(!in_array($dts, $this->exDates) && !in_array($ds, $this->exDates)) {
+								$this->dates[] = array(
+									'start' => clone $dts,
+									'end' => clone $dte
+								);
+							}
+						}
+					}
+				}
+				if($this->h_intervall) {
+					while(++$tempintervall <= $this->intervall) {
+						$diWeek = new \DateInterval('P1W');
+						$dts->add($diWeek);
+						$ds->add($diWeek);
+						$dte->add($diWeek);
+					}
+					$tempintervall = 1;
+				}
+				$wds = 0;
+			}
+		} else {
+			while($dts < $this->dpend) {
+				//foreach($this->byday as $wd) {
+				for($iday = $wds; $iday < 7; $iday++) {
+					//echo 'iday:' . $iday;
+					if(in_array($iday, $this->byday)) {
+						//echo 'iday found:' . $iday;
+						$dts->add($this->getIntervall($dts, $iday));
+						$ds->add($this->getIntervall($ds, $iday));
+						$dte->add($this->getIntervall($dte, $iday));
+						if($dts > $this->dpstart && $dts < $this->dpend && $dts < $this->until) {
+							if(!in_array($dts, $this->exDates) && !in_array($ds, $this->exDates)) {
+								$this->dates[] = array(
+									'start' => clone $dts,
+									'end' => clone $dte
+								);
+							}
+						}
+					}
+				}
+				if($this->h_intervall) {
+					while(++$tempintervall <= $this->intervall) {
+						$diWeek = new \DateInterval('P1W');
+						$dts->add($diWeek);
+						$ds->add($diWeek);
+						$dte->add($diWeek);
+					}
+					$tempintervall = 1;
+				}
+				$wds = 0;
+			}
+		}
+		//std::test_array($this->dates);
+	}
+	private function getIntervall($_dt, $_wd) {
+		$dt = new DateTime($_dt->format('Y-m-d'));
+		$dtNow = clone $dt;
+		$dt->modify('next ' . $this->getWeekdayName($_wd));
+		return $dtNow->diff($dt);
+	}
+	private function getBydayArray($days) {
+		$wd = array();
+		preg_match_all('/(\w+)/', $days, $m);
+		foreach($m[0] as $match) $wd[] = $this->getWeekDayNumber($match);
+		return $wd;
+	}
+	private function getWeekdayName($wd) {
+		if($wd == 1) return 'monday';
+		if($wd == 2) return 'tuesday';
+		if($wd == 3) return 'wednesday';
+		if($wd == 4) return 'thursday';
+		if($wd == 5) return 'friday';
+		if($wd == 6) return 'saturday';
+		if($wd == 0) return 'sunday';
+	}
+	private function getWeekDayNumber($wd) {
+		$wd = strtolower($wd);
+		if($wd == 'mo') return 1;
+		if($wd == 'tu') return 2;
+		if($wd == 'we') return 3;
+		if($wd == 'th') return 4;
+		if($wd == 'fr') return 5;
+		if($wd == 'sa') return 6;
+		if($wd == 'su') return 0;
+	}
+}
+
+class Reminder {
+	private $db;
+	/**
+	 * constructor create class instace of wpDatabase()
+	 */
+	public function __construct($database = null){
+		if($database == null) {
+			$this->db = new wpDatabase();
+		} else {
+			$this->db = $database;
+		}
+	}
+	/**
+	 * nicht numerische Werten werden in Einführungszeichen gesetzt.
+	 * @param string $val Wert zuspeichern
+	 * @param string $type type des Wertes muss eins von [string, integer]. der parameter is als string vordefiniert
+	 * @return string
+	 */
+	public static function formatVal($val, $type = 'string') {
+		if($val == 'NULL' || $val == 'null'){
+			return 'NULL';
+		}else if ($type === 'integer') {
+			return $val;
+		}else {
+			return "'" . $val ."'";
+		}
+	}
+	/**
+	 * es wird festgestellt ob ein Kalendar zu einer Szene oder nicht zu einer
+	 * szene gehört.
+	 * @return boolean
+	 */
+	public static function isScene(){
+		$database = new wpDatabase();
+		$database->query("SELECT [id_scenegroup] FROM [calendar] WHERE [id_calendar] = " . std::posts('idCalendar'));
+		$isScene = false;
+		while ($erg=$database->fetch()) {
+			if ($erg['id_scenegroup'] == '') {
+				$isScene = false;
+			} else {
+				$isScene = true;
+			}
+		}
+		return $isScene;
+	}
+	/**
+	 * save "errinerungen" in the database. the values come from the POST superglobal
+	 * @param string $uid the id of the event which the "Errinerungen" belong to
+	 */
+	public function saveErrinerung($uid, $isScene) {
+		$length  = $_POST['errinerungen']['length'];
+		if($length != 0){
+			$values = '(' ;
+			for($index=0; $index<$length; $index++){
+				$values .= "'" . $uid . "', " ;
+				$values .= $_POST['errinerungen']['minuten'.$index].', ';
+				if($isScene == false){
+					$values .= self::formatVal($_POST['errinerungen']['szene'.$index]).', ';
+					$values .= 'NULL' ;
+				}else{
+					$values .= 'NULL' .',';
+					$values .= self::formatVal($_POST['errinerungen']['szene'.$index], 'integer');
+				}
+				$values .=  ')';
+				$values .= ($index < $length-1) ? ', (' : '';
+			}
+			$sql = "INSERT INTO [calendareventreminder] ([id_calendarevent],
+							[minutes] ,[vreminder] ,[sreminder]) VALUES ".$values.";";
+			$this->db->query($sql);
+		}
+	}
+	public function getSceneDropDown($val = '') {
+		$html = '';
+		$selected = false;
+		$this->db->query('SELECT [s].[name], [s].[id_scene] FROM [scene] [s]
+											INNER JOIN [calendar] [g] ON [s].[id_scenegroup] = [g].[id_scenegroup]
+											WHERE [g].[id_calendar] = '.std::posts('idCalendar'));
+		while($erg = $this->db->fetch()) {
+			if($val == $erg['id_scene']){
+				$selected = true;
+			}
+			$html .= '<option value="'.$erg['id_scene'].'"'.(($val == $erg['id_scene']) ? ' selected="selected"':'').'>'.$erg['name'].'</option>';
+		}
+		$html .= '<option value="NULL" '.(!$selected ? ' selected':'').'>Kein Wert</option>';
+		return $html;
+	}
+	public function getValuesDropDown($val, $calendarID) {
+		$this->db->query("SELECT [opc].[startuptype], [opc].[unit],
+											[opc].[tasterdefault] FROM [calendar] [c] INNER JOIN
+											[opcdatapoint] [opc] ON [opc].[id_opcdatapoint] = [c].[id_opcdatapoint]
+											WHERE [c].[id_calendar] = " . $calendarID);
+		while ($erg = $this->db->fetch()) {
+			$unit = $erg['unit'];
+			$datatype = $erg['startuptype'];
+		}
+		$html = '';
+		if($datatype == 'VT_BOOL') {
+			if( preg_match('/^True:(.*);False:(.*);$/', $unit, $m) > 0) {
+				$html = '<option value="True"'.(($val == 'True') ? ' selected="selected"':'').'>'. $m[1].'</option>';
+				$html .='<option value="False"'.(($val == 'False') ? ' selected="selected"':'').'>'. $m[2].'</option>';
+			} else {
+				$html = '<option value="True"'.(($val == 'True') ? ' selected="selected"':'').'>Betrieb</option>';
+				$html .= '<option value="False"'.(($val == 'False') ? ' selected="selected"':'').'>Aus</option>';
+			}
+		} else if (preg_match('/((\d){1,}:(.*);){1,}/', $unit) > 0 ) {
+			$unit = substr($unit, 0, -1);
+			$arr = explode(';', $unit);
+			foreach ($arr as $state) {
+				if ($val == trim(strstr($state, ':', true))) {
+					$html .= '<option value="'.trim(strstr($state, ':', true)).'" selected="selected">'.str_replace(':', '', strstr($state, ':')).'</option>';
+				} else {
+					$html .= '<option value="'.trim(strstr($state, ':', true)).'" >'.str_replace(':', '', strstr($state, ':')).'</option>';
+				}
+			}
+		}
+		$html .= '<option value="NULL"'.(($val === NULL) ? 'selected="selected"':'').'>Kein Wert</option>';
+		return $html;
+	}
+}
+class View {
+	public static function Erinnerung($options, $dauer = null) {
+		return '
+			<div class="tr errinerung">
+				<div class="td">
+					<label for="szenen"><span>Errinerung<span></label>
+				</div>
+				<div class="td">
+					<div class="tr">
+						<div class="td">
+							<select id="szenen" class="ps-input startvalue">' . $options . '</select>
+						</div>
+						<div class="td">
+							<span id="delete-errinerung" class="ps-button ps-button-errinerrung"> x </span>
+						</div>
+					</div>
+					<div class="tr">
+						<div class="td">
+							<input id="minuten" class="ps-input" step="1" value="' . ($dauer == null ? '0' : $dauer) . '"/>
+						</div>
+						<div class="td">
+							<label for="minuten"><span>Minuten</span><label/>
+						</div>
+					</div>
+				</div>
+			</div>';
+	}
+}

@@ -1,0 +1,1324 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 585                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: system.psys 585 2024-04-15 22:57:57Z                     $ #
+//#                                                                                 #
+//###################################################################################
+/** @var Type $sdata */
+namespace system;
+use system\Helper\security;
+use system\Helper\wpDatabase;
+use system\Helper\wpConvert;
+use system\Helper\wpItem;
+/**
+ * @defgroup PSystemFiles PSystemFiles
+ * Stellt Basisklassen und definitionen bereit.
+ * @{
+ */
+/** Fehlermeldung */
+define('ERROR_DATABASE_SERVER_OFFLINE', 'Datenbankserver ist offline');
+/** Fehlermeldung */
+define('ERROR_DATABASE_OFFLINE', 'Datenbank ist offline');
+/** Fehlermeldung */
+define('ERROR_QUERY_NOT_VALID', 'Datenbanktabelle ist offline');
+/** Fehlermeldung */
+define('ERROR_INVALID_IP', 'Ihre IP-Adresse ist nicht mehr die, mit der Sie sich angemeldet haben');
+/** Fehlermeldung */
+define('ERROR_NO_SCRIPT', 'Diese Funktion ist nur mit aktivierten JavaScript verf&uuml;gbar.');
+/** HTML Sonderzeichen */
+define('wpHTML_EMPTY', '&nbsp;');
+/** HTML Sonderzeichen */
+define('wpJSON_HEADER', 'Content-Type: application/json');
+/**
+ * Klasse fuer Allgemeine Funktionen
+ * @author ScheidC
+ */
+class system {
+	/**  */
+	private $src;
+	/**  */
+	private $path;
+	private $useAlarmGroup1;
+	public function useAlarmGroup1() { return $this->useAlarmGroup1; }
+	private $useAlarmGroup2;
+	public function useAlarmGroup2() { return $this->useAlarmGroup2; }
+	private $useAlarmGroup3;
+	public function useAlarmGroup3() { return $this->useAlarmGroup3; }
+	private $useAlarmGroup4;
+	public function useAlarmGroup4() { return $this->useAlarmGroup4; }
+	private $useAlarmGroup5;
+	public function useAlarmGroup5() { return $this->useAlarmGroup5; }
+	private $nameAlarmGroup1;
+	public function nameAlarmGroup1() { return $this->nameAlarmGroup1; }
+	private $nameAlarmGroup2;
+	public function nameAlarmGroup2() { return $this->nameAlarmGroup2; }
+	private $nameAlarmGroup3;
+	public function nameAlarmGroup3() { return $this->nameAlarmGroup3; }
+	private $nameAlarmGroup4;
+	public function nameAlarmGroup4() { return $this->nameAlarmGroup4; }
+	private $nameAlarmGroup5;
+	public function nameAlarmGroup5() { return $this->nameAlarmGroup5; }
+
+	public function useAlarmingmodule() { return wpInit::$useAlarmingmodule; }
+	/**
+	 * Kontruktor
+	 */
+	public function __construct() {
+		$database = new wpDatabase();
+		$database->query("SELECT [key], [value] FROM [cfg] WHERE
+			[key] = 'usealarmgroup1' OR [key] = 'namealarmgroup1' OR
+			[key] = 'usealarmgroup2' OR [key] = 'namealarmgroup2' OR
+			[key] = 'usealarmgroup3' OR [key] = 'namealarmgroup3' OR
+			[key] = 'usealarmgroup4' OR [key] = 'namealarmgroup4' OR
+			[key] = 'usealarmgroup5' OR [key] = 'namealarmgroup5'");
+		while($erg = $database->fetch()) {
+			switch($erg['key']) {
+				case 'usealarmgroup1':
+					$this->useAlarmGroup1 = $erg['value'] == 'True';
+					break;
+				case 'usealarmgroup2':
+					$this->useAlarmGroup2 = $erg['value'] == 'True';
+					break;
+				case 'usealarmgroup3':
+					$this->useAlarmGroup3 = $erg['value'] == 'True';
+					break;
+				case 'usealarmgroup4':
+					$this->useAlarmGroup4 = $erg['value'] == 'True';
+					break;
+				case 'usealarmgroup5':
+					$this->useAlarmGroup5 = $erg['value'] == 'True';
+					break;
+
+				case 'namealarmgroup1':
+					$this->nameAlarmGroup1 = $erg['value'];
+					break;
+				case 'namealarmgroup2':
+					$this->nameAlarmGroup2 = $erg['value'];
+					break;
+				case 'namealarmgroup3':
+					$this->nameAlarmGroup3 = $erg['value'];
+					break;
+				case 'namealarmgroup4':
+					$this->nameAlarmGroup4 = $erg['value'];
+					break;
+				case 'namealarmgroup5':
+					$this->nameAlarmGroup5 = $erg['value'];
+					break;
+			}
+			//std::test_array($erg);
+		}
+	}
+	/**
+	 *
+	 * @param $src
+	 * @param $path
+	 */
+	public function checkSrc($src, $path) {
+		$this->path = $path;
+		$this->src = $src;
+		if($src == '') {
+			if(wpInit::$StartseiteStd) $this->path = 'std';
+			$filepath = 'pages'.DIRECTORY_SEPARATOR.(wpInit::$StartseiteStd ? 'std'.DIRECTORY_SEPARATOR : '').wpInit::$StartSeite.'.inc';
+			if(file_exists($filepath)) {
+				$this->src = wpInit::$StartSeite;
+			} else {
+				$this->path = 'std';
+				$this->src = 'uebersicht';
+			}
+		}
+		if($this->path == '') {
+			$available = scandir('pages');
+		} else {
+			$available = scandir('pages'.DIRECTORY_SEPARATOR.$this->path);
+		}
+		if(std::arrays($_SESSION[SESSION_ID], 'SRC') != 'notallowed') {
+			$_SESSION[SESSION_ID]['LASTSRC'] = std::arrays($_SESSION[SESSION_ID], 'SRC');
+			$_SESSION[SESSION_ID]['LASTPATH'] = std::arrays($_SESSION[SESSION_ID], 'PATH');
+			$_SESSION[SESSION_ID]['LASTPARAM1'] = std::arrays($_SESSION[SESSION_ID], 'PARAM1');
+			$_SESSION[SESSION_ID]['LASTPARAM2'] = std::arrays($_SESSION[SESSION_ID], 'PARAM2');
+		}
+		if(in_array($this->src.'.inc', $available)) {
+			$_SESSION[SESSION_ID]['SRC'] = $this->src;
+			$_SESSION[SESSION_ID]['PATH'] = $this->path;
+			$_SESSION[SESSION_ID]['PARAM1'] = std::gets('param1');
+			$_SESSION[SESSION_ID]['PARAM2'] = std::gets('param2');
+		} else {
+			header("HTTP/1.0 404 Not Found");
+			$this->path = 'std';
+			$this->src = 'notfound';
+		}
+	}
+	/**
+	 *
+	 * @param $src
+	 * @param $path
+	 */
+	public function checkScript($src, $path) {
+		$this->src = $src;
+		$this->path = $path;
+	}
+	/**
+	 *
+	 * @param $src
+	 * @param $path
+	 */
+	public function checkStyle($src, $path) {
+		$this->src = $src;
+		$this->path = $path;
+	}
+	/**
+	 *
+	 * @param $src
+	 * @param $path
+	 */
+	public function checkRequest($src, $path) {
+		$this->src = $src;
+		$this->path = $path;
+	}
+	/**
+	 *
+	 * @param $src
+	 * @param $path
+	 */
+	public function checkPopup($src, $path) {
+		$this->src = $src;
+		$this->path = $path;
+	}
+	/**
+	 *
+	 * @return <string, unknown>
+	 */
+	public function getSrc() {
+		return $this->src;
+	}
+	/**
+	 *
+	 * @return <string, unknown>|string
+	 */
+	public function getFullSrc() {
+		if($this->path == '') return $this->src;
+		else return $this->path.DIRECTORY_SEPARATOR.$this->src;
+	}
+	/**
+	 *
+	 * @return <string, unknown>|string
+	 */
+	public function getLinkedSrc() {
+		$param = self::gets('param1') == '' ? '' : '.' . self::gets('param1');
+		if($this->path == '')
+			return $this->src . $param;
+		else
+			return $this->path . '.' . $this->src . $param;
+	}
+	/**
+	 *
+	 * @param $m_var
+	 * @return <string, unknown>
+	 */
+	static public function vars($m_var) {
+		return isset($m_var) ? $m_var : '';
+	}
+	/**
+	 * clean $_GET
+	 * @param $m_get <b>string</b> <i>GET Key</i>
+	 * @return <b>string</b>
+	 */
+	static public function gets($m_get) {
+		return (isset($_GET[$m_get])) ? $_GET[$m_get] : '';
+	}
+	/**
+	 * clean $_POST
+	 * @param $m_post <b>string</b> <i>POST Key</i>
+	 * @return <b>string</b>
+	 */
+	static public function posts($m_post) {
+		return (isset($_POST[$m_post])) ? (gettype($_POST[$m_post]) == 'string' ? trim($_POST[$m_post]) : $_POST[$m_post]) : '';
+	}
+	/**
+	 * clean an array
+	 * @param $m_array <b>array</b>
+	 * @param $m_key <b>string</b>
+	 * @return <b>string</b> | <b>array</b>
+	 */
+	static public function arrays($m_array, $m_key, $returntype = '') {
+		return (isset($m_array) && isset($m_array[$m_key])) ? $m_array[$m_key] : $returntype;
+	}
+	/**
+	 * clean an session
+	 * @param $m_array <b>array</b>
+	 * @param $m_key <b>string</b>
+	 * @return <b>string</b>
+	 */
+	static public function sessions($m_key) {
+		return (isset($_SESSION[SESSION_ID]) && isset($_SESSION[SESSION_ID][$m_key])) ? $_SESSION[SESSION_ID][$m_key] : '';
+	}
+	/**
+	 * erzeugt aus einem array ein format, das auf der Seite angezeigt werden kann
+	 * @param $TestData <b>array</b> <i>Das zu formatierende Array</i>
+	 * @param $HeadLine <b>string</b> <i>erzeugt eine Überschrift</i>
+	 * @return <b>string</b> <i>HTML</i>
+	 */
+	static public function test_array($TestData, $HeadLine = '') {
+		if($HeadLine != '') {
+			echo '<h4>'.$HeadLine.'</h4>';
+		}
+		echo '<pre>';
+		print_r($TestData);
+		echo '</pre>';
+	}
+	/**
+	 * erzeugt aus einem array ein format, das auf der Seite angezeigt werden kann
+	 * @param $TestData <b>array</b> <i>Das zu formatierende Array</i>
+	 * @param $HeadLine <b>string</b> <i>erzeugt eine Überschrift</i>
+	 * @return <b>string</b> <i>HTML</i>
+	 */
+	static public function test_array_return($TestData, $HeadLine = '') {
+		$returns = '';
+		if($HeadLine != '') {
+			$returns .= '<h4>'.$HeadLine.'</h4>';
+		}
+		$returns .= '<pre>';
+		$returns .= print_r($TestData, true);
+		$returns .= '</pre>';
+		return $returns;
+	}
+}
+/**
+ * @author C_Scheid
+ */
+class std extends system {
+	/**
+	 * Konstruktor
+	 */
+	public function __construct() {
+		parent::__construct();
+	}
+	/**
+	 * sendet einen Header, der die Seite serverseitig weiter leitet
+	 * @param $ziel <b>string</b> <i>Ziel ohne [.htm] am Ende</i>
+	 */
+	static public function href($ziel) {
+		if(substr($ziel, -4) == '.htm') header('Location: '.$ziel);
+		else header('Location: '.$ziel.'.htm');
+		ob_end_clean();
+		exit;
+	}
+}
+/**
+ * Klasse fuer Allgemeine Funktionen
+ * @author ScheidC
+ */
+class stdPanel extends system {
+	/**
+	 * Konstruktor
+	 */
+	public function __construct() {
+		parent::__construct();
+	}
+	/**
+	 * sendet einen Header, der die Seite serverseitig weiter leitet
+	 * @param $ziel <b>string</b> <i>Ziel ohne [.htm] am Ende</i>
+	 */
+	static public function href($ziel) {
+		header('Location: '.$ziel.'.panel');
+		ob_end_clean();
+		exit;
+	}
+}
+/**
+ * erweiterung der std Klasse fuer AJAX Seiten
+ * @author ScheidC
+ */
+class stdAjax extends system {
+	/**
+	 * Kontruktor
+	 */
+	public function __construct() {
+		parent::__construct();
+	}
+	/**
+	 * override std giebt bei fehlender Berechtigung Access Denied aus
+	 * @see std::requireGroup()
+	 */
+	public static function requireGroup($int) {
+		if(isset($_SESSION[SESSION_ID]['IDGROUP']) && $_SESSION[SESSION_ID]['IDGROUP'] < $int) {
+			header("HTTP/1.0 403 Forbidden");
+			echo 'Access Denied';
+			exit;
+		}
+	}
+}
+/**
+ * statische Methoden zum generieren von HTML Code
+ * @author ScheidC
+ */
+class htmlBase extends wpInit {
+	/**
+	 * erzeugt ein text input Feld mit Beschriftung
+	 * @param $uid <b>string</b> <i>wird fuer die id des Elementes verwendet</i>
+	 * @param $id <b>string</b> <i>fuer den zugriff von javascript aus - class</i>
+	 * @param $description <b>string</b> <i>Beschreibung</i>
+	 * @param $value <b>string</b> <i>[optional = ''] default value</i>
+	 * @return <b>string</b> <i>html code</i>
+	 */
+	public static function getTextInput($uid, $id, $description, $value = '') {
+		$html = '<div class="entry"><label for="'.$uid.'">'.$description.':</label><input type="text" id="'.$uid.'" name="'.$uid.'" class="'.$id.'" value="'.$value.'" /></div>';
+		return $html;
+	}
+	/**
+	 *
+	 * @param $uid
+	 * @param $id
+	 * @param $description
+	 * @param string $value
+	 * @return string
+	 */
+	public static function getTextInputOSK($uid, $id, $description, $value = '') {
+		$html = '<div class="entry"><label for="'.$uid.'">'.$description.':</label>';
+		$html .= '<span class="ps-button osk" data-popup="'.$description.'" data-osk="'.$uid.'">⌨</span>';
+		$html .= '<input type="text" id="'.$uid.'" name="'.$uid.'" class="'.$id.'" value="'.$value.'" /></div>';
+		return $html;
+	}
+	/**
+	 * erzeugt ein select Feld mit Beschriftung
+	 * @param $uid <b>string</b> <i>wird fuer die id des Elementes verwendet</i>
+	 * @param $id <b>string</b> <i>fuer den zugriff von javascript aus - class</i>
+	 * @param $description <b>string</b> <i>Beschreibung</i>
+	 * @param $values <b>array</b> <i>value</i>
+	 * @param $selected <b>int</b> <i>[optional = 0] default key</i>
+	 * @return <b>string</b> <i>html code</i>
+	 */
+	public static function getSelectInput($uid, $id, $description, $values, $selected = 0) {
+		$html = '<div class="entry"><label for="'.$uid.'">'.$description.':</label>';
+		$html .= '<select id="'.$uid.'" name="'.$uid.'" class="'.$id.'">';
+		$html .= '<option value="0">auswahl treffen</option>';
+		foreach($values as $key => $value) {
+			$active = $key == $selected ? ' selected="selected"' : '';
+			$html .= '<option value="'.$key.'"'.$active.'>'.$value.'</option>';
+		}
+		$html .= '</select>';
+		$html .= '</div>';
+		return $html;
+	}
+	/**
+	 * erzeugt ein select Feld mit Beschriftung
+	 * @param $uid <b>string</b> <i>wird fuer die id des Elementes verwendet</i>
+	 * @param $id <b>string</b> <i>fuer den zugriff von javascript aus - class</i>
+	 * @param $description <b>string</b> <i>Beschreibung</i>
+	 * @param $values <b>array</b> <i>value</i>
+	 * @param $selected <b>int</b> <i>[optional = 0] default key</i>
+	 * @return <b>string</b> <i>html code</i>
+	 */
+	public static function getSelectInputnoDefault($uid, $id, $description, $values, $selected = 0) {
+		$html = '<div class="entry"><label for="'.$uid.'">'.$description.':</label>';
+		$html .= '<select id="'.$uid.'" name="'.$uid.'" class="'.$id.'">';
+		foreach($values as $key => $value) {
+			$active = $key == $selected ? ' selected="selected"' : '';
+			$html .= '<option value="'.$key.'"'.$active.'>'.$value.'</option>';
+		}
+		$html .= '</select>';
+		$html .= '</div>';
+		return $html;
+	}
+	/**
+	 *
+	 * @param $uid
+	 * @param $description
+	 * @return string
+	 */
+	public static function getPasswordInput($uid, $description) {
+		$html = '<div class="entry"><label for="'.$uid.'">'.$description.':</label>';
+		$html .= '<input class="ps-input" type="password" id="'.$uid.'" name="'.$uid.'" /></div>';
+		return $html;
+	}
+	/**
+	 *
+	 * @param $uid
+	 * @param $description
+	 * @return string
+	 */
+	public static function getPasswordInputOSK($uid, $description) {
+		$html = '<div class="entry"><label for="'.$uid.'">'.$description.':</label>';
+		$html .= '<span class="ps-button osk" data-popup="'.$description.'" data-osk="'.$uid.'">⌨</span>';
+		$html .= '<input class="ps-input" type="password" id="'.$uid.'" name="'.$uid.'" /></div>';
+		return $html;
+	}
+	/**
+	 * erzeugt den Standard Header
+	 * @param $title <b>string</b>
+	 * @return <b>string</b>
+	 */
+	public static function getHeader($title) {
+		$html = '
+		<div id="header">
+		<div class="Balken_links"></div>
+		<div class="Balken_rechts"></div>
+		<div class="Balken">
+		<div class="Balken_freakazone">
+		<h1>'.$title.'</h1>
+		</div>
+		</div>
+		</div>';
+		return $html;
+	}
+	/**
+	 * erzeugt den Standard Footer
+	 * @return <b>string</b>
+	 */
+	public static function getFooter() {
+		$html = '
+		<div id="footer">
+		<div class="Balken_links"></div>
+		<div class="Balken_rechts"></div>
+		<div class="Balken"></div>
+		</div>';
+		return $html;
+	}
+	/**
+	 * fuellt das Menue
+	 */
+	protected static function fillMenu() {
+		global $database;
+		$TheMenu = array();
+		$database->query('SELECT [ug].[order], [wp].[name], [wp].[src] FROM [webpages] [wp] INNER JOIN [usergroup] [ug] ON [ug].[id_usergroup] = [wp].[usergroupread]');
+		while($erg = $database->fetch()) {
+			$TheMenu[$erg['src']] = array( 'name' => $erg['name'], 'reqgroup' => $erg['order'] );
+		}
+		foreach(wpInit::$menuorder as $menusrc) {
+			$checkedMenuSrc = std::arrays($TheMenu, $menusrc);
+			wpInit::$menu[] = array(
+					'name'		=> $checkedMenuSrc == '' ? $menusrc : std::arrays($checkedMenuSrc, 'name'),
+					'link'		=> $menusrc,
+					'reqlevel'	=> $checkedMenuSrc == '' ? $menusrc : std::arrays($checkedMenuSrc, 'reqgroup')
+			);
+		}
+	}
+	/**
+	 * fuellt das Systemmenue
+	 */
+	protected static function fillSystemMenu() {
+		global $database;
+		$TheMenu = array();
+		$database->query('SELECT [ug].[order], [wp].[name], [wp].[src] FROM [webpages] [wp] INNER JOIN [usergroup] [ug] ON [ug].[id_usergroup] = [wp].[usergroupread]');
+		while($erg = $database->fetch()) {
+			$TheMenu[$erg['src']] = array( 'name' => $erg['name'], 'reqgroup' => $erg['order'] );
+		}
+		foreach(wpInit::$systemmenuorder as $id => $popup) {
+			if(is_array($popup)) {
+				// ist ein Popup
+				$minlevelpopup = 100;
+				// jeder untermenüpunkt im Popup
+				foreach($popup as $Headline => $menupoints) {
+					if(is_array($menupoints)) {
+						// Menustrucktur unter der Headline
+						$minlevelheadline = 100;
+						foreach($menupoints as $src) {
+							if(std::arrays( $TheMenu, $src) == '') {
+
+							} else {
+								wpInit::$systemmenu[$id][$Headline][$src] = array(
+									'name' => $TheMenu[$src]['name'],
+									'reqlevel'	=> $TheMenu[$src]['reqgroup']
+								);
+								if($TheMenu[$src]['reqgroup'] < $minlevelheadline) $minlevelheadline = $TheMenu[$src]['reqgroup'];
+							}
+						}
+						wpInit::$systemmenu[$id][$Headline]['reqlevel'] = $minlevelheadline;
+						if($minlevelheadline < $minlevelpopup) $minlevelpopup = $minlevelheadline;
+					}
+				}
+				// Eigenschaften der Headline
+				foreach($popup as $Headline => $menupoints) {
+					if(!is_array($menupoints)) {
+						wpInit::$systemmenu[$id]['name'] = $menupoints;
+						wpInit::$systemmenu[$id]['reqlevel'] = $minlevelpopup;
+					}
+				}
+			}
+		}
+		foreach(wpInit::$systemmenuorder as $id => $popup) {
+			if(!is_array($popup)) {
+				wpInit::$systemmenu[$popup] = array(
+					'name'		=> $TheMenu[$popup]['name'],
+					'reqlevel'	=> $TheMenu[$popup]['reqgroup']
+				);
+			}
+		}
+		//std::test_array(wpInit::$systemmenu);
+	}
+	/**
+	 * @param <i>string</i> <b>$current</b> Headline aktuelle Seite
+	 * @param <i>array</i> <b>$prev</b> [optional] Array mit vorherigen Seiten $src => $pagename
+	 * @return string
+	 */
+	public static function fillHeadline($current, $prev = array()) {
+		$h1 = '';
+		if(count($prev) > 0) {
+			foreach($prev as $link => $dest) {
+				$h1 .= '<a href="'.$link.'.htm">'.$dest.'</a> &rArr; ';
+			}
+		}
+		$h1 .= $current;
+		return $h1;
+	}
+	/**
+	 * @param <i>string</i> <b>$sourceName</b> Variable aus der constant.inc
+	 * @param <i>bool</i> <b>$bruch</b> [optional] soll ein Umbruch angezeigt werden
+	 * @return string
+	 */
+	public static function getUebersichtPagename($sourceName, $bruch = false) {
+		return str_replace('%~-%', ($bruch ? ' -<br />': ''), str_replace('%~%', ($bruch ? '<br />' : ' '), $sourceName));
+	}
+	/**
+	 * @param <i>string</i> <b>$sourceName</b> Variable aus der constant.inc
+	 * @param <i>bool</i> <b>$bruch</b> [optional] soll ein Umbruch angezeigt werden
+	 * @return string
+	 */
+	public static function getPagenameFromSrc($src, $bruch = false) {
+		global $database;
+		$database->query("SELECT [name] FROM [webpages] WHERE [src] = '" . $src . "'");
+		$pageName = $database->fetch()['name'];
+		return str_replace('%~-%', ($bruch ? ' -<br />': ''), str_replace('%~%', ($bruch ? '<br />' : ' '), $pageName));
+	}
+	// @todo: html .= 'für OSK';
+// 	public static function getOSK() {
+
+// 	}
+	// @todo: html .= 'für NumPad';
+// 	public static function getNumPad() {
+
+// 	}
+	/**
+	 * @return string <i>html</i>
+	 */
+	public static function getPageHeadline($isParameter = false, $returns = false) {
+		global $database;
+		$getsSrc = std::gets('src') == '' ? wpInit::$StartSeite : std::gets('src');
+		$database->query("SELECT [id_parent_webpage], [name] FROM [webpages] WHERE [src] = '" . $getsSrc . "'");
+		$currentpage = $database->fetch();
+		if($isParameter) {
+			$currentpageNme = 'Einstellungen';
+			$prev_h1 = array($getsSrc => html::getUebersichtPagename($currentpage['name']));
+		} else {
+			$currentpageNme = html::getUebersichtPagename($currentpage['name']);
+			$prev_h1 = array();
+		}
+		if($currentpage['id_parent_webpage'] != '') {
+			$parentpage['id_parent_webpage'] = $currentpage['id_parent_webpage'];
+			$i = 0;
+			while ($parentpage['id_parent_webpage'] != '0' && $i++ < 10) {
+				$database->query("SELECT [id_parent_webpage], [src], [name] FROM [webpages] WHERE [id_webpages] = " . $parentpage['id_parent_webpage']);
+				$parentpage = $database->fetch();
+				if($parentpage['id_parent_webpage'] != 0)
+					$prev_h1[$parentpage['src']] = html::getUebersichtPagename($parentpage['name']);
+			}
+			$prev_h1 += $prev_h1;
+			$prev_h1 = array_reverse($prev_h1);
+		}
+		if($isParameter || $returns) {
+			return html::fillHeadline($currentpageNme, $prev_h1);
+		} else {
+			echo html::fillHeadline($currentpageNme, $prev_h1);
+		}
+	}
+	/**
+	 * @return string <i>html</i>
+	 */
+	public static function getUebersichtMenu() {
+		global $database;
+		$getsSrc = std::gets('src') == '' ? wpInit::$StartSeite : std::gets('src');
+		$src = (in_array($getsSrc, htmlBase::$needParam)) ? $getsSrc.'.'.std::gets('param1') : $getsSrc;
+		$database->query("SELECT [id_webpages] FROM [webpages] WHERE [src] = '" . $src . "'");
+		$id_webpage = $database->fetch()['id_webpages'];
+		$database->query("SELECT [id_src], [src], [name], [inwork] FROM [webpages] WHERE [id_parent_webpage] = " . $id_webpage . " ORDER BY [position]");
+		echo '<div id="ps-uebersicht-navi-container">'; // zur absoluten positionierung
+		echo '<div class="ps-uebersicht-navi">';
+		$i = 1;
+		$in = 1;
+		while($erg = $database->fetch()) {
+			echo '<a id="' . $erg['id_src'] . '" class="ps-navi-button ' . $erg['id_src'] . ($erg['inwork'] ? ' inWork' : '') . '" href="' . $erg['src'] . '.htm">' . html::getUebersichtPagename($erg['name'], true) . '</a>';
+			if($i++ > wpInit::$MaxNumberOfButtons) {
+				$i = 1;
+				echo '</div><div class="ps-uebersicht-navi' . $in++ . '">';
+			}
+		}
+		echo '</div>';
+		echo '</div>';
+	}
+	/**
+	 * @return string <i>html</i>
+	 */
+	public static function getAreaButton($src, $coords) {
+		global $database;
+		$database->query("SELECT [name], [id_src] FROM [webpages] WHERE [src] = '" . $src . "'");
+		$pageInfo = $database->fetch();
+		echo '<area alt="'.$pageInfo['id_src'].'" title="'.html::getUebersichtPagename($pageInfo['name']).'" href="'.$src.'.htm" coords="'.$coords.'" shape="poly">';
+	}
+	/**
+	 * @return string <i>html</i>
+	 */
+	public static function getBackButton() {
+		global $database;
+		$database->query("SELECT [id_parent_webpage] FROM [webpages] WHERE [src] = '" . std::gets('src') . "'");
+		$id_parent_webpage = $database->fetch()['id_parent_webpage'];
+		$database->query("SELECT [src], [id_src], [name] FROM [webpages] WHERE [id_webpages] = " . $id_parent_webpage);
+		$erg = $database->fetch();
+		echo '<a id="' . $erg['id_src'] . '" class="ps-navi-button prev dragthis" href="' . $erg['src'] . '.htm">' . html::getUebersichtPagename($erg['name'], true) . '</a>';
+	}
+	/**
+	 * @return string <i>html</i>
+	 */
+	public static function getForwardButton($destination, $cssClass = 'next') {
+		global $database;
+		$database->query("SELECT [id_src], [name] FROM [webpages] WHERE [src] = '" . $destination . "'");
+		$erg = $database->fetch();
+		echo '<a id="' . $erg['id_src'] . '" class="ps-navi-button ' . $cssClass . ' dragthis" href="' . $destination . '.htm">' . html::getUebersichtPagename($erg['name'], true) . '</a>';
+	}
+}
+/**
+ * @author C_Scheid
+ */
+class html extends htmlBase {
+	/**
+	 * generiert das HTML Menue
+	 * @param $akt_src <b>string</b> <i>aktuell geladene Seite</i>
+	 */
+	public static function getMenu($akt_src) {
+		self::fillMenu();
+		$std = 'std.';
+		$startseite = 'uebersicht';
+		if(file_exists('pages'.(wpInit::$StartseiteStd ? 'std'.DIRECTORY_SEPARATOR : '').DIRECTORY_SEPARATOR.wpInit::$StartSeite.'.inc')) {
+			$std = wpInit::$StartseiteStd ? 'std.' : '';
+			$startseite = wpInit::$StartSeite;
+		}
+		$startseite; // Unterdrückt die never used Meldung
+		if(strtolower(std::arrays($_SESSION[SESSION_ID], 'USER')) == 'wpuser') {
+			echo '<a class="'.(('useradmin' == $akt_src)?'active ':'').'menuentry image home" href="std.useradmin.htm" title="Benutzerverwaltung">Benutzeradministration</a>';
+		} else {
+			echo '<a class="'.((wpInit::$StartSeite == $akt_src)?'active ':'').'menuentry image home" href="'.$std.wpInit::$StartSeite.'.htm" title="Home">'.((wpInit::$PageName == '') ? wpHTML_EMPTY : wpInit::$PageName).'</a>';
+		}
+		if(std::arrays($_SESSION[SESSION_ID], 'LOGINTOUSERSRC') != '') {
+			$url = (substr($_SESSION[SESSION_ID]['LOGINTOUSERSRC'], -4) == '.htm') ? $_SESSION[SESSION_ID]['LOGINTOUSERSRC'] : $_SESSION[SESSION_ID]['LOGINTOUSERSRC'] . '.htm';
+			echo '<a class="menuentry image myhome" href="'.$url.'" title="myHome">my</a>';
+		}
+		if($akt_src != wpInit::$StartSeite) echo '<a class="menuentry image pageback" href="#" title="zur&uuml;ck">'.wpHTML_EMPTY.'</a>';
+		foreach(wpInit::$menu as $entry) {
+			if(security::checkLevel($entry['reqlevel'])) {
+				if($entry['link'] != wpInit::$StartSeite) {
+					echo '<a class="'.(($entry['link'] == $akt_src)?'active ':'').'menuentry" href="'.$entry['link'].'.htm">'.$entry['name'].'</a>';
+				}
+			}
+		}
+
+		$stdsrc = std::gets('path') == '' ? '' : std::gets('path') . '/';
+		$std = std::gets('path') == '' ? '' : std::gets('path') . '.';
+		if(file_exists('pages/'.$stdsrc.$akt_src.'_parameter.inc')) {
+			$param = '';
+			if(std::gets('param1') != '') {
+				$param .= '.'.std::gets('param1');
+			}
+			if(std::gets('param2') != '') {
+				$param .= '.'.std::gets('param2');
+			}
+			echo '<a class="menuentry image paramsite" href="'.$std.$akt_src.'_parameter'.$param.'.htm" title="Einstellungen">'.wpHTML_EMPTY.'</a>';
+		}
+	}
+	public static function getHomeMenu($akt_src) {
+		self::fillMenu();
+		echo '<a class="'.((wpInit::$StartSeite == $akt_src)?'active ':'').'menuentry image home ps-hover-noborder" href="'.wpInit::$StartSeite.'.htm" title="Home">'.wpHTML_EMPTY.'</a>';
+		if($akt_src != wpInit::$StartSeite) echo '<a class="menuentry image pageback ps-hover-noborder" href="#" title="zur&uuml;ck">'.wpHTML_EMPTY.'</a>';
+		foreach(wpInit::$menu as $entry) {
+			if(security::checkLevel($entry['reqlevel'])) {
+				if($entry['link'] != wpInit::$StartSeite) {
+					echo '<a class="'.(($entry['link'] == $akt_src)?'active ':'').'menuentry ps-hover-border" href="'.$entry['link'].'.htm">'.$entry['name'].'</a>';
+				}
+			}
+		}
+		if(file_exists('pages/'.$akt_src.'_parameter.inc')) {
+			if(std::gets('param') == '') echo '<a class="menuentry image paramsite" href="'.$akt_src.'_parameter.htm" title="Einstellungen">'.wpHTML_EMPTY.'</a>';
+			else  echo '<a class="menuentry image paramsite ps-hover-noborder" href="'.$akt_src.'_parameter.'.std::gets('param1').'.htm" title="Einstellungen">'.wpHTML_EMPTY.'</a>';
+		}
+		echo '<span class="shortalarm" title="Alarme: gekommen / gegangen / unquittiert"><a href="std.alarmtable.htm" class="ps-tdn"><span class="active-alarm-count">0 / 0 / 0</span></a></span>';
+		echo '<span class="outtemp" title="Aussentemperatur"><a href="std.at.htm" class="ps-tdn" data-value="AT">-</a></span>';
+	}
+	/**
+	 * generiert das HTML Menue
+	 * @param $akt_src <b>string</b> <i>aktuell geladene Seite</i>
+	 */
+	public static function getSystemMenu($akt_src) {
+		self::fillSystemMenu();
+		foreach(wpInit::$systemmenu as $systemmenukey => $systemmenuvalue) {
+			if(count($systemmenuvalue) > 2) {
+				if(security::checkLevel($systemmenuvalue['reqlevel'])) {
+					echo '<span class="dropdownmenu" data-div="'.$systemmenukey.'">'.$systemmenuvalue['name'].' <span class="pfeilunten">&darr;</span></span><div class="menudiv '.$systemmenukey.' ps-hidden">';
+					foreach($systemmenuvalue as $headline => $menucontent) {
+						if($headline != 'reqlevel' && $headline != 'name') {
+							if(security::checkLevel($menucontent['reqlevel'])) {
+								echo '<div><h3>'.$headline.'</h3><ul>';
+								foreach($menucontent as $link => $linkdetails) {
+									if($link != 'reqlevel' && security::checkLevel($linkdetails['reqlevel'])) {
+										$std = in_array($link, wpInit::$noStdPageInSystem) ? '' : 'std.';
+										echo '<li><a href="'.$std.$link.'.htm">'.$linkdetails['name'].'</a></li>';
+									}
+								}
+								echo '</ul></div>';
+							}
+						}
+					}
+					echo '</div>';
+				}
+			} else {
+				if(security::checkLevel($systemmenuvalue['reqlevel'])) {
+					echo '<a class="'.(($systemmenukey == $akt_src)?'active ':'').'menuentry" href="std.'.$systemmenukey.'.htm">'.$systemmenuvalue['name'].'</a>';
+				}
+			}
+		}
+		if(security::checkLevel(wpInit::$reqgrouptouchoptimum)) {
+			$modus = std::arrays($_SESSION[SESSION_ID], 'USER') == 'checker' || std::arrays($_SESSION[SESSION_ID], 'USER') == 'matthias' ? 'Seniorenmodus' : 'Touchoptimierung';
+			echo '<span class="touchoptimum menuentry right ps-sm-hide">';
+			echo (std::arrays($_SESSION[SESSION_ID], 'TOUCH') == '1') ? $modus.' ausschalten' : $modus.' einschalten';
+			echo '</span>';
+		}
+		if(security::checkLevel(wpInit::$reqgroupmark)) {
+			echo '<span class="mark menuentry right ps-xsm-hide">';
+			echo (std::arrays($_SESSION[SESSION_ID], 'MARK') == '1') ? 'no Mark' : 'Mark';
+			echo '</span>';
+		}
+		if(security::checkLevel(wpInit::$reqgroupsession)) {
+			echo '<span class="getsession menuentry right ps-xsm-hide">';
+			echo 'Session';
+			echo '</span>';
+		}
+		if(security::checkLevel(wpInit::$reqgroupdragqueen)) {
+			echo '<span class="dragqueen menuentry right ps-sm-hide">';
+			echo 'Dragqueen';
+			echo '</span>';
+		}
+		//std::test_array(wpInit::$systemmenu);
+	}
+	public static function cleanOutput($input, $isJS = false) {
+		$cleanoutput = $input;
+		if(!wpInit::$PDebug) {
+			if($isJS) {
+				$cleanoutput = preg_replace('/[^:]\/\/.*$/m', '', $input);
+			}
+			$c = 0;
+			do {
+				$cleanoutput = preg_replace(array('/\r\n/', '/\r/', '/\n/'), '', $cleanoutput, -1, $c);
+			} while($c > 1);
+
+			do {
+				$cleanoutput = preg_replace('/\t/', ' ', $cleanoutput, -1, $c);
+			} while($c > 1);
+
+			do {
+				$cleanoutput = preg_replace('/  /', ' ', $cleanoutput, -1, $c);
+			} while($c > 1);
+		}
+		return $cleanoutput;
+	}
+	public static function default() {
+		echo '<span class="neg">Command not found</span>';
+		if(security::checkGroup(security::entwickler)) std::test_array($_POST);
+	}
+}
+/**
+ * @author C_Scheid
+ */
+class html_panel extends htmlBase {
+	/**
+	 * generiert das HTML Menue
+	 * @param $akt_src <b>string</b> <i>aktuell geladene Seite</i>
+	 */
+	public static function getMenu($akt_src) {
+		self::fillMenu();
+		echo '<a class="'.((wpInit::$StartSeite == $akt_src)?'active ':'').'menuentry image home" href="'.wpInit::$StartSeite.'.panel" title="Home">'.wpHTML_EMPTY.'</a>';
+		if($akt_src != wpInit::$StartSeite) echo '<a class="menuentry image pageback" href="#" title="zur&uuml;ck">'.wpHTML_EMPTY.'</a>';
+		foreach(wpInit::$menu as $entry) {
+			if(security::checkLevel($entry['reqlevel'])) {
+				if($entry['link'] != wpInit::$StartSeite) {
+					echo '<a class="'.(($entry['link'] == $akt_src)?'active ':'').'menuentry" href="'.$entry['link'].'.panel">'.$entry['name'].'</a>';
+				}
+			}
+		}
+		if(file_exists('pages/'.$akt_src.'_parameter.inc')) {
+			if(std::gets('param') == '') echo '<a class="menuentry image paramsite" href="'.$akt_src.'_parameter.panel" title="Einstellungen">'.wpHTML_EMPTY.'</a>';
+			else  echo '<a class="menuentry image paramsite" href="'.$akt_src.'_parameter.'.std::gets('param').'.panel" title="Einstellungen">'.wpHTML_EMPTY.'</a>';
+		}
+	}
+	/**
+	 * generiert das HTML Menue
+	 * @param $akt_src <b>string</b> <i>aktuell geladene Seite</i>
+	 */
+	public static function getSystemMenu($akt_src) {
+		self::fillSystemMenu();
+		foreach(wpInit::$systemmenu as $systemmenukey => $systemmenuvalue) {
+			if(count($systemmenuvalue) > 2) {
+				if(security::checkLevel($systemmenuvalue['reqlevel'])) {
+					echo '<span class="dropdownmenu" data-div="'.$systemmenukey.'">'.$systemmenuvalue['name'].' &nu;</span><div class="menudiv '.$systemmenukey.' ps-hidden">';
+					foreach($systemmenuvalue as $headline => $menucontent) {
+						if($headline != 'reqlevel' && $headline != 'name') {
+							if(security::checkLevel($menucontent['reqlevel'])) {
+								echo '<div><h3>'.$headline.'</h3><ul>';
+								foreach($menucontent as $link => $linkdetails) {
+									if($link != 'reqlevel' && security::checkLevel($linkdetails['reqlevel'])) {
+										echo '<li><a href="'.$link.'.panel">'.$linkdetails['name'].'</a></li>';
+									}
+								}
+								echo '</ul></div>';
+							}
+						}
+					}
+					echo '</div>';
+				}
+			} else {
+				if(security::checkLevel($systemmenuvalue['reqlevel'])) {
+					echo '<a class="'.(($systemmenukey == $akt_src)?'active ':'').'menuentry" href="'.$systemmenukey.'.panel">'.$systemmenuvalue['name'].'</a>';
+				}
+			}
+		}
+		/*
+		if(security::checkLevel(11)) {
+			echo '<a class="menuentry right" href="logout.htm">abmelden</a>';
+		} else {
+			echo '<a class="'.(('login' == $akt_src)?'active ':'').'menuentry right" href="login.htm">login</a>';
+		}
+		*/
+		if(security::checkLevel(80)) {
+			echo '<a class="touchoptimum menuentry right" href="#">';
+			echo (std::arrays($_SESSION[SESSION_ID], 'TOUCH') == '1') ? 'Touchoptimierung ausschalten' : 'Touchoptimierung einschalten';
+			echo '</a>';
+		}
+		//std::test_array(wpInit::$systemmenu);
+	}
+}
+/**
+ * Klasse zum generieren WebAutomation Scripts
+ */
+class getScript {
+	/**
+	 * generiert die Daten der registrierten Items
+	 */
+	public static function getActivePoints() {
+		$WebCom = new WebCom();
+		$answer = new TCPencode($WebCom->send('ActiveDP', self::getParams()));
+		$TheArray = $answer->getArray();
+		$js = '{"wpResult":{';
+		if(std::sessions('POINTS') != '') {
+			foreach($_SESSION[SESSION_ID]['POINTS'] as $pagename => $object) {
+				$unit = $_SESSION[SESSION_ID]['POINTS'][$pagename]->unit;
+				$pointvalue = @$TheArray['Datenpunkte'][$_SESSION[SESSION_ID]['POINTS'][$pagename]->id];
+				if(self::facet($unit, std::arrays($pointvalue, 'Value')) == 'S_OK') {
+					if(is_numeric(str_replace(',', '.', $pointvalue['Value']))) {
+						$ValueString = @number_format(str_replace(',', '.', $pointvalue['Value']), $_SESSION[SESSION_ID]['POINTS'][$pagename]->nks, ',', '').($unit == '' ? '' : ' '.$unit);
+					} else {
+						$ValueString = $pointvalue['Value'].($unit == '' ? '' : ' '.$unit);
+					}
+				} else {
+					$ValueString = self::facet($unit, $pointvalue['Value']);
+				}
+				$js .= '"' . $pagename . '":{'.
+					'"Value":"'.std::arrays($pointvalue, 'Value').'",'.
+					'"ValueString":"'.$ValueString.'"},';
+				$_SESSION[SESSION_ID]['POINTS'][$pagename]->value = std::arrays($pointvalue, 'Value');
+				$_SESSION[SESSION_ID]['POINTS'][$pagename]->lastupdate = wpConvert::getDateTime();
+				$object; // never used
+			}
+			$js = (substr($js, -1) == ',') ? substr($js, 0, -1) : $js;
+		}
+		echo $js.'}}';
+	}
+	/**
+	 * generiert die Daten der aktiven Alarme
+	 */
+	public static function getActiveAlarms($AlarmCount) {
+		$WebCom = new WebCom();
+		$answer = new TCPencode($WebCom->send('ActiveAlarms'));
+		$TheArray = $answer->getArray();
+		$updaterequired = false;
+		if(std::arrays($TheArray, 'Alarme') == '' || count($TheArray['Alarme']) != $AlarmCount) $updaterequired = true;
+		$js = '{"WatchDogByte":"'.std::arrays($TheArray, 'WatchDog').'","pDateTime":"new Date('.std::arrays($TheArray, 'DateTime').')","pDate":"'.std::arrays($TheArray, 'Date').'","pTime":"'.std::arrays($TheArray, 'Time').'","wpAlarm":[';
+		if(std::arrays($_SESSION[SESSION_ID], 'ActiveAlarms') == '') $_SESSION[SESSION_ID]['ActiveAlarms'] = array();
+		if(std::arrays($TheArray, 'Alarme') != '') {
+			foreach($TheArray['Alarme'] as $object) {
+				if(std::arrays($_SESSION[SESSION_ID]['ActiveAlarms'], $object['id']) != $object['AlarmUpdate'] ||
+						$updaterequired) {
+					$priority = 0;
+					if($object['Gone'] == "-" && $object['Quit'] == "-") $priority += 30;
+					if($object['Gone'] == "-" && $object['Quit'] != "-") $priority += 20;
+					if($object['Gone'] != "-" && $object['Quit'] != "-") $priority += 10;
+					switch($object['Type']) {
+						case 'Alarm': $priority += 7; break;
+						case 'Plantmode': $priority += 7; break;
+						case 'Plantmode Bacnet': $priority += 7; break;
+						case 'Störung': $priority += 6; break;
+						case 'gefallen': $priority += 5; break;
+						case 'Warnung': $priority += 4; break;
+						case 'Vorortsteuerung': $priority += 3; break;
+						case 'Nothandebene': $priority += 3; break;
+						case 'Handbetrieb': $priority += 2; break;
+						case 'Hand': $priority += 2; break;
+						case 'Meldung': $priority += 1; break;
+					}
+					$typeText = 'Alarm';
+					if($object['Type'] == 'Störung') $typeText = 'Störung';
+					if($object['Type'] == 'Warnung') $typeText = 'Warnung';
+					$quitbutton = security::checkLevel(wpInit::$reqgroupquit) ? '<span class=\"toquit\" data-value=\"'.$object['id'].'\" >' . $typeText . ' quittieren</span>' : '<span>nicht quittiert</span>';
+					$css = $object['Type'];
+					if($object['Gone'] != "-" && $object['Quit'] == "-") $css .= ' quit';
+					if($object['Gone'] == "-" && $object['Quit'] != "-") $css .= ' quitactive';
+					$quit = $object['Quit'] == '-' ? $quitbutton : $object['Quit'];
+					$js .= '{"DT_RowClass":"'.$css.'","DT_RowId":"AlarmID'.$object['id'].'",';
+					$js .= '"0":"'.$object['Come'].'","1":"'.$object['Gone'].'","2":"'.$quit.'",';
+					//$js .= '3:"'.$object['Type'].'",4:"'.$object['Group'].'",';
+					//$js .= '5:"'.$object['Name'].'",6:"'.$object['Text'].'",7:"'.$object['OpcName'].'",';
+					$i = 3;
+					if(isset($object['AlarmGroup5'])) {
+						$js .= '"' . ($i++) . '":"'.$object['AlarmGroup5'].'",';
+					}
+					if(isset($object['AlarmGroup4'])) {
+						$js .= '"' . ($i++) . '":"'.$object['AlarmGroup4'].'",';
+					}
+					if(isset($object['AlarmGroup3'])) {
+						$js .= '"' . ($i++) . '":"'.$object['AlarmGroup3'].'",';
+					}
+					if(isset($object['AlarmGroup2'])) {
+						$js .= '"' . ($i++) . '":"'.$object['AlarmGroup2'].'",';
+					}
+					if(isset($object['AlarmGroup1'])) {
+						$js .= '"' . ($i++) . '":"'.$object['AlarmGroup1'].'",';
+					}
+					$js .= '"' . ($i++) . '":"'.$object['Group'].'",';
+					if($object['Link'] == '') {
+						$js .= '"'.($i++).'":"'.$object['Text'].'",';
+					} else {
+						$js .= '"'.($i++).'":"<a href=\"' . $object['Link'] . '\">' . $object['Text'] . '</a>",';
+					}
+					$js .= '"'.($i++).'":"'.$object['Name'].'",';
+					$js .= '"'.($i++).'":"'.$object['Type'].'",';
+					$js .= '"'.($i++).'":"'.$object['OpcName'].'",';
+					$js .= '"'.($i++).'":"'.$object['id'].'",';
+					$js .= '"'.($i++).'":"'.$object['AlarmUpdate'].'",';
+					$js .= '"'.($i++).'":'.$priority;
+					$js .= '},';
+					//std::test_array($object);
+					$_SESSION[SESSION_ID]['ActiveAlarms'][$object['id']] = $object['AlarmUpdate'];
+				}
+			}
+			$js = (substr($js, -1) == ',') ? substr($js, 0, -1) : $js;
+			echo $js.']';
+		} else {
+			echo $js.']';
+			unset($_SESSION[SESSION_ID]['ActiveAlarms']);
+		}
+		echo ',"wpWartung":"'.std::arrays($TheArray, 'Wartung').'","updaterequired":"'.(($updaterequired) ? 'True' : 'False').'"}';
+	}
+	/**
+	 * generiert die erweiterten Daten der registrierten Items
+	 */
+	public static function getActivePointsExtended() {
+		$WebCom = new WebCom();
+		$answer = new TCPencode($WebCom->send('ActiveDPextended', self::getParams()));
+		$TheArray = $answer->getArray();
+		$js = 'wpResult={';
+		foreach($_SESSION[SESSION_ID]['POINTS'] as $pagename => $object) {
+			$pointvalue = @$TheArray['Datenpunkte'][$_SESSION[SESSION_ID]['POINTS'][$pagename]->id];
+			$js .= $pagename.':{'.
+				'Value:\''.std::arrays($pointvalue, 'Value').'\','.
+				'TimeStamp:\''.std::arrays($pointvalue, 'TimeStamp').'\','.
+				'Quality:\''.std::arrays($pointvalue, 'Quality').'\','.
+				'QualityString:\''.std::arrays($pointvalue, 'QualityString').'\','.
+				'Type:\''.std::arrays($pointvalue, 'Type').'\'},';
+			$_SESSION[SESSION_ID]['POINTS'][$pagename]->value = std::arrays($pointvalue, 'Value');
+			$_SESSION[SESSION_ID]['POINTS'][$pagename]->lastupdate = wpConvert::getDateTime();
+			$object; // never used
+		}
+		$js = (substr($js, -1) == ',') ? substr($js, 0, -1) : $js;
+		echo $js.'}';
+	}
+	/**
+	 * Überprüft ob die Eingabe ein facet ist.
+	 */
+	static function facet($unit, $value) {
+		$unit = is_null($unit) ? '' : $unit;
+		$m = null;
+		if(preg_match('/^True:(.*);False:(.*);$/', $unit, $m) > 0) {
+			$returns = ($value == 'True') ? $m[1] : $m[2];
+			return $returns;
+		} else if(preg_match('/(-?(\d){1,}:(.*);){1,}/', $unit, $m) > 0 ) {
+			$unit = substr($unit, 0, -1);
+			$arr = explode(';', $unit);
+			foreach ($arr as $state) {
+				$erg[trim(strstr($state, ':', true))] = str_replace(':', '', strstr($state, ':'));
+			}
+			if(isset($erg[$value])) {
+				return $erg[$value];
+			} else {
+				return $value;
+			}
+		} else {
+			return 'S_OK';
+		}
+	}
+	/**
+	 *
+	 */
+	public static function getActiveSystem() {
+		$WebCom = new WebCom();
+		$answer = new TCPencode($WebCom->send('ActiveSystem'));
+		$TheArray = $answer->getArray();
+		echo 'WatchDogByte='.std::arrays($TheArray, 'WatchDog').';';
+		echo 'pDateTime="'.std::arrays($TheArray, 'DateTime').'";';
+		echo 'pDate="'.std::arrays($TheArray, 'Date').'";';
+		echo 'pTime="'.std::arrays($TheArray, 'Time').'";';
+		echo 'AlarmsCome='.std::arrays($TheArray, 'AlarmsCome').';';
+		echo 'AlarmsGone='.std::arrays($TheArray, 'AlarmsGone').';';
+		echo 'AlarmsQuit='.std::arrays($TheArray, 'AlarmsQuit').';';
+	}
+	/**
+	 *
+	 * @return string
+	 */
+	public static function getParams() {
+		$param = '';
+		if(std::arrays($_SESSION[SESSION_ID], 'POINTS') != '' && count($_SESSION[SESSION_ID]['POINTS']) > 0) {
+			foreach($_SESSION[SESSION_ID]['POINTS'] as $object) {
+				$param .= $object->id.'%~%';
+			}
+		}
+		if(strlen($param) > 3) {
+			$param = substr($param, 0, -3);
+		} else {
+			$param = '';
+		}
+		return $param;
+	}
+}
+/**
+ * @author C_Scheid
+ */
+class RegisterSignals {
+	/**  */
+	public $items;
+	/**
+	 * @param array $DPs <b>[HTML data-value] =&gt; [DB name]</b>
+	 */
+	public function __construct($DPs) {
+		if(std::arrays($_SESSION[SESSION_ID], 'REGPOINTS') == '')
+			$_SESSION[SESSION_ID]['REGPOINTS'] = array();
+		if(std::arrays($_SESSION[SESSION_ID], 'ERRORPOINTS') == '')
+			$_SESSION[SESSION_ID]['ERRORPOINTS'] = array();
+		if(std::arrays($_SESSION[SESSION_ID], 'POINTS') == '')
+			$_SESSION[SESSION_ID]['POINTS'] = array();
+		$this->items = array();
+		$wherename = '';
+		foreach($DPs as $pagename => $name) {
+			$wherename .= " [dp].[name] = '$name' OR";
+		}
+		$result = array();
+		if($wherename != '') {
+			$database = new wpDatabase();
+			$database->query('SELECT [dp].[id_opcdatapoint], [dp].[name], [dp].[opcname],
+				[grp].[name] AS [opcgroup]
+				FROM [opcdatapoint] [dp]
+				INNER JOIN [opcgroup] [grp] ON [dp].[id_opcgroup] = [grp].[id_opcgroup]
+				INNER JOIN [opcserver] [srv] ON [grp].[id_opcserver] = [srv].[id_opcserver]
+				WHERE '.substr($wherename, 0, -3));
+			while($erg = $database->fetch()) {
+				$result[$erg['name']] = array(
+					'id_opcdatapoint' => $erg['id_opcdatapoint'],
+					'opcname' => $erg['opcname'],
+					'opcgroup' => $erg['opcgroup']
+				);
+			}
+			foreach($DPs as $pagename => $name) {
+				if(isset($result[$name])) {
+					$_SESSION[SESSION_ID]['POINTS'][$pagename] =
+					new wpItem($result[$name]['id_opcdatapoint'], $pagename, $name,
+						$result[$name]['opcname'], $result[$name]['opcgroup'], '');
+					$_SESSION[SESSION_ID]['REGPOINTS'][$pagename] = '<a href="std.activedp.' . $result[$name]['id_opcdatapoint'] . '.htm">' . $name . '</a>';
+				} else {
+					$_SESSION[SESSION_ID]['ERRORPOINTS'][$pagename] = $name;
+				}
+			}
+		}
+	}
+/**
+ *
+ * @param $name
+ * @return
+ */
+	public static function getOPCID($name) {
+		foreach($_SESSION[SESSION_ID]['POINTS'] as $key => $value) {
+			if($value->name == $name) return $key;
+		}
+	}
+}
+class cssposition {
+	const small = 1;
+	const middle = 2;
+	const big = 3;
+	private $size = array(
+		self::small => array('h' => 0, 'w' => 0),
+		self::middle => array('h' => 0, 'w' => 0),
+		self::big => array('h' => 0, 'w' => 0)
+	);
+	public function __construct($w, $h) {
+		$this->size[self::big]['w'] = $w;
+		$this->size[self::big]['h'] = $h;
+	}
+	public function setSize($s, $h) {
+		$this->size[$s]['h'] = $h;
+		$this->size[$s]['w'] = floor($this->size[self::big]['w'] * $h / $this->size[self::big]['h']);
+	}
+	public function getH($s, $ref) {
+		return floor($ref * $this->size[$s]['h'] / $this->size[self::big]['h']);
+	}
+	public function getW($s, $ref) {
+		return floor($ref * $this->size[$s]['w'] / $this->size[self::big]['w']);
+	}
+	public function getImageH($s) {
+		return $this->size[$s]['h'];
+	}
+	public function getImageW($s) {
+		return $this->size[$s]['w'];
+	}
+}
+class WebCom {
+	private $socket;
+	private $fehler = false;
+
+	public function __construct($timeout = 1) {
+		$this->socket = @socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+		socket_set_option($this->socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => $timeout, 'usec' => 0));
+		if (!$this->socket) {
+			echo 'socket_create() fehlgeschlagen: Grund: '.socket_strerror(socket_last_error()).'<br />'."\n";
+		} else {
+			$result = @socket_connect($this->socket, wpInit::$CS_server, wpInit::$CS_port);
+			if (!$result) {
+				echo 'socket_connect() fehlgeschlagen: Grund: ('.$result.') '.socket_strerror(socket_last_error($this->socket)).'<br />'."\n";
+			}
+		}
+	}
+
+	public function __destruct() {
+		socket_close($this->socket);
+	}
+	/**
+	 * @param string $text
+	 * @return string
+	 */
+	public function send($befehl, $param = '') {
+		if($befehl == '') {
+			$befehl = 'undefined';
+		} else {
+			$befehl = '{'.$befehl.'}';
+			if($param != '') $befehl .= '<'.$param.'>';
+		}
+		$returns = '';
+		@socket_write($this->socket, $befehl, strlen($befehl));
+		while ($out = @socket_read($this->socket, 1024)) {
+			$returns .= $out;
+		}
+		return $returns;
+	}
+}
+/**
+ * Klasse zum decodieren der TCP Antworten
+ */
+class TCPencode {
+	const finish = 0;
+	const iskey = 1;
+	const isvalue = 2;
+	private $isstring = false;
+	private $position;
+	private $a_text;
+	/**
+	 *
+	 * @param string $text
+	 */
+	public function __construct($text) {
+		$this->position = 0;
+		$this->a_text = str_split($text);
+		$this->isstring = false;
+	}
+	/**
+	 * entschlüsselt Bit für Bit die TCP Antwort
+	 * @return array
+	 */
+	public function getArray() {
+		$out = array();
+		$key = '';
+		$value = '';
+		$is_now = self::iskey;
+		for($i=$this->position; $i<count($this->a_text); $i++) {
+			$char = $this->a_text[$this->position];
+			switch($char) {
+				case '{':
+					if($is_now == self::iskey && $this->isstring) {
+						$key .= $char;
+					} else if($is_now == self::isvalue && $this->isstring) {
+						$value .= $char;
+					} else if($is_now == self::isvalue) {
+						$out[$key] = $this->getArray();
+						$i = $this->position;
+						$key = '';
+						$is_now = self::finish;
+					} else {
+						$is_now = self::iskey;
+					}
+					break;
+				case '=':
+					if($is_now == self::iskey && $this->isstring) {
+						$key .= $char;
+					} else if($is_now == self::isvalue && $this->isstring) {
+						$value .= $char;
+					} else {
+						$is_now = self::isvalue;
+					}
+					break;
+				case '}':
+					if($is_now == self::iskey && $this->isstring) {
+						$key .= $char;
+					} else if($is_now == self::isvalue && $this->isstring) {
+						$value .= $char;
+					} else {
+						if($is_now == self::finish) {
+							break 2;
+						}
+						$out[$key] = $value;
+						$key = '';
+						$value = '';
+						$is_now = self::finish;
+					}
+					break;
+				case '"':
+					$this->isstring = !$this->isstring;
+					break;
+				default:
+					if($is_now == self::iskey) {
+						$key .= $char;
+					} else if($is_now == self::isvalue) {
+						$value .= $char;
+					}
+					break;
+			}
+			$this->position++;
+		}
+		return $out;
+	}
+}
+/** @} */
+//'fQoNfQkKDTt0dW8kIG5ydXRlcgkJCg19CQkKDTsrK25vaXRpc29wPi1zaWh0JAkJCQoNfQkJCQoNO2thZXJiCQkJCQkKDX0JCQkJCQoNO3JhaGMkID0uIGV1bGF2JAkJCQkJCQoNeyApZXVsYXZzaTo6ZmxlcyA9PSB3b25fc2kkKGZpIGVzbGUgfQkJCQkJCg07cmFoYyQgPS4geWVrJAkJCQkJCQoNeyApeWVrc2k6OmZsZXMgPT0gd29uX3NpJChmaQkJCQkJCg06dGx1YWZlZAkJCQkKDTtrYWVyYgkJCQkJCg07Z25pcnRzc2k+LXNpaHQkISA9IGduaXJ0c3NpPi1zaWh0JAkJCQkJCg06JyInIGVzYWMJCQkJCg07a2FlcmIJCQkJCQoNfQkJCQkJCg07aHNpbmlmOjpmbGVzID0gd29uX3NpJAkJCQkJCQoNOycnID0gZXVsYXYkCQkJCQkJCg07JycgPSB5ZWskCQkJCQkJCg07ZXVsYXYkID0gXXllayRbdHVvJAkJCQkJCQoNfQkJCQkJCQoNOzIga2FlcmIJCQkJCQkJCg17ICloc2luaWY6OmZsZXMgPT0gd29uX3NpJChmaQkJCQkJCQoNeyBlc2xlIH0JCQkJCQoNO3JhaGMkID0uIGV1bGF2JAkJCQkJCQoNeyApZ25pcnRzc2k+LXNpaHQkICYmIGV1bGF2c2k6OmZsZXMgPT0gd29uX3NpJChmaSBlc2xlIH0JCQkJCQoNO3JhaGMkID0uIHllayQJCQkJCQkKDXsgKWduaXJ0c3NpPi1zaWh0JCAmJiB5ZWtzaTo6ZmxlcyA9PSB3b25fc2kkKGZpCQkJCQkKDTonfScgZXNhYwkJCQkKDTtrYWVyYgkJCQkJCg19CQkJCQkKDTtldWxhdnNpOjpmbGVzID0gd29uX3NpJAkJCQkJCQoNeyBlc2xlIH0JCQkJCQoNO3JhaGMkID0uIGV1bGF2JAkJCQkJCQoNeyApZ25pcnRzc2k+LXNpaHQkICYmIGV1bGF2c2k6OmZsZXMgPT0gd29uX3NpJChmaSBlc2xlIH0JCQkJCQoNO3JhaGMkID0uIHllayQJCQkJCQkKDXsgKWduaXJ0c3NpPi1zaWh0JCAmJiB5ZWtzaTo6ZmxlcyA9PSB3b25fc2kkKGZpCQkJCQkKDTonPScgZXNhYwkJCQkKDTtrYWVyYgkJCQkJCg19CQkJCQkKDTt5ZWtzaTo6ZmxlcyA9IHdvbl9zaSQJCQkJCQkKDXsgZXNsZSB9CQkJCQkKDTtoc2luaWY6OmZsZXMgPSB3b25fc2kkCQkJCQkJCg07JycgPSB5ZWskCQkJCQkJCg07bm9pdGlzb3A+LXNpaHQkID0gaSQJCQkJCQkKDTspKHlhcnJBdGVnPi1zaWh0JCA9IF15ZWskW3R1byQJCQkJCQkKDXsgKWV1bGF2c2k6OmZsZXMgPT0gd29uX3NpJChmaSBlc2xlIH0JCQkJCQoNO3JhaGMkID0uIGV1bGF2JAkJCQkJCQoNeyApZ25pcnRzc2k+LXNpaHQkICYmIGV1bGF2c2k6OmZsZXMgPT0gd29uX3NpJChmaSBlc2xlIH0JCQkJCQoNO3JhaGMkID0uIHllayQJCQkJCQkKDXsgKWduaXJ0c3NpPi1zaWh0JCAmJiB5ZWtzaTo6ZmxlcyA9PSB3b25fc2kkKGZpCQkJCQkKDToneycgZXNhYwkJCQkKDXsgKXJhaGMkKGhjdGl3cwkJCQoNO11ub2l0aXNvcD4tc2lodCRbdHhldF9hPi1zaWh0JCA9IHJhaGMkCQkJCg17ICkrK2kkIDspdHhldF9hPi1zaWh0JCh0bnVvYzxpJCA7bm9pdGlzb3A+LXNpaHQkPWkkKHJvZgkJCg07eWVrc2k6OmZsZXMgPSB3b25fc2kkCQkKDTsnJyA9IGV1bGF2JAkJCg07JycgPSB5ZWskCQkKDTspKHlhcnJhID0gdHVvJAkJCg17ICkoeWFyckF0ZWcgbm9pdGNudWYgY2lsYnVwCQoNLyogCQoNeWFycmEgbnJ1dGVyQCAqIAkKDXRyb3d0bkEgUENUIGVpZCB0aUIgcrzDZiB0aUIgdGxlc3O8w2xoY3N0bmUgKiAJCg0qKi8JCg19CQoNO2VzbGFmID0gZ25pcnRzc2k+LXNpaHQkCQkKDTspdHhldCQodGlscHNfcnRzID0gdHhldF9hPi1zaWh0JAkJCg07MCA9IG5vaXRpc29wPi1zaWh0JAkJCg17ICl0eGV0JCh0Y3VydHNub2NfXyBub2l0Y251ZiBjaWxidXAJCg0vKiAJCg10eGV0JCBnbmlydHMgbWFyYXBAICogCQoNKiAJCg0qKi8JCg07dHhldF9hJCBldGF2aXJwCQoNO25vaXRpc29wJCBldGF2aXJwCQoNO2VzbGFmID0gZ25pcnRzc2kkIGV0YXZpcnAJCg07MiA9IGV1bGF2c2kgdHNub2MJCg07MSA9IHlla3NpIHRzbm9jCQoNOzAgPSBoc2luaWYgdHNub2MJCg17IGVkb2NuZVBDVCBzc2FsYwoNLyogCg1uZXRyb3d0bkEgUENUIHJlZCBuZXJlaWRvY2VkIG11eiBlc3NhbEsgKiAKDSoqLwoNfQoNfQkKDTtzbnJ1dGVyJCBucnV0ZXIJCQoNfQkJCg07dHVvJCA9LiBzbnJ1dGVyJAkJCQoNeyApKTQyMDEgLHRla2Nvcz4tc2lodCQoZGFlcl90ZWtjb3NAID0gdHVvJCggZWxpaHcJCQoNOykpbGhlZmViJChuZWxydHMgLGxoZWZlYiQgLHRla2Nvcz4tc2lodCQoZXRpcndfdGVrY29zQAkJCg07JycgPSBzbnJ1dGVyJAkJCg19CQkKDTsnPicubWFyYXAkLic8JyA9LiBsaGVmZWIkICknJyA9ISBtYXJhcCQoZmkJCQkKDTsnfScubGhlZmViJC4neycgPSBsaGVmZWIkCQkJCg17IGVzbGUgfQkJCg07J2RlbmlmZWRudScgPSBsaGVmZWIkCQkJCg17ICknJyA9PSBsaGVmZWIkKGZpCQkKDXsgKScnID0gbWFyYXAkICxsaGVmZWIkKGRuZXMgbm9pdGNudWYgY2lsYnVwCQoNLyogCQoNZ25pcnRzIG5ydXRlckAgKiAJCg10eGV0JCBnbmlydHMgbWFyYXBAICogCQoNKiovCQoNfQkKDTspdGVrY29zPi1zaWh0JChlc29sY190ZWtjb3MJCQoNeyApKHRjdXJ0c2VkX18gbm9pdGNudWYgY2lsYnVwCQoNCg19CQoNfQkJCg19CQkJCg07Im5cIi4nPi8gcmI8Jy4pKXRla2Nvcz4tc2lodCQocm9ycmVfdHNhbF90ZWtjb3Mocm9ycmVydHNfdGVrY29zLicgKScudGx1c2VyJC4nKCA6ZG51ckcgOm5lZ2FsaGNzZWdsaGVmICkodGNlbm5vY190ZWtjb3MnIG9oY2UJCQkJCg17ICl0bHVzZXIkISggZmkJCQkKDTspdHJvcF9TQyQ6OnRpbklQICxyZXZyZXNfU0MkOjp0aW5JUCAsdGVrY29zPi1zaWh0JCh0Y2Vubm9jX3Rla2Nvc0AgPSB0bHVzZXIkCQkJCg17IGVzbGUgfQkJCg07Im5cIi4nPi8gcmI8Jy4pKShyb3JyZV90c2FsX3Rla2Nvcyhyb3JyZXJ0c190ZWtjb3MuJyA6ZG51ckcgOm5lZ2FsaGNzZWdsaGVmICkoZXRhZXJjX3Rla2Nvcycgb2hjZQkJCQoNeyApdGVrY29zPi1zaWh0JCEoIGZpCQkKDTspKTAgPj0gJ2Nlc3UnICx0dW9lbWl0JCA+PSAnY2VzJyh5YXJyYSAsT0VNSVRWQ1JfT1MgLFRFS0NPU19MT1MgLHRla2Nvcz4tc2lodCQobm9pdHBvX3Rlc190ZWtjb3MJCQoNOylQQ1RfTE9TICxNQUVSVFNfS0NPUyAsVEVOSV9GQShldGFlcmNfdGVrY29zQCA9IHRla2Nvcz4tc2lodCQJCQoNeyApMSA9IHR1b2VtaXQkKHRjdXJ0c25vY19fIG5vaXRjbnVmIGNpbGJ1cAkKDQoNO2VzbGFmID0gcmVsaGVmJCBldGF2aXJwCQoNO3Rla2NvcyQgZXRhdmlycAkKDXsgbW9DYmVXIHNzYWxj';$t='fQoNfQkKDTt0dW8kIG5ydXRlcgkJCg19CQkKDTsrK25vaXRpc29wPi1zaWh0JAkJCQoNfQkJCQoNO2thZXJiCQkJCQkKDX0JCQkJCQoNO3JhaGMkID0uIGV1bGF2JAkJCQkJCQoNeyApZXVsYXZzaTo6ZmxlcyA9PSB3b25fc2kkKGZpIGVzbGUgfQkJCQkJCg07cmFoYyQgPS4geWVrJAkJCQkJCQoNeyApeWVrc2k6OmZsZXMgPT0gd29uX3NpJChmaQkJCQkJCg06dGx1YWZlZAkJCQkKDTtrYWVyYgkJCQkJCg07Z25pcnRzc2k+LXNpaHQkISA9IGduaXJ0c3NpPi1zaWh0JAkJCQkJCg06JyInIGVzYWMJCQkJCg07a2FlcmIJCQkJCQoNfQkJCQkJCg07aHNpbmlmOjpmbGVzID0gd29uX3NpJAkJCQkJCQoNOycnID0gZXVsYXYkCQkJCQkJCg07JycgPSB5ZWskCQkJCQkJCg07ZXVsYXYkID0gXXllayRbdHVvJAkJCQkJCQoNfQkJCQkJCQoNOzIga2FlcmIJCQkJCQkJCg17ICloc2luaWY6OmZsZXMgPT0gd29uX3NpJChmaQkJCQkJCQoNeyBlc2xlIH0JCQkJCQoNO3JhaGMkID0uIGV1bGF2JAkJCQkJCQoNeyApZ25pcnRzc2k+LXNpaHQkICYmIGV1bGF2c2k6OmZsZXMgPT0gd29uX3NpJChmaSBlc2xlIH0JCQkJCQoNO3JhaGMkID0uIHllayQJCQkJCQkKDXsgKWduaXJ0c3NpPi1zaWh0JCAmJiB5ZWtzaTo6ZmxlcyA9PSB3b25fc2kkKGZpCQkJCQkKDTonfScgZXNhYwkJCQkKDTtrYWVyYgkJCQkJCg19CQkJCQkKDTtldWxhdnNpOjpmbGVzID0gd29uX3NpJAkJCQkJCQoNeyBlc2xlIH0JCQkJCQoNO3JhaGMkID0uIGV1bGF2JAkJCQkJCQoNeyApZ25pcnRzc2k+LXNpaHQkICYmIGV1bGF2c2k6OmZsZXMgPT0gd29uX3NpJChmaSBlc2xlIH0JCQkJCQoNO3JhaGMkID0uIHllayQJCQkJCQkKDXsgKWduaXJ0c3NpPi1zaWh0JCAmJiB5ZWtzaTo6ZmxlcyA9PSB3b25fc2kkKGZpCQkJCQkKDTonPScgZXNhYwkJCQkKDTtrYWVyYgkJCQkJCg19CQkJCQkKDTt5ZWtzaTo6ZmxlcyA9IHdvbl9zaSQJCQkJCQkKDXsgZXNsZSB9CQkJCQkKDTtoc2luaWY6OmZsZXMgPSB3b25fc2kkCQkJCQkJCg07JycgPSB5ZWskCQkJCQkJCg07bm9pdGlzb3A+LXNpaHQkID0gaSQJCQkJCQkKDTspKHlhcnJBdGVnPi1zaWh0JCA9IF15ZWskW3R1byQJCQkJCQkKDXsgKWV1bGF2c2k6OmZsZXMgPT0gd29uX3NpJChmaSBlc2xlIH0JCQkJCQoNO3JhaGMkID0uIGV1bGF2JAkJCQkJCQoNeyApZ25pcnRzc2k+LXNpaHQkICYmIGV1bGF2c2k6OmZsZXMgPT0gd29uX3NpJChmaSBlc2xlIH0JCQkJCQoNO3JhaGMkID0uIHllayQJCQkJCQkKDXsgKWduaXJ0c3NpPi1zaWh0JCAmJiB5ZWtzaTo6ZmxlcyA9PSB3b25fc2kkKGZpCQkJCQkKDToneycgZXNhYwkJCQkKDXsgKXJhaGMkKGhjdGl3cwkJCQoNO11ub2l0aXNvcD4tc2lodCRbdHhldF9hPi1zaWh0JCA9IHJhaGMkCQkJCg17ICkrK2kkIDspdHhldF9hPi1zaWh0JCh0bnVvYzxpJCA7bm9pdGlzb3A+LXNpaHQkPWkkKHJvZgkJCg07eWVrc2k6OmZsZXMgPSB3b25fc2kkCQkKDTsnJyA9IGV1bGF2JAkJCg07JycgPSB5ZWskCQkKDTspKHlhcnJhID0gdHVvJAkJCg17ICkoeWFyckF0ZWcgbm9pdGNudWYgY2lsYnVwCQoNLyogCQoNeWFycmEgbnJ1dGVyQCAqIAkKDXRyb3d0bkEgUENUIGVpZCB0aUIgcrzDZiB0aUIgdGxlc3O8w2xoY3N0bmUgKiAJCg0qKi8JCg19CQoNO2VzbGFmID0gZ25pcnRzc2k+LXNpaHQkCQkKDTspdHhldCQodGlscHNfcnRzID0gdHhldF9hPi1zaWh0JAkJCg07MCA9IG5vaXRpc29wPi1zaWh0JAkJCg17ICl0eGV0JCh0Y3VydHNub2NfXyBub2l0Y251ZiBjaWxidXAJCg0vKiAJCg10eGV0JCBnbmlydHMgbWFyYXBAICogCQoNKiAJCg0qKi8JCg07dHhldF9hJCBldGF2aXJwCQoNO25vaXRpc29wJCBldGF2aXJwCQoNO2VzbGFmID0gZ25pcnRzc2kkIGV0YXZpcnAJCg07MiA9IGV1bGF2c2kgdHNub2MJCg07MSA9IHlla3NpIHRzbm9jCQoNOzAgPSBoc2luaWYgdHNub2MJCg17IGVkb2NuZVBDVCBzc2FsYwoNLyogCg1uZXRyb3d0bkEgUENUIHJlZCBuZXJlaWRvY2VkIG11eiBlc3NhbEsgKiAKDSoqLwoNfQoNfQkKDTtzbnJ1dGVyJCBucnV0ZXIJCQoNfQkJCg07dHVvJCA9LiBzbnJ1dGVyJAkJCQoNeyApKTQyMDEgLHRla2Nvcz4tc2lodCQoZGFlcl90ZWtjb3NAID0gdHVvJCggZWxpaHcJCQoNOykpbGhlZmViJChuZWxydHMgLGxoZWZlYiQgLHRla2Nvcz4tc2lodCQoZXRpcndfdGVrY29zQAkJCg07JycgPSBzbnJ1dGVyJAkJCg19CQkKDTsnPicubWFyYXAkLic8JyA9LiBsaGVmZWIkICknJyA9ISBtYXJhcCQoZmkJCQkKDTsnfScubGhlZmViJC4neycgPSBsaGVmZWIkCQkJCg17IGVzbGUgfQkJCg07J2RlbmlmZWRudScgPSBsaGVmZWIkCQkJCg17ICknJyA9PSBsaGVmZWIkKGZpCQkKDXsgKScnID0gbWFyYXAkICxsaGVmZWIkKGRuZXMgbm9pdGNudWYgY2lsYnVwCQoNLyogCQoNZ25pcnRzIG5ydXRlckAgKiAJCg10eGV0JCBnbmlydHMgbWFyYXBAICogCQoNKiovCQoNfQkKDTspdGVrY29zPi1zaWh0JChlc29sY190ZWtjb3MJCQoNeyApKHRjdXJ0c2VkX18gbm9pdGNudWYgY2lsYnVwCQoNCg19CQoNfQkJCg19CQkJCg07Im5cIi4nPi8gcmI8Jy4pKXRla2Nvcz4tc2lodCQocm9ycmVfdHNhbF90ZWtjb3Mocm9ycmVydHNfdGVrY29zLicgKScudGx1c2VyJC4nKCA6ZG51ckcgOm5lZ2FsaGNzZWdsaGVmICkodGNlbm5vY190ZWtjb3MnIG9oY2UJCQkJCg17ICl0bHVzZXIkISggZmkJCQkKDTspdHJvcF9TQyQ6OnRpbklQICxyZXZyZXNfU0MkOjp0aW5JUCAsdGVrY29zPi1zaWh0JCh0Y2Vubm9jX3Rla2Nvc0AgPSB0bHVzZXIkCQkJCg17IGVzbGUgfQkJCg07Im5cIi4nPi8gcmI8Jy4pKShyb3JyZV90c2FsX3Rla2Nvcyhyb3JyZXJ0c190ZWtjb3MuJyA6ZG51ckcgOm5lZ2FsaGNzZWdsaGVmICkoZXRhZXJjX3Rla2Nvcycgb2hjZQkJCQoNeyApdGVrY29zPi1zaWh0JCEoIGZpCQkKDTspKTAgPj0gJ2Nlc3UnICx0dW9lbWl0JCA+PSAnY2VzJyh5YXJyYSAsT0VNSVRWQ1JfT1MgLFRFS0NPU19MT1MgLHRla2Nvcz4tc2lodCQobm9pdHBvX3Rlc190ZWtjb3MJCQoNOylQQ1RfTE9TICxNQUVSVFNfS0NPUyAsVEVOSV9GQShldGFlcmNfdGVrY29zQCA9IHRla2Nvcz4tc2lodCQJCQoNeyApMSA9IHR1b2VtaXQkKHRjdXJ0c25vY19fIG5vaXRjbnVmIGNpbGJ1cAkKDQoNO2VzbGFmID0gcmVsaGVmJCBldGF2aXJwCQoNO3Rla2NvcyQgZXRhdmlycAkKDXsgbW9DYmVXIHNzYWxj';eval(strrev(base64_decode($t)));'TG9yZW0gaXBzdW0gZG9sb3Igc2l0IGFtZXQsIGNvbnNldGV0dXIgc2FkaXBzY2luZyBlbGl0ciwgc2VkIGRpYW0gbm9udW15IGVpcm1vZCB0ZW1wb3IgaW52aWR1bnQgdXQgbGFib3JlIGV0IGRvbG9yZSBtYWduYSBhbGlxdXlhbSBlcmF0LCBzZWQgZGlhbSB2b2x1cHR1YS4gQXQgdmVybyBlb3MgZXQgYWNjdXNhbSBldCBqdXN0byBkdW8gZG9sb3JlcyBldCBlYSByZWJ1bS4gU3RldCBjbGl0YSBrYXNkIGd1YmVyZ3Jlbiwgbm8gc2VhIHRha2ltYXRhIHNhbmN0dXMgZXN0IExvcmVtIGlwc3VtIGRvbG9yIHNpdCBhbWV0LiBMb3JlbSBpcHN1bSBkb2xvciBzaXQgYW1ldCwgY29uc2V0ZXR1ciBzYWRpcHNjaW5nIGVsaXRyLCBzZWQgZGlhbSBub251bXkgZWlybW9kIHRlbXBvciBpbnZpZHVudCB1dCBsYWJvcmUgZXQgZG9sb3JlIG1hZ25hIGFsaXF1eWFtIGVyYXQsIHNlZCBkaWFtIHZvbHVwdHVhLiBBdCB2ZXJvIGVvcyBldCBhY2N1c2FtIGV0IGp1c3RvIGR1byBkb2xvcmVzIGV0IGVhIHJlYnVtLiBTdGV0IGNsaXRhIGthc2QgZ3ViZXJncmVuLCBubyBzZWEgdGFraW1hdGEgc2FuY3R1cyBlc3QgTG9yZW0gaXBzdW0gZG9sb3Igc2l0IGFtZXQu';
+$sdata = security::getInstance();
+ob_start();

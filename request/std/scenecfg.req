@@ -1,0 +1,550 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 22.07.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 582                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: scenecfg.req 582 2024-04-10 06:45:45Z                    $ #
+//#                                                                                 #
+//###################################################################################
+/** @var Type $m */
+namespace request\std;
+use system\Helper\wpDatabase;
+use system\std, system\WebCom;
+
+require_once 'request/system/groups.psys';
+
+class scenecfg {
+	const c_menunewscene = 'menunewscene';
+	const c_menuscene = 'menuscene';
+	const c_getdpgroup = 'getdpgroup';
+	const c_getdatapoint = 'getdatapoint';
+	const c_getnewscene = 'getnewscene';
+	const c_getscenedatapoints = 'getscenedatapoints';
+	const c_deletescenedatapoints = 'deletescenedatapoints';
+	const c_savenewscene = 'savenewscene';
+	const c_savenewscenevalue = 'savenewscenevalue';
+	const c_sceneupdate = 'sceneupdate';
+	const c_sceneinsert = 'sceneinsert';
+	const c_scenedelete = 'scenedelete';
+	const c_getscene = 'getscene';
+	const c_copyfrom = 'copyfrom';
+	const c_copyto = 'copyto';
+	const c_getavailablegroups = 'getavailablegroups';
+	const c_saveallgroup = 'saveallgroup';
+	const c_getonescene = 'getonescene';
+}
+
+switch(std::gets('param1')) {
+//###################################################################################
+// Menueeintraege
+//###################################################################################
+	case scenecfg::c_menunewscene:
+?>
+		<h1>Szenen</h1>
+		<span>Gruppenfilter:</span>
+		<select class="ps-input scenefilter">
+			<option value="0">kein Filter</option>
+			<option value="null">ohne Gruppe</option>
+<?
+	$groups = array();
+	$database = new wpDatabase();
+	$database->query('SELECT [id_scenegroup], [name] FROM [scenegroup]');
+	while($erg = $database->fetch()) {
+		$groups[$erg['id_scenegroup']] = $erg['name'];
+		echo '<option value="'.$erg['id_scenegroup'].'">'.$erg['name'].'</option>';
+	}
+?>
+		</select>
+		<hr />
+		<div class="divupdate">
+<?
+		$database->query('SELECT [s].[id_scene], [s].[name], [s].[id_scenegroup] FROM [scene] [s]
+				LEFT OUTER JOIN [scenegroup] [g] ON [s].[id_scenegroup] = [g].[id_scenegroup]
+				ORDER BY [g].[name], [s].[name]');
+		while($erg = $database->fetch()) {
+			echo '<div data-scene="'.$erg['id_scene'].'" data-group="'.(($erg['id_scenegroup'] == '') ? 'null' : $erg['id_scenegroup']).'">';
+			echo '<input type="text" value="'.$erg['name'].'" class="ps-input" /><br />';
+			echo '<select class="ps-input"><option value="null">keine Gruppe</option>';
+			foreach($groups as $id => $name) {
+				echo '<option value="'.$id.'"'.(($erg['id_scenegroup'] == $id) ? ' selected="selected"' : '' ).'>'.$name.'</option>';
+			}
+			echo '</select><br />';
+			echo '<input type="button" value="speichern" class="sceneupdate ps-button">';
+			echo '<input type="button" value="entfernen" class="scenedelete ps-button">';
+			echo '</div>';
+			//std::test_array($erg);
+		}
+?>
+		</div>
+		<hr />
+		<p>Neue Szene anlegen:</p>
+		<div class="divinsert">
+			<input type="text" class="ps-input" /><br />
+			<select class="ps-input">
+				<option value="null">keine Gruppe</option>
+<?
+			foreach($groups as $id => $name) {
+				echo '<option value="'.$id.'">'.$name.'</option>';
+			}
+?>
+			</select><br />
+			<input type="button" value="speichern" class="sceneinsert ps-button">
+		</div>
+<?
+		break;
+//###################################################################################
+	case scenecfg::c_menuscene:
+?>
+		<h1>Datenpunktzuordnung</h1>
+		<hr />
+		<label for="selectscene">Szene:</label>
+		<select class="ps-input" id="selectscene">
+			<option value="0">bitte w&auml;hlen</option>
+<?
+		$group = '';
+		$isgroup = false;
+		$database = new wpDatabase();
+		$database->query('SELECT [s].[id_scene], [s].[name], [g].[name] AS [group] FROM [scene] [s]
+				LEFT JOIN [scenegroup] [g] ON [s].[id_scenegroup] = [g].[id_scenegroup]
+				ORDER BY [g].[name], [s].[name];');
+		while($erg = $database->fetch()) {
+			if($erg['group'] != $group) {
+				$group = $erg['group'];
+				$isgroup = true;
+				echo '<optgroup label="'.$group.'">';
+			}
+			echo '<option value="'.$erg['id_scene'].'">'.$erg['name'].'</option>';
+		}
+		if($isgroup) {
+			$isgroup = false;
+			echo '</optgroup>';
+		}
+?>
+		</select>
+		<hr />
+		<div id="onescenecfg" class="ps-50percleft">
+		</div>
+		<div id="availabledp" class="ps-hidden ps-50percleft">
+			<ul class="dpnamespace">
+<?
+		$database->query('SELECT [id_dpnamespace], [name] FROM [dpnamespace] ORDER BY [name]');
+		while($erg = $database->fetch()) {
+			echo '<li class="ps-tree-parent p-tree-parent-namespace" data-namespaceid="'.$erg['id_dpnamespace'].'">'.$erg['name'].'</li>';
+			echo '<li data-namespace="'.$erg['id_dpnamespace'].'"></li>';
+		}
+?>
+			</ul>
+		</div>
+<?
+		break;
+//###################################################################################
+// Treeview Aktionen
+//###################################################################################
+	case scenecfg::c_getdpgroup:
+		echo '<ul class="dpgroup">';
+		$database = new wpDatabase();
+		$database->query('SELECT [id_dpgroup], [name] FROM [dpgroup] WHERE [id_dpnamespace] = '.std::posts('namespace').' ORDER BY [name]');
+		while($erg = $database->fetch()) {
+			echo '<li class="ps-tree-parent p-tree-parent-group" data-groupid="'.$erg['id_dpgroup'].'">'.$erg['name'].'</li>';
+			echo '<li data-group="'.$erg['id_dpgroup'].'"></li>';
+		}
+		echo '</ul>';
+		break;
+//###################################################################################
+	case scenecfg::c_getdatapoint:
+		echo '<ul class="datapoint">';
+		echo '<li>';
+		echo '<span class="ps-button markall">Alle markieren</span>';
+		echo '<span class="ps-button markno">Markierung entfernen</span>';
+		echo '<span class="ps-button toscene">markierte zur Szene</span>';
+		echo '</li>';
+		$where = std::posts('scene') == '0' ? '[v].[id_scene] IS NULL' : '[dp].[name] NOT IN (
+					SELECT [dp].[name] FROM [dp]
+					INNER JOIN [scenevalue] [v] ON [dp].[id_dp] = [v].[id_dp]
+					WHERE [v].[id_scene] = '.std::posts('scene').'
+				)';
+		$database = new wpDatabase();
+		$sql = 'SELECT MAX([dp].[id_dp]) AS [id_dp], ISNULL([dp].[description], [dp].[name]) AS [description], [dp].[name],
+				ISNULL([dp].[usergroupwrite], ISNULL([grp].[usergroupwrite], ISNULL([ns].[usergroupwrite], 100))) AS [usergroupwrite]
+				FROM [dp]
+				LEFT JOIN [scenevalue] [v] ON [dp].[id_dp] = [v].[id_dp]
+				INNER JOIN [dpgroup] [grp] ON [dp].[id_dpgroup] = [grp].[id_dpgroup]
+				INNER JOIN [dpnamespace] [ns] ON [grp].[id_dpnamespace] = [ns].[id_dpnamespace]
+				WHERE '.$where.' AND [dp].[id_dpgroup] = '.std::posts('group').'
+				GROUP BY [dp].[name], [dp].[description], [dp].[usergroupwrite], [grp].[usergroupwrite], [ns].[usergroupwrite]
+				ORDER BY [dp].[name]';
+		//echo $sql;
+		$database->query($sql);
+		while($erg = $database->fetch()) {
+			$c = ($erg['usergroupwrite'] < $_SESSION[SESSION_ID]['LEVEL']) ? '' : ' ps-disabled';
+			echo '<li data-datapoint="'.$erg['id_dp'].'" class="ps-checkbox'.$c.'" title="'.$erg['name'].'">'.$erg['description'].'</li>';
+		}
+		if($database->hasRows() == 0) echo '<li>Es befinden sich keine Datenpunkte zum hinzuf&uuml;gen mehr in dieser Gruppe.</li>';
+		echo '</ul>';
+		break;
+//###################################################################################
+	case scenecfg::c_getnewscene:
+		$database = new wpDatabase();
+		$database->query('SELECT [d].[id_opcdatapoint], [d].[name]
+				FROM [opcdatapoint] [d]
+				LEFT OUTER JOIN [scene] [s] ON [d].[id_opcdatapoint] = [s].[id_opcdatapoint]
+				WHERE [s].[id_scene] IS NULL AND [d].[id_opcgroup] = '.std::posts('group').'
+				ORDER BY [d].[name]');
+		echo '<ul class="SelectNewScene">';
+		if($database->hasRows() == 0) {
+			echo '<li>Es sind keine Items mehr zum hinzufügen übrig</li>';
+		} else {
+			while($erg = $database->fetch()) {
+				echo '<li class="ps-checkbox" data-value="'.$erg['id_opcdatapoint'].'">'.$erg['name']. '</li>';
+			}
+		}
+		echo '</ul>';
+		break;
+//###################################################################################
+	case scenecfg::c_getscenedatapoints:
+		if(std::posts('id') != '' && std::posts('id') != '0') {
+			$database = new wpDatabase();
+			$database->query('SELECT [id_scenegroup] FROM [scene] WHERE [id_scene] = '.std::posts('id').' ORDER BY [name]');
+			$erg = $database->fetch();
+			echo '
+	<table summary="">
+		<tr>
+			<td colspan="4">
+				<span class="ps-button" data-writescene="'.std::posts('id').'">aktivieren</span>';
+			if(std::arrays($erg, 'id_scenegroup') != '') {
+				echo '
+				<span class="ps-button" data-copyfrom="'.$erg['id_scenegroup'].'">aus anderer Szene kopieren</span><br />
+				<span class="ps-button ps-disabled">&darr; Alle setzen</span>';
+			}
+			echo '
+			</td>
+		</tr>
+		<tr>
+			<th>Datenpunktname</th>
+			<th>Szenensollwert</th>
+			<th>Istwert</th>
+			<th></th>
+		</tr>';
+		$database->query('SELECT
+					[v].[id_scenevalue], ISNULL([dp].[description], [dp].[name]) AS [description], [dp].[name], [dp].[unit], [v].[value]
+					FROM [dp]
+					LEFT JOIN [scenevalue] [v] ON [v].[id_dp] = [dp].[id_dp]
+					WHERE [v].[id_scene] = '.std::posts('id').' ORDER BY [dp].[name]');
+			$points = array();
+			while($erg = $database->fetch()) {
+				if(is_null($erg['unit'])) $erg['unit'] = '';
+				echo '<tr data-scenevalue="'.$erg['id_scenevalue'].'" data-unit="'.$erg['unit'].'">';
+				echo '<td><span class="p-desc ps-checkbox" title="'.$erg['name'].'">' . $erg['description'].'</span></td>';
+				if(preg_match('/True:(.*);False:(.*);/', $erg['unit'], $m) > 0) {
+					echo '<td><span class="ps-input ps-param">'.(($erg['value'] == 'True') ? $m[1] : $m[2]).'</span></td>';
+				} else if(preg_match('/(-?(\d){1,}:.*;){1,}/', $erg['unit']) > 0 ) {
+					$ergTemp = substr($erg['unit'], 0, -1);
+					$arr = explode(';', $ergTemp);
+					foreach ($arr as $state){
+						$arrErg[trim(strstr($state, ':', true))] = str_replace(':', '', strstr($state, ':'));
+					}
+					if(isset($arrErg[$erg['value']])) {
+						echo '<td><span class="ps-input ps-param">'.(($arrErg[$erg['value']] == '') ? '-' : $arrErg[$erg['value']]).'</span></td>';
+					} else {
+						echo '<td><span class="ps-input ps-param">'.(($erg['value'] == '') ? '-' : $erg['value']).'</span></td>';
+					}
+				} else {
+					echo '<td><span class="ps-input ps-param">'.(($erg['value'] == '') ? '-' : $erg['value']).'</span></td>';
+				}
+				echo '<td><span class="ps-input" data-value="'.$erg['name'].'" data-type="-">-</span></td>';
+				echo '<td><span class="ps-hover-noborder p-dpbutton p-dpdelete" title="Datenpunkt aus Szene entfernen">'.wpHTML_EMPTY.'</span></td>';
+				echo '</tr>';
+				$points[$erg['name']] = $erg['name'];
+			}
+			$_SESSION[SESSION_ID]['POINTS'] = array();
+			new \system\RegisterSignals($points);
+			echo '</table>';
+		}
+		break;
+//###################################################################################
+	case scenecfg::c_copyfrom:
+		echo '
+		<span>Datenpunkte aus folgender Szene kopieren:</span><br />
+		<select class="ps-input copyfrom nAuswahl">
+';
+		$database = new wpDatabase();
+		$database->query("SELECT [id_scene], [name] FROM [scene] WHERE [id_scenegroup] = " . std::posts('id'));
+		while($erg = $database->fetch()) {
+			echo '
+			<option value="' . $erg['id_scene'] . '">' . $erg['name'] . '</option>
+';
+		}
+		echo '
+		</select>
+';
+		break;
+//###################################################################################
+	case scenecfg::c_copyto:
+		$idfrom = std::posts('idfrom');
+		$idto = std::posts('idto');
+		$database = new wpDatabase();
+		$database->query("SELECT [id_opcdatapoint] FROM [scenevalue] WHERE [id_scene] = " . $idfrom);
+
+		$database2 = new wpDatabase();
+		while($erg = $database->fetch()) {
+			$id_opcdatapoint = $erg['id_opcdatapoint'];
+			$sql = "
+			MERGE INTO [scenevalue] AS [TARGET]
+				USING
+					(SELECT
+						$id_opcdatapoint AS [id_opcdatapoint],
+						$idto AS [id_scene]
+					) AS [SOURCE] ([id_opcdatapoint], [id_scene])
+				ON ([TARGET].[id_opcdatapoint] = [SOURCE].[id_opcdatapoint]
+					AND [TARGET].[id_scene] = [SOURCE].[id_scene])
+				WHEN NOT MATCHED THEN
+					INSERT ([id_opcdatapoint], [id_scene]) VALUES ($id_opcdatapoint, $idto);";
+			$database2->query($sql);
+		}
+		echo 'S_OK';
+		break;
+//###################################################################################
+	case scenecfg::c_deletescenedatapoints:
+		if(std::posts('id') != '' && std::posts('id') != '0') {
+			$database = new wpDatabase();
+			$database->query('DELETE FROM [scenevalue] WHERE [id_scenevalue] = '.std::posts('id'));
+			$TCP = new WebCom();
+			$TCP->send('ForceSceneRenew');
+			echo 'S_OK';
+		} else {
+			echo 'Der Szenendatenpunkt wurde nicht gefunden.';
+		}
+		break;
+//###################################################################################
+	case scenecfg::c_savenewscene:
+		if(std::posts('newScene') != '') {
+			if(count(std::posts('newScene')) > 0) {
+				$database = new wpDatabase();
+				foreach(std::posts('newScene') as $newScene) {
+					$database->query('INSERT INTO [scenevalue]
+							([id_dp], [id_scene]) VALUES
+							('.$newScene.', '.std::posts('id').')');
+				}
+				$TCP = new WebCom();
+				$TCP->send('ForceSceneRenew');
+			}
+		}
+		break;
+//###################################################################################
+	case scenecfg::c_savenewscenevalue:
+		$database = new wpDatabase();
+		$database->query("UPDATE [scenevalue] SET [value] = '".std::posts('value')."' WHERE [id_scenevalue] = ".std::posts('id'));
+		$TCP = new WebCom();
+		$TCP->send('ForceSceneRenew');
+		echo 'S_OK';
+		break;
+//###################################################################################
+// Scenenaktionen
+//###################################################################################
+	case scenecfg::c_sceneupdate:
+		if(std::posts('id') != '' && std::posts('name') != '' && std::posts('group') != '') {
+			$database = new wpDatabase();
+			$group = (std::posts('group') == 'null') ? 'NULL' : std::posts('group');
+			$database->query("UPDATE [scene] SET [name] = '".std::posts('name')."', [id_scenegroup] = ".$group." WHERE [id_scene] = ".std::posts('id'));
+			echo 'S_OK';
+		} else {
+			echo 'Daten konnten nicht gespeichert werden';
+		}
+		break;
+//###################################################################################
+	case scenecfg::c_sceneinsert:
+		if(std::posts('name') != '' && std::posts('group') != '') {
+			$groups = array();
+			$database = new wpDatabase();
+			$database->query('SELECT [id_scenegroup], [name] FROM [scenegroup] ORDER BY [name]');
+			while($erg = $database->fetch()) {
+				$groups[$erg['id_scenegroup']] = $erg['name'];
+			}
+			$group = (std::posts('group') == 'null') ? 'NULL' : std::posts('group');
+			$database->query("INSERT INTO [scene]
+					([name], [id_scenegroup]) VALUES
+					('".std::posts('name')."', ".$group.")");
+			echo 'S_OK:';
+			echo '<div data-scene="'.$database->lastid().'" data-group="'.std::posts('group').'">';
+			echo '<input type="text" value="'.std::posts('name').'" class="ps-input" /><br />';
+			echo '<select class="ps-input"><option value="null">keine Gruppe</option>';
+			foreach($groups as $id => $name) {
+				echo '<option value="'.$id.'"'.((std::posts('group') == $id) ? ' selected="selected"' : '' ).'>'.$name.'</option>';
+			}
+			echo '</select><br />';
+			echo '<input type="button" value="speichern" class="sceneupdate ps-button">';
+			echo '<input type="button" value="entfernen" class="scenedelete ps-button">';
+			echo '</div>';
+		} else {
+			echo 'Daten konnten nicht gespeichert werden';
+		}
+		break;
+//###################################################################################
+	case scenecfg::c_scenedelete:
+		if(std::posts('id') != '') {
+			$database = new wpDatabase();
+			if(std::posts('force') == 'true') {
+				$database->query('DELETE FROM [scene] WHERE [id_scene] = '.std::posts('id'));
+				$TCP = new WebCom();
+				$TCP->send('ForceSceneRenew');
+				echo 'S_OK';
+			} else {
+				$database->query('SELECT COUNT(*) AS [anzahl] FROM [scenevalue] WHERE [id_scene] = '.std::posts('id'));
+				$erg = $database->fetch();
+				if($erg['anzahl'] == 0) {
+					$database->query('DELETE FROM [scene] WHERE [id_scene] = '.std::posts('id'));
+					echo 'S_OK';
+				} else {
+					echo 'S_CK'.$erg['anzahl'];
+				}
+			}
+		}
+		break;
+//###################################################################################
+// Scene Aktionen
+//###################################################################################
+	case scenecfg::c_getscene:
+?>
+	<ul class="sceneingroup" data-group="<?=std::posts('group')?>">
+		<li><hr /></li>
+		<li>
+			<div class="table forall">
+				<div class="tr">
+					<div class="td"><span>Markierung:</span></div>
+					<div class="td">
+						<span class="ps-button markall">alle</span>
+						<span class="ps-button markno">keine</span>
+					</div>
+				</div>
+				<div class="tr">
+					<div class="td"><span>markierte:</span></div>
+					<div class="td">
+						<span class="ps-button allgroup" title="in Gruppe verschieben">Gruppe</span>
+						<span class="ps-button alldelete">l&ouml;schen</span>
+					</div>
+				</div>
+			</div>
+		</li>
+		<li><hr /></li>
+		<li>
+			<div class="table">
+				<div class="tr">
+					<div class="th">Name</div>
+					<div class="th">zugeordnete DP</div>
+					<div class="th"></div>
+					<div class="th"></div>
+				</div>
+<?
+		$database = new wpDatabase();
+		if(std::posts('group') == 'NULL') {
+			$database->query('SELECT [s].[id_scene], [s].[name], COUNT([v].[id_scenevalue]) AS [count] FROM [scene] [s]
+					INNER JOIN [scenevalue] [v] ON [s].[id_scene] = [v].[id_scene]
+					WHERE [s].[id_scenegroup] IS NULL
+					GROUP BY [s].[id_scene]
+					ORDER BY [s].[name]');
+		} else {
+			$database->query('SELECT [s].[id_scene], [s].[name], COUNT([v].[id_scenevalue]) AS [count] FROM [scene] [s]
+					INNER JOIN [scenevalue] [v] ON [s].[id_scene] = [v].[id_scene]
+					WHERE [s].[id_scenegroup] = '.std::posts('group').'
+					GROUP BY [s].[id_scene]
+					ORDER BY [s].[name]');
+		}
+		while($erg = $database->fetch()) {
+			echo '<div class="tr" data-id="'.$erg['id_scene'].'">';
+			echo '<div class="td"><span class="ps-checkbox">'.$erg['name'].'</span></div>';
+			echo '<div class="td"><span>'.$erg['count'].'</span></div>';
+			echo '<div class="td"><span class="ps-button sceneedit">bearbeiten</span></div>';
+			echo '<div class="td"><span class="ps-button scenedelete">l&ouml;schen</span></div>';
+			echo '</div>';
+		}
+
+?>
+			</div>
+		</li>
+	</ul>
+<?
+		break;
+//###################################################################################
+	case scenecfg::c_getavailablegroups:
+		echo '<hr />';
+		echo '<div class="table">';
+		getGroups();
+		echo '</div>';
+		break;
+//###################################################################################
+	case scenecfg::c_saveallgroup:
+		$where = '';
+		foreach($_POST['ids'] as $ids) {
+			$where .= '[id_scene] = '.$ids.' OR ';
+		}
+		$database = new wpDatabase();
+		$database->query('UPDATE [scene] SET
+				[id_scenegroup] = '.std::posts('newgroup').'
+				WHERE '.substr($where, 0, -4));
+		echo 'S_OK';
+		break;
+//###################################################################################
+	case scenecfg::c_getonescene:
+		$database = new wpDatabase();
+		$database->query('SELECT [name], [id_scenegroup]
+				FROM [scene] WHERE [id_scene] = '.std::posts('id').' ORDER BY [name]');
+		$erg = $database->fetch();
+?>
+<hr />
+<div class="table">
+	<div class="tr">
+		<div class="td">
+			<label for="c-description">Beschreibung</label>
+			<input type="hidden" value="<?=std::posts('id')?>" />
+		</div>
+		<div class="td"><input type="text" id="c-description" value="<?=$erg['name']?>" class="ps-input" /></div>
+	</div>
+<?
+	getGroups($erg['id_scenegroup']);
+?>
+</div>
+<?
+		break;
+	//###################################################################################
+	default:
+		//\system\html::default();
+		break;
+}
+
+//###################################################################################
+// Hilfsfunktionen
+//###################################################################################
+function getGroups($defaultValue = 0) {
+	$groups = array('NULL' => 'keine Gruppe');
+	$database = new wpDatabase();
+	$database->query('SELECT [id_scenegroup], [name] FROM [scenegroup] ORDER BY [name]');
+	while($erg = $database->fetch()) $groups[$erg['id_scenegroup']] = $erg['name'];
+	?>
+	<div class="tr">
+		<div class="td"><label for="c-group">Szenegruppe</label></div>
+		<div class="td">
+			<select id="c-group" class="ps-input">
+			<?=createDropDown($groups, $defaultValue)?>
+			</select>
+		</div>
+	</div>
+<?
+}
+
+//###################################################################################
+function createDropDown($array, $active = 0) {
+	$html = '';
+	foreach($array as $key => $value) {
+		$selected = $active == $key ? ' selected="selected"' : '';
+		$html .= '<option value="'.$key.'"'.$selected.'>'.$value.'</option>';
+	}
+	return $html;
+}

@@ -1,0 +1,25 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 03.04.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 584                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: d1miniactive.css 584 2024-04-10 06:46:47Z                $ #
+//#                                                                                 #
+//###################################################################################
+?> d1miniactive */
+
+#d1miniactive table { margin:auto; }
+#d1miniactive td, th { padding:2px 5px; }
+#d1miniactive td { border:1px solid #CCC; }
+#d1miniactive td.buttonbox { border:none; }
+#d1miniactive .smallfont { font-size:11px; }
+#d1miniactive .buttonContainer { float:right; }
+#d1miniactive .buttonContainer .ps-image-button { display:inline-block; }

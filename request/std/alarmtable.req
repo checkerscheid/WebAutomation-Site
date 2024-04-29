@@ -1,0 +1,208 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: alarmtable.req 550 2023-12-25 03:02:54Z                  $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\std;
+use system\Helper\wpDatabase;
+use system\Helper\wpConvert;
+use system\std, system\WebCom;
+class alarmtable {
+	const c_optiontype = 'optiontype';
+	const c_optiongroup = 'optiongroup';
+	const c_optiongroup1 = 'optiongroup1';
+	const c_optiongroup2 = 'optiongroup2';
+	const c_optiongroup3 = 'optiongroup3';
+	const c_optiongroup4 = 'optiongroup4';
+	const c_optiongroup5 = 'optiongroup5';
+	const c_setsessionflt = 'setsessionflt';
+	const c_removeflt = 'removeflt';
+	const c_quitalarm = 'quitalarm';
+	const c_quitall = 'quitall';
+	const c_setwartung = 'setwartung';
+}
+
+switch(std::gets('param1')) {
+//###################################################################################
+	case alarmtable::c_optiontype:
+		echo '<ul>';
+		foreach($_POST['type'] as $thetype) {
+			$checked = ' checked';
+			if(std::posts('aktiv') != '') {
+				$checked = in_array($thetype, $_POST['aktiv']) ? ' checked' : '';
+			}
+			echo '<li class="ps-checkbox'.$checked.'">'.$thetype.'</li>';
+		}
+		echo '</ul>';
+		break;
+//###################################################################################
+	case alarmtable::c_optiongroup:
+		echo '<ul>';
+		foreach($_POST['group'] as $thegroup) {
+			$checked = ' checked';
+			if(std::posts('aktiv') != '') {
+				$checked = in_array($thegroup, $_POST['aktiv']) ? ' checked' : '';
+			}
+			echo '<li class="ps-checkbox'.$checked.'">'.$thegroup.'</li>';
+		}
+		echo '</ul>';
+		break;
+//###################################################################################
+	case alarmtable::c_optiongroup1:
+		echo '<ul>';
+		foreach($_POST['group1'] as $thegroup1) {
+			$checked = ' checked';
+			if(std::posts('aktiv') != '') {
+				$checked = in_array($thegroup1, $_POST['aktiv']) ? ' checked' : '';
+			}
+			$thegroup1 = $thegroup1 == '' ? 'leer' : $thegroup1;
+			echo '<li class="ps-checkbox'.$checked.'">'.$thegroup1.'</li>';
+		}
+		echo '</ul>';
+		break;
+//###################################################################################
+	case alarmtable::c_optiongroup2:
+		echo '<ul>';
+		foreach($_POST['group2'] as $thegroup2) {
+			$checked = ' checked';
+			if(std::posts('aktiv') != '') {
+				$checked = in_array($thegroup2, $_POST['aktiv']) ? ' checked' : '';
+			}
+			$thegroup2 = $thegroup2 == '' ? 'leer' : $thegroup2;
+			echo '<li class="ps-checkbox'.$checked.'">'.$thegroup2.'</li>';
+		}
+		echo '</ul>';
+		break;
+//###################################################################################
+	case alarmtable::c_optiongroup3:
+		echo '<ul>';
+		foreach($_POST['group3'] as $thegroup3) {
+			$checked = ' checked';
+			if(std::posts('aktiv') != '') {
+				$checked = in_array($thegroup3, $_POST['aktiv']) ? ' checked' : '';
+			}
+			$thegroup3 = $thegroup3 == '' ? 'leer' : $thegroup3;
+			echo '<li class="ps-checkbox'.$checked.'">'.$thegroup3.'</li>';
+		}
+		echo '</ul>';
+		break;
+//###################################################################################
+	case alarmtable::c_optiongroup4:
+		echo '<ul>';
+		foreach($_POST['group4'] as $thegroup4) {
+			$checked = ' checked';
+			if(std::posts('aktiv') != '') {
+				$checked = in_array($thegroup4, $_POST['aktiv']) ? ' checked' : '';
+			}
+			$thegroup4 = $thegroup4 == '' ? 'leer' : $thegroup4;
+			echo '<li class="ps-checkbox'.$checked.'">'.$thegroup4.'</li>';
+		}
+		echo '</ul>';
+		break;
+//###################################################################################
+	case alarmtable::c_optiongroup5:
+		echo '<ul>';
+		foreach($_POST['group5'] as $thegroup5) {
+			$checked = ' checked';
+			if(std::posts('aktiv') != '') {
+				$checked = in_array($thegroup5, $_POST['aktiv']) ? ' checked' : '';
+			}
+			$thegroup5 = $thegroup5 == '' ? 'leer' : $thegroup5;
+			echo '<li class="ps-checkbox'.$checked.'">'.$thegroup5.'</li>';
+		}
+		echo '</ul>';
+		break;
+//###################################################################################
+	case alarmtable::c_setsessionflt:
+		setSessionFlt(std::posts('type'), std::posts('group'), std::posts('group1'), std::posts('group2'),
+			std::posts('group3'), std::posts('group4'), std::posts('group5'));
+		break;
+//###################################################################################
+	case alarmtable::c_removeflt:
+		unset($_SESSION[SESSION_ID]['ALARMTABLE']);
+		break;
+//###################################################################################
+	case alarmtable::c_quitalarm:
+		$WebCom = new WebCom();
+		echo $WebCom->send('QuitAlarm', $_SESSION[SESSION_ID]['USER'].'%~%'.std::posts('id').'%~%'.std::posts('text'));
+		break;
+//###################################################################################
+	case alarmtable::c_quitall:
+		if(std::arrays($_POST, 'toquit') != '') {
+			$toquit = '';
+			foreach($_POST['toquit'] as $idtoquit) $toquit .= $idtoquit.'%~%';
+			$WebCom = new WebCom();
+			echo $WebCom->send('QuitAlarms', $_SESSION[SESSION_ID]['USER'].'%~%'.$toquit.std::posts('text'));
+		} else {
+			echo 'nichts zu quittieren';
+		}
+		break;
+//###################################################################################
+	case alarmtable::c_setwartung:
+		$WebCom = new WebCom();
+		$req = $WebCom->send('changeWartung');
+		if($req = 'S_OK') {
+			$newvalue = std::posts('value') == 'True' ? 'False' : 'True';
+			$database = new wpDatabase();
+			$database->query("INSERT INTO [useractivity]
+				([username], [datapoint], [oldvalue], [newvalue], [writetime]) VALUES
+				('".$_SESSION[SESSION_ID]['USER']."', 'FreakaZone Wartung', '".std::posts('value')."', '".$newvalue."', '".wpConvert::getDateTime()."')");
+		}
+		echo $req;
+		break;
+//###################################################################################
+	default:
+		\system\html::default();
+		break;
+}
+
+function setSessionFlt($type, $group, $group1, $group2, $group3, $group4, $group5) {
+	$_SESSION[SESSION_ID]['ALARMTABLE'] = array();
+	if(is_array($type) && $type[0] == '') {
+		unset($_SESSION[SESSION_ID]['ALARMTABLE']['FLTTYPE']);
+	} else {
+		$_SESSION[SESSION_ID]['ALARMTABLE']['FLTTYPE'] = $type;
+	}
+	if(is_array($group) && $group[0] == '') {
+		unset($_SESSION[SESSION_ID]['ALARMTABLE']['FLTGROUP']);
+	} else {
+		$_SESSION[SESSION_ID]['ALARMTABLE']['FLTGROUP'] = $group;
+	}
+	if(is_array($group1) && count($group1) == 0) {
+		unset($_SESSION[SESSION_ID]['ALARMTABLE']['FLTGROUP1']);
+	} else {
+		$_SESSION[SESSION_ID]['ALARMTABLE']['FLTGROUP1'] = $group1;
+	}
+	if(is_array($group2) && count($group2) == 0) {
+		unset($_SESSION[SESSION_ID]['ALARMTABLE']['FLTGROUP2']);
+	} else {
+		$_SESSION[SESSION_ID]['ALARMTABLE']['FLTGROUP2'] = $group2;
+	}
+	if(is_array($group3) && count($group3) == 0) {
+		unset($_SESSION[SESSION_ID]['ALARMTABLE']['FLTGROUP3']);
+	} else {
+		$_SESSION[SESSION_ID]['ALARMTABLE']['FLTGROUP3'] = $group3;
+	}
+	if(is_array($group4) && count($group4) == 0) {
+		unset($_SESSION[SESSION_ID]['ALARMTABLE']['FLTGROUP4']);
+	} else {
+		$_SESSION[SESSION_ID]['ALARMTABLE']['FLTGROUP4'] = $group4;
+	}
+	if(is_array($group5) && count($group5) == 0) {
+		unset($_SESSION[SESSION_ID]['ALARMTABLE']['FLTGROUP5']);
+	} else {
+		$_SESSION[SESSION_ID]['ALARMTABLE']['FLTGROUP5'] = $group5;
+	}
+}
+?>

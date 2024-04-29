@@ -1,0 +1,106 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 29.11.2023                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 572                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: uebersicht_parameter.req 572 2024-03-20 06:52:42Z        $ #
+//#                                                                                 #
+//###################################################################################
+namespace request;
+use system\std;
+class uebersicht_parameter {
+	const c_set_wz = 'set_wz';
+	const c_unset_wz = 'unset_wz';
+	const c_set_wb = 'set_wb';
+	const c_unset_wb = 'unset_wb';
+	const c_pia_wn = 'pia_wn';
+	const c_pia_we = 'pia_we';
+	const c_pia_wnwe = 'pia_wnwe';
+}
+// "0000ass-0123456-on","0030-0123456-off","0530-0123456-on","0000bsr-0123456-off"
+// "2200-45-on","0000bsr-0123456-off"
+// http://192.168.80.180/settings/relay/0/?index=0&schedule_rules=0000ass-0123456-on,0000bsr-0123456-off
+switch(std::gets('param1')) {
+	//###################################################################################
+	case uebersicht_parameter::c_set_wz:
+		header('Content-Type: application/json');
+		$http = '{"shelly_schedule":[';
+		// Fenster
+		$http .= file_get_contents('http://wpLicht:turner@192.168.80.178/settings/relay/0/?index=0&schedule=true&schedule_rules=0030bss-0123456-on,0030-0123456-off,0530-0123456-on,0030asr-0123456-off') . ',';
+		// Kamin
+		$http .= file_get_contents('http://wpLicht:turner@192.168.80.179/settings/relay/0/?index=0&schedule=true&schedule_rules=0030bss-0123456-on,0030-0123456-off,0530-0123456-on,0030asr-0123456-off');
+		echo $http . ']}';
+		break;
+	//###################################################################################
+	case uebersicht_parameter::c_unset_wz:
+		header('Content-Type: application/json');
+		$http = '{"shelly_schedule":[';
+		// Fenster
+		$http .= file_get_contents('http://wpLicht:turner@192.168.80.178/settings/relay/0/?index=0&schedule=false') . ',';
+		// Kamin
+		$http .= file_get_contents('http://wpLicht:turner@192.168.80.179/settings/relay/0/?index=0&schedule=false');
+		echo $http . ']}';
+		break;
+	//###################################################################################
+	case uebersicht_parameter::c_set_wb:
+		header('Content-Type: application/json');
+		$http = '{"shelly_schedule":[';
+		// Weihnachtsbaum
+		$http = file_get_contents('http://wpLicht:turner@192.168.80.185/settings/relay/0/?index=0&schedule=true&schedule_rules=0030bss-0123456-on,0030-0123456-off,0530-0123456-on,0030asr-0123456-off');
+		echo $http . ']}';
+		break;
+	//###################################################################################
+	case uebersicht_parameter::c_unset_wb:
+		header('Content-Type: application/json');
+		$http = '{"shelly_schedule":[';
+		// Weihnachtsbaum
+		$http .= file_get_contents('http://wpLicht:turner@192.168.80.185/settings/relay/0/?index=0&schedule=false');
+		echo $http . ']}';
+		break;
+	//###################################################################################
+	case uebersicht_parameter::c_pia_wn:
+		header('Content-Type: application/json');
+		$http = '{"shelly_schedule":[';
+		// Pia
+		$http .= file_get_contents('http://wpLicht:turner@192.168.80.180/settings/relay/0/?index=0&schedule=true&schedule_rules=
+			0030bss-0123456-on,
+			0030-0123456-off,
+			0530-0123456-on,
+			0030asr-0123456-off');
+		echo $http . ']}';
+		break;
+	//###################################################################################
+	case uebersicht_parameter::c_pia_we:
+		header('Content-Type: application/json');
+		$http = '{"shelly_schedule":[';
+		// Weihnachtsbaum
+		$http = file_get_contents('http://wpLicht:turner@192.168.80.180/settings/relay/0/?index=0&schedule=true&schedule_rules=
+			2200-45-on,
+			0030asr-0123456-off');
+		echo $http . ']}';
+		break;
+	//###################################################################################
+	case uebersicht_parameter::c_pia_wnwe:
+		header('Content-Type: application/json');
+		$http = '{"shelly_schedule":[';
+		// Weihnachtsbaum
+		$http = file_get_contents('http://wpLicht:turner@192.168.80.180/settings/relay/0/?index=0&schedule=true&schedule_rules=
+			0030bss-0123456-on,
+			0030asr-0123456-off');
+		echo $http . ']}';
+		break;
+	//###################################################################################
+	default:
+		\system\html::default();
+		break;
+};
+
+?>

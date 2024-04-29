@@ -1,0 +1,28 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 25.06.2020                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: paramexport.req 550 2023-12-25 03:02:54Z                 $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\std;
+echo 'id_opcdatapoint;name;opcname;pagename;value;
+';
+
+foreach($_POST['dataValues'] as $elem) {
+	echo $_SESSION[SESSION_ID]['POINTS'][$elem]->id . ';';
+	echo $_SESSION[SESSION_ID]['POINTS'][$elem]->name . ';';
+	echo $_SESSION[SESSION_ID]['POINTS'][$elem]->opcname . ';';
+	echo $_SESSION[SESSION_ID]['POINTS'][$elem]->pagename . ';';
+	echo $_SESSION[SESSION_ID]['POINTS'][$elem]->value . ';
+';
+}

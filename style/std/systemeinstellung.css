@@ -1,0 +1,26 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 01.11.2023                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 582                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: systemeinstellung.css 582 2024-04-10 06:45:45Z           $ #
+//#                                                                                 #
+//###################################################################################
+?> systemeinstellung */
+
+#systemeinstellung h1 { text-align:center; }
+#systemeinstellung table { margin:auto; }
+#systemeinstellung div { padding:10px; }
+#systemeinstellung .ps-input { display:inline-block; min-width:100px; text-align:center; }
+#systemeinstellung .ps-button { display:inline-block; min-width:150px; text-align:center; }
+#systemeinstellung .pa-EinAus { cursor:pointer; }
+#systemeinstellung [data-togglewrite] { cursor:pointer; }
+#systemeinstellung .ps-container { margin:10px; padding:10px; float:left; }

@@ -1,0 +1,19 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#                     (C) by WebProgrammierung - Scheid                           #
+//#                     =================================                           #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 15.06.2011                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 505                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: notfound.css 505 2021-05-07 21:55:45Z checker            $ #
+//#                                                                                 #
+//###################################################################################
+?> notfound */
+#notfound { height:425px; min-height:425px; padding:50px; background:transparent url(images/layout/notfound.png) center bottom no-repeat; }
+#notfound p { text-align:center; }

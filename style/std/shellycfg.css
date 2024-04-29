@@ -1,0 +1,71 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 16.12.2019                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 572                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: shellycfg.css 572 2024-03-20 06:52:42Z                   $ #
+//#                                                                                 #
+//###################################################################################
+?> shellycfg */
+
+#shellycfgcontainer h1 { text-align:center; }
+
+#submenu { height:20px; padding:0 0 5px 50px; }
+#submenu li { float:left; }
+#shellycfg { margin:10px 50px; }
+
+#shellycfg ul, #dialog ul { margin-left:30px; }
+#shellycfg div.td, #shellycfg div.th { padding:2px 5px; }
+#shellycfg td span, #shellycfg th span, #shellycfg div.td span, #shellycfg div.th span { white-space:nowrap; }
+#shellycfg .shellylist .ps-image-button { display:inline-block; }
+#shellycfg .shellylist .ps-info { float:none; }
+#shellycfg .shellylist .ps-checkbox { background-position:left 4px; }
+#shellycfg .shellylist td { padding:2px 5px; border:1px solid #CCC; margin:1px; }
+
+#shellycfg .shelly-flex { display:flex; justify-content:space-between; }
+#shellycfg .shelly-flex span { line-height:29px; }
+
+h2.editorder { cursor:pointer; }
+
+div.divupdate div, div.divinsert { border:1px solid #CCC; padding:3px 5px; margin:3px; display:inline-block; border-radius:6px; }
+div.forall span.ps-button { width:75px; text-align:center; }
+
+#shellycfg div.table.shellylist { border-spacing:5px; }
+#shellycfg div.table.shellylist span { line-height:27px; }
+#shellycfg div.table.shellylist div.th { padding:2px 5px; overflow:hidden; white-space:nowrap; }
+#shellycfg div.table.shellylist div.td { padding:2px 5px; overflow:hidden; white-space:nowrap; border:1px solid #CCC; text-align:center; vertical-align:middle; }
+#shellycfg div.table.shellylist div.td.tal { text-align:left; }
+#shellycfg div.table.shellylist div.td.maxw { max-width:150px; }
+#shellycfg div.table.shellylist .ps-image-button { float:right; }
+#dialog .datapointchooseable { display:block; padding:2px 5px; cursor:pointer; border:1px solid transparent; border-radius:2px; }
+#dialog .datapointchooseable:hover { border-color:#CCC; }
+
+.sh-infopopup * { line-height:24px; }
+.sh-infopopup .td { padding:1px 5px; }
+.sh-infopopup .sh-rssi { height:24px; padding-left:29px; white-space:nowrap; background:transparent url(images/visuelemente/empfang.png) left center no-repeat; }
+.sh-infopopup .sh-update { white-space:nowrap; }
+.sh-size { width:300px; height:20px; border:1px solid #ccc; }
+.sh-size div { height:20px; background:#888; color:#FFF; padding-left:10px; }
+
+.sh-infopopup .rssipp { background-position:-0px -0px; }
+.sh-infopopup .rssip { background-position:-0px -24px; }
+.sh-infopopup .rssi { background-position:-0px -48px; }
+.sh-infopopup .rssim { background-position:-0px -72px; }
+.sh-infopopup .rssimm { background-position:-0px -96px; }
+.sh-infopopup .rssibat { background-position:-0px -120px; }
+.sh-infopopup .rssioff { background-position:-0px -144px; }
+
+span.ps-tree-parent { display:inline-block; }
+#erg input.neg { border-color:#A91919; color:#A91919; }
+
+.ps-container { width:350px; }
+.shelly-manual .ps-button { width:130px;}
+.shelly-manual .ps-slider { margin:15px 10px; }

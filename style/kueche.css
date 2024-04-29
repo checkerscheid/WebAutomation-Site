@@ -1,0 +1,39 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 26.01.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 533                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: kueche.css 533 2022-10-08 13:30:30Z checker              $ #
+//#                                                                                 #
+//###################################################################################
+?> kueche */
+
+@media screen and (min-width:1024px) {
+	.page { background:transparent url(images/kueche.png) center top no-repeat; width:993px; height:409px; position:relative; margin:auto; }
+	.page * { position:absolute; }
+	.page .ps-zimmer-info { bottom:20px; left:20px; }
+	.page .ps-button { padding:8px 25px; }
+
+	#RT { top:90px; left:425px; background:transparent url(images/visuelemente/Fuehler.png) -200px 0px no-repeat; height:25px; width:25px; }
+	#RT span { left:20px; }
+	#RT span.sw { top:25px; }
+	#RT span.iw { top:0px; }
+
+	#VTContainer { top:324px; left:570px; }
+
+	.FK .ps-input { top:20px; }
+	#FK { top:277px; left:382px; }
+
+	#LI { top:1px; left:471px; }
+	#LI_LL { top:140px; left:547px; }
+}
+
+#FK { top:237px; left:362px; } /* new: checker 2021-12-03T08:02:14 */

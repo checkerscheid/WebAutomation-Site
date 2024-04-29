@@ -1,0 +1,315 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christopher Korn                                                 #
+//# Date         : 28.07.2015                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: schedulespecial.req 550 2023-12-25 03:02:54Z             $ #
+//#                                                                                 #
+//###################################################################################
+namespace popup\std;
+use system\Helper\wpDatabase;
+use system\std;
+switch(std::gets('param1')) {
+	case 'new':
+?>
+<div class="popup Zeitraum">
+	<table summary="">
+		<tr>
+			<td>
+				<span>Name:</span>
+			</td>
+			<td colspan="2">
+				<input id="name" class="ps-input"></input>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<hr />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<span>Startdatum:</span>
+			</td>
+			<td colspan="2">
+				<input id="startdatum" class="ps-input"></input>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<hr />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<span>Enddatum:</span>
+			</td>
+			<td colspan="2">
+				<input id="enddatum" class="ps-input"></input>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<hr />
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<span id="fehler" class="ps-bold"></span>
+			</td>
+		</tr>
+	</table>
+</div>
+<?
+		break;
+	case 'edit':
+		$database = new wpDatabase();
+		$database->query('SELECT [name],[datefrom],[dateto]
+				FROM [scheduleextra]
+				WHERE [id_scheduleextra] ='.std::posts('id'));
+		$erg = $database->fetch();
+		$start = $erg['datefrom'];
+		$end = $erg['dateto'];
+?>
+<div class="popup Zeitraum" data-start="<?=std::posts('id')?>" data-end="<?=std::posts('idend') ?>">
+	<table summary="">
+		<tr>
+			<td>
+				<span>Name:</span>
+			</td>
+			<td colspan="2">
+				<input id="name" class="ps-input" value="<?=$erg['name']?>"></input>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<hr />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<span>Startdatum:</span>
+			</td>
+			<td colspan="2">
+				<input id="startdatum" class="ps-input"value="<?=$start->format('d.m.Y')?>"></input>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<hr />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<span>Enddatum:</span>
+			</td>
+			<td colspan="2">
+				<input id="enddatum" class="ps-input" value="<?=$end->format('d.m.Y')?>"></input>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<hr />
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<span id="fehler" class="ps-bold"></span>
+			</td>
+		</tr>
+	</table>
+</div>
+<?
+		break;
+	case 'newTimes':
+
+?>
+		<div class="popup ">
+		<table summary="">
+		<tr>
+		<td colspan="2">
+		<hr />
+		</td>
+		</tr>
+		<tr>
+		<td>
+		<span>Startwert:</span>
+		</td>
+		<td>
+		<? if(std::posts('type') == 'VT_BOOL') { ?>
+						<select class="ps-input startvalue">
+							<option value="True" selected="selected">Betrieb</option>
+							<option value="False">Aus</option>
+						</select>
+		<? } else { ?>
+						<input type="text" class="ps-input startvalue" value="0" />
+		<? } ?>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<input type="text" class="ps-input starth" value="<?=getTime(std::posts('starth'))?>" />:<input type="text" class="ps-input startm" value="<?=getTime(std::posts('startm'))?>" />Uhr
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<hr />
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2"><span class="ps-checkbox nostopevent">Kein Ausschaltzeitpunkt</span></td>
+				</tr>
+				<tr>
+					<td>
+						<span>Endwert:</span>
+					</td>
+					<td>
+		<? if(std::posts('type') == 'VT_BOOL') { ?>
+						<select class="ps-input endvalue">
+							<option value="True">Betrieb</option>
+							<option value="False" selected="selected">Aus</option>
+						</select>
+		<? } else { ?>
+						<input type="text" class="ps-input endvalue" value="100" />
+		<? } ?>
+					</td>
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<input type="text" class="ps-input endh" value="<?=getTime(std::posts('endh'))?>" />:<input type="text" class="ps-input endm" value="<?=getTime(std::posts('endm'))?>" />Uhr
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<hr />
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<span id="fehler" class="ps-bold"></span>
+					</td>
+				</tr>
+			</table>
+				<hr />
+			<span class="ps-checkbox ps-checkbox-montag<?=((std::posts('startd') == '1') ? ' checked' : '')?>">Montag</span>
+			<span class="ps-checkbox ps-checkbox-dienstag<?=((std::posts('startd') == '2') ? ' checked' : '')?>">Dienstag</span>
+			<span class="ps-checkbox ps-checkbox-mittwoch<?=((std::posts('startd') == '3') ? ' checked' : '')?>">Mittwoch</span>
+			<span class="ps-checkbox ps-checkbox-donnerstag<?=((std::posts('startd') == '4') ? ' checked' : '')?>">Donnerstag</span>
+			<span class="ps-checkbox ps-checkbox-freitag<?=((std::posts('startd') == '5') ? ' checked' : '')?>">Freitag</span>
+			<br />
+			<span class="ps-checkbox ps-checkbox-samstag<?=((std::posts('startd') == '6') ? ' checked' : '')?>">Samstag</span>
+			<span class="ps-checkbox ps-checkbox-sonntag<?=((std::posts('startd') == '7') ? ' checked' : '')?>">Sonntag</span>
+			<hr />
+			<span class="ps-button ps-button-wochentag">Wochentag</span>
+			<span class="ps-button ps-button-wochenende">Wochenende</span>
+		</div><?
+		break;
+	case 'editTimes' :
+?>
+		<div class="popup" data-start="<?=std::posts('id')?>" data-end="<?=std::posts('idend')?>">
+		<table summary="">
+		<tr>
+		<td colspan="2">
+		<hr />
+		</td>
+		</tr>
+		<tr>
+		<td>
+		<span>Startwert:</span>
+		</td>
+		<td>
+		<? if(std::posts('type') == 'VT_BOOL') { ?>
+						<select class="ps-input startvalue">
+							<option value="True" selected="selected">Betrieb</option>
+							<option value="False">Aus</option>
+						</select>
+		<? } else { ?>
+						<input type="text" class="ps-input startvalue" value="<?echo std::posts('startval')?>" />
+		<? } ?>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<input type="text" class="ps-input starth" value="<?=getTime(std::posts('starth'))?>" />:<input type="text" class="ps-input startm" value="<?=getTime(std::posts('startm'))?>" />Uhr
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<hr />
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2"><span id="keinEndwert" class="ps-checkbox<?=((std::posts('idend') == '') ? ' checked' : '')?>">Kein Ausschaltzeitpunkt</span></td>
+				</tr>
+				<tr>
+					<td>
+						<span>Endwert:</span>
+					</td>
+					<td>
+		<? if(std::posts('type') == 'VT_BOOL') { ?>
+						<select class="ps-input endvalue">
+							<option value="True">Betrieb</option>
+							<option value="False" selected="selected">Aus</option>
+						</select>
+		<? } else { ?>
+						<input type="text" class="ps-input endvalue" value="<?if(std::posts('idend')== ''){echo '';}else{echo std::posts('endval');}?>" />
+		<? } ?>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<input type="text" class="ps-input endh" value="<?=getTime(std::posts('endh'))?>" />:<input type="text" class="ps-input endm" value="<?=getTime(std::posts('endm'))?>" />Uhr
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<hr />
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<span id="fehler" class="ps-bold"></span>
+					</td>
+				</tr>
+			</table>
+			<span class="ps-checkbox ps-disabled ps-checkbox-montag<?=((std::posts('startd') == '1') ? ' checked' : '')?>">Montag</span>
+			<span class="ps-checkbox ps-disabled ps-checkbox-dienstag<?=((std::posts('startd') == '2') ? ' checked' : '')?>">Dienstag</span>
+			<span class="ps-checkbox ps-disabled ps-checkbox-mittwoch<?=((std::posts('startd') == '3') ? ' checked' : '')?>">Mittwoch</span>
+			<span class="ps-checkbox ps-disabled ps-checkbox-donnerstag<?=((std::posts('startd') == '4') ? ' checked' : '')?>">Donnerstag</span>
+			<span class="ps-checkbox ps-disabled ps-checkbox-freitag<?=((std::posts('startd') == '5') ? ' checked' : '')?>">Freitag</span>
+			<br />
+			<span class="ps-checkbox ps-disabled ps-checkbox-samstag<?=((std::posts('startd') == '6') ? ' checked' : '')?>">Samstag</span>
+			<span class="ps-checkbox ps-disabled ps-checkbox-sonntag<?=((std::posts('startd') == '7') ? ' checked' : '')?>">Sonntag</span>
+			<!--hr />
+			<span class="ps-button ps-button-wochentag">Wochentag</span>
+			<span class="ps-button ps-button-wochenende">Wochenende</span-->
+		</div><?
+		break;
+}
+
+// function getWeekday($day) {
+// 	$html = '';
+// 	for($i = 1; $i < 8; $i++) {
+// 		$html .= '<option value="'.$i.'"'.(($i == $day)?' selected="selected"':'').'>'.PConvert::$weekdays[$i].'</option>';
+// 	}
+// 	return $html;
+// }
+function getTime($value) {
+	if(strlen($value) == 1) return '0'.$value;
+	else return $value;
+}
+function getValueDropDown($val) {
+	$html = '<option value="True"'.(($val == 'True') ? ' selected="selected"':'').'>Betrieb</option>';
+	$html .= '<option value="False"'.(($val == 'False') ? ' selected="selected"':'').'>Aus</option>';
+	return $html;
+}
+?>

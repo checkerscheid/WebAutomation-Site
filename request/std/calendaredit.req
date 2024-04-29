@@ -1,0 +1,90 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 15.05.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: calendaredit.req 550 2023-12-25 03:02:54Z                $ #
+//#                                                                                 #
+//###################################################################################
+/** @var Type $m */
+namespace request\std;
+use system\Helper\wpDatabase;
+use system\std;
+class calendaredit {
+	const c_popupwriteitem = 'popupwriteitem';
+}
+
+switch(std::gets('param1')) {
+	//###################################################################################
+	// Menueeintraege
+	//###################################################################################
+	case calendaredit::c_popupwriteitem:
+		$datatype = std::posts('type');
+		$unit = std::posts('unit');
+		?>
+		<h1>Zeitprogramm</h1>
+		<div class="table popup">
+			<div class="tr">
+				<div class="td">
+					<span class="description">neuer Wert:</span>
+				</div>
+				<div class="td">
+		<?
+			if($datatype == 'VT_BOOL') {
+				echo '<select id="calendarwriteitem" class="ps-input">' . getValueDropDown($unit) . '</select>';
+			} else if($datatype == 'scene') {
+				echo '<select id="calendarwriteitem" class="ps-input">';
+				$database = new wpDatabase();
+				$database->query("SELECT [id_scene], [name] FROM [scene] WHERE [id_scenegroup] = " . std::posts('idScene') . " ORDER BY [name]");
+				while($erg = $database->fetch()) {
+					echo '<option value="' . $erg['id_scene'] . '">' . $erg['name'] . '</option>';
+				}
+				echo '</select>';
+			} else if(preg_match_all('/(\d+):([^;]+);/', $unit, $m) > 0) {
+				echo '<select id="calendarwriteitem" class="ps-input">';
+				for($i = 0; $i < count($m[0]); $i++) {
+					echo '<option value="' . $m[1][$i] . '">' . $m[2][$i] . '</option>';
+				}
+				echo '</select>';
+			} else {
+				echo '<input id="calendarwriteitem" type="text" class="ps-input forosk" value="" />';
+			}
+		?>
+
+				</div>
+			</div>
+		</div>
+		<hr />
+		<div class="calendareditinfo">
+			<p>Information:</p>
+			<p>
+				Diese Bedienung setzt einmalig den Datenpunkt, wie ein Zeitprogramm Schaltpunkt.<br />
+				Es ist kein Handbetrieb oder außerkraft setzen des, oder der nächsten Zeitschaltpunkte.
+			</p>
+		</div>
+<?
+		break;
+	//###################################################################################
+	default:
+		\system\html::default();
+		break;
+}
+
+function getValueDropDown($unit) {
+	if( preg_match('/^True:(.*);False:(.*);$/', $unit, $m) > 0) {
+		$html = '<option value="True">'. $m[1].'</option>';
+		$html .='<option value="False">'. $m[2].'</option>';
+	} else {
+		$html = '<option value="True">Betrieb</option>';
+		$html .= '<option value="False">Aus</option>';
+	}
+	return $html;
+}

@@ -1,0 +1,46 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 15.05.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 505                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: calendartemplate.css 505 2021-05-07 21:55:45Z checker    $ #
+//#                                                                                 #
+//###################################################################################
+?> calendartemplate */
+
+#calendartemplatecontainer h1 { text-align:center; }
+
+#submenu { height:20px; padding:0 0 5px 50px; }
+#submenu li { float:left; }
+#calendartemplate { margin:10px 50px; }
+
+#calendartemplate ul { margin-left:30px; }
+
+#newtemplate, #edittemplatecalendar { width:50%; float:right; }
+#listtemplates { float:left; width:45%; }
+
+#calendartemplate li { height:30px; }
+#calendartemplate .p-ttext { display:block; line-height:27px; float:left; }
+#calendartemplate .p-tbutton { display:inline-block; width:27px; height:27px; padding:0 2px; margin:0 3px; cursor:pointer; float:right; }
+#calendartemplate .p-tedit { background:transparent url(images/layout/ic_menu_edit.png) center center no-repeat; }
+#calendartemplate .p-tdelete { background:transparent url(images/layout/ic_menu_delete.png) center center no-repeat; }
+#calendartemplate .p-trefresh { background:transparent url(images/layout/ic_menu_refresh.png) center center no-repeat; }
+
+#calendarnumpad { width:250px; }
+#calendarnumpad .ps-button { float:left; }
+div.popup div.table { float:left; margin:10px; }
+div.popup input.ps-input { display:inline-block; width:150px; text-align:center; }
+div.popup select.ps-input { display:inline-block; width:150px; }
+div.popup select.startd, div.popup select.endd { display:inline-block; width:75px; }
+div.popup input.starth, div.popup input.startm, div.popup input.endh, div.popup input.endm { display:inline-block; width:30px; }
+#calendarnumpad .ps-button { width:50px; height:25px; line-height:25px; text-align:center; font-size:14px; }
+#fullcalendar .fc-view-container .fc-content * { color:#FFF; }
+

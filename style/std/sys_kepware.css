@@ -1,0 +1,32 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 28.06.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 505                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: sys_kepware.css 505 2021-05-07 21:55:45Z checker         $ #
+//#                                                                                 #
+//###################################################################################
+?> wago */
+
+#kepware h1, #kepware h2, #kepware h3 { text-align:center; }
+#kepware h2.ps-nowrap { cursor:pointer; line-height:26px; background:transparent url(images/layout/ic_menu_add.png) right center no-repeat; }
+#kepware h2.ps-nowrap.open { background:none; }
+#kepware { margin:0 25px 0 10px; }
+
+#kepware span { display:inline-block; width:100px; text-align:center; }
+#kepware .besch { width:200px; padding:5px 0; float:left; text-align:left; }
+#kepware .ps-input { width:150px; }
+#kepware .height0 { height:0px; overflow:hidden; }
+#kepware .write { cursor:pointer; }
+#kepware .neg { background-color:#A91919; color:#FFF; }
+#kepware .pos { background-color:#0F0; color:#000; }
+#kepware .serverinfo { position:fixed; top:85px; right:25px; color:#FFF; font-size:7pt; }
+

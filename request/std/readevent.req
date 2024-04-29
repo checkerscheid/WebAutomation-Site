@@ -1,0 +1,80 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 03.07.2017                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: readevent.req 550 2023-12-25 03:02:54Z                   $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\std;
+use system\std, system\WebCom, system\TCPencode;
+use DateTime;
+
+ini_set('max_execution_time', 240);
+
+class readevent {
+	const c_geteventtable = 'geteventtable';
+	const c_reloadsettings= 'reloadsettings';
+}
+
+switch(std::gets('param1')) {
+//###################################################################################
+	case readevent::c_geteventtable:
+		$WebCom = new WebCom(90);
+		$answer = new TCPencode($WebCom->send('ReadEvent'));
+		$TheArray = $answer->getArray();
+		//std::test_array($TheArray);
+?>
+<table id="readeventtable" class="stripe hover">
+	<thead>
+		<tr>
+			<th>Nummer</th>
+			<th>Typ</th>
+			<th>Zeit</th>
+			<th>Quelle</th>
+			<th>Message</th>
+		</tr>
+	</thead>
+	<tbody>
+<?
+	foreach(std::arrays($TheArray, 'data', array()) as $nr => $data) {
+		$dt = new DateTime(std::arrays($data, 'Time'));
+		echo '<tr class="ps-'.strtolower(std::arrays($data, 'EntryType')).'">';
+		echo '<td>'.std::arrays($data, 'InstanceId').'</td>';
+		echo '<td>'.std::arrays($data, 'EntryType').'</td>';
+		echo '<td>'.$dt->format('d.m.Y H:i:s').'</td>';
+		echo '<td data-cat="'.std::arrays($data, 'Category').'">'.std::arrays($data, 'Source').'</td>';
+		if(is_array(std::arrays($data, 'Message'))) {
+			echo '<td><pre>'.json_encode(std::arrays($data, 'Message')).'</pre></td>';
+		} else {
+			echo '<td><pre>'.std::arrays($data, 'Message').'</pre></td>';
+		}
+		echo '</tr>';
+		$nr;
+	}
+?>
+	</tbody>
+</table>
+<?
+		break;
+//###################################################################################
+	case readevent::c_reloadsettings:
+		$WebCom = new WebCom();
+		$answer = new TCPencode($WebCom->send('ReloadSettings'));
+		$TheArray = $answer->getArray();
+		echo std::arrays($TheArray, 'ERROR');
+		break;
+//###################################################################################
+	default:
+		\system\html::default();
+		break;
+}
+?>

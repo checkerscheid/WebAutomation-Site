@@ -1,0 +1,399 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 15.05.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 582                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: calendarcfg.req 582 2024-04-10 06:45:45Z                 $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\std;
+use system\Helper\wpDatabase;
+use system\std, system\WebCom;
+
+require_once 'request/system/groups.psys';
+require_once 'request/system/dps.psys';
+
+class calendarcfg {
+	const c_menueditelem = 'menueditelem';
+	const c_getcalendar = 'getcalendar';
+	const c_getavailablegroups = 'getavailablegroups';
+	const c_getaktiv = 'getaktiv';
+	const c_saveallgroup = 'saveallgroup';
+	const c_saveallaktiv = 'saveallaktiv';
+	const c_getonecalendar = 'getonecalendar';
+	const c_saveonecalendar = 'saveonecalendar';
+	const c_deleteonecalendar = 'deleteonecalendar';
+	const c_deleteall = 'deleteall';
+	const c_setactive = 'setactive';
+	const c_unsetactive = 'unsetactive';
+	const c_cleancalendar = 'cleancalendar';
+	const c_cleanmulticalendar = 'cleanmulticalendar';
+	const c_cleanallcalendar = 'cleanallcalendar';
+}
+
+switch(std::gets('param1')) {
+	//###################################################################################
+	// Menueeintraege
+	//###################################################################################
+	case calendarcfg::c_menueditelem:
+		$database = new wpDatabase();
+?>
+		<h1>Zeitprogramm</h1>
+		<hr />
+		<ul id="calendar">
+<?
+		$database->query('SELECT [id_calendargroup], [name] FROM [calendargroup] ORDER BY [name]');
+		while($erg = $database->fetch()) {
+			echo '<li class="ps-tree-parent calendargroupfolder" data-calendargroup="'.$erg['id_calendargroup'].'">'.$erg['name'].'</li>';
+			echo '<li data-calendars="'.$erg['id_calendargroup'].'"></li>';
+		}
+		echo '<li class="ps-tree-parent calendargroupfolder" data-calendargroup="NULL">Zeitprogramme ohne Gruppe</li>';
+		echo '<li data-calendars="NULL"></li>';
+?>
+		</ul>
+		<span class="ps-button allclean" title="bereinigen">Alle Kalender bereinigen</span>
+<?
+		break;
+//###################################################################################
+// 	case calendarcfg::c_getnewcalendar:
+// 		if(wpDatabase::checkID(std::posts('group'))) {
+// 			$database = new wpDatabase();
+// 			$database->query('SELECT [d].[id_opcdatapoint], [d].[name], [d].[description]
+// 					FROM [opcdatapoint] [d]
+// 					INNER JOIN [opcgroup] [grp] ON [d].[id_opcgroup] = [grp].[id_opcgroup]
+// 					INNER JOIN [opcserver] [srv] ON [grp].[id_opcserver] = [srv].[id_opcserver]
+// 					LEFT OUTER JOIN [calendar] [cal] ON [cal].[id_opcdatapoint] = [d].[id_opcdatapoint]
+// 					WHERE [d].[id_opcdatapoint] NOT IN (SELECT [id_opcdatapoint] FROM [calendar] WHERE [id_opcdatapoint] IS NOT NULL) AND [d].[id_opcgroup] = '.std::posts('group').' AND
+// 					ISNULL([d].[usergroupwrite], ISNULL([grp].[usergroupwrite], ISNULL([srv].[usergroupwrite], 100))) < '.$_SESSION[SESSION_ID]['LEVEL'].'
+// 					ORDER BY [d].[name]');
+// 			echo '<ul class="SelectNewCalendar">';
+// 			if($database->hasRows() == 0) {
+// 				echo '<li>Es sind keine Items mehr zum hinzufügen übrig</li>';
+// 			} else {
+// 				while($erg = $database->fetch()) {
+// 					echo '<li class="ps-checkbox" data-value="'.$erg['id_opcdatapoint'].'">'.($erg['description'] == '' ? $erg['name'] : $erg['description'] . ' ('.$erg['name'].')').'</li>';
+// 				}
+// 			}
+// 			echo '</ul>';
+// 		} else {
+// 			echo 'Keine gültige ID';
+// 		}
+// 		break;
+//###################################################################################
+// Calendar Aktionen
+//###################################################################################
+	case calendarcfg::c_getcalendar:
+		$database = new wpDatabase();
+?>
+	<ul class="calendaringroup" data-group="<?=std::posts('group')?>">
+		<li><hr /></li>
+		<li>
+			<div class="table forall">
+				<div class="tr">
+					<div class="td"><span>Markierung:</span></div>
+					<div class="td">
+						<span class="ps-button markall">alle</span>
+						<span class="ps-button markno">keine</span>
+					</div>
+				</div>
+				<div class="tr">
+					<div class="td"><span>markierte:</span></div>
+					<div class="td">
+						<span class="ps-button allgroup" title="in Gruppe verschieben">Gruppe</span>
+						<span class="ps-button allaktiv" title="aktivieren / deaktivieren">Aktiv</span>
+						<span class="ps-button multiclean" title="bereinigen">bereinigen</span>
+						<span class="ps-button alldelete">l&ouml;schen</span>
+					</div>
+				</div>
+			</div>
+		</li>
+		<li><hr /></li>
+		<li>
+			<div class="table">
+				<div class="tr">
+					<div class="th">Zeitprogrammname</div>
+					<div class="th">DP Name</div>
+					<div class="th">Aktiv</div>
+					<div class="th"></div>
+					<div class="th"></div>
+					<div class="th"></div>
+				</div>
+<?
+		if(std::posts('calendargroup') == 'NULL') {
+			$database->query('SELECT [c].[id_calendar], [c].[name], [c].[active], [dp].[id_dp], [dp].[name] AS [dpname]
+						FROM [calendar] [c]
+					LEFT OUTER JOIN [calendargroup] [g] ON [g].[id_calendargroup] = [c].[id_calendargroup]
+					INNER JOIN [dp] ON [dp].[id_dp] = [c].[id_dp]
+					WHERE [c].[id_calendargroup] IS NULL ORDER BY [c].[name]');
+		} else {
+			$database->query('SELECT [c].[id_calendar], [c].[name], [c].[active], [dp].[name] AS [dpname]
+						FROM [calendar] [c]
+					LEFT OUTER JOIN [calendargroup] [g] ON [g].[id_calendargroup] = [c].[id_calendargroup]
+					INNER JOIN [dp] ON [dp].[id_dp] = [c].[id_dp]
+					WHERE [c].[id_calendargroup] = ' . std::posts('calendargroup') . ' ORDER BY [c].[name]');
+		}
+		while($erg = $database->fetch()) {
+			echo '<div class="tr" data-id="'.$erg['id_calendar'].'">';
+			echo '<div class="td"><span class="ps-checkbox" title="id: '.$erg['id_calendar'].'">'.$erg['name'].'</span></div>';
+			echo '<div class="td"><span title="'.$erg['id_dp'].'">'.$erg['dpname'].'</span></div>';
+			echo '<div class="td"><span class="tr-calendaractive'.($erg['active'] == '0' ? '">Nein' : ' ps-green">Ja').'</div>';
+			echo '<div class="td"><span class="ps-button calendaredit">bearbeiten</span></div>';
+			echo '<div class="td"><span class="ps-button calendardelete">l&ouml;schen</span></div>';
+			echo '</div>';
+		}
+?>
+			</div>
+		</li>
+	</ul>
+<?
+		break;
+//###################################################################################
+	case calendarcfg::c_getavailablegroups:
+		echo '<hr />';
+		echo '<div class="table">';
+		getGroups();
+		echo '</div>';
+		break;
+//###################################################################################
+	case calendarcfg::c_getaktiv:
+?>
+		<hr />
+		<div class="table">
+			<div class="tr">
+				<div class="td"></div>
+				<div class="td"><span id="c-active" class="ps-checkbox">aktiv</span></div>
+			</div>
+		</div>
+<?
+		break;
+//###################################################################################
+	case calendarcfg::c_saveallgroup:
+		$database = new wpDatabase();
+		$where = '';
+		foreach($_POST['ids'] as $id) {
+			$where .= "[id_calendar] = '" . $id . "' OR ";
+		}
+
+		$database->query('UPDATE [calendar] SET
+				[id_calendargroup] = '.std::posts('newgroup').'
+				WHERE '.substr($where, 0, -4));
+		echo 'S_OK';
+		break;
+//###################################################################################
+	case calendarcfg::c_saveallaktiv:
+		$database = new wpDatabase();
+		$where = '';
+		foreach($_POST['ids'] as $ids) {
+			$where .= '[id_calendar] = '.$ids.' OR ';
+		}
+		$database->query("UPDATE [calendar] SET
+				[active] = ".(std::posts('newaktiv') == 'True' ? '1' : '0')."
+				WHERE ".substr($where, 0, -4));
+		$WebCom = new WebCom();
+		foreach($_POST['ids'] as $ids) {
+			$WebCom->send('CalendarRenew', $ids);
+		}
+		break;
+//###################################################################################
+	case calendarcfg::c_getonecalendar:
+		$database = new wpDatabase();
+		$database->query("SELECT [c].[id_calendargroup], [c].[name], [c].[active]
+				FROM [calendar] [c]
+				WHERE [c].[id_calendar] = '" . std::posts('id') . "'");
+		$erg = $database->fetch();
+?>
+<hr />
+<div class="table">
+	<div class="tr">
+		<div class="td">
+			<label for="c-description">Zeitprogrammname</label>
+			<input type="hidden" value="<?=std::posts('id')?>" />
+		</div>
+		<div class="td"><input type="text" id="c-description" value="<?=$erg['name']?>" class="ps-input" /></div>
+	</div>
+<?
+	getGroups($erg['id_calendargroup']);
+?>
+	<div class="tr">
+		<div class="td">
+		</div>
+		<div class="td">
+			<span id="c-active" class="ps-checkbox<?=($erg['active'] == '0' ? '' : ' checked')?>">Aktiv</span>
+		</div>
+	</div>
+</div>
+<?
+		break;
+//###################################################################################
+	case calendarcfg::c_saveonecalendar:
+		$database = new wpDatabase();
+		$database->query("UPDATE [calendar] SET
+			[id_calendargroup] = " . std::posts('group').",
+			[name] = '" . std::posts('description') . "',
+			[active] = '" . std::posts('active') . "'
+			WHERE [id_calendar] = '" . std::posts('id') . "'");
+
+		$TCP = new WebCom();
+		$TCP->send('CalendarRenew', std::posts('id'));
+		echo 'S_OK';
+		//std::test_array($encode->getArray());
+		break;
+//###################################################################################
+	case calendarcfg::c_deleteonecalendar:
+		$database = new wpDatabase();
+		$sql = "DELETE FROM [calendar]
+				WHERE [id_calendar] = " . std::posts('id');
+		$database->query($sql);
+
+		$WebCom = new WebCom();
+		echo $WebCom->send('CalendarRenew', std::posts('id'));
+		break;
+//###################################################################################
+	case calendarcfg::c_deleteall:
+		$database = new wpDatabase();
+		$sql = "DELETE FROM [calendar]
+				WHERE ";
+		$fortcp = '';
+		$where = "";
+		foreach($_POST['ids'] as $ids) {
+			$fortcp .= $ids.'%~%';
+			$where .= "[id_calendar] = " . $ids . " OR ";
+		}
+
+		$database->query($sql . substr($where,0,-4));
+
+		$WebCom = new WebCom();
+		echo $WebCom->send('CalendarRenew', substr($fortcp, 0, -3));
+		break;
+//###################################################################################
+	case calendarcfg::c_setactive:
+		$database = new wpDatabase();
+		$database->query("UPDATE [calendar] SET [active] = 1 WHERE [id_calendar] = ".std::posts('id'));
+		$TCP = new WebCom();
+		echo $TCP->send('CalendarRenew', std::posts('id'));
+		break;
+//###################################################################################
+	case calendarcfg::c_unsetactive:
+		$database = new wpDatabase();
+		$database->query("UPDATE [calendar] SET [active] = 0 WHERE [id_calendar] = ".std::posts('id'));
+		$TCP = new WebCom();
+		echo $TCP->send('CalendarRenew', std::posts('id'));
+		break;
+//###################################################################################
+	case calendarcfg::c_cleancalendar:
+		$database = new wpDatabase();
+		$sql = 'DELETE FROM [calendarevent] WHERE [id_calendarevent] IN (
+		SELECT [ce].[id_calendarevent] FROM [calendarevent] [ce]
+		INNER JOIN [calendarrrule] [cr] ON [ce].[id_calendarevent] = [cr].[id_calendarevent]
+		WHERE [cr].[until] < GETDATE() AND [ce].[id_calendar] = ' . std::posts('id') . ')';
+		//echo $sql;
+		$database->query($sql);
+		echo $database->hasRows() . ' Kalenderereignisse gelöscht, die beendet sind<br />';
+		$sql = 'DELETE FROM [calendarevent] WHERE [id_calendarevent] IN (
+		SELECT [ce].[id_calendarevent] FROM [calendarevent] [ce]
+		LEFT JOIN [calendarrrule] [cr] ON [ce].[id_calendarevent] = [cr].[id_calendarevent]
+		WHERE [cr].[id_calendarrrule] IS NULL AND [ce].[dtend] < GETDATE() AND [ce].[id_calendar] = ' . std::posts('id') . ')';
+		//echo $sql;
+		$database->query($sql);
+		echo $database->hasRows() . ' Einzeleignisse gelöscht, die beendet sind<br />';
+		$sql = 'DELETE FROM [calendarexdate] WHERE [id_calendarexdate] IN (
+		SELECT [cex].[id_calendarexdate] FROM [calendarexdate] [cex]
+		INNER JOIN [calendarrrule] [cr] ON [cr].[id_calendarrrule] = [cex].[id_calendarrrule]
+		INNER JOIN [calendarevent] [ce] ON [ce].[id_calendarevent] = [cr].[id_calendarevent]
+		WHERE [cex].[datetime] < GETDATE() AND [ce][id_calendar] = ' . std::posts('id') .')';
+		//echo $sql;
+		$database->query($sql);
+		echo $database->hasRows() . ' Ausnahmen gelöscht, die beendet sind<br />';
+		break;
+//###################################################################################
+	case calendarcfg::c_cleanmulticalendar:
+		$database = new wpDatabase();
+		$ids = implode(' OR [ce].[id_calendar] = ', std::posts('ids'));
+		$sql = 'DELETE FROM [calendarevent] WHERE [id_calendarevent] IN (
+		SELECT [ce].[id_calendarevent] FROM [calendarevent] [ce]
+		INNER JOIN [calendarrrule] [cr] ON [ce].[id_calendarevent] = [cr].[id_calendarevent]
+		WHERE [cr].[until] < GETDATE() AND ([ce].[id_calendar] = ' . $ids . '))';
+		//echo $sql;
+		$database->query($sql);
+		echo $database->hasRows() . ' Kalenderereignisse gelöscht, die beendet sind<br />';
+		$sql = 'DELETE FROM [calendarevent] WHERE [id_calendarevent] IN (
+		SELECT [ce].[id_calendarevent] FROM [calendarevent] [ce]
+		LEFT JOIN [calendarrrule] [cr] ON [ce].[id_calendarevent] = [cr].[id_calendarevent]
+		WHERE [cr].[id_calendarrrule] IS NULL AND [ce].[dtend] < GETDATE() AND ([ce].[id_calendar] = ' . $ids . '))';
+		//echo $sql;
+		$database->query($sql);
+		echo $database->hasRows() . ' Einzeleignisse gelöscht, die beendet sind<br />';
+		$sql = 'DELETE FROM [calendarexdate] WHERE [id_calendarexdate] IN (
+		SELECT [cex].[id_calendarexdate] FROM [calendarexdate] [cex]
+		INNER JOIN [calendarrrule] [cr] ON [cr].[id_calendarrrule] = [cex].[id_calendarrrule]
+		INNER JOIN [calendarevent] [ce] ON [ce].[id_calendarevent] = [cr].[id_calendarevent]
+		WHERE [cex].[datetime] < GETDATE() AND ([ce].[id_calendar] = ' . $ids . '))';
+		//echo $sql;
+		$database->query($sql);
+		echo $database->hasRows() . ' Ausnahmen gelöscht, die beendet sind<br />';
+		break;
+//###################################################################################
+	case calendarcfg::c_cleanallcalendar:
+		$database = new wpDatabase();
+		$sql = 'DELETE FROM [calendarevent] WHERE [id_calendarevent] IN (
+		SELECT [ce].[id_calendarevent] FROM [calendarevent] [ce]
+		INNER JOIN [calendarrrule] [cr] ON [ce].[id_calendarevent] = [cr].[id_calendarevent]
+		WHERE [cr].[until] < GETDATE())';
+		//echo $sql;
+		$database->query($sql);
+		echo $database->hasRows() . ' Kalenderereignisse gelöscht, die beendet sind<br />';
+		$sql = 'DELETE FROM [calendarevent] WHERE [id_calendarevent] IN (
+		SELECT [ce].[id_calendarevent] FROM [calendarevent] [ce]
+		LEFT JOIN [calendarrrule] [cr] ON [ce].[id_calendarevent] = [cr].[id_calendarevent]
+		WHERE [cr].[id_calendarrrule] IS NULL AND [ce].[dtend] < GETDATE())';
+		//echo $sql;
+		$database->query($sql);
+		echo $database->hasRows() . ' Einzeleignisse gelöscht, die beendet sind<br />';
+		$sql = 'DELETE FROM [calendarexdate] WHERE [datetime] < GETDATE()';
+		//echo $sql;
+		$database->query($sql);
+		echo $database->hasRows() . ' Ausnahmen gelöscht, die beendet sind<br />';
+		break;
+//###################################################################################
+	default:
+		//\system\html::default();
+		break;
+}
+
+//###################################################################################
+// Hilfsfunktionen
+//###################################################################################
+function getGroups($defaultValue = 0) {
+	$groups = array('NULL' => 'keine Gruppe');
+	$database = new wpDatabase();
+	$database->query('SELECT [id_calendargroup], [name] FROM [calendargroup] ORDER BY [name]');
+	while($erg = $database->fetch()) $groups[$erg['id_calendargroup']] = $erg['name'];
+	?>
+	<div class="tr">
+		<div class="td"><label for="c-group">Zeitprogrammgruppe</label></div>
+		<div class="td">
+			<select id="c-group" class="ps-input">
+			<?=createDropDown($groups, $defaultValue)?>
+			</select>
+		</div>
+	</div>
+<?
+}
+
+//###################################################################################
+function createDropDown($array, $active = 0) {
+	$html = '';
+	foreach($array as $key => $value) {
+		$selected = $active == $key ? ' selected="selected"' : '';
+		$html .= '<option value="'.$key.'"'.$selected.'>'.$value.'</option>';
+	}
+	return $html;
+}

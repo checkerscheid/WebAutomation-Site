@@ -1,0 +1,50 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 05.12.2018                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 582                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: wpItem.psys 582 2024-04-10 06:45:45Z                     $ #
+//#                                                                                 #
+//###################################################################################
+namespace system\Helper;
+/**
+ * @author C_Scheid
+ */
+class wpItem {
+	/**  */
+	public $id;
+	/**  */
+	public $pagename;
+	/**  */
+	public $name;
+	/**  */
+	public $opcname;
+	/**  */
+	public $opcgroup;
+	/**  */
+	public $unit;
+	/**  */
+	public $value;
+	/**  */
+	public $lastupdate;
+	/**
+	 * Konstruktor
+	 */
+	public function __construct($id, $pagename, $name, $opcname, $opcgroup, $unit) {
+		$this->id = $id;
+		$this->pagename = $pagename;
+		$this->name = $name;
+		$this->opcname = $opcname;
+		$this->opcgroup = $opcgroup;
+		$this->unit = $unit;
+	}
+}
+?>

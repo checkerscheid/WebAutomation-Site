@@ -1,0 +1,35 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 05.12.2018                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 562                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: wpDateTime.psys 562 2024-01-16 02:08:14Z                 $ #
+//#                                                                                 #
+//###################################################################################
+namespace system\Helper;
+/**
+ * @author C_Scheid
+ */
+class wpDateTime extends \DateTime {
+	const forDB = 'Y-m-d\TH:i:s';
+	public function diffSec(\DateTime $compare) {
+		$diff = $this->Diff($compare);
+		$diffSec = $diff->s;
+		$diffMin = 60 * $diff->i;
+		$diffHour = 60 * 60 * $diff->h;
+		$returns = $diffSec + $diffMin + $diffHour;
+		if($diff->invert == 1) {
+			$returns = -1 * $returns;
+		}
+		return $returns;
+	}
+}
+?>

@@ -1,0 +1,19 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#                     (C) by WebProgrammierung - Scheid                           #
+//#                     =================================                           #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 15.06.2011                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 505                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: notallowed.css 505 2021-05-07 21:55:45Z checker          $ #
+//#                                                                                 #
+//###################################################################################
+?> notallowed */
+#notallowed { height:300px; padding:50px; background:transparent url(images/layout/notallowed.png) center bottom no-repeat; }
+#notallowed p { text-align:center; }

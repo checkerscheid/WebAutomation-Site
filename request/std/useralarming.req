@@ -1,0 +1,226 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Matthias Kotulla                                                 #
+//# Date         : 30.03.2016                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 552                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: useralarming.req 552 2024-01-06 13:56:24Z                $ #
+//#                                                                                 #
+//###################################################################################
+/** @var Type $system */
+namespace request\std;
+use system\Helper\wpDatabase;
+use system\std;
+class useralarming {
+	const c_getalarms = 'getalarms';
+	const c_alarminginfo = 'alarminginfo';
+	const c_delete = 'delete';
+}
+
+switch(std::gets('param1')) {
+//###################################################################################
+	case useralarming::c_getalarms:
+		$database = new wpDatabase();
+
+		$database->query("SELECT [id_email] FROM [user] WHERE [login] ='".strtolower($_SESSION[SESSION_ID]['USER'])."'");
+		while($erg = $database->fetch()) { $contact = $erg['id_email']; }
+
+		echo '
+		<ul class="alarmsingroup" data-group="'.std::posts('group').'">
+			<li><hr /></li>
+
+			<li>
+				<div class="table">
+					<div class="tr">
+						<div class="th">Beschreibung</div>
+						<div class="th">Alarmtyp</div>
+						'.($system->useAlarmGroup5() ? '<div class="th">'.$system->nameAlarmGroup5().'</div>' : '').'
+						'.($system->useAlarmGroup4() ? '<div class="th">'.$system->nameAlarmGroup4().'</div>' : '').'
+						'.($system->useAlarmGroup3() ? '<div class="th">'.$system->nameAlarmGroup3().'</div>' : '').'
+						'.($system->useAlarmGroup2() ? '<div class="th">'.$system->nameAlarmGroup2().'</div>' : '').'
+						'.($system->useAlarmGroup1() ? '<div class="th">'.$system->nameAlarmGroup1().'</div>' : '').'
+						<div class="th" title="aus meiner Alarmierung entfernen">aus meiner Alarmierung entfernen</div>';
+		if($system->useAlarmingmodule()){
+			echo '<div class="th">Alarmierung</div>';
+		}
+		echo '
+					</div>';
+		//! TODO Alarm delay anzeigen
+		if($system->useAlarmingmodule()){
+			$database->query('SELECT DISTINCT
+					[d].[opcname], [d].[name], [t].[name] AS [type], [a].[id_alarm] AS [id], [a].[text],
+					[g1].[name] AS [groups1], [g2].[name] AS [groups2], [g3].[name] AS [groups3],
+					[g4].[name] AS [groups4], [g5].[name] AS [groups5]
+					FROM [email] [e]
+					INNER JOIN [escalationgroupmember] [egm] ON [egm].[id_email] = [e].[id_email]
+					INNER JOIN [escalationgroup] [eg] ON [eg].[id_escalationgroup] = [egm].[id_escalationgroup]
+					INNER JOIN [alarmtoescalation] [ae] ON [ae].[id_escalationgroup] = [eg].[id_escalationgroup]
+					INNER JOIN [alarm] [a] ON [a].[id_alarm] = [ae].[id_alarm]
+					INNER JOIN [opcdatapoint] [d] ON [d].[id_opcdatapoint] = [a].[id_opcdatapoint]
+					INNER JOIN [alarmtype] [t] ON [t].[id_alarmtype] = [a].[id_alarmtype]
+					LEFT OUTER JOIN [alarmgroups1] AS [g1] ON [g1].[id_alarmgroups1] = [a].[id_alarmgroups1]
+					LEFT OUTER JOIN [alarmgroups2] AS [g2] ON [g2].[id_alarmgroups2] = [a].[id_alarmgroups2]
+					LEFT OUTER JOIN [alarmgroups3] AS [g3] ON [g3].[id_alarmgroups3] = [a].[id_alarmgroups3]
+					LEFT OUTER JOIN [alarmgroups4] AS [g4] ON [g4].[id_alarmgroups4] = [a].[id_alarmgroups4]
+					LEFT OUTER JOIN [alarmgroups5] AS [g5] ON [g5].[id_alarmgroups5] = [a].[id_alarmgroups5]
+					WHERE [e].[id_email] = '.$contact.' AND [a].[id_alarmgroup] = '.std::posts('group').' ORDER BY [d].[opcname]');
+		} else {
+			$database->query('SELECT DISTINCT
+					[ae].[id_alarmtoemail] AS [id],
+					[d].[opcname], [d].[name], [t].[name] AS [type], [a].[id_alarm], [a].[text],
+					[g1].[name] AS [groups1], [g2].[name] AS [groups2], [g3].[name] AS [groups3],
+					[g4].[name] AS [groups4], [g5].[name] AS [groups5]
+					FROM [email] [e]
+					INNER JOIN [alarmtoemail] [ae] ON [ae].[id_email] = [e].[id_email]
+					INNER JOIN [alarm] [a] ON [a].[id_alarm] = [ae].[id_alarm]
+					INNER JOIN [opcdatapoint] [d] ON [d].[id_opcdatapoint] = [a].[id_opcdatapoint]
+					INNER JOIN [alarmtype] [t] ON [t].[id_alarmtype] = [a].[id_alarmtype]
+					LEFT OUTER JOIN [alarmgroups1] AS [g1] ON [g1].[id_alarmgroups1] = [a].[id_alarmgroups1]
+					LEFT OUTER JOIN [alarmgroups2] AS [g2] ON [g2].[id_alarmgroups2] = [a].[id_alarmgroups2]
+					LEFT OUTER JOIN [alarmgroups3] AS [g3] ON [g3].[id_alarmgroups3] = [a].[id_alarmgroups3]
+					LEFT OUTER JOIN [alarmgroups4] AS [g4] ON [g4].[id_alarmgroups4] = [a].[id_alarmgroups4]
+					LEFT OUTER JOIN [alarmgroups5] AS [g5] ON [g5].[id_alarmgroups5] = [a].[id_alarmgroups5]
+					WHERE [e].[id_email] = '.$contact.' AND [a].[id_alarmgroup] = '.std::posts('group').' ORDER BY [a].[text]');
+		}
+		while($erg = $database->fetch()) {
+			echo '<div class="tr" data-name="'.$erg['opcname'].'" data-id="'.$erg['id'].'">';
+			echo '<div class="td"><span title="'.$erg['opcname'].'">'.$erg['text'].'</span></div>';
+			//echo '<div class="td"><span>'.$erg['name'].'</span></div>';
+			echo '<div class="td"><span class="tr-alarmtyp">'.$erg['type'].'</span></div>';
+			if($system->useAlarmGroup5())
+				echo '<div class="td"><span class="tr-groups5">'.$erg['groups5'].'</div>';
+			if($system->useAlarmGroup4())
+				echo '<div class="td"><span class="tr-groups4">'.$erg['groups4'].'</div>';
+			if($system->useAlarmGroup3())
+				echo '<div class="td"><span class="tr-groups3">'.$erg['groups3'].'</div>';
+			if($system->useAlarmGroup2())
+				echo '<div class="td"><span class="tr-groups2">'.$erg['groups2'].'</div>';
+			if($system->useAlarmGroup1())
+				echo '<div class="td"><span class="tr-groups1">'.$erg['groups1'].'</div>';
+
+			if($system->useAlarmingmodule()){
+				echo '<div class="td">';
+				echo '<span class="ps-button info" title="Alarmierungsgründe anzeigen">Info</span>';
+				echo '</div>';
+			}
+			echo '<div class="td">';
+			echo '<span class="ps-button entfernen" title="aus meiner Alarmierung entfernen">entfernen</span>';
+			echo '</div>';
+			echo '</div>';
+		}
+		echo '</div></li></ul>';
+
+		break;
+//###################################################################################
+		case useralarming::c_alarminginfo:
+			$database = new wpDatabase();
+
+			$database->query("SELECT [id_email] FROM [user] WHERE [login] ='".$_SESSION[SESSION_ID]['USER']."'");
+			while($erg = $database->fetch()) { $contact = $erg['id_email']; }
+
+			$database->query('SELECT [eg].[name], [eg].[id_escalationgroup], [egm].[minutes]
+				FROM [email] [e]
+				INNER JOIN [escalationgroupmember] [egm] ON [egm].[id_email] = [e].[id_email]
+				INNER JOIN [escalationgroup] [eg] ON [eg].[id_escalationgroup] = [egm].[id_escalationgroup]
+				INNER JOIN [alarmtoescalation] [ae] ON [ae].[id_escalationgroup] = [eg].[id_escalationgroup]
+				WHERE [ae].[id_alarm] = '.std::posts('id').' AND [e].[id_email] = '.$contact.'
+				ORDER BY [eg].[name]');
+
+			$inplans = array();
+			$assignedgroups = array();
+			$delay = array();
+			while($erg = $database->fetch()) {
+				$assignedgroups[$erg['id_escalationgroup']] = $erg['name'];
+				$inplans[$erg['name']] = '';
+				$delay[$erg['id_escalationgroup']] = $erg['minutes'];
+			}
+			$assignedgroups = array_unique($assignedgroups);
+
+			foreach ($assignedgroups as $id => $group){
+
+				$database->query('SELECT [sp].[name]
+				FROM [standbyescalation] [se]
+				INNER JOIN [standbyplans] [sp] ON [sp].[id_standbyplan] = [se].[id_standbyplan]
+				WHERE [se].[id_escalationgroup] = '.$id.'
+				ORDER BY [sp].[name]');
+
+				$plans = array();
+				while($erg = $database->fetch()) {
+					array_push($plans, $erg['name']);
+				}
+				$plans = array_unique($plans);
+
+				foreach ($plans as $plan){
+					$inplans[$group] .= $plan.', ';
+				}
+			}
+
+			echo '
+				<div class="table emptable">
+					<div class="tr">
+						<div class="th">Alarmierung für:</div>
+						<div class="td">'.std::posts('name').'</div>
+					</div>
+					<div class="tr">
+						<div>
+							<br />
+						</div>
+					</div>
+				</div>
+				<div class="table emptable">
+					<div class="tr">';
+
+			echo '<div class="th">Gruppenzugehörigkeit</div>';
+			echo '<div class="th">Verzögerung</div>';
+			echo '<div class="th">In Bereitschaftsplan</div>';
+
+			echo '
+					</div>';
+
+			if(!empty($assignedgroups)){
+				foreach ($assignedgroups as $id => $group){
+					echo '
+					<div class="tr">';
+
+					echo '
+						<div class="td">'.$group.'</div>';
+
+					echo '
+						<div class="td">'.$delay[$id].' Min</div>';
+
+					if(substr($inplans[$group], 0, -2) != ''){
+						echo '
+						<div class="td">'.substr($inplans[$group], 0, -2).'</div>';
+					} else {
+						echo '
+						<div class="td">-</div>';
+					}
+					echo '
+					</div>';
+				}
+			} else {
+				echo '<div class="tr"><div class="td">-</div><div class="td">-</div></div>';
+			}
+
+			echo '
+				</div>';
+			break;
+			//###################################################################################
+		case useralarming::c_delete:
+			$database = new wpDatabase();
+			$database->query("DELETE FROM [alarmtoemail] WHERE [id_alarmtoemail] = " . std::posts('id'));
+			echo 'S_OK';
+			break;
+			//###################################################################################
+	default:
+		\system\html::default();
+		break;
+	}
+?>

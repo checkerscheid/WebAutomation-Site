@@ -1,0 +1,683 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 16.12.2019                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 572                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: shellycom.req 572 2024-03-20 06:52:42Z                   $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\std;
+require_once 'system/helper/shelly.psys';
+use system\helper\shelly as ShellyDevice;
+use system\helper\wpDatabase;
+use system\std;
+$default_socket_timeout = ini_get('default_socket_timeout');
+ini_set('default_socket_timeout', 1);
+
+class shellycom {
+	const c_get_shelly = 'get-shelly';
+	const c_get_status = 'get-status';
+	const c_get_settings = 'get-settings';
+	const c_get_settings_relay_0 = 'get-settings-relay-0';
+	const c_get_relay_0 = 'get-relay-0';
+	const c_get_light_0 = 'get-light-0';
+	const c_get_out = 'get-out';
+	const c_get_timerisset = 'get-timerisset';
+	const c_get_info = 'get-info';
+	const c_get_signal = 'get-signal';
+	const c_get_update_signal = 'get-update-signal';
+	const c_get_update_signal_2 = 'get-update-signal-2';
+	const c_get_onoff = 'get-onoff';
+	const c_get_temp = 'get-temp';
+	const c_get_feuchte = 'get-feuchte';
+	const c_get_lux = 'get-lux';
+	const c_get_bat = 'get-bat';
+
+	const c_set_settings = 'set-settings';
+	const c_set_settings_relay_0 = 'set-settings-relay-0';
+	const c_set_default = 'set-default';
+	const c_set_relay = 'set-relay';
+	const c_set_dimmer = 'set-dimmer';
+	const c_set_rgbw = 'set-rgbw';
+	const c_set_datapoint = 'set-datapoint';
+
+	const c_do_scan = 'do-scan';
+	const c_do_scan_row = 'do-scan-row';
+	const c_do_reboot = 'do-reboot';
+	const c_do_update = 'do-update';
+}
+
+// require:
+$ShellyIP = std::posts('ShellyIP');
+
+switch(std::gets('param1')) {
+	//###################################################################################
+	case shellycom::c_get_shelly:
+		header('Content-Type: application/json');
+		echo file_get_contents('http://' . $ShellyIP . '/shelly');
+		break;
+	//###################################################################################
+	case shellycom::c_get_status:
+		header('Content-Type: application/json');
+		echo file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/status');
+		break;
+	//###################################################################################
+	case shellycom::c_get_settings:
+		header('Content-Type: application/json');
+		echo file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/settings');
+		break;
+	//###################################################################################
+	case shellycom::c_get_settings_relay_0:
+		header('Content-Type: application/json');
+		echo file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/settings/relay/0');
+		break;
+	//###################################################################################
+	case shellycom::c_get_relay_0:
+		header('Content-Type: application/json');
+		echo file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/relay/0');
+		break;
+	//###################################################################################
+	case shellycom::c_get_light_0:
+		header('Content-Type: application/json');
+		echo file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/light/0');
+		break;
+	//###################################################################################
+	case shellycom::c_get_out:
+		header('Content-Type: application/json');
+		$http = '';
+		$shellyType = json_decode(file_get_contents('http://' . $ShellyIP . '/shelly'));
+		if(ShellyDevice::isLight($shellyType))
+			$http = file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/light/0');
+			if(ShellyDevice::isRelay($shellyType))
+			$http = file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/relay/0');
+		echo $http;
+		break;
+	//###################################################################################
+	case shellycom::c_get_timerisset:
+		header('Content-Type: application/json');
+		$shellyType = json_decode(file_get_contents('http://' . $ShellyIP . '/shelly'));
+		if(ShellyDevice::isGen1($shellyType)) {
+			$http = json_decode(file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/settings'));
+			if(ShellyDevice::isLight($shellyType))
+				echo json_encode($http->lights[0]);
+				if(ShellyDevice::isRelay($shellyType))
+				echo json_encode($http->relays[0]);
+		}
+		if(ShellyDevice::isGen2($shellyType)) {
+			$http = json_decode(file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/rpc/Switch.GetConfig?id=0'));
+			$http->auto_off = $http->auto_off ? $http->auto_off_delay : 0;
+			echo json_encode($http);
+		}
+		//return http;
+		break;
+	//###################################################################################
+	case shellycom::c_set_settings:
+		header('Content-Type: application/json');
+		echo file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/settings?' . std::posts('key') . '=' . urlencode(trim(std::posts('value'))));
+		break;
+	//###################################################################################
+	case shellycom::c_set_settings_relay_0:
+		header('Content-Type: application/json');
+		echo file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/settings/relay/0?' . std::posts('key') . '=' . urlencode(trim(std::posts('value'))));
+		break;
+	//###################################################################################
+	case shellycom::c_get_info:
+		$status = json_decode(file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/status'));
+		$settings = json_decode(file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/settings'));
+		$actions = json_decode(file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/settings/actions'));
+		//std::test_array($actions);
+		echo '
+			<div class="table sh-infopopup">
+				<div class="tr"><div class="td">WLAN:</div><div class="td sh-rssi ' . getRssi($status->wifi_sta->rssi) . '">' . $status->wifi_sta->rssi . ' dBm</div></div>
+				<div class="tr"><div class="td">Update:</div><div class="td' . ($status->has_update == 'true' ? ' ps-green' : '') . '">' . ($status->has_update == 'true' ? 'Update steht an' : 'kein Update vorhanden') . '</div></div>
+				<div class="tr">
+					<div class="td">RAM:</div>
+					<div class="td">
+						<div class="sh-size">
+							<div style="width:' . intval(($status->ram_total - $status->ram_free) / $status->ram_total * 100) . '%;">' . intval(($status->ram_total - $status->ram_free) / $status->ram_total * 100) . ' %</div>
+						</div>
+					</div>
+				</div>
+				<div class="tr">
+					<div class="td">Festplatte:</div>
+					<div class="td">
+						<div class="sh-size">
+							<div style="width:' . intval(($status->fs_size - $status->fs_free) / $status->fs_size * 100) . '%;">' . intval(($status->fs_size - $status->fs_free) / $status->fs_size * 100) . ' %</div>
+						</div>
+					</div>
+				</div>
+				<div class="tr"><div class="td">Name:</div><div class="td">' . $settings->name . '</div></div>
+				<div class="tr"><div class="td">Firmware:</div><div class="td">' . $settings->fw  . '</div></div>
+				<div class="tr"><div class="td">Hardware:</div><div class="td">' . $settings->hwinfo->hw_revision . '</div></div>';
+		if($settings->device->type == 'SHSW-1') {
+			echo '
+				<div class="tr"><div class="td">Ausgang Name:</div><div class="td">' . $settings->relays[0]->name . '</div></div>
+				<div class="tr">
+					<div class="td">status:</div>
+					<div class="td' . ($settings->relays[0]->ison == 'true' ? ' ps-green' : '') . '">' . ($settings->relays[0]->ison == 'true' ? 'eingeschaltet' : 'ausgeschaltet') . '</div>
+				</div>
+				<div class="tr">
+					<div class="td">Timer aktiv:</div>
+					<div class="td' . ($settings->relays[0]->has_timer == 'true' ? ' ps-green' : '') . '">' . ($settings->relays[0]->has_timer == 'true' ? 'Ja' : 'Nein') . '</div>
+				</div>
+				<div class="tr"><div class="td">wieder einschalten:</div><div class="td">' . $settings->relays[0]->auto_on . ' sek</div></div>
+				<div class="tr"><div class="td">wieder ausschalten:</div><div class="td">' . $settings->relays[0]->auto_off . ' sek</div></div>
+				<div class="tr"><div class="td">URL ON:</div><div class="td">' . $actions->actions->out_on_url[0]->urls[0] . '</div></div>
+				<div class="tr"><div class="td">URL OFF:</div><div class="td">' . $actions->actions->out_off_url[0]->urls[0] . '</div></div>';
+		}
+		if($settings->device->type == 'SHSW-PM') {
+			echo '
+				<div class="tr"><div class="td">Ausgang Name:</div><div class="td">' . $settings->relays[0]->name . '</div></div>';
+		}
+		if($settings->device->type == 'SHSW-PM' || $settings->device->type == 'SHPLG-S') {
+			echo '
+				<div class="tr">
+					<div class="td">status:</div>
+					<div class="td' . ($settings->relays[0]->ison == 'true' ? ' ps-green' : '') . '">' . ($settings->relays[0]->ison == 'true' ? 'eingeschaltet' : 'ausgeschaltet') . '</div>
+				</div>
+				<div class="tr"><div class="td">Leistung:</div><div class="td">' . $status->meters[0]->power . ' W</div></div>
+				<div class="tr"><div class="td">Arbeit:</div><div class="td">' . round($status->meters[0]->total / 60, 2) . ' Wh</div></div>
+				<div class="tr">
+					<div class="td">Timer aktiv:</div>
+					<div class="td' . ($settings->relays[0]->has_timer == 'true' ? ' ps-green' : '') . '">' . ($settings->relays[0]->has_timer == 'true' ? 'Ja' : 'Nein') . '</div>
+				</div>
+				<div class="tr"><div class="td">wieder einschalten:</div><div class="td">' . $settings->relays[0]->auto_on . ' sek</div></div>
+				<div class="tr"><div class="td">wieder ausschalten:</div><div class="td">' . $settings->relays[0]->auto_off . ' sek</div></div>
+				<div class="tr"><div class="td">URL ON:</div><div class="td">' . $actions->actions->out_on_url[0]->urls[0] . '</div></div>
+				<div class="tr"><div class="td">URL OFF:</div><div class="td">' . $actions->actions->out_off_url[0]->urls[0] . '</div></div>';
+		}
+		if($settings->device->type == 'SHDM-1' || $settings->device->type == 'SHDM-2') {
+			echo '
+				<div class="tr"><div class="td">Ausgang Name:</div><div class="td">' . $settings->lights[0]->name . '</div></div>
+				<div class="tr">
+					<div class="td">Status:</div>
+					<div class="td' . ($settings->lights[0]->ison == 'true' ? ' ps-green' : '') . '">' . ($settings->lights[0]->ison == 'true' ? 'eingeschaltet' : 'ausgeschaltet') . '</div>
+				</div>
+				<div class="tr">
+					<div class="td">Kalibriert:</div>
+					<div class="td' . ($settings->calibrated == 'true' ? ' ps-green' : ' ps-red') . '">' . ($settings->calibrated == 'true' ? 'kalibriert' : 'nicht kalibriert') . ' (' . getPulseMode($settings->pulse_mode) . ')</div>
+				</div>
+				<div class="tr"><div class="td">Dimmung:</div><div class="td">' . $status->lights[0]->brightness . ' %</div></div>
+				<div class="tr"><div class="td">Fade In / Out:</div><div class="td">' . $settings->transition . ' ms</div></div>
+				<div class="tr"><div class="td">ninimale Helligkeit:</div><div class="td">' . $settings->min_brightness . ' %</div></div>
+				<div class="tr"><div class="td">Tasterdimmung:</div><div class="td">' . $settings->fade_rate . ' x</div></div>
+				<div class="tr"><div class="td">Anti Flickering:</div><div class="td">' . $settings->zcross_debounce . ' ms</div></div>';
+			if($settings->night_mode->enabled == 'true') {
+				echo '
+					<div class="tr">
+						<div class="td">Nachtabsenkung:</div>
+						<div class="td">von ' . $settings->night_mode->start_time . ' bis ' . $settings->night_mode->end_time . ' ' . $settings->night_mode->brightness .' %</div>
+					</div>';
+			}
+			if($settings->warm_up->enabled == 'true') {
+				echo '
+					<div class="tr">
+						<div class="td">Anfahrtschaltung:</div>
+						<div class="td">' . $settings->warm_up->time . ' ms ' . $settings->warm_up->brightness . ' %</div>
+					</div>';
+			}
+			echo '
+				<div class="tr"><div class="td">Leistung:</div><div class="td">' . $status->meters[0]->power . ' W</div></div>
+				<div class="tr"><div class="td">Arbeit:</div><div class="td">' . round($status->meters[0]->total / 60, 2) . ' Wh</div></div>
+				<div class="tr"><div class="td">wieder einschalten:</div><div class="td">' . $settings->lights[0]->auto_on . ' sek</div></div>
+				<div class="tr"><div class="td">wieder ausschalten:</div><div class="td">' . $settings->lights[0]->auto_off . ' sek</div></div>
+				<div class="tr"><div class="td">URL ON:</div><div class="td">' . $actions->actions->out_on_url[0]->urls[0] . '</div></div>
+				<div class="tr"><div class="td">URL OFF:</div><div class="td">' . $actions->actions->out_off_url[0]->urls[0] . '</div></div>';
+		}
+		echo '
+			</div>';
+		//std::test_array($status);
+		//std::test_array($settings);
+		break;
+	//###################################################################################
+	case shellycom::c_get_signal:
+		$status = json_decode(file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/status'));
+		echo '<div class="tr"><div class="td">WLAN:</div><div class="td">' . $status->wifi_sta->rssi . '</div></div>';
+		break;
+		//###################################################################################
+	case shellycom::c_get_update_signal:
+		$rssi = 'Offline'; $updateC = ' ps-red'; $updateT = 'kein Update möglich'; $name = ''; $nameout = '';
+		$status = json_decode(@file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/status'));
+		if($status !== null) {
+			$rssi = $status->wifi_sta->rssi . ' dBm';
+			$updateC = $status->has_update == 'true' ? ' ps-green' : '';
+			$updateT = $status->has_update == 'true' ? 'Update steht an' : 'kein Update vorhanden';
+		}
+		$settings = json_decode(@file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/settings'));
+		if($settings !== null) {
+			$name = $settings->name;
+			$nameout = '';
+			if(ShellyDevice::isRelay($settings->device->type)) $nameout = ', Relay: ' . $settings->relays[0]->name;
+			if(ShellyDevice::isLight($settings->device->type)) $nameout = ', Light: ' . $settings->lights[0]->name;
+		}
+
+		echo 'function getSignal() { return ';
+		echo '\'<span class="sh-rssi ' . getRssi($rssi) . '">' . $rssi . '</span>\'; }';
+
+		echo 'function getUpdate() { return ';
+		echo '\'<span class="sh-update ' . $updateC . '">' . $updateT . '</span>\'; }';
+
+		echo 'function getNames() { return ';
+		echo '\'<span class="sh-names">Name: ' . $name.$nameout.'</span>\'; }';
+		break;
+		//###################################################################################
+	case shellycom::c_get_update_signal_2:
+		$status = json_decode(file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/rpc/WiFi.GetStatus'));
+		$rssi = $status->rssi;
+		$status = json_decode(file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/rpc/Sys.GetStatus'));
+		$update = isset($status->available_updates->stable) ? 'true' : 'false';
+		$settings = json_decode(file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/rpc/Sys.GetConfig'));
+		$name = $settings->device->name;
+		$switch = json_decode(file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/rpc/Switch.GetConfig?id=0'));
+		$nameout = ', Relay: ' . $switch->name;
+
+		echo 'function getSignal() { return ';
+		echo '\'<span class="sh-rssi ' . getRssi($rssi) . '">' . $rssi . ' dBm</span>\'; }';
+
+		echo 'function getUpdate() { return ';
+		echo '\'<span class="sh-update ' . ($update == 'true' ? ' ps-green' : '') . '">' . ($update == 'true' ? 'Update steht an' : 'kein Update vorhanden') . '</span>\'; }';
+
+		echo 'function getNames() { return ';
+		echo '\'<span class="sh-names">Name: ' . $name.$nameout.'</span>\'; }';
+		break;
+		//###################################################################################
+	case shellycom::c_get_onoff:
+		chooseDP('onoff');
+		break;
+		//###################################################################################
+	case shellycom::c_get_temp:
+		chooseDP('temp');
+		break;
+		//###################################################################################
+	case shellycom::c_get_feuchte:
+		chooseDP('feuchte');
+		break;
+		//###################################################################################
+	case shellycom::c_get_lux:
+		chooseDP('lux');
+		break;
+		//###################################################################################
+	case shellycom::c_get_bat:
+		chooseDP('bat');
+		break;
+	//###################################################################################
+	case shellycom::c_do_scan:
+		$html = '';
+		for($i = std::posts('ShellyIpFrom'); $i <= std::posts('ShellyIpTo'); $i++) {
+			$ip = std::posts('ShellyIpNet') . '.' . $i;
+			$html .= '
+				<div class="tr" data-ipseg="' . $i . '">
+					<div class="td ps-loading">-</div>
+					<div class="td">suche...</div>
+					<div class="td"></div>
+					<div class="td"><span class="sh-ip">' . $ip . '</span></div>
+					<div class="td"></div>
+					<div class="td"></div>
+					<div class="td"></div>
+					<div class="td"></div>
+				</div>';
+		}
+		echo $html;
+		break;
+	//###################################################################################
+	case shellycom::c_do_scan_row:
+		$ip = std::posts('ShellyIp');
+		$availableShelly = shellyHelper::getAvailableShelly();
+
+		$fc = @file_get_contents('http://' . $ip . '/shelly');
+		$existShelly = isset($availableShelly[$ip]);
+
+		$http = shellyHelper::getOneRow($fc, $ip, $existShelly, $availableShelly);
+
+		echo $http;
+		break;
+	//###################################################################################
+	case shellycom::c_do_reboot:
+		$http = file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/reboot');
+		echo std::test_array(json_decode($http));
+		break;
+		//###################################################################################
+	case shellycom::c_do_update:
+		$http = file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/ota?update=1');
+		echo json_decode($http);
+		break;
+		//###################################################################################
+	case shellycom::c_set_default:
+		shellyHelper::setDefault(std::posts('id'));
+		break;
+	//###################################################################################
+	case shellycom::c_set_relay:
+		$turn = strtolower(std::posts('turn'));
+		if($turn == 'true' || $turn = 'false') {
+			$http = file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/relay/0?turn=' . ($turn == 'true' ? 'on' : 'off'));
+			echo $http;
+		} else {
+			echo std::test_array($_POST, 'ERROR');
+		}
+		break;
+	//###################################################################################
+	case shellycom::c_set_dimmer:
+		$turn = strtolower(std::posts('turn'));
+		$turnstr = '';
+		if($turn == 'true' || $turn == 'false') {
+			$turnstr = 'turn=' . ($turn == 'true' ? 'on' : 'off');
+		}
+		$brightness = std::posts('brightness');
+		$brightnessstr = '';
+		if($brightness != '') {
+			$brightnessint = intval(std::posts('brightness'));
+			if($brightnessint < 0) $brightnessint = 0;
+			if($brightnessint > 100) $brightnessint = 100;
+			$brightnessstr = 'brightness=' . $brightnessint;
+		}
+		if($brightnessstr != '' || $turnstr != '') {
+			if($brightnessstr != '' && $turnstr != '') $urlext = $brightnessstr . '&' . $turnstr;
+			else $urlext = $brightnessstr . $turnstr;
+			$http = file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/light/0?' . $urlext);
+			echo $http;
+		} else {
+			echo std::test_array($_POST, 'ERROR');
+		}
+		break;
+		//###################################################################################
+	case shellycom::c_set_rgbw:
+		$turn = strtolower(std::posts('turn'));
+		$turnstr = '';
+		if($turn == 'true' || $turn == 'false') {
+			$turnstr = 'turn=' . ($turn == 'true' ? 'on' : 'off');
+		}
+		$gain = std::posts('gain');
+		$gainstr = '';
+		if($gain != '') {
+			$gainint = intval(std::posts('gain'));
+			if($gainint < 0) $gainint = 0;
+			if($gainint > 100) $gainint = 100;
+			$gainstr = 'gain=' . $gainint;
+		}
+		$red = std::posts('red');
+		$redstr = '';
+		if($red != '') {
+			$redint = intval(std::posts('red'));
+			if($redint < 0) $redint = 0;
+			if($redint > 255) $redint = 255;
+			$redstr = 'red=' . $redint;
+		}
+		$green = std::posts('green');
+		$greenstr = '';
+		if($green != '') {
+			$greenint = intval(std::posts('green'));
+			if($greenint < 0) $greenint = 0;
+			if($greenint > 255) $greenint = 255;
+			$greenstr = 'green=' . $greenint;
+		}
+		$blue = std::posts('blue');
+		$bluestr = '';
+		if($blue != '') {
+			$blueint = intval(std::posts('blue'));
+			if($blueint < 0) $blueint = 0;
+			if($blueint > 255) $blueint = 255;
+			$bluestr = 'blue=' . $blueint;
+		}
+		if($turnstr != '' || $gainstr != '' || $redstr != '' || $greenstr != '' || $bluestr != '') {
+			if($turnstr != '' && $gainstr != '') $urlext = $turnstr . '&' . $gainstr;
+			else $urlext = $turnstr . $gainstr;
+			if($urlext != '' && $redstr != '') $urlext = $urlext . '&' . $redstr;
+			else $urlext = $urlext . $redstr;
+			if($urlext != '' && $greenstr != '') $urlext = $urlext . '&' . $greenstr;
+			else $urlext = $urlext . $greenstr;
+			if($urlext != '' && $bluestr != '') $urlext = $urlext . '&' . $bluestr;
+			else $urlext = $urlext . $bluestr;
+
+			$http = file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/color/0?' . $urlext);
+			echo $http;
+		} else {
+			echo std::test_array($_POST, 'ERROR');
+		}
+		break;
+	//###################################################################################
+	case shellycom::c_set_datapoint:
+		$database = new wpDatabase();
+		$database->query('UPDATE [shelly] SET [id_'.std::posts('action').'] = '.std::posts('id').' WHERE [id_shelly] = '.std::posts('shelly'));
+		echo 'S_OK';
+		break;
+	//###################################################################################
+	default:
+		\system\html::default();
+		break;
+};
+ini_set('default_socket_timeout', $default_socket_timeout);
+
+class shellyHelper {
+	private $p_id;
+	private $p_type;
+	private $p_mac;
+	private $p_name;
+	private $p_bat;
+	private $p_un;
+	private $p_pw;
+	public function __construct($id, $type, $mac, $name, $un, $pw) {
+		$this->p_id = $id;
+		$this->p_type = $type;
+		$this->p_mac = $mac;
+		$this->p_name = $name;
+		$this->p_bat = $type == 'SHDW' || $type == 'SHHT-1';
+		$this->p_un = $un;
+		$this->p_pw = $pw;
+	}
+	public function getId() { return $this->p_id; }
+	public function getType() { return $this->p_type; }
+	public function getMac() { return $this->p_mac; }
+	public function getName() { return $this->p_name; }
+	public function getBat() { return $this->p_bat; }
+	private function getCreds() {
+		return ($this->p_un != '' && $this->p_pw != '') ? $this->p_un . ':' . $this->p_pw . '@' : '';
+	}
+
+	public static function getAvailableShelly() {
+		$availableShelly = array();
+		$database = new wpDatabase();
+		$database->query("SELECT [id_shelly], [ip], [type], [mac], [name], [un], [pw] FROM [shelly] ORDER BY [ip]");
+		while($erg = $database->fetch())
+			$availableShelly[$erg['ip']] = new shellyHelper($erg['id_shelly'], $erg['type'], $erg['mac'], $erg['name'], $erg['un'], $erg['pw']);
+		return $availableShelly;
+	}
+	public static function getOneRow($fc, $ip, $existShelly, $availableShelly) {
+		$http = '';
+		if($fc !== false) $jsondec = json_decode($fc);
+		if($fc !== false && json_last_error() == JSON_ERROR_NONE) {
+			if(isset($jsondec->gen) && ($jsondec->gen == 2 || $jsondec->gen == 3)) {
+				$shinfo = array(
+					'type'			=> $jsondec->app,
+					'mac'			=> strtolower($jsondec->mac),
+					'auth'			=> $jsondec->auth_en,
+					'fw'			=> $jsondec->fw_id,
+					'num_outputs'	=> $jsondec->ver
+				);
+			} else {
+				$shinfo = array(
+					'type'			=> $jsondec->type,
+					'mac'			=> strtolower($jsondec->mac),
+					'auth'			=> $jsondec->auth,
+					'fw'			=> $jsondec->fw,
+					'num_outputs'	=> $jsondec->num_outputs
+				);
+			}
+			if($existShelly) {
+				$MyShelly = $availableShelly[$ip];
+				$http .= '
+					<div class="tr" data-id="' . $MyShelly->getId() . '">
+						<div class="td"><span class="ps-green sh-name">' . $MyShelly->getName() . '</span></div>
+						<div class="td"><span class="ps-green">online' . ($MyShelly->getBat() ? ', Batterie betrieben' : '') . '</span></div>
+						<div class="td">
+							<span class="sh-type ' . ($MyShelly->getType() == $shinfo['type'] ? 'ps-green"' : 'ps-yellow') . '" title="' . $MyShelly->getType() . '">' . $shinfo['type'] . '</span>
+							' . ($MyShelly->getType() == $shinfo['type'] ? '' : '<span class="ps-image-button ps-refresh typeupdate" title="Type Update">&nbsp;</span>') . '
+						</div>
+						<div class="td"><span class="ps-green sh-ip"' . ($MyShelly->getBat() ? ' title="Batterie betrieben"' : '') . '><a href="http://' .$MyShelly->getCreds(). $ip . '" target="_blank">' . $ip . '</a></span></div>
+						<div class="td">
+							<span class="sh-mac ' . ($MyShelly->getMac() == $shinfo['mac'] ? 'ps-green"' : 'ps-yellow') . '" title="' . $MyShelly->getMac() . '">' . $shinfo['mac'] . '</span>
+							' . ($MyShelly->getMac() == $shinfo['mac'] ? '' : '<span class="ps-image-button ps-refresh macupdate" title="MAC Update">&nbsp;</span>') . '
+						</div>
+						<div class="td">
+							<span' . ($shinfo['auth'] == '1' ? ($MyShelly->getCreds() == '' ? ' class="ps-yellow"' : ' class="ps-green"') : '') . '>' . ($shinfo['auth'] == '1' ? 'PW' : '') . '</span>
+							' . ($MyShelly->getCreds() == '' && $shinfo['auth'] == '1' ? '<span class="ps-image-button ps-refresh credsupdate" title="UN / PW Update">&nbsp;</span>' : '') . '
+						</div>
+						<div class="td"><span>' . $shinfo['fw'] . '</span></div>
+						<div class="td"><span>' . $shinfo['num_outputs'] . '</span></div>
+					</div>';
+			} else {
+				$http .= '
+					<div class="tr">
+						<div class="td">
+							<span class="sh-name">-</span>
+							<span class="ps-image-button ps-refresh addShelly" title="Shelly einfügen">&nbsp;</span>
+						</div>
+						<div class="td"><span>Neu, online</span></div>
+						<div class="td"><span class="sh-type">' . $shinfo['type'] . '</span></div>
+						<div class="td"><span class="ps-yellow sh-ip"><a href="http://' . $ip . '" target="_blank">' . $ip . '</a></span></div>
+						<div class="td"><span class="sh-mac">' . $shinfo['mac'] . '</span></div>
+						<div class="td"><span' . ($shinfo['auth'] == '1' ? ' class="ps-green"' : '') . '>' . ($shinfo['auth'] == '1' ? 'PW' : '') . '</span></div>
+						<div class="td"><span>' . $shinfo['fw'] . '</span></div>
+						<div class="td"><span>' . $shinfo['num_outputs'] . '</span></div>
+					</div>';
+			}
+		} else {
+			if($existShelly) {
+				$MyShelly = $availableShelly[$ip];
+				$http .= '
+					<div class="tr" data-id="' . $MyShelly->getId() . '">
+						<div class="td">
+							<span>' . $MyShelly->getName() . '</span>
+							<span class="ps-image-button ps-delete removeShelly" title="Shelly löschen">&nbsp;</span>
+						</div>
+						<div class="td"><span class="ps-yellow">offline' . ($MyShelly->getBat() ? ', Batterie betrieben' : '') . '</span></div>
+						<div class="td"><span>' . $MyShelly->getType() . '</span></div>
+						<div class="td">
+							<span class="ps-red sh-ip"' . ($MyShelly->getBat() ? ' title="Batterie betrieben"' : '') . '>' . $ip . '</span>
+						</div>
+						<div class="td"><span>' . $MyShelly->getMAC() . '</span></div>
+						<div class="td"></div>
+						<div class="td"></div>
+						<div class="td"></div>
+					</div>';
+			} else {
+				$http .= '
+					<div class="tr" data-ip="' . $ip . '">
+						<div class="td">-</div>
+						<div class="td">kein Shelly</div>
+						<div class="td"></div>
+						<div class="td"><span class="sh-ip">' . $ip . '</span></div>
+						<div class="td"></div>
+						<div class="td"></div>
+						<div class="td"></div>
+						<div class="td"></div>
+					</div>';
+			}
+		}
+		return $http;
+	}
+	public static function setDefault($id = '') {
+		$database = new wpDatabase();
+		$dbwrite = new wpDatabase();
+		$sid = $id == '' ? "" : " AND [id_shelly] = '" . $id . "'";
+		$database->query("SELECT [id_shelly], [ip], [mac], [name], [type], [UN], [PW] FROM [shelly]
+			WHERE [active] = 1" . $sid . " AND (" . ShellyDevice::relaySqlWhere() . " OR " . ShellyDevice::lightSqlWhere() . ")");
+		$http = '{"SetDefault":';
+		$res = array();
+		while($erg = $database->fetch()) {
+			$resText = '{"name":"' . $erg['name'] . '","id":' . $erg['id_shelly'] . ',"ip":"' . $erg['ip'] . '","mac":"' . $erg['mac'] . '",';
+			$fc = file_get_contents('http://' . $erg['ip'] . '/shelly');
+			if($fc !== false) $jsondec = json_decode($fc);
+			if($fc !== false && json_last_error() == JSON_ERROR_NONE) {
+				if(!$jsondec->auth) {
+					$resText .= '"Set auth":' . file_get_contents('http://' . $erg['ip'] . '/settings/login?enabled=true&username=wpLicht&password=turner') . ',';
+					$dbwrite->query("UPDATE [shelly] SET [UN] = 'wpLicht', [PW] = 'turner' WHERE [id_shelly] = " . $erg['id_shelly']);
+				}
+			}
+			$resText .= '"Set Name":' . file_get_contents('http://wpLicht:turner@' . $erg['ip'] . '/settings?name=' . urlencode($erg['name'])) . ',';
+			if($erg['type'] == 'SHSW-PM') {
+				$resText .= '"Set relay Name":' . file_get_contents('http://wpLicht:turner@' . $erg['ip'] . '/settings/relay/0?name=' . urlencode($erg['name'])) . ',';
+			}
+			if($erg['type'] == 'SHDM-1' || $erg['type'] == 'SHDM-2') {
+				$resText .= '"Set light Name":' . file_get_contents('http://wpLicht:turner@' . $erg['ip'] . '/settings/light/0?name=' . urlencode($erg['name'])) . ',';
+			}
+
+			if($erg['type'] == 'SHDM-1' || $erg['type'] == 'SHDM-2') {
+				$resText .= '"Set Dimmer":';
+				$url = 'http://wpLicht:turner@' . $erg['ip'] . '/settings';
+				$url .= '?transition=1000';
+				$url .= '&min_brightness=15';
+				$url .= '&fade_rate=2';
+				$resText .= file_get_contents($url) . ',';
+			}
+
+			$resText .= '"Set Action off":';
+			$url = 'http://wpLicht:turner@' . $erg['ip'] . '/settings/actions/?index=0';
+			$url .= '&name=out_off_url&urls[]=http://light.freakazone.com:255/%3Fr=' . $erg['mac'] . '%26s=false';
+			$resText .= file_get_contents($url) . ',';
+			$resText .= '"Set Action on":';
+			$url = 'http://wpLicht:turner@' . $erg['ip'] . '/settings/actions/?index=0';
+			$url .= '&name=out_on_url&urls[]=http://light.freakazone.com:255/%3Fr=' . $erg['mac'] . '%26s=true';
+			$resText .= file_get_contents($url) . '}';
+			$res[] = $resText;
+		}
+		echo $http . implode(',', $res) . '}';
+	}
+}
+function getPulseMode($in) {
+	switch($in) {
+		case 0:
+			return 'nicht Kalibriert';
+			break;
+		case 1:
+			return 'Leading Edge';
+			break;
+		case 2:
+			return 'Trailing Edge';
+			break;
+		default:
+			return 'unknown ' . $in;
+			break;
+	}
+}
+function getRssi($in) {
+	$i = -1 * intval($in);
+	if($i == 0) return 'rssioff';
+	if($i <= 70) return 'rssipp';
+	if($i <= 75) return 'rssip';
+	if($i <= 80) return 'rssi';
+	if($i <= 90) return 'rssim';
+	if($i <= 100) return 'rssimm';
+	return 'rssibat';
+}
+function chooseDP($action) {
+	echo '<ul class="ps-tree-top" data-action="'.$action.'" data-shelly="'.std::posts('ShellyID').'">';
+	$dbs = new wpDatabase();
+	$dbs->query('SELECT [id_opcserver], [name] FROM [opcserver] ORDER BY [name]');
+	while($server = $dbs->fetch()) {
+		echo '<li data-server="'.$server['id_opcserver'].'"><span class="ps-tree-parent">'.$server['name'].'</span></li>';
+		echo '<li class="ps-hidden" data-groups="'.$server['id_opcserver'].'"><ul>';
+		$dbg = new wpDatabase();
+		$dbg->query('SELECT [id_opcgroup], [name] FROM [opcgroup] WHERE [id_opcserver] = '.$server['id_opcserver'].' ORDER BY [name]');
+		while($group = $dbg->fetch()) {
+			echo '<li data-group="'.$group['id_opcgroup'].'"><span class="ps-tree-parent">'.$group['name'].'</span></li>';
+			echo '<li class="ps-hidden" data-items="'.$group['id_opcgroup'].'"><ul>';
+			$dbd = new wpDatabase();
+			$dbd->query('SELECT [id_opcdatapoint], [name], [opcname] FROM [opcdatapoint] WHERE [id_opcgroup] = '.$group['id_opcgroup'].' ORDER BY [name]');
+			while($point = $dbd->fetch()) {
+				echo '<li><span title="'.$point['id_opcdatapoint'].' - '.$point['opcname'].'" class="datapointchooseable" data-id="'.$point['id_opcdatapoint'].'">'.$point['name'].'</span></li>';
+			}
+			echo '</ul></li>';
+		}
+		echo '</ul></li>';
+	}
+	echo '</ul>';
+}
+?>

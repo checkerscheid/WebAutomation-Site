@@ -1,0 +1,567 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 27.11.2017                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 570                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: calendar_rrule.req 570 2024-03-13 18:22:21Z              $ #
+//#                                                                                 #
+//###################################################################################
+/** @var Type $m */
+namespace popup\std;
+use system\Helper\wpDatabase;
+use system\std, DateTime;
+
+// std::test_array($_POST['rrule']);
+
+if(std::posts('rrule') != '') {
+	if(std::arrays($_POST['rrule'], 'freq') != '') {
+		$freq = std::arrays($_POST['rrule'], 'freq');
+		if($freq == 'daily') $freqtext = 'Tagen';
+		if($freq == 'weekly') $freqtext = 'Wochen';
+		if($freq == 'monthly') $freqtext = 'Monate';
+		if($freq == 'yearly') $freqtext = 'Jahre';
+	}
+	if(std::arrays($_POST['rrule'], 'intervall') != '') $intervall = std::arrays($_POST['rrule'], 'intervall');
+	if(std::arrays($_POST['rrule'], 'count') != '') {
+		$count = std::arrays($_POST['rrule'], 'count');
+		$until = ''; // important
+	} else if(std::arrays($_POST['rrule'], 'until') != '') {
+		$until = std::arrays($_POST['rrule'], 'until');
+		$count = '';
+	} else {
+		$until = '';
+		$count = '';
+	}
+	if(std::arrays($_POST['rrule'], 'byday') != '') $byday = std::arrays($_POST['rrule'], 'byday');
+} else {
+	// default werte
+	$freq = 'weekly';
+	$freqtext = 'Wochen';
+	$intervall = '1';
+	$until = '';
+	$count = '';
+	$byday = array();
+}
+
+$update = false;
+if (isset($_POST['update'])) {
+	if ($_POST['update'] == 'true') {
+		$update = true;
+	}
+}
+
+$start = $_POST['schedule']['start'];
+$clickedDay = new DateTime($start);
+$summary = '';
+
+$weekdays[1] = 'Montag';
+$weekdays[2] = 'Dienstag';
+$weekdays[3] = 'Mittwoch';
+$weekdays[4] = 'Donnerstag';
+$weekdays[5] = 'Freitag';
+$weekdays[6] = 'Samstag';
+$weekdays[7] = 'Sonntag';
+
+$calendarID = std::posts('idCalendar');
+
+$id = std::arrays($_POST, 'schedule') != '' && std::arrays($_POST['schedule'], 'id') != '' ? $_POST['schedule']['id'] : '';
+
+$startHours = std::arrays($_POST, 'schedule') != '' && std::arrays($_POST['schedule'], 'starth') != '' ? $_POST['schedule']['starth'] : '';
+$startMinutes = std::arrays($_POST, 'schedule') != '' && std::arrays($_POST['schedule'], 'startm') != '' ? $_POST['schedule']['startm'] : '';
+
+$endHours = std::arrays($_POST, 'schedule') != '' && std::arrays($_POST['schedule'], 'endh') != '' ? $_POST['schedule']['endh'] : '';
+$endMinutes = std::arrays($_POST, 'schedule') != '' && std::arrays($_POST['schedule'], 'endm') != '' ? $_POST['schedule']['endm'] : '';
+
+$database = new wpDatabase();
+
+$isScene = false;
+$sql = "SELECT [id_dp]
+		FROM [calendar]
+		WHERE [id_calendar] = " . $calendarID;
+$database->query($sql);
+while ($erg = $database->fetch()) {
+	if ($erg['id_dp'] == '') {
+		$isScene = true;
+	}
+}
+
+if ($isScene == false) {
+	$sql = "SELECT [dp].[unit]
+		FROM [calendar] [c]
+		INNER JOIN [dp] ON [c].[id_dp] = [dp].[id_dp]
+		WHERE [c].[id_calendar] = " . $calendarID;
+	$database->query($sql);
+	while ($erg = $database->fetch()) {
+		if(is_null($erg['unit'])) $erg['unit'] = '';
+		$unit = $erg['unit'];
+	}
+}
+
+$startVal = '';
+$endVal = '';
+if ($update == true) {
+	if ($isScene == false) {
+		$sql = ("SELECT
+				[ce].[id_calendarevent], [ce].[dtstart], [ce].[dtend], [ce].[summary], [ce].[vstart], [ce].[vend],
+				[cr].[id_calendarrrule], [cr].[freq], [cr].[intervall], [cr].[until], [cr].[count], [cr].[byday]
+				FROM [calendarevent] [ce]
+				LEFT OUTER JOIN [calendarrrule] [cr] ON [ce].[id_calendarevent] = [cr].[id_calendarevent]
+				WHERE [ce].[id_calendarevent] = '" . $id . "'");
+		$database->query($sql);
+
+		while ($erg = $database->fetch()) {
+			$summary = $erg['summary'];
+			$startTime = $erg['dtstart'];
+			// $endTime = $erg['dtend']; never used??
+			$freq = $erg['freq'];
+			$intervall = $erg['intervall'];
+			$until = $erg['until'];
+			$count = $erg['count'];
+			$startVal = $erg['vstart'];
+			$endVal = $erg['vend'];
+			$bydayString = $erg['byday'];
+		}
+	} else {
+		$sql = ("SELECT
+				[ce].[id_calendarevent], [ce].[dtstart], [ce].[dtend], [ce].[summary], [ce].[sstart], [ce].[send],
+				[cr].[id_calendarrrule], [cr].[freq], [cr].[intervall], [cr].[until], [cr].[count], [cr].[byday]
+				FROM [calendarevent] [ce]
+				LEFT OUTER JOIN [calendarrrule] [cr] ON [ce].[id_calendarevent] = [cr].[id_calendarevent]
+				WHERE [ce].[id_calendarevent] = '" . $id . "'");
+		$database->query($sql);
+
+		while ($erg = $database->fetch()) {
+			$summary = $erg['summary'];
+			$startTime = $erg['dtstart'];
+			//$endTime = $erg['dtend']; never used??
+			$freq = $erg['freq'];
+			$intervall = $erg['intervall'];
+			$until = $erg['until'];
+			$count = $erg['count'];
+			$startScene = $erg['sstart'];
+			$endScene = $erg['send'];
+			$bydayString =  $erg['byday'];
+		}
+	}
+	$bydayString = 'Wochentage: ' . $bydayString;
+
+	$bydayString = str_replace('MO', 'Mo', $bydayString);
+	$bydayString = str_replace('TU', 'Di', $bydayString);
+	$bydayString = str_replace('WE', 'Mi', $bydayString);
+	$bydayString = str_replace('TH', 'Do', $bydayString);
+	$bydayString = str_replace('FR', 'Fr', $bydayString);
+	$bydayString = str_replace('SA', 'Sa', $bydayString);
+	$bydayString = str_replace('SU', 'So', $bydayString);
+
+// 	echo 'Test: ' . strpos($bydayString, 'Mo');
+/*
+	if ($freq == 'daily') {
+		$freqString = 'täglich';
+	}
+	if ($freq == 'weekly') {
+		$freqString = 'wöchentlich';
+	}
+	if ($freq == 'monthly') {
+		$freqString = 'monatlich';
+	}
+	if ($freq == 'yearly') {
+		$freqString = 'jährlich';
+	}
+	if ($freq == '') {
+		$freqString = 'nie';
+	}
+*/
+	$endTimeString = '';
+	if ($until != '') {
+		$endTimeString = $until->format('d.m.Y');
+
+	}
+// 	else if ($count != '') {
+// 		$endTimeString = 'Nach ' . $count . ' Terminen';
+// 	} else {
+// 		$endTimeString = 'nie';
+// 	}
+}
+?>
+
+<div class="popup">
+	<h1><?=$weekdays[$clickedDay->format('N')] . ', ' . $clickedDay->format('d.m.Y');?></h1>
+<? if ($isScene == false) { ?>
+	<div class="table">
+		<div class="tr">
+			<div class="td">
+				<span>Ereignisname:</span>
+			</div>
+			<div class="td">
+				<input type="text" class="ps-input summary" value="<?=$summary?>" />
+			</div>
+		</div>
+		<div class="tr">
+			<div class="td">
+				<hr />
+			</div>
+		</div>
+		<div class="tr">
+			<div class="td">
+				<span>Einschaltwert:</span>
+			</div>
+			<div class="td">
+		<? /*
+		if($datatype == 'VT_BOOL') {
+				echo '
+						<select class="ps-input startvalue">
+							'.getValueDropDown($startVal, $unit).'
+						</select>';
+			} else if (preg_match('/((\d){1,}:(.*);){1,}/', $unit) > 0 ) {
+				$unit = substr($unit, 0, -1);
+				$arr = explode(';', $unit);
+				echo '<select class="ps-input startvalue">';
+				foreach ($arr as $state) {
+					if($startVal == trim(strstr($state, ':', true))){
+						echo '<option value="'.trim(strstr($state, ':', true)).'" selected="selected" >'.str_replace(':', '', strstr($state, ':')).'</option>';
+					} else {
+						echo '<option value="'.trim(strstr($state, ':', true)).'" >'.str_replace(':', '', strstr($state, ':')).'</option>';
+					}
+				}
+				echo '<option value="NULL"'.(($startVal == '') ? 'selected="selected"':'').'>Kein Wert</option>';
+				echo '</select>';
+			} else {
+				echo '	<input type="text" class="ps-input startvalue forosk" value="'. $startVal.'" />';
+			}
+		*/ ?>
+			</div>
+		</div>
+		<div class="tr">
+			<div class="td">
+				<span>Einschaltzeit:</span>
+			</div>
+			<div class="td">
+				<input type="text" class="ps-input starth forosk" value="<?=getTime($startHours)?>" />:<input type="text" class="ps-input startm forosk" value="<?=getTime($startMinutes)?>" />Uhr
+			</div>
+		</div>
+		<div class="tr">
+			<div class="td">
+				<hr />
+			</div>
+		</div>
+		<div class="tr">
+			<div class="td">
+				<span>Ausschaltwert:</span>
+			</div>
+			<div class="td">
+		<? /*
+		if($datatype == 'VT_BOOL') {
+				echo '
+					<select class="ps-input endvalue">
+						'.getValueDropDown($endVal, $unit).'
+					</select>';
+			} else if (preg_match('/((\d){1,}:(.*);){1,}/', $unit) > 0 ) {
+				echo '<select class="ps-input endvalue">';
+				foreach ($arr as $state) {
+					if ($endVal == trim(strstr($state, ':', true))){
+						echo '<option value="'.trim(strstr($state, ':', true)).'" selected="selected">'.str_replace(':', '', strstr($state, ':')).'</option>';
+					} else {
+						echo '<option value="'.trim(strstr($state, ':', true)).'" >'.str_replace(':', '', strstr($state, ':')).'</option>';
+					}
+				}
+				echo '<option value="NULL"'.(($startVal === NULL) ? 'selected="selected"':'').'>Kein Wert</option>';
+				echo '</select>';
+			} else { ?>
+				<input type="text" class="ps-input endvalue forosk" value="<?=$endVal?>" />
+		<?	}
+		*/ ?>
+			</div>
+		</div>
+		<div class="tr">
+			<div class="td">
+				<span>Ausschaltzeit:</span>
+			</div>
+			<div class="td">
+				<input type="text" class="ps-input endh forosk" value="<?=getTime($endHours)?>" />:<input type="text" class="ps-input endm forosk" value="<?=getTime($endMinutes)?>" />Uhr
+			</div>
+		</div>
+	</div>
+<? } else if ($isScene == true) {?>
+	<div class="table">
+		<div class="tr">
+			<div class="td">
+				<span>Ereignisname:</span>
+			</div>
+			<div class="td">
+				<input type="text" class="ps-input summary" value="<?=$summary?>" />
+			</div>
+		</div>
+		<div class="tr">
+			<div class="td">
+				<span>Einschaltszene:</span>
+			</div>
+			<div class="td">
+				<select class="ps-input startvalue">
+					<?=getSceneDropDown($startScene)?>
+				</select>
+			</div>
+		</div>
+		<div class="tr">
+			<div class="td">
+				<span>Einschaltzeit:</span>
+			</div>
+			<div class="td">
+				<input type="text" class="ps-input starth" value="<?=getTime($startHours)?>" />:<input type="text" class="ps-input startm" value="<?=getTime($startMinutes)?>" />Uhr
+			</div>
+		</div>
+		<div class="tr">
+			<div class="td">
+				<hr />
+			</div>
+		</div>
+<!-- 				<div class="tr"> -->
+<!-- 					<div class="td"> -->
+<!-- 						<span class="ps-checkbox nostopevent">keinen Endzeitpunkt verwenden</span> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+		<div class="tr">
+			<div class="td">
+				<span>Ausschaltszene:</span>
+			</div>
+			<div class="td">
+				<select class="ps-input endvalue">
+					<?=getSceneDropDown($endScene)?>
+				</select>
+			</div>
+		</div>
+		<div class="tr">
+			<div class="td">
+				<span>Ausschaltzeit:</span>
+			</div>
+			<div class="td">
+				<input type="text" class="ps-input endh" value="<?=getTime($endHours)?>" />:<input type="text" class="ps-input endm" value="<?=getTime($endMinutes)?>" />Uhr
+			</div>
+		</div>
+	</div>
+<? } ?>
+	<hr />
+	<div class="table">
+		<div class="tr tr-erinnerung-add">
+			<div class="td">
+				<span class="ps-button reminder-add">Erinnerung hinzufügen</span>
+			</div>
+		</div>
+	</div>
+	<hr />
+<? if ($update != true) { ?>
+	<div class="table">
+		<div class="tr ">
+			<span class="ps-checkbox checked repeatbox">ohne Wiederholung</span>
+		</div>
+	</div>
+	<div class="updatespecial ps-hidden">
+		<div class="table">
+			<div class="tr">
+				<div class="th">
+					<span>wird wiederholt:</span>
+				</div>
+				<div class="td ps-tal">
+					<select name="freq" class="freq ps-input">
+						<option value="daily"<?=($freq == 'daily' ? ' selected="selected"' : '')?>>täglich</option>
+						<option value="weekly"<?=($freq == 'weekly' ? ' selected="selected"' : '')?>>wöchentlich</option>
+						<option value="monthly"<?=($freq == 'monthly' ? ' selected="selected"' : '')?>>monatlich</option>
+						<option value="yearly"<?=($freq == 'yearly' ? ' selected="selected"' : '')?>>jährlich</option>
+					</select>
+				</div>
+			</div>
+			<div class="tr">
+				<div class="th">
+					<span>Wiederholen alle:</span>
+				</div>
+				<div class="td ps-tal">
+					<select name="intervall" class="ps-input intervall">
+						<? for($i=1;$i<=12;$i++) echo '<option value="' . $i . '"' . ($intervall == $i ? ' selected="selected"' : '') . '>' . $i . '</option>' ?>
+					</select>
+					<span class="textintervall"><?=$freqtext?></span>
+				</div>
+			</div>
+			<div class="tr weeklyspecial<?=($freq != 'weekly' ? ' ps-hidden' : '')?>">
+				<div class="th">
+					<span>Wiederholen am:</span>
+				</div>
+				<div class="td ps-tal byday">
+					<span class="ps-checkbox<?=(in_array('MO', $byday) ? ' checked' : '')?>" data-day="MO">Mo</span>
+					<span class="ps-checkbox<?=(in_array('TU', $byday) ? ' checked' : '')?>" data-day="TU">Di</span>
+					<span class="ps-checkbox<?=(in_array('WE', $byday) ? ' checked' : '')?>" data-day="WE">Mi</span>
+					<span class="ps-checkbox<?=(in_array('TH', $byday) ? ' checked' : '')?>" data-day="TH">Do</span>
+					<span class="ps-checkbox<?=(in_array('FR', $byday) ? ' checked' : '')?>" data-day="FR">Fr</span>
+					<span class="ps-checkbox<?=(in_array('SA', $byday) ? ' checked' : '')?>" data-day="SA">Sa</span>
+					<span class="ps-checkbox<?=(in_array('SU', $byday) ? ' checked' : '')?>" data-day="SU">So</span>
+				</div>
+			</div>
+			<div class="tr">
+				<div class="th">
+					<span>Endet:</span>
+				</div>
+				<div class="td ps-tal">
+					<span class="ps-checkbox p-checkboxgroup never<?=($until == '' && $count == '' ? ' checked' : '')?>" data-checkboxgroup="until">Nie</span><br />
+					<span class="ps-checkbox p-checkboxgroup count<?=($count != '' ? ' checked' : '')?>" data-checkboxgroup="until">Nach <input type="text" class="ps-input" value="<?=$count?>" /></span><span class="textintervall"><?=$freqtext?></span><br />
+					<span class="ps-checkbox p-checkboxgroup until<?=($until != '' ? ' checked' : '')?>" data-checkboxgroup="until">Am <input type="text" class="ps-input datepicker" value="<?=$until?>" /></span>
+				</div>
+			</div>
+		</div>
+	</div>
+<? } else { ?>
+	<div class="table">
+		<div class="tr">
+			<div class="th">
+				<span>Beginn:</span>
+			</div>
+			<div class="td">
+				<div class="td ps-tal">
+					<span><?=$startTime->format('d.m.Y')?></span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<hr />
+	<div class="table">
+		<div class="tr">
+			<div class="th">
+				<span>Änderungen übernehmen:</span>
+			</div>
+			<div class="td">
+				<div class="td ps-tal">
+					<select name="update" class="ps-input update">
+						<option value="day">für den <?=$clickedDay->format('d.m.Y');?></option>
+						<option value="from">ab dem <?=$clickedDay->format('d.m.Y');?></option>
+						<option value="weekday">für jeden <?=$weekdays[$clickedDay->format('N')];?></option>
+						<option value="all">für alle Termine</option>
+					</select>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="updatespecial ps-hidden">
+		<div class="table">
+			<div class="tr">
+				<div class="th">
+					<span>wird wiederholt:</span>
+				</div>
+				<div class="td ps-tal">
+					<select name="freq" class="freq ps-input">
+						<option value="daily"<?=($freq == 'daily' ? ' selected="selected"' : '')?>>täglich</option>
+						<option value="weekly"<?=($freq == 'weekly' ? ' selected="selected"' : '')?>>wöchentlich</option>
+						<option value="monthly"<?=($freq == 'monthly' ? ' selected="selected"' : '')?>>monatlich</option>
+						<option value="yearly"<?=($freq == 'yearly' ? ' selected="selected"' : '')?>>jährlich</option>
+					</select>
+				</div>
+				<!--<div class="td">
+					<span><?//=$freqString?></span>
+				</div>-->
+			</div>
+			<? if ($intervall == '') { $intervall = 1; } ?>
+			<div class="tr">
+				<div class="th">
+					<span>Wiederholen alle:</span>
+				</div>
+				<div class="td ps-tal">
+					<select name="intervall" class="ps-input intervall">
+						<? for($i=1;$i<=12;$i++) echo '<option value="' . $i . '"' . ($intervall == $i ? ' selected="selected"' : '') . '>' . $i . '</option>' ?>
+					</select>
+					<span class="textintervall"><?=$freqtext?></span>
+				</div>
+			</div>
+			<div class="tr weeklyspecial<?=($freq != 'weekly' ? ' ps-hidden' : '')?>">
+				<div class="th">
+					<span>Wiederholen am:</span>
+				</div>
+				<div class="td ps-tal byday">
+					<span class="ps-checkbox<?=(strpos($bydayString, 'Mo') != '' ? ' checked' : '')?>" data-day="MO">Mo</span>
+					<span class="ps-checkbox<?=(strpos($bydayString, 'Di') != '' ? ' checked' : '')?>" data-day="TU">Di</span>
+					<span class="ps-checkbox<?=(strpos($bydayString, 'Mi') != '' ? ' checked' : '')?>" data-day="WE">Mi</span>
+					<span class="ps-checkbox<?=(strpos($bydayString, 'Do') != '' ? ' checked' : '')?>" data-day="TH">Do</span>
+					<span class="ps-checkbox<?=(strpos($bydayString, 'Fr') != '' ? ' checked' : '')?>" data-day="FR">Fr</span>
+					<span class="ps-checkbox<?=(strpos($bydayString, 'Sa') != '' ? ' checked' : '')?>" data-day="SA">Sa</span>
+					<span class="ps-checkbox<?=(strpos($bydayString, 'So') != '' ? ' checked' : '')?>" data-day="SU">So</span>
+				</div>
+			</div>
+			<div class="tr">
+				<div class="th">
+					<span>Endet:</span>
+				</div>
+				<div class="td ps-tal">
+					<span class="ps-checkbox p-checkboxgroup never<?=($until == '' && $count == '' ? ' checked' : '')?>" data-checkboxgroup="until">Nie</span><br />
+					<span class="ps-checkbox p-checkboxgroup count<?=($count != '' ? ' checked' : '')?>" data-checkboxgroup="until">Nach <input type="text" class="ps-input" value="<?=$count?>" /></span><span class="textintervall"><?=$freqtext?></span><br />
+					<span class="ps-checkbox p-checkboxgroup until<?=($endTimeString != '' ? ' checked' : '')?>" data-checkboxgroup="until">Am <input type="text" class="ps-input datepicker" value="<?=$endTimeString?>" /></span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<hr />
+	<div class="max-height">
+		<div class="table">
+			<div class="tr">
+				<div class="th">
+					<span>Ausgeschlossene Tage:</span>
+				</div>
+<?
+	$database->query("SELECT [ex].[id_calendarexdate], [ex].[datetime] FROM [calendarexdate] [ex]
+		INNER JOIN [calendarrrule] [cr] ON [cr].[id_calendarrrule] = [ex].[id_calendarrrule]
+		INNER JOIN [calendarevent] [ce] ON [ce].[id_calendarevent] = [cr].[id_calendarevent]
+		WHERE [cr].[id_calendarevent] = '" . $id . "'");
+?>
+					<div class="td ps-tal">
+<?
+	$checker = 0;
+	while($erg = $database->fetch()) {
+		echo '<div class="exdate' . $erg['id_calendarexdate'] . '">';
+		echo '<span>' . $erg['datetime']->format('d.m.Y') . '</span>';
+		echo '<span class="ps-button" data-ex="' . $erg['id_calendarexdate'] . '">rückgängig</span><br />';
+		echo '</div>';
+		$checker++;
+	}
+	if($checker == 0) echo '<span>keine angelegt</span>';
+?>
+				</div>
+			</div>
+		</div>
+	</div>
+<? } ?>
+</div>
+<?
+function getSceneDropDown($val = '') {
+	$html = '';
+	$selected = false;
+	$database = new wpDatabase();
+	$database->query('SELECT [s].[name], [s].[id_scene] FROM [scene] [s]
+		INNER JOIN [calendar] [g] ON [s].[id_scenegroup] = [g].[id_scenegroup]
+		WHERE [g].[id_calendar] = '.std::posts('idCalendar'));
+	while($erg = $database->fetch()) {
+		if($val == $erg['id_scene']) $selected = true;
+		$html .= '<option value="'.$erg['id_scene'].'"'.(($val == $erg['id_scene']) ? ' selected="selected"':'').'>'.$erg['name'].'</option>';
+	}
+	$html .= '<option value="NULL" '.(!$selected ? ' selected="selected"':'').'>Kein Wert</option>';
+	return $html;
+}
+function getValueDropDown($val, $unit) {
+	if( preg_match('/^True:(.*);False:(.*);$/', $unit, $m) > 0) {
+		$html = '<option value="True"'.(($val == 'True') ? ' selected="selected"':'').'>'. $m[1].'</option>';
+		$html .='<option value="False"'.(($val == 'False') ? ' selected="selected"':'').'>'. $m[2].'</option>';
+	} else {
+		$html = '<option value="True"'.(($val == 'True') ? ' selected="selected"':'').'>Betrieb</option>';
+		$html .= '<option value="False"'.(($val == 'False') ? ' selected="selected"':'').'>Aus</option>';
+	}
+	$html .= '<option value="NULL"'.(($val === NULL) ? ' selected="selected"':'').'>Kein Wert</option>';
+	return $html;
+}
+function getTime($value) {
+	if(strlen($value) == 1) return '0'.$value;
+	else return $value;
+}
+?>

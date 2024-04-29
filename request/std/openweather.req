@@ -1,0 +1,167 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 21.07.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 582                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: openweather.req 582 2024-04-10 06:45:45Z                 $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\std;
+use system\std, system\wpInit, DateTime;
+class openweather {
+	const c_weather = 'weather';
+	const c_forecast = 'forecast';
+}
+
+switch(std::gets('param1')) {
+	//###################################################################################
+	case openweather::c_weather:
+		owDecode::getWeather();
+		break;
+	//###################################################################################
+	case openweather::c_forecast:
+		owDecode::getForecast();
+		break;
+	//###################################################################################
+	default:
+		\system\html::default();
+		break;
+}
+class owDecode  {
+	public static function getWeather() {
+		$con = json_decode(file_get_contents('http://api.openweathermap.org/data/2.5/weather?id='.wpInit::$weathercode.'&APPID='.wpInit::$weatherkey.'&units=metric&lang=de'));
+?>
+		<div style="background:transparent url(<?=self::getIcon($con->weather[0]->icon)?>) left top no-repeat" title="<?=$con->weather[0]->description?>">
+
+			<p class="big"><?=$con->main->temp?> <sup>°C</sup></p>
+			<p class="location"><?=$con->name?></p>
+
+			<p class="wind"><?=$con->wind->speed?> m / s
+			<img alt="" src="images/layout/wind.png" style="transform:rotate(<?='$con->wind->deg'?>deg);" title="Richtung: <?=self::getwind($con->wind->deg)?>" /></p>
+			<p class="atm"><?=$con->main->humidity?> %rF,  <?=$con->main->pressure?> mbar</p>
+			<p class="sonne">
+				<span class="sunrise" title="Sonnenaufgang"><?=wpHTML_EMPTY?></span><span><?=self::getTime($con->sys->sunrise)?> Uhr</span>
+				<span class="sunset" title="Sonnenuntergang"><?=wpHTML_EMPTY?></span><span><?=self::getTime($con->sys->sunset)?> Uhr</span>
+			</p>
+			<div class="clearboth"></div>
+		</div>
+<?
+	}
+	public static function getForecast() {
+		$con = json_decode(file_get_contents('http://api.openweathermap.org/data/2.5/forecast?id='.wpInit::$weathercode.'&APPID='.wpInit::$weatherkey.'&units=metric&lang=de'));
+		$aktdt = '';
+		for($i = 0; $i < $con->cnt; $i++) {
+			$akt = $con->list[$i];
+			if(self::convertDate($akt->dt, false) != $aktdt) {
+				echo '<div class="clearboth"><h4>'.self::convertDate($akt->dt, false).'</h4></div>';
+				if(self::getTime($akt->dt) != '01:00' && self::getTime($akt->dt) != '02:00') {
+					echo self::getEmptyForecast($akt->dt);
+				}
+				$aktdt = self::convertDate($akt->dt, false);
+			}
+?>
+		<div class="days">
+			<h4><?=self::getTime($akt->dt)?></h4>
+			<img alt="<?=$akt->weather[0]->description?>" title="<?=$akt->weather[0]->description?>" src="<?=self::getIcon($akt->weather[0]->icon)?>" /><br />
+			<span class="high"><?=$akt->main->temp_max?> °C</span><br />
+			<span class="ps-bold"><?=$akt->main->temp?> °C</span><br />
+			<span class="low"><?=$akt->main->temp_min?> °C</span><br />
+			<span>Wolken: <?=$akt->clouds->all?> %</span><br />
+			<span>Wind: <?=$akt->wind->speed?> m / s<br /><img alt="" class="wind" src="images/layout/wind.png" style="transform:rotate(<?=$akt->wind->deg?>deg);" title="Richtung: <?=self::getwind($akt->wind->deg)?>" /></span><br />
+			<span><?=$akt->main->pressure?> mbar<br /><?=$akt->main->humidity?> %rF</span>
+		</div>
+<?
+		}
+?>
+		<div class="clearboth"></div>
+<?
+	}
+	private static function getIcon($icon) {
+		$output = $_SERVER['DOCUMENT_ROOT'].'/images/cache/'.$icon.'.png';
+		if(!file_exists($output)) {
+			$input = 'http://openweathermap.org/img/w/'.$icon.'.png';
+			file_put_contents($output, file_get_contents($input));
+		}
+		return 'images/cache/'.$icon.'.png';
+	}
+	private static function convertDate($unixtime, $usetime = true) {
+		$dt = new DateTime();
+		$dt->setTimestamp($unixtime);
+		if($usetime) return $dt->format('d.m H:i');
+		else return self::$wochentage[$dt->format('N')].', '.$dt->format('d.m');
+	}
+	private static function getTime($unixtime) {
+		$dt = new DateTime();
+		$dt->setTimestamp($unixtime);
+		return $dt->format('H:i');
+	}
+	private static function getEmptyForecast($aktTime) {
+		$empty = 0;
+		$returns = '';
+		switch(owDecode::getTime($aktTime)) {
+			case '22:00': case '23:00': $empty = 7; break;
+			case '19:00': case '20:00': $empty = 6; break;
+			case '16:00': case '17:00': $empty = 5; break;
+			case '13:00': case '14:00': $empty = 4; break;
+			case '10:00': case '11:00': $empty = 3; break;
+			case '07:00': case '08:00': $empty = 2; break;
+			case '04:00': case '05:00': $empty = 1; break;
+		}
+		for($iempty = 1; $iempty <= $empty; $iempty++) { $returns .= '<div class="daysempty"></div>'; }
+		return $returns;
+	}
+	private static function getWind($wind_direction) {
+		if($wind_direction > 348.75 && $wind_direction < 11.25) {
+			$wind_direction_converted = "N";
+		} else if($wind_direction > 11.25 && $wind_direction < 33.75) {
+			$wind_direction_converted = "NNO";
+		} else if($wind_direction > 33.75 && $wind_direction < 56.25) {
+			$wind_direction_converted = "NO";
+		} else if($wind_direction > 56.25 && $wind_direction < 78.75) {
+			$wind_direction_converted = "ONO";
+		} else if($wind_direction > 78.75 && $wind_direction < 101.25) {
+			$wind_direction_converted = "O";
+		} else if($wind_direction > 101.25 && $wind_direction < 123.75) {
+			$wind_direction_converted = "OSO";
+		} else if($wind_direction > 123.75 && $wind_direction < 146.25) {
+			$wind_direction_converted = "SO";
+		} else if($wind_direction > 146.25 && $wind_direction < 168.75) {
+			$wind_direction_converted = "SSO";
+		} else if($wind_direction > 168.75 && $wind_direction < 191.25) {
+			$wind_direction_converted = "S";
+		} else if($wind_direction > 191.25 && $wind_direction < 213.75) {
+			$wind_direction_converted = "SSW";
+		} else if($wind_direction > 213.75 && $wind_direction < 236.25) {
+			$wind_direction_converted = "SW";
+		} else if($wind_direction > 236.25 && $wind_direction < 258.75) {
+			$wind_direction_converted = "WSW";
+		} else if($wind_direction > 258.75 && $wind_direction < 281.25) {
+			$wind_direction_converted = "W";
+		} else if($wind_direction > 281.25 && $wind_direction < 303.75) {
+			$wind_direction_converted = "WNW";
+		} else if($wind_direction > 303.75 && $wind_direction < 326.25) {
+			$wind_direction_converted = "NW";
+		} else if($wind_direction > 326.25 && $wind_direction < 348.75) {
+			$wind_direction_converted = "NNW";
+		} else $wind_direction_converted = "";
+		return $wind_direction_converted;
+	}
+	private static $wochentage = array(
+		1 => 'Montag',
+		2 => 'Dienstag',
+		3 => 'Mittwoch',
+		4 => 'Donnerstag',
+		5 => 'Freitag',
+		6 => 'Samstag',
+		7 => 'Sonntag'
+	);
+}
+

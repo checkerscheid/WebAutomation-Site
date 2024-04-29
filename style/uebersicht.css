@@ -1,0 +1,53 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 20.12.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 591                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: uebersicht.css 591 2024-04-24 20:57:52Z                  $ #
+//#                                                                                 #
+//###################################################################################
+?> uebersicht */
+
+/* #uebersicht { background:transparent url(images/uebersicht.jpg) center top no-repeat; min-height:410px; } */
+#uebersicht .wartungmeldung { display:block; padding:4px; margin:5px; color:#FFBF00; border:1px solid #CCC; }
+#uebersicht .ps-container { margin:10px; padding:10px; float:left; }
+#uebersicht .ps-container .ps-input, #uebersicht .ps-container .ps-button { display:inline-block; width:100px; text-align:center; }
+#uebersicht .ps-container hr { margin:5px auto; }
+#uebersicht .ps-button { padding:8px 6px; }
+#uebersicht .ps-button.pa-scene { padding:8px 25px; }
+
+#uebersicht .shelly-dimmer { margin:5px 0 10px 0; }
+
+#uebersicht .clicklicht, #uebersicht .ps-operable { cursor:pointer; }
+#uebersicht .description { padding-left:20px; text-align:left; }
+#uebersicht .loading .description { background:transparent url(images/layout/loader.gif) left center no-repeat; background-size:15px 5px; }
+#uebersicht .ps-hastimer .description { background:transparent url(images/layout/clock_icon.svg) left center no-repeat; background-size:14px 14px; }
+
+#uebersicht .condition, #uebersicht .forecast { border:1px solid #CCC; padding:10px; margin:30px auto;
+	border-radius:10px;
+	box-shadow:6px 6px 8px 0px #222;
+	background-image: linear-gradient(#606060 25%, #222 100%);
+}
+
+#uebersicht .showonportrait { display:none; }
+@media (orientation: portrait) {
+	#uebersicht .ps-button { padding:25px 6px; }
+	#uebersicht .ps-button.pa-scene { padding:25px 25px; }
+	#uebersicht .ui-slider .ui-slider-handle { width:30px; height:30px; }
+	#uebersicht .ui-slider-horizontal { height:20px; }
+	#uebersicht td.description, #uebersicht td.description * { font-size:17px; }
+	#uebersicht .showonportrait { display:inline; }
+}
+#uebersicht td:has(.ps-input, .ps-button) { text-align: right; }
+
+.page .ps-zimmer-info span.hand { position:absolute; left:95px; }
+.page .ps-zimmer-info .ps-input { margin:0 5px; }
+.page .ps-zimmer-info { width:auto; }

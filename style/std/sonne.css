@@ -1,0 +1,52 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 22.05.2015                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 540                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: sonne.css 540 2023-11-16 19:36:17Z checker               $ #
+//#                                                                                 #
+//###################################################################################
+?> sonne */
+#sonne { width:980px; margin:auto; position:relative; }
+#sonne h1, #sonne h2 { text-align:center; }
+#AT, #AT span.ps-input { position:absolute; }
+#AT { left:75px; }
+#sonne .sonnenstand { width:542px; float:left; margin-top:100px; }
+#sonne .wetterdaten { width:400px; height:330px; float:right; background:transparent url(images/visuelemente/wetterstation.jpg) center center no-repeat; }
+#sonne .wettercontainer { position:relative; margin-top:20px; }
+#sonne .sonnecontainer { width:540px; height:180px; border:1px solid #ccc; margin:auto; position:relative; overflow:hidden; background:transparent url(images/visuelemente/sonnebg.png) center center no-repeat; }
+#sonne .sued { width:540px; text-align:center; margin:auto; }
+#sonne .winkel, #sonne .ostwest { width:540px; margin:auto; text-align:center; }
+#sonne .ost { float:left; display:inline-block; width:100px; text-align:center; margin-left:40px; }
+#sonne .west { float:right; display:inline-block; width:100px; text-align:center; margin-right:40px; }
+#sonne .left90 { float:left; display:inline-block; width:100px; text-align:center; margin-left:40px; }
+#sonne .right270 { float:right; display:inline-block; width:100px; text-align:center; margin-right:40px; }
+#sonne .sonne { position:absolute; width:30px; height:30px; background:transparent url(images/visuelemente/sonne.png) center center no-repeat; }
+#sonne .sonnebaum { width:540px; height:180px; position:absolute; background:transparent url(images/visuelemente/sonneba.png) center center no-repeat; }
+#sonne .sonnecontainer table { position:absolute; }
+#sonne .sonnecontainer table td { color:#FFF; }
+#sonne .az { display:inline-block; width:75px; text-align:center; }
+#sonne .el { display:inline-block; width:75px; text-align:center; }
+#sonne .wettercontainer .ps-input { position:absolute; width:75px; text-align:center; }
+#sonne .wettercontainer .text { position:absolute; display:inline-block; }
+#sonne [data-value=Wind] { top:45px; left:149px; }
+#sonne [data-value=Regen] { top:216px; left:230px; }
+#sonne [data-value=LichtO] { top:101px; left:70px; }
+#sonne [data-value=LichtS] { top:123px; left:70px; }
+#sonne [data-value=LichtW] { top:145px; left:70px; }
+#sonne [data-value=Daemmerung] { top:209px; left:70px; }
+#sonne .t-wind { top:32px; left:177px; width:40px; text-align:center; }
+#sonne .t-regen { top:201px; left:233px; width:80px; text-align:center; }
+#sonne .t-lichto { top:107px; left:-20px; width:90px; text-align:right; }
+#sonne .t-lichts { top:129px; left:-20px; width:90px; text-align:right; }
+#sonne .t-lichtw { top:151px; left:-20px; width:90px; text-align:right; }
+#sonne .t-daemmerung { top:215px; left:-20px; width:90px; text-align:right; }
+

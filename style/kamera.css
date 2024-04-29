@@ -1,0 +1,20 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 20.03.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 578                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: kamera.css 578 2024-03-22 21:53:46Z                      $ #
+//#                                                                                 #
+//###################################################################################
+?> kamera */
+#kamera div.ps-container { text-align:left; }
+#kamera div.imageContainer { position:relative; width:640px; height:480px; }
+#kamera div.imageContainer img { position:absolute; width:640px; height:480px; border-radius:8px; border:1px solid #CCC; }

@@ -1,0 +1,99 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 23.08.2016                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 505                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: elements_.css 505 2021-05-07 21:55:45Z checker           $ #
+//#                                                                                 #
+//###################################################################################
+?> elements */
+
+.ps-operable { cursor:pointer; }
+.ps-input { width:50px; text-align:center; }
+.ps-bmk { width:50px; }
+.pe-finalpos { width:75px; }
+
+/* ################################################################################### */
+/* fireprotection flap / fireprotection flap with motor */
+.pe-fireprotection { background:transparent url(images/std/fireprotection.png) no-repeat; }
+.pe-fireprotection.pe-left, .pe-fireprotection.pe-right { width:60px; height:30px; }
+.pe-fireprotection.pe-top, .pe-fireprotection.pe-bottom { width:30px; height:60px; }
+.pe-fireprotection span.pe-finalpos { width:75px; }
+
+/* motor left */
+.pe-fireprotection.pe-left { background-position:-60px -60px; }
+.pe-fireprotection.pe-left.pe-sm { background-position:-60px -90px; }
+.pe-fireprotection.pe-left.pe-motor { background-position:-60px 0px; }
+.pe-fireprotection.pe-left.pe-motor.pe-sm { background-position:-60px -30px; }
+
+.pe-fireprotection.pe-left img { top:13px; left:-15px; }
+.pe-fireprotection.pe-left span.pe-finalpos { top:-12px; left:-90px; }
+.pe-fireprotection.pe-left span.pe-bmk { top:-12px; left:5px; }
+
+/* motor top */
+.pe-fireprotection.pe-top { background-position:0px -60px; }
+.pe-fireprotection.pe-top.pe-sm { background-position:-30px -60px; }
+.pe-fireprotection.pe-top.pe-motor { background-position:0px 0px; }
+.pe-fireprotection.pe-top.pe-motor.pe-sm { background-position:-30px 0px; }
+
+.pe-fireprotection.pe-top img { top:0px; left:18px; }
+.pe-fireprotection.pe-top span.pe-finalpos { top:-22px; left:0px; }
+.pe-fireprotection.pe-top span.pe-bmk { top:23px; left:28px; }
+
+/* motor right */
+.pe-fireprotection.pe-right { background-position:-180px -60px; }
+.pe-fireprotection.pe-right.pe-sm { background-position:-180px -90px; }
+.pe-fireprotection.pe-right.pe-motor { background-position:-180px 0px; }
+.pe-fireprotection.pe-right.pe-motor.pe-sm { background-position:-180px -30px; }
+
+.pe-fireprotection.pe-right img { top:13px; left:50px; }
+.pe-fireprotection.pe-right span.pe-finalpos { top:-12px; left:53px; }
+.pe-fireprotection.pe-right span.pe-bmk { top:-12px; left:26px; }
+
+/* motor bottom */
+.pe-fireprotection.pe-bottom { background-position:-120px -60px; }
+.pe-fireprotection.pe-bottom.pe-sm { background-position:-150px -60px; }
+.pe-fireprotection.pe-bottom.pe-motor { background-position:-120px 0px; }
+.pe-fireprotection.pe-bottom.pe-motor.pe-sm { background-position:-150px 0px; }
+
+.pe-fireprotection.pe-bottom img { top:33px; left:18px; }
+.pe-fireprotection.pe-bottom span.pe-finalpos { top:56px; left:0px; }
+.pe-fireprotection.pe-bottom span.pe-bmk { top:22px; left:28px; }
+
+/* ################################################################################### */
+/* volume flow control */
+
+.pe-volumeflow { width:60px; height:60px;
+                 background:transparent url(images/std/volumeflow.png) no-repeat; }
+
+/* motor left */
+.pe-volumeflow.pe-left { background-position:0px 0px; }
+.pe-volumeflow.pe-left img { top:27px; left:-5px; }
+.pe-volumeflow.pe-left span.pe-bmk { top:-5px; left:15px; }
+.pe-volumeflow.pe-left span.ps-input { top:2px; left:-70px; }
+
+/* motor top */
+.pe-volumeflow.pe-top { background-position:-60px 0px; }
+.pe-volumeflow.pe-top img { top:9px; left:33px; }
+.pe-volumeflow.pe-top span.pe-bmk { top:34px; left:52px; }
+.pe-volumeflow.pe-top span.ps-input { top:-13px; left:15px; }
+
+/* motor right */
+.pe-volumeflow.pe-right { background-position:-120px 0px; }
+.pe-volumeflow.pe-right img { top:27px; left:30px; }
+.pe-volumeflow.pe-right span.pe-bmk { top:-5px; left:15px; }
+.pe-volumeflow.pe-right span.ps-input { top:2px; left:43px; }
+
+/* motor bottom */
+.pe-volumeflow.pe-bottom { background-position:-180px 0px; }
+.pe-volumeflow.pe-bottom img { top:23px; left:33px; }
+.pe-volumeflow.pe-bottom span.pe-bmk { top:12px; left:52px; }
+.pe-volumeflow.pe-bottom span.ps-input { top:46px; left:15px; }

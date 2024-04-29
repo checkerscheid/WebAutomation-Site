@@ -1,0 +1,25 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 23.07.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 505                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: scene.css 505 2021-05-07 21:55:45Z checker               $ #
+//#                                                                                 #
+//###################################################################################
+?> scene */
+
+#scene { margin:10px 50px; }
+#scene h1 { text-align:center; }
+
+#scene ul, #scene table { margin-left:30px; }
+#scene .ps-input { width:75px; text-align:center; }
+span.ps-tree-parent { display:inline-block; }
+.ps-tree-parent .ps-button { padding:0 5px; margin-left:10px; }

@@ -1,0 +1,37 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 20.12.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 578                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: quit.req 578 2024-03-22 21:53:46Z                        $ #
+//#                                                                                 #
+//###################################################################################
+namespace popup\std;
+use system\Helper\wpDatabase;
+use system\std;
+$database= new wpDatabase();
+
+?>
+
+<div class="popup">
+	<div id="osk">
+		<input id="oskinput" class="ps-input" type="text" /><br />
+		<span>letzte Meldungen:</span><br />
+		<select id="oskselect" class="ps-input">
+<?
+	$database->query("SELECT [quittext], MAX([come]) FROM [alarmhistoric] GROUP BY [quittext] ORDER BY MAX([come]) DESC");
+	while($erg = $database->fetch()) {
+		echo '<option value="' . $erg['quittext'] . '">' . $erg['quittext'] . '</option>';
+	}
+?>
+		</select>
+	</div>
+</div>

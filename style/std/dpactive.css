@@ -1,0 +1,26 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 578                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: dpactive.css 578 2024-03-22 21:53:46Z                    $ #
+//#                                                                                 #
+//###################################################################################
+?> dpactive */
+
+#dpactive .ps-tree-parent { display:inline-block; min-height:30px; line-height:normal; }
+#dpactive .smallfont { font-size:11px; }
+#dpactive .boldfont { font-weight:bold; }
+#dpactive .buttonContainer { float:right; }
+#dpactive .buttonContainer .ps-image-button { display:inline-block; }
+#dpactive ul { margin-left:20px; }
+#dpactive .dpgroups td { padding:2px 5px; border:1px solid #CCC; }
+#dpactive .dpgroups td span { line-height:27px; }

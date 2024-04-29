@@ -1,0 +1,32 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 28.06.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 505                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: sys_prosystems.css 505 2021-05-07 21:55:45Z checker      $ #
+//#                                                                                 #
+//###################################################################################
+?> prosystems */
+
+#prosystems h1, #prosystems h2, #prosystems h3 { text-align:center; }
+#prosystems h2.ps-nowrap { cursor:pointer; line-height:26px; background:transparent url(images/layout/ic_menu_add.png) right center no-repeat; }
+#prosystems h2.ps-nowrap.open { background:none; }
+#prosystems { margin:0 25px 0 10px; }
+
+#prosystems span { display:inline-block; width:100px; text-align:center; }
+#prosystems .besch { width:200px; padding:5px 0; float:left; }
+#prosystems .ps-input { width:150px; }
+#prosystems .height0 { height:0px; overflow:hidden; }
+#prosystems .write { cursor:pointer; }
+#prosystems .neg { background-color:#A91919; color:#FFF; }
+#prosystems .pos { background-color:#0F0; color:#000; }
+#prosystems .serverinfo { position:fixed; top:85px; right:25px; color:#FFF; font-size:7pt; }
+

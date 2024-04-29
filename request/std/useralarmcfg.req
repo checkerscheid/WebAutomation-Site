@@ -1,0 +1,661 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 05.12.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 582                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: useralarmcfg.req 582 2024-04-10 06:45:45Z                $ #
+//#                                                                                 #
+//###################################################################################
+/** @var Type $userfilter */
+namespace request\std;
+use system\std;
+use system\Helper\wpDatabase;
+use system\Helper\security;
+use system\Helper\cfg;
+use system\WebCom;
+class useralarmcfg {
+	const c_formfiltertype = 'formfiltertype';
+	const c_savefiltertype = 'savefiltertype';
+	const c_deletefiltertype = 'deletefiltertype';
+
+	const c_formfiltergroup = 'formfiltergroup';
+	const c_savefiltergroup = 'savefiltergroup';
+	const c_deletefiltergroup = 'deletefiltergroup';
+
+	const c_formfiltergroup1 = 'formfiltergroup1';
+	const c_savefiltergroup1 = 'savefiltergroup1';
+	const c_deletefiltergroup1 = 'deletefiltergroup1';
+
+	const c_formfiltergroup2 = 'formfiltergroup2';
+	const c_savefiltergroup2 = 'savefiltergroup2';
+	const c_deletefiltergroup2 = 'deletefiltergroup2';
+
+	const c_formfiltergroup3 = 'formfiltergroup3';
+	const c_savefiltergroup3 = 'savefiltergroup3';
+	const c_deletefiltergroup3 = 'deletefiltergroup3';
+
+	const c_formfiltergroup4 = 'formfiltergroup4';
+	const c_savefiltergroup4 = 'savefiltergroup4';
+	const c_deletefiltergroup4 = 'deletefiltergroup4';
+
+	const c_formfiltergroup5 = 'formfiltergroup5';
+	const c_savefiltergroup5 = 'savefiltergroup5';
+	const c_deletefiltergroup5 = 'deletefiltergroup5';
+
+	const c_savegroups = 'savegroups';
+
+	const c_getentrie = 'getentrie';
+	const c_addentrie = 'addentrie';
+	const c_saveentrie = 'saveentrie';
+	const c_deleteentrie = 'deleteentrie';
+
+	const c_gettypes = 'gettypes';
+	const c_addtypes = 'addtypes';
+	const c_savetypes = 'savetypes';
+	const c_deletetypes = 'deletetypes';
+}
+
+class groupsentries {
+	private $entries;
+	private $nr;
+	public function __construct($gnr) {
+		$this->nr = $gnr;
+		$database = new wpDatabase();
+		$database->query("SELECT [id_alarmgroups".$gnr."], [name] FROM [alarmgroups".$gnr."] WHERE [name] <> '' ORDER BY [name]");
+		while($erg = $database->fetch()) {
+			$this->entries[$erg['id_alarmgroups'.$gnr]] = $erg['name'];
+		}
+	}
+	public function getHTML() {
+		echo '<table data-id="'.$this->nr.'"><tbody>';
+		echo '<tr>
+				<td>Neue Beschreibung:</td>
+				<td><input type="text" class="ps-input" /></td>
+				<td><span class="ps-hover-noborder p-dpbutton p-dpadd" title="Neuen Eintrag speichern">'.wpHTML_EMPTY.'</span></td>
+				<td></td>
+			</tr>';
+		if(is_array($this->entries) && count($this->entries) > 0) {
+			foreach($this->entries as $key => $value) {
+				echo '<tr data-id="'.$key.'">
+					<td></td>
+					<td><input type="text" class="ps-input" value="'.$value.'" title="id: '.$key.'" /></td>
+					<td><span class="ps-hover-noborder p-dpbutton p-dpsave" title="speichern">'.wpHTML_EMPTY.'</span></td>
+					<td><span class="ps-hover-noborder p-dpbutton p-dpdelete" title="löschen">'.wpHTML_EMPTY.'</span></td>
+				</tr>';
+			}
+		}
+		echo '</tbody></table>';
+	}
+}
+
+switch(std::gets('param1')) {
+//###################################################################################
+	case useralarmcfg::c_formfiltertype:
+		if(std::posts('message') != '') echo std::posts('message');
+		$userid = security::getIdFromUser();
+		$hasCfg = false;
+		if($userid > 0) {
+			$database = new wpDatabase();
+			$database->query("SELECT TOP 1 [value] FROM [cfg] WHERE [id_user] = ".$userid." AND [key] = '".cfg::alarmtable_filtertype."'");
+			$erg = $database->fetch();
+			$userfilter = array();
+			if($database->hasRows() > 0) {
+				$hasCfg = true;
+				foreach (explode('%~%', $erg['value']) as $value) {
+					$userfilter[$value] = cfg::$alarmtype[$value];
+				}
+			}
+		}
+		if(!$hasCfg) echo '<div class="entry"><span>kein Filter aktiv</span></div>';
+		for($i = 1; $i <= count(cfg::$alarmtype); $i++) {
+			getTypeCheckbox($i);
+		}
+		break;
+//###################################################################################
+	case useralarmcfg::c_savefiltertype:
+		$intodb = implode('%~%', $_POST['userflttype']);
+		$userid = security::getIdFromUser();
+		$database = new wpDatabase();
+
+		$sql = "MERGE INTO [cfg] AS TARGET
+				USING
+					(VALUES ('".$userid."', '".cfg::alarmtable_filtertype."', '".$intodb."'))
+						AS SOURCE (Userfield, Keyfield, Valuefield)
+				ON
+					[TARGET].[id_user] = [SOURCE].[Userfield] AND [TARGET].[key] = [SOURCE].[Keyfield]
+				WHEN MATCHED THEN
+					UPDATE SET [TARGET].[value] = [SOURCE].[Valuefield]
+				WHEN NOT MATCHED THEN
+					INSERT ([id_user], [key], [value]) VALUES ('".$userid."', '".cfg::alarmtable_filtertype."', '".$intodb."')
+				;";
+		if($database->query($sql)){
+			echo 'S_OK';
+		} else {
+			echo '<span class="neg">Fehler passiert</span>';
+		}
+		break;
+//###################################################################################
+	case useralarmcfg::c_deletefiltertype:
+		$userid = security::getIdFromUser();
+		$database = new wpDatabase();
+		if($database->query("DELETE FROM [cfg] WHERE [id_user] = ".$userid." AND [key] = 'alarmtable_filtertype'")) {
+			echo 'S_OK';
+		} else {
+			echo '<span class="neg">Fehler passiert</span>';
+		}
+		break;
+//###################################################################################
+	case useralarmcfg::c_formfiltergroup:
+		if(std::posts('message') != '') echo std::posts('message');
+		$userid = security::getIdFromUser();
+		$hasCfg = false;
+		if($userid > 0) {
+			$database = new wpDatabase();
+			$alarmgroup = array();
+			$database->query('SELECT [id_alarmgroup], [name] FROM [alarmgroup]');
+			while($erg = $database->fetch()) {
+				$alarmgroup[$erg['id_alarmgroup']] = $erg['name'];
+			}
+			$database->query("SELECT TOP 1 [value] FROM [cfg] WHERE [id_user] = ".$userid." AND [key] = '".cfg::alarmtable_filtergroup."'");
+			$erg = $database->fetch();
+			$userfilter = array();
+			if($database->hasRows() > 0) {
+				$hasCfg = true;
+				foreach (explode('%~%', $erg['value']) as $value) {
+					$userfilter[$value] = $alarmgroup[$value];
+				}
+			}
+		}
+		if(!$hasCfg) echo '<div class="entry"><span>kein Filter aktiv</span></div>';
+		foreach($alarmgroup as $key => $value) {
+			getGroupCheckbox($key);
+		}
+		break;
+//###################################################################################
+	case useralarmcfg::c_savefiltergroup:
+		$intodb = implode('%~%', $_POST['userfltgroup']);
+		$userid = security::getIdFromUser();
+		$database = new wpDatabase();
+
+		$sql = "MERGE INTO [cfg] AS TARGET
+				USING
+					(VALUES ('".$userid."', '".cfg::alarmtable_filtergroup."', '".$intodb."'))
+							AS SOURCE (Userfield, Keyfield, Valuefield)
+				ON
+					[TARGET].[id_user] = [SOURCE].[Userfield] AND [TARGET].[key] = [SOURCE].[Keyfield]
+				WHEN MATCHED THEN
+					UPDATE SET [TARGET].[value] = [SOURCE].[Valuefield]
+				WHEN NOT MATCHED THEN
+					INSERT ([id_user], [key], [value]) VALUES ('".$userid."', '".cfg::alarmtable_filtergroup."', '".$intodb."')
+				;";
+		if($database->query($sql)){
+			echo 'S_OK';
+		} else {
+			echo '<span class="neg">Fehler passiert</span>';
+		}
+		break;
+//###################################################################################
+	case useralarmcfg::c_deletefiltergroup:
+		$userid = security::getIdFromUser();
+		$database = new wpDatabase();
+		if($database->query("DELETE FROM [cfg] WHERE [id_user] = ".$userid." AND [key] = 'alarmtable_filtergroup'")) {
+			echo 'S_OK';
+		} else {
+			echo '<span class="neg">Fehler passiert</span>';
+		}
+		break;
+//###################################################################################
+	case useralarmcfg::c_formfiltergroup1:
+		if(std::posts('message') != '') echo std::posts('message');
+		$userid = security::getIdFromUser();
+		$hasCfg = false;
+		if($userid > 0) {
+			$database = new wpDatabase();
+			$alarmgroup = array();
+			$database->query("SELECT [id_alarmgroups1], [name] FROM [alarmgroups1]");
+			while($erg = $database->fetch()) {
+				$alarmgroup[$erg['id_alarmgroups1']] = $erg['name'];
+			}
+			$database->query("SELECT TOP 1 [value] FROM [cfg] WHERE [id_user] = ".$userid." AND [key] = '".cfg::alarmtable_filtergroup1."'");
+			$erg = $database->fetch();
+			$userfilter = array();
+			if($database->hasRows() > 0) {
+				$hasCfg = true;
+				foreach (explode('%~%', $erg['value']) as $value) {
+					$userfilter[$value] = $alarmgroup[$value];
+				}
+			}
+		}
+		if(!$hasCfg) echo '<div class="entry"><span>kein Filter aktiv</span></div>';
+		foreach($alarmgroup as $key => $value) {
+			getGroupCheckbox($key);
+		}
+		break;
+//###################################################################################
+	case useralarmcfg::c_savefiltergroup1:
+		$intodb = implode('%~%', $_POST['userfltgroup1']);
+		$userid = security::getIdFromUser();
+		$database = new wpDatabase();
+
+		$sql = "MERGE INTO [cfg] AS TARGET
+				USING
+					(VALUES ('".$userid."', '".cfg::alarmtable_filtergroup1."', '".$intodb."'))
+							AS SOURCE (Userfield, Keyfield, Valuefield)
+				ON
+					[TARGET].[id_user] = [SOURCE].[Userfield] AND [TARGET].[key] = [SOURCE].[Keyfield]
+				WHEN MATCHED THEN
+					UPDATE SET [TARGET].[value] = [SOURCE].[Valuefield]
+				WHEN NOT MATCHED THEN
+					INSERT ([id_user], [key], [value]) VALUES ('".$userid."', '".cfg::alarmtable_filtergroup1."', '".$intodb."')
+				;";
+		if($database->query($sql)){
+			echo 'S_OK';
+		} else {
+			echo '<span class="neg">Fehler passiert</span>';
+		}
+		break;
+//###################################################################################
+	case useralarmcfg::c_deletefiltergroup1:
+		$userid = security::getIdFromUser();
+		$database = new wpDatabase();
+		if($database->query("DELETE FROM [cfg] WHERE [id_user] = ".$userid." AND [key] = '".cfg::alarmtable_filtergroup1."'")) {
+			echo 'S_OK';
+		} else {
+			echo '<span class="neg">Fehler passiert</span>';
+		}
+		break;
+//###################################################################################
+	case useralarmcfg::c_formfiltergroup2:
+		if(std::posts('message') != '') echo std::posts('message');
+		$userid = security::getIdFromUser();
+		$hasCfg = false;
+		if($userid > 0) {
+			$database = new wpDatabase();
+			$alarmgroup = array();
+			$database->query('SELECT [id_alarmgroups2], [name] FROM [alarmgroups2]');
+			while($erg = $database->fetch()) {
+				$alarmgroup[$erg['id_alarmgroups2']] = $erg['name'];
+			}
+			$database->query("SELECT TOP 1 [value] FROM [cfg] WHERE [id_user] = ".$userid." AND [key] = '".cfg::alarmtable_filtergroup2."'");
+			$erg = $database->fetch();
+			$userfilter = array();
+			if($database->hasRows() > 0) {
+				$hasCfg = true;
+				foreach (explode('%~%', $erg['value']) as $value) {
+					$userfilter[$value] = $alarmgroup[$value];
+				}
+			}
+		}
+		if(!$hasCfg) echo '<div class="entry"><span>kein Filter aktiv</span></div>';
+		foreach($alarmgroup as $key => $value) {
+			getGroupCheckbox($key);
+		}
+		break;
+//###################################################################################
+	case useralarmcfg::c_savefiltergroup2:
+		$intodb = implode('%~%', $_POST['userfltgroup2']);
+		$userid = security::getIdFromUser();
+		$database = new wpDatabase();
+
+		$sql = "MERGE INTO [cfg] AS TARGET
+				USING
+					(VALUES ('".$userid."', '".cfg::alarmtable_filtergroup2."', '".$intodb."'))
+							AS SOURCE (Userfield, Keyfield, Valuefield)
+				ON
+					[TARGET].[id_user] = [SOURCE].[Userfield] AND [TARGET].[key] = [SOURCE].[Keyfield]
+				WHEN MATCHED THEN
+					UPDATE SET [TARGET].[value] = [SOURCE].[Valuefield]
+				WHEN NOT MATCHED THEN
+					INSERT ([id_user], [key], [value]) VALUES ('".$userid."', '".cfg::alarmtable_filtergroup2."', '".$intodb."')
+				;";
+		if($database->query($sql)){
+			echo 'S_OK';
+		} else {
+			echo '<span class="neg">Fehler passiert</span>';
+		}
+		break;
+//###################################################################################
+	case useralarmcfg::c_deletefiltergroup2:
+		$userid = security::getIdFromUser();
+		$database = new wpDatabase();
+		if($database->query("DELETE FROM [cfg] WHERE [id_user] = ".$userid." AND [key] = '".cfg::alarmtable_filtergroup2."'")) {
+			echo 'S_OK';
+		} else {
+			echo '<span class="neg">Fehler passiert</span>';
+		}
+		break;
+//###################################################################################
+	case useralarmcfg::c_formfiltergroup3:
+		if(std::posts('message') != '') echo std::posts('message');
+		$userid = security::getIdFromUser();
+		$hasCfg = false;
+		if($userid > 0) {
+			$database = new wpDatabase();
+			$alarmgroup = array();
+			$database->query('SELECT [id_alarmgroups3], [name] FROM [alarmgroups3]');
+			while($erg = $database->fetch()) {
+				$alarmgroup[$erg['id_alarmgroups3']] = $erg['name'];
+			}
+			$database->query("SELECT TOP 1 [value] FROM [cfg] WHERE [id_user] = ".$userid." AND [key] = '".cfg::alarmtable_filtergroup3."'");
+			$erg = $database->fetch();
+			$userfilter = array();
+			if($database->hasRows() > 0) {
+				$hasCfg = true;
+				foreach (explode('%~%', $erg['value']) as $value) {
+					$userfilter[$value] = $alarmgroup[$value];
+				}
+			}
+		}
+		if(!$hasCfg) echo '<div class="entry"><span>kein Filter aktiv</span></div>';
+		foreach($alarmgroup as $key => $value) {
+			getGroupCheckbox($key);
+		}
+		break;
+//###################################################################################
+	case useralarmcfg::c_savefiltergroup3:
+		$intodb = implode('%~%', $_POST['userfltgroup3']);
+		$userid = security::getIdFromUser();
+		$database = new wpDatabase();
+
+		$sql = "MERGE INTO [cfg] AS TARGET
+				USING
+					(VALUES ('".$userid."', '".cfg::alarmtable_filtergroup3."', '".$intodb."'))
+							AS SOURCE (Userfield, Keyfield, Valuefield)
+				ON
+					[TARGET].[id_user] = [SOURCE].[Userfield] AND [TARGET].[key] = [SOURCE].[Keyfield]
+				WHEN MATCHED THEN
+					UPDATE SET [TARGET].[value] = [SOURCE].[Valuefield]
+				WHEN NOT MATCHED THEN
+					INSERT ([id_user], [key], [value]) VALUES ('".$userid."', '".cfg::alarmtable_filtergroup3."', '".$intodb."')
+				;";
+		if($database->query($sql)){
+			echo 'S_OK';
+		} else {
+			echo '<span class="neg">Fehler passiert</span>';
+		}
+		break;
+//###################################################################################
+	case useralarmcfg::c_deletefiltergroup3:
+		$userid = security::getIdFromUser();
+		$database = new wpDatabase();
+		if($database->query("DELETE FROM [cfg] WHERE [id_user] = ".$userid." AND [key] = '".cfg::alarmtable_filtergroup3."'")) {
+			echo 'S_OK';
+		} else {
+			echo '<span class="neg">Fehler passiert</span>';
+		}
+		break;
+//###################################################################################
+	case useralarmcfg::c_formfiltergroup4:
+		if(std::posts('message') != '') echo std::posts('message');
+		$userid = security::getIdFromUser();
+		$hasCfg = false;
+		if($userid > 0) {
+			$database = new wpDatabase();
+			$alarmgroup = array();
+			$database->query('SELECT [id_alarmgroups4], [name] FROM [alarmgroups4]');
+			while($erg = $database->fetch()) {
+				$alarmgroup[$erg['id_alarmgroups4']] = $erg['name'];
+			}
+			$database->query("SELECT TOP 1 [value] FROM [cfg] WHERE [id_user] = ".$userid." AND [key] = '".cfg::alarmtable_filtergroup4."'");
+			$erg = $database->fetch();
+			$userfilter = array();
+			if($database->hasRows() > 0) {
+				$hasCfg = true;
+				foreach (explode('%~%', $erg['value']) as $value) {
+					$userfilter[$value] = $alarmgroup[$value];
+				}
+			}
+		}
+		if(!$hasCfg) echo '<div class="entry"><span>kein Filter aktiv</span></div>';
+		foreach($alarmgroup as $key => $value) {
+			getGroupCheckbox($key);
+		}
+		break;
+//###################################################################################
+	case useralarmcfg::c_savefiltergroup4:
+		$intodb = implode('%~%', $_POST['userfltgroup4']);
+		$userid = security::getIdFromUser();
+		$database = new wpDatabase();
+
+		$sql = "MERGE INTO [cfg] AS TARGET
+				USING
+					(VALUES ('".$userid."', '".cfg::alarmtable_filtergroup4."', '".$intodb."'))
+							AS SOURCE (Userfield, Keyfield, Valuefield)
+				ON
+					[TARGET].[id_user] = [SOURCE].[Userfield] AND [TARGET].[key] = [SOURCE].[Keyfield]
+				WHEN MATCHED THEN
+					UPDATE SET [TARGET].[value] = [SOURCE].[Valuefield]
+				WHEN NOT MATCHED THEN
+					INSERT ([id_user], [key], [value]) VALUES ('".$userid."', '".cfg::alarmtable_filtergroup4."', '".$intodb."')
+				;";
+		if($database->query($sql)){
+			echo 'S_OK';
+		} else {
+			echo '<span class="neg">Fehler passiert</span>';
+		}
+		break;
+//###################################################################################
+	case useralarmcfg::c_deletefiltergroup4:
+		$userid = security::getIdFromUser();
+		$database = new wpDatabase();
+		if($database->query("DELETE FROM [cfg] WHERE [id_user] = ".$userid." AND [key] = '".cfg::alarmtable_filtergroup4."'")) {
+			echo 'S_OK';
+		} else {
+			echo '<span class="neg">Fehler passiert</span>';
+		}
+		break;
+//###################################################################################
+	case useralarmcfg::c_formfiltergroup5:
+		if(std::posts('message') != '') echo std::posts('message');
+		$userid = security::getIdFromUser();
+		$hasCfg = false;
+		if($userid > 0) {
+			$database = new wpDatabase();
+			$alarmgroup = array();
+			$database->query('SELECT [id_alarmgroups5], [name] FROM [alarmgroups5]');
+			while($erg = $database->fetch()) {
+				$alarmgroup[$erg['id_alarmgroups5']] = $erg['name'];
+			}
+			$database->query("SELECT TOP 1 [value] FROM [cfg] WHERE [id_user] = ".$userid." AND [key] = '".cfg::alarmtable_filtergroup5."'");
+			$erg = $database->fetch();
+			$userfilter = array();
+			if($database->hasRows() > 0) {
+				$hasCfg = true;
+				foreach (explode('%~%', $erg['value']) as $value) {
+					$userfilter[$value] = $alarmgroup[$value];
+				}
+			}
+		}
+		if(!$hasCfg) echo '<div class="entry"><span>kein Filter aktiv</span></div>';
+		foreach($alarmgroup as $key => $value) {
+			getGroupCheckbox($key);
+		}
+		break;
+//###################################################################################
+	case useralarmcfg::c_savefiltergroup5:
+		$intodb = implode('%~%', $_POST['userfltgroup5']);
+		$userid = security::getIdFromUser();
+		$database = new wpDatabase();
+
+		$sql = "MERGE INTO [cfg] AS TARGET
+				USING
+					(VALUES ('".$userid."', '".cfg::alarmtable_filtergroup5."', '".$intodb."'))
+							AS SOURCE (Userfield, Keyfield, Valuefield)
+				ON
+					[TARGET].[id_user] = [SOURCE].[Userfield] AND [TARGET].[key] = [SOURCE].[Keyfield]
+				WHEN MATCHED THEN
+					UPDATE SET [TARGET].[value] = [SOURCE].[Valuefield]
+				WHEN NOT MATCHED THEN
+					INSERT ([id_user], [key], [value]) VALUES ('".$userid."', '".cfg::alarmtable_filtergroup5."', '".$intodb."')
+				;";
+		if($database->query($sql)){
+			echo 'S_OK';
+		} else {
+			echo '<span class="neg">Fehler passiert</span>';
+		}
+		break;
+//###################################################################################
+	case useralarmcfg::c_deletefiltergroup5:
+		$userid = security::getIdFromUser();
+		$database = new wpDatabase();
+		if($database->query("DELETE FROM [cfg] WHERE [id_user] = ".$userid." AND [key] = '".cfg::alarmtable_filtergroup5."'")) {
+			echo 'S_OK';
+		} else {
+			echo '<span class="neg">Fehler passiert</span>';
+		}
+		break;
+//###################################################################################
+	case useralarmcfg::c_savegroups:
+		// std::test_array($_POST);
+		$database = new wpDatabase();
+		$sql = '';
+		for($i = 1; $i <= 10; $i++) {
+			$usename = ($i < 6) ? 'use' : 'name';
+			$j = ($i < 6) ? $i : $i - 5;
+			$sql .= "MERGE INTO [cfg] AS TARGET
+				USING
+					(VALUES ('".$usename."alarmgroup".$j."', '".std::posts($usename."group".$j)."'))
+							AS SOURCE (Keyfield, Valuefield)
+				ON
+					[TARGET].[key] = [SOURCE].[Keyfield]
+				WHEN MATCHED THEN
+					UPDATE SET [TARGET].[value] = [SOURCE].[Valuefield]
+				WHEN NOT MATCHED THEN
+					INSERT ([key], [value]) VALUES ('".$usename."alarmgroup".$j."', '".std::posts($usename."group".$j)."');
+				";
+		}
+
+		if($database->query($sql)){
+			$WebCom = new WebCom();
+			echo $WebCom->send('UpdateAlarmGroups');
+		} else {
+			echo '<span class="neg">Fehler passiert</span>';
+		}
+		break;
+//###################################################################################
+	case useralarmcfg::c_getentrie:
+		$g = new groupsentries(std::posts('id'));
+		$g->getHTML();
+		break;
+//###################################################################################
+	case useralarmcfg::c_addentrie:
+		$i = intval(std::posts('id'));
+		if(std::posts('text') != '' && $i > 0 && $i <= 5) {
+			$database = new wpDatabase();
+			$database->query("INSERT INTO [alarmgroups".$i."] ([name]) Values
+					('".std::posts('text')."')");
+			$WebCom = new WebCom();
+			echo $WebCom->send('UpdateAlarmGroups');
+		} else {
+			echo '<span class="neg">Bitte einen Text Eingeben</span>';
+		}
+		break;
+//###################################################################################
+	case useralarmcfg::c_saveentrie:
+		$g = intval(std::posts('group'));
+		$i = intval(std::posts('id'));
+		if(std::posts('text') != '' && $g > 0 && $g <= 5) {
+			$database = new wpDatabase();
+			$database->query("UPDATE [alarmgroups".$g."] SET [name] = '".std::posts('text')."'
+					WHERE [id_alarmgroups".$g."] = ".$i);
+			$WebCom = new WebCom();
+			echo $WebCom->send('UpdateAlarmGroups');
+		} else {
+			echo '<span class="neg">Bitte einen Text Eingeben</span>';
+		}
+		break;
+//###################################################################################
+	case useralarmcfg::c_deleteentrie:
+		$g = intval(std::posts('group'));
+		$i = intval(std::posts('id'));
+		if($g > 0 && $g <= 5) {
+			$database = new wpDatabase();
+			$database->query("DELETE FROM [alarmgroups".$g."]
+					WHERE [id_alarmgroups".$g."] = ".$i);
+			$WebCom = new WebCom();
+			echo $WebCom->send('UpdateAlarmGroups');
+		}
+		break;
+//###################################################################################
+	case useralarmcfg::c_gettypes:
+		$database = new wpDatabase();
+		echo '
+			<table>
+				<tbody>
+					<tr>
+						<td>Neuer Alarmtyp:</td>
+						<td><input type="text" class="ps-input" /></td>
+						<td><span class="ps-hover-noborder p-dpbutton p-dpadd" title="Neuen Eintrag speichern">'.wpHTML_EMPTY.'</span></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<th></th>
+						<th>Name</th>
+						<th>quittieren</th>
+						<td></td>
+						<td></td>
+					</tr>';
+		$database->query("SELECT [id_alarmtype], [name], [autoquit] FROM [alarmtype] ORDER BY [autoquit], [name]");
+		while($erg = $database->fetch()) {
+			echo '
+					<tr data-id="'.$erg['id_alarmtype'].'">
+						<td></td>
+						<td><input type="text" class="ps-input" value="'.$erg['name'].'" title="id: '.$erg['id_alarmtype'].'" /></td>
+						<td><span class="ps-checkbox'.($erg['autoquit'] ? ' checked' : '').'">automatisch</span></td>
+						<td><span class="ps-hover-noborder p-dpbutton p-dpsave" title="speichern">'.wpHTML_EMPTY.'</span></td>
+						<td><span class="ps-hover-noborder p-dpbutton p-dpdelete" title="löschen">'.wpHTML_EMPTY.'</span></td>
+					</tr>';
+		}
+		echo '
+				</tbody>
+			</table>';
+		break;
+//###################################################################################
+	case useralarmcfg::c_addtypes:
+		break;
+//###################################################################################
+	case useralarmcfg::c_deletetypes:
+		break;
+//###################################################################################
+	case useralarmcfg::c_savetypes:
+		break;
+//###################################################################################
+// default
+//###################################################################################
+	default:
+		\system\html::default();
+		break;
+}
+
+function getTypeCheckbox($value) {
+	global $userfilter, $hasCfg;
+	echo '<div class="entry">';
+	if($hasCfg) {
+		echo '<span class="ps-checkbox'.((std::arrays($userfilter, $value) != '') ? ' checked' : '').'" data-id="'.$value.'">'.cfg::$alarmtype[$value].'</span>';
+	} else {
+		echo '<span class="ps-checkbox checked" data-id="'.$value.'">'.cfg::$alarmtype[$value].'</span>';
+	}
+	echo '</div>';
+}
+function getGroupCheckbox($value) {
+	global $alarmgroup, $userfilter, $hasCfg;
+	echo '<div class="entry">';
+	$name = $alarmgroup[$value] == '' ? 'leer' : $alarmgroup[$value];
+	if($hasCfg) {
+		echo '<span class="ps-checkbox'.(isset($userfilter[$value]) ? ' checked' : '').'" data-id="'.$value.'">'.$name.'</span>';
+	} else {
+		echo '<span class="ps-checkbox checked" data-id="'.$value.'">'.$name.'</span>';
+	}
+	echo '</div>';
+}
+
+?>

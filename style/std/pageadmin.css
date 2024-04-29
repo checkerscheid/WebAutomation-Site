@@ -1,0 +1,26 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 505                                                     $ #
+//# Author       : $Author:: checker                                              $ #
+//# File-ID      : $Id:: pageadmin.css 505 2021-05-07 21:55:45Z checker           $ #
+//#                                                                                 #
+//###################################################################################
+?> pageadmin */
+
+#pageadmin { padding:20px; }
+#pageadmin h3 { padding-left:20px; }
+#pageadmin p { padding:5px 0 5px 50px; }
+#pageadmin div.floater { float:left; border:1px solid #ccc; margin:10px; padding:5px; }
+#pageadmin .ps-description { display:inline-block; width:170px; }
+#pageadmin .clickable { cursor:pointer; }
+#pageadmin .closed { height:0px; overflow:hidden; }
+#pageadmin .ps-container { text-align:left; }

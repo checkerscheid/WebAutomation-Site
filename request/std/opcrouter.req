@@ -1,0 +1,203 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christopher Korn                                                 #
+//# Date         : 06.06.2015                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 582                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: opcrouter.req 582 2024-04-10 06:45:45Z                   $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\std;
+use system\Helper\wpDatabase;
+use system\std, system\WebCom;
+class opcrouter {
+	const c_menuroutefrom = 'menuroutefrom';
+	const c_menurouteto = 'menurouteto';
+	const c_menuroutetochoice = 'menuroutetochoice';
+	const c_getpoints = 'getpoints';
+	const c_getnewrout = 'getnewrout';
+	const c_submenu = 'submenu';
+	const c_savenewroute = 'savenewroute';
+	const c_deleterouter = 'deleterouter';
+	const c_deletesingle = 'deletesingle';
+	const c_deletechecked = 'deletechecked';
+}
+switch(std::gets('param1')) {
+//###################################################################################
+// Menueeintraege
+//###################################################################################
+	case opcrouter::c_menuroutefrom:
+		echo '<h1>Neue Route</h1><span>Filter:</span><input type="text" class="ps-input filtertext" id="filtergroup" /><hr /><div><ul id="tree">';
+		$database = new wpDatabase();
+		$database->query('SELECT DISTINCT [g].[id_opcgroup], [g].[name]
+				FROM [opcdatapoint] [d]
+				INNER JOIN [opcgroup] [g] ON [d].[id_opcgroup] = [g].[id_opcgroup] ORDER BY [g].[name]');
+		while($erg = $database->fetch()) {
+			echo '<li class="ps-tree-parent" data-group="'.$erg['id_opcgroup'].'">'.$erg['name'].'</li>';
+			echo '<li data-points="'.$erg['id_opcgroup'].'"></li>';
+		}
+		echo '</ul>';
+		break;
+//###################################################################################
+	case opcrouter::c_menurouteto:
+		echo '<h1>Routenzuordnung</h1><hr /><div id="routen"><span>OPC Datenpunkt Quelle:';
+		echo '<select id="routwahl" class="ps-input">';
+		echo '<option>Bitte wählen</option>';
+		if (std::posts('name') != '' ){
+			echo '<option data-point="'.std::posts('datapoint').'">'.std::posts('name').'</option>';
+		};
+		$database = new wpDatabase();
+		$database->query('SELECT DISTINCT [r].[id_from], [d].[name]
+				FROM [opcrouter] [r]
+				INNER JOIN [opcdatapoint] [d] ON [r].[id_from] = [d].[id_opcdatapoint]
+				ORDER BY [d].[name]');
+		while($erg = $database->fetch()) {
+			echo '<option data-point="'.$erg['id_from'].'">'.$erg['name'].'</option>';
+		}
+		echo '</select></span><span class="ps-delete">'.wpHTML_EMPTY.'</span>';
+		echo '</div>';
+		echo '<hr />';
+		echo '<ul id="tree1"></ul>';
+		echo '<div id="selectdp"></div>';
+		break;
+//###################################################################################
+	case opcrouter::c_menuroutetochoice:
+		echo '<h3>OPC Datenpunkt Ziele</h3>';
+		echo '<ul>';
+		if (std::posts('datapoint') != '') {
+			echo '<li><div class="table">';
+			echo '<div class="tr">';
+			echo '<div class="td"><span>Markierung:<span></div><div class="td"><span class="ps-button markallroutes">alle</span></div><div class="td"><span class="ps-button marknone">keine</span></div>';
+			echo '</div><div class="tr">';
+			echo '<div class="td"><span>markierte:</span></div><div class="td"><span class="ps-button deletemarked">löschen</span></div>';
+			echo '</div>';
+			echo '</div></li>';
+			echo '<li><div class="table"><div class="tr"><div class="th">Name</div><div class="th"></div></div><hr />' ;
+			$database = new wpDatabase();
+			$database->query('SELECT [r].[id_opcrouter], [d].[name]
+					FROM [opcrouter] [r]
+					INNER JOIN [opcdatapoint] [d] ON [r].[id_to] = [d].[id_opcdatapoint]
+					WHERE [r].[id_from] ='.std::posts('datapoint').' ORDER BY [d].[name]');
+			while ($erg = $database->fetch()) {
+				echo '<div class="tr">';
+				echo '<div class="td"><span class="dplink td ps-checkbox" data-routid="'.$erg['id_opcrouter'].'">'.$erg['name'].'</span></div>';
+				echo '<div class="td"><span class="ps-button deletesingle">löschen</span></div>';
+				echo '</div>';
+			};
+			echo '</div></li>';
+		}
+		echo '</ul>';
+		break;
+//###################################################################################
+	case opcrouter::c_getpoints:
+		$database = new wpDatabase();
+		$database->query('SELECT [d].[id_opcdatapoint], [d].[name]
+				FROM [opcdatapoint] [d]
+				INNER JOIN [opcgroup] [g] ON [d].[id_opcgroup] = [g].[id_opcgroup]
+				WHERE [g].[id_opcgroup] = '.std::posts('group').'
+				AND [d].[id_opcdatapoint] NOT IN (SELECT DISTINCT [id_from] FROM [opcrouter]) ORDER BY [d].[name]');
+		echo '<ul class="dps">';
+		while ($erg = $database->fetch()) {
+			echo '<li class="dplink" data-dp="'.$erg['id_opcdatapoint'].'">'.$erg['name'].'</li>';
+		}
+		echo '</ul>';
+		break;
+//###################################################################################
+	case opcrouter::c_getnewrout:
+		$database = new wpDatabase();
+		$database->query('SELECT [d].[id_opcdatapoint], [d].[name]
+				FROM [opcdatapoint] [d]
+				INNER JOIN [opcgroup] [g] ON [d].[id_opcgroup] = [g].[id_opcgroup]
+				WHERE [g].[id_opcgroup] = '.std::posts('group').'
+				AND [d].[id_opcdatapoint] NOT IN (SELECT DISTINCT [id_to] FROM [opcrouter])
+				AND [d].[id_opcdatapoint] NOT IN (SELECT DISTINCT [id_from] FROM [opcrouter])
+				AND [d].[id_opcdatapoint] != '.std::posts('datapoint'));
+		echo '<ul id="selectnewrouts">';
+		if($database->hasRows() == 0) {
+			echo '<li>Es sind keine Items mehr zum hinzufügen übrig</li>';
+		} else {
+			while($erg = $database->fetch()) {
+				echo '<li class="ps-checkbox" data-value="'.$erg['id_opcdatapoint'].'">'.$erg['name']. '</li>';
+			}
+		}
+		break;
+//###################################################################################
+	case opcrouter::c_submenu:
+		$database = new wpDatabase();
+		$database->query('SELECT DISTINCT [r].[id_opcgroup], [r].[name]
+				FROM [opcdatapoint] [d]
+				INNER JOIN [opcgroup] [r] ON [d].[id_opcgroup] = [r].[id_opcgroup]');
+		echo '<span>Filter:</span><input type="text" class="ps-input newdpfilter" />';
+		echo '<span class="markall ps-button">alle markieren</span>';
+		echo '<span class="markno ps-button">Markierung entfernen</span>';
+		echo '<span class="savenewroute ps-button">markierte hinzuf&uuml;gen</span>';
+		echo '<hr />';
+		echo '<ul>';
+		while($erg = $database->fetch()) {
+			echo '<li class="ps-tree-parent" data-group="'.$erg['id_opcgroup'].'">'.$erg['name'].'</li>';
+			echo '<li data-points="'.$erg['id_opcgroup'].'"></li>';
+		}
+		echo '</ul>';
+		break;
+//###################################################################################
+	case opcrouter::c_savenewroute:
+		$database = new wpDatabase();
+		if(std::posts('routes') != '' ) {
+			$query = 'INSERT INTO [opcrouter] ([id_from],[id_to]) VALUES ';
+			foreach(std::posts('routes') as $Route) {
+				$query .= '('.std::posts('router').', '.$Route.'), ';
+			}
+			$query = substr($query, 0, -2);
+			$database->query($query);
+			$WebCom = new WebCom();
+			$WebCom->send('UpdateRouter', std::posts('router'));
+		}
+		break;
+//###################################################################################
+	case opcrouter::c_deleterouter:
+		$database = new wpDatabase();
+		if (std::posts('router') != '') {
+			$database->query('DELETE FROM [opcrouter] WHERE [id_from] = '.std::posts('router'));
+			$WebCom = new WebCom();
+			$WebCom->send('UpdateRouter', std::posts('router'));
+			echo 'S_OK';
+		}
+		break;
+//###################################################################################
+	case opcrouter::c_deletesingle:
+		$database = new wpDatabase();
+		if (std::posts('single') != '') {
+			$database->query('DELETE FROM [opcrouter] WHERE [id_opcrouter] = '.std::posts('single'));
+			$WebCom = new WebCom();
+			$WebCom->send('UpdateRouter', std::posts('router'));
+			echo 'S_OK';
+		}
+		break;
+//###################################################################################
+	case opcrouter::c_deletechecked:
+		$database = new wpDatabase();
+		if(std::posts('group') != '') {
+			$query = 'DELETE FROM [opcrouter] WHERE [id_opcrouter] IN (';
+			foreach(std::posts('group') as $value) {
+				$query .= $value.', ';
+			}
+			$query = substr($query, 0, -2).')';
+			$database->query($query);
+			$WebCom = new WebCom();
+			$WebCom->send('UpdateRouter', std::posts('router'));
+			echo 'S_OK';
+		}
+		break;
+//###################################################################################
+	default:
+		\system\html::default();
+		break;
+}
+?>

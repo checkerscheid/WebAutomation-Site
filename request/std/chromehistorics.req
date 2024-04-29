@@ -1,0 +1,103 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 06.03.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: chromehistorics.req 550 2023-12-25 03:02:54Z             $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\std;
+use system\Helper\wpDatabase;
+use system\Helper\wpConvert;
+use system\Helper\wpDateTime;
+use system\std, system\wpInit;
+class chromehistorics {
+	const c_getactivitytable = 'getactivitytable';
+	const c_delete = 'delete';
+}
+
+switch(std::gets('param1')) {
+	//###################################################################################
+	case chromehistorics::c_getactivitytable:
+		$where = '';
+		if(std::posts('from') != '' && std::posts('to') == '') {
+			$where = "WHERE [datetime] > '".std::posts('from')."T00:00:00'";
+		}
+		if(std::posts('from') == '' && std::posts('to') != '') {
+			$where = "WHERE [datetime] < '".std::posts('to')."T23:59:59'";
+		}
+		if(std::posts('from') != '' && std::posts('to') != '') {
+			$where = "WHERE [datetime] > '".std::posts('from')."T00:00:00' AND [datetime] < '".std::posts('to')."T23:59:59'";
+		}
+		getTable($where);
+		break;
+	//###################################################################################
+	case chromehistorics::c_delete:
+		$database = new wpDatabase();
+		$timedelete = new wpDatetime();
+		$sql = "DELETE FROM [chromehistorics] WHERE [datetime] < '".$timedelete->sub(new \Dateinterval('P'.std::posts('dsgvo').'D'))->format(wpDateTime::forDB)."'";
+		if($database->query($sql)) echo 'S_OK';
+		break;
+	//###################################################################################
+	default:
+		\system\html::default();
+		break;
+}
+
+function getTable($where) {
+	?>
+<table id="historictable" class="stripe hover">
+	<thead>
+		<tr>
+			<th>Zeit</th>
+			<th>IP</th>
+<? if(wpInit::$useDns) { ?>
+			<th>Host</th>
+<? } ?>
+			<th>Benutzername</th>
+			<th>Seite</th>
+		</tr>
+	</thead>
+	<tbody>
+<?
+	$scriptstart = microtime(true);
+	$database = new wpDatabase();
+	$database->query('
+		SELECT [chromeuser].[ip]
+			'.(wpInit::$useDns ? ',[chromeuser].[host]' : '').'
+			,[user].[name]
+			,[user].[lastname]
+			,[chromeuser].[page]
+			,[chromeuser].[datetime]
+		FROM [chromeuser]
+			LEFT OUTER JOIN [user] ON [chromeuser].[id_user] = [user].[id_user]
+		'.$where.' ORDER BY [chromeuser].[datetime] DESC
+	');
+	$count = $database->hasRows();
+	while($erg = $database->fetch()) {
+		echo '<tr>';
+		echo '<td>'.wpConvert::getdeDateTimeFromDB($erg['datetime']).'</td>';
+		echo '<td>'.$erg['ip'].'</td>';
+		if(wpInit::$useDns) echo '<td>'.$erg['host'].'</td>';
+		echo '<td>'.$erg['name'] . ' ' . $erg['lastname'].'</td>';
+		echo '<td>'.$erg['page'].'</td>';
+		echo '</tr>';
+	}
+?>
+	</tbody>
+</table>
+<?
+	//if(intval($count) >= 1000) echo '<span>Ihre Abfrage erzeugte 1000 Datens&auml;tze. Es sind vielleicht weitere Daten vorhanden. Bitte spezifizieren Sie Ihre Suchanfrage.</span>';
+	echo '<!-- Eintraege: '.$count." -->\n";
+	echo '<!-- Dauer:'.(microtime(true) - $scriptstart)." -->\n";
+}
+
+?>
