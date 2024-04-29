@@ -59,7 +59,7 @@ class wpDatabase {
 			$error = std::arrays($sqlerror, '0');
 			if(std::arrays($error, 'code') != '3604') {
 				die(ERROR_QUERY_NOT_VALID .
-						((wpInit::$PDebug) ?
+						((wpInit::$PDebugSQL) ?
 								'<br />' . $query . '<br />' . std::test_array(sqlsrv_errors()) :
 								'<br /><br />' . std::arrays($error, 'message')));
 			}

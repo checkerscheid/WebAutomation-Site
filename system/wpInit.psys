@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 582                                                     $ #
+//# Revision     : $Rev:: 593                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpInit.psys 582 2024-04-10 06:45:45Z                     $ #
+//# File-ID      : $Id:: wpInit.psys 593 2024-04-29 17:50:03Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace system;
@@ -28,6 +28,8 @@ define('SESSION_ID', 'WebAutomation');
 class wpInit {
 	/** Debugen <b>[ true | false ]</b> */
 	public static $PDebug = true;
+	/** SQL Debugen <b>[ true | false ]</b> */
+	public static $PDebugSQL = true;
 	/** Alarmlinks automatisch für registrierte Datenpunkte eintragen <b>[ true | false ]</b> */
 	public static $SetAlarmLink = false;
 	/** Daten für den Datenbankzugriff */
@@ -88,7 +90,7 @@ class wpInit {
 			// Popup Name
 			'name'						=> 'Projektierung',
 			// Headline => src
-			'Treiber Konfiguration'		=> array( 'dpactive', 'opcbrowse', 'opcactive', 'mqttactive', 'shellycfg', 'd1miniactive' ),
+			'Treiber Konfiguration'		=> array( 'dpactive', 'opcbrowse', 'opcactive', 'mqttactive', 'shellycfg', 'd1minibrowse', 'd1miniactive' ),
 			'Server Konfiguration'		=> array( 'alarmcfg', 'trendcfg', 'calendarcfg', 'scenecfg', 'calendarscenecfg' )
 		),
 		// Popup id
