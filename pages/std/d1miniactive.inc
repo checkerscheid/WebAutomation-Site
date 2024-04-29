@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 03.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 591                                                     $ #
+//# Revision     : $Rev:: 593                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1miniactive.inc 591 2024-04-24 20:57:52Z                $ #
+//# File-ID      : $Id:: d1miniactive.inc 593 2024-04-29 17:50:03Z                $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
@@ -23,14 +23,6 @@ $database->query("SELECT [id_d1mini], [name], [description], [ip], [mac], [versi
 ?>
 <div id="d1miniactive">
 	<h1><?=$headline['name']?></h1>
-	<div id="globalD1MiniCmd">
-		<span class="ps-button startSearch">Start Search</span>
-	</div>
-	<div class="searchResult">
-		<h3 class="foundNew"></h3>
-		<div class="erg"></div>
-		<pre class="wpDebugResult"></pre>
-	</div>
 	<table summary="">
 		<thead>
 			<tr>
