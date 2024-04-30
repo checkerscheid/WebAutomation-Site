@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 16.12.2019                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 602                                                     $ #
+//# Revision     : $Rev:: 595                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: shellybrowse.inc 602 2024-04-30 06:12:43Z                $ #
+//# File-ID      : $Id:: shellycfg.inc 595 2024-04-30 01:38:01Z                   $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */

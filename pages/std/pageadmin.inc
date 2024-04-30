@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 12.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 582                                                     $ #
+//# Revision     : $Rev:: 598                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pageadmin.inc 582 2024-04-10 06:45:45Z                   $ #
+//# File-ID      : $Id:: pageadmin.inc 598 2024-04-30 02:01:27Z                   $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
@@ -71,7 +71,7 @@ function getUserGroupDropDown($current) {
 		$storedFiles[] = $erg['src'].'.inc';
 		if($_SESSION[SESSION_ID]['LEVEL'] >= $erg['order']) {
 			$html .= '<div data-id="' .  $erg['id_webpages']. '" class="ps-container">';
-			$html .= '<h3 class="clickable'.($erg['name'] == $erg['src'] ? ' ps-red' : '').'">'.\system\html::getUebersichtPagename($erg['name']).'</h3>';
+			$html .= '<h3 class="clickable'.($erg['name'] == $erg['src'] ? ' ps-fontred' : '').'">'.\system\html::getUebersichtPagename($erg['name']).'</h3>';
 			$html .= '<div class="closeable closed">';
 			$html .= '<p><span class="ps-description">Neuer Name:</span><input type="text" class="ps-input name" value="'.$erg['name'].'" /></p>';
 			$html .= '<p><span class="ps-description">ben&ouml;tigte Sicherheitsgruppe:</span>'.getUserGroupDropDown($erg['order']).'</p>';
@@ -79,15 +79,15 @@ function getUserGroupDropDown($current) {
 			$html .= '<p><span class="ps-description">editierbar:</span>'.($erg['static'] == 0 ? 'ja' : 'nein').'</p>';
 			$html .= '<p><span class="ps-description">Quelldatei:</span>'.$erg['src'].'.inc</p>';
 			$html .= '<p class="ps-flright">';
-			$html .= (file_exists('pages/' . $erg['src'].'.inc') ? '<a href="' . $erg['src'] . '.htm" class="ps-green">pages</a>' : '<span>pages</span>') . wpHTML_EMPTY . '-' . wpHTML_EMPTY;
-			$html .= '<span class="' . (file_exists('script/' . $erg['src'].'.js') ? 'ps-green' : (file_exists('pages/' . $erg['src'].'.inc') ? 'ps-red' : '')) . '">script</span>' . wpHTML_EMPTY . '-' . wpHTML_EMPTY;
-			$html .= '<span class="' . (file_exists('style/' . $erg['src'].'.css') ? 'ps-green' : (file_exists('pages/' . $erg['src'].'.inc') ? 'ps-red' : '')) . '">style</span>' . wpHTML_EMPTY . '-' . wpHTML_EMPTY;
-			$html .= '<span class="' . (file_exists('request/' . $erg['src'].'.req') ? 'ps-green' : (file_exists('pages/' . $erg['src'].'.inc') ? 'ps-red' : '')) . '">request</span><br />';
+			$html .= (file_exists('pages/' . $erg['src'].'.inc') ? '<a href="' . $erg['src'] . '.htm" class="ps-fontgreen">pages</a>' : '<span>pages</span>') . wpHTML_EMPTY . '-' . wpHTML_EMPTY;
+			$html .= '<span class="' . (file_exists('script/' . $erg['src'].'.js') ? 'ps-fontgreen' : (file_exists('pages/' . $erg['src'].'.inc') ? 'ps-fontred' : '')) . '">script</span>' . wpHTML_EMPTY . '-' . wpHTML_EMPTY;
+			$html .= '<span class="' . (file_exists('style/' . $erg['src'].'.css') ? 'ps-fontgreen' : (file_exists('pages/' . $erg['src'].'.inc') ? 'ps-fontred' : '')) . '">style</span>' . wpHTML_EMPTY . '-' . wpHTML_EMPTY;
+			$html .= '<span class="' . (file_exists('request/' . $erg['src'].'.req') ? 'ps-fontgreen' : (file_exists('pages/' . $erg['src'].'.inc') ? 'ps-fontred' : '')) . '">request</span><br />';
 
-			$html .= (stream_resolve_include_path('pages/std/' . $erg['src'].'.inc') ? '<a href="std.' . $erg['src'] . '.htm" class="ps-green">pages</a>' : '<span>pages</span>') . wpHTML_EMPTY . '-' . wpHTML_EMPTY;
-			$html .= '<span class="' . (stream_resolve_include_path('script/std/' . $erg['src'].'.js') ? 'ps-green' : (stream_resolve_include_path('pages/std/' . $erg['src'].'.inc') ? 'ps-red' : '')) . '">script</span>' . wpHTML_EMPTY . '-' . wpHTML_EMPTY;
-			$html .= '<span class="' . (stream_resolve_include_path('style/std/' . $erg['src'].'.css') ? 'ps-green' : (stream_resolve_include_path('pages/std/' . $erg['src'].'.inc') ? 'ps-red' : '')) . '">style</span>' . wpHTML_EMPTY . '-' . wpHTML_EMPTY;
-			$html .= '<span class="' . (stream_resolve_include_path('request/std/' . $erg['src'].'.req') ? 'ps-green' : (stream_resolve_include_path('pages/std/' . $erg['src'].'.inc') ? 'ps-red' : '')) . '">request</span>';
+			$html .= (stream_resolve_include_path('pages/std/' . $erg['src'].'.inc') ? '<a href="std.' . $erg['src'] . '.htm" class="ps-fontgreen">pages</a>' : '<span>pages</span>') . wpHTML_EMPTY . '-' . wpHTML_EMPTY;
+			$html .= '<span class="' . (stream_resolve_include_path('script/std/' . $erg['src'].'.js') ? 'ps-fontgreen' : (stream_resolve_include_path('pages/std/' . $erg['src'].'.inc') ? 'ps-fontred' : '')) . '">script</span>' . wpHTML_EMPTY . '-' . wpHTML_EMPTY;
+			$html .= '<span class="' . (stream_resolve_include_path('style/std/' . $erg['src'].'.css') ? 'ps-fontgreen' : (stream_resolve_include_path('pages/std/' . $erg['src'].'.inc') ? 'ps-fontred' : '')) . '">style</span>' . wpHTML_EMPTY . '-' . wpHTML_EMPTY;
+			$html .= '<span class="' . (stream_resolve_include_path('request/std/' . $erg['src'].'.req') ? 'ps-fontgreen' : (stream_resolve_include_path('pages/std/' . $erg['src'].'.inc') ? 'ps-fontred' : '')) . '">request</span>';
 			$html .= '</p>';
 			$html .= '<p>';
 			$html .= '<span class="ps-button updatepage">speichern</span>';
