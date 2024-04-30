@@ -1,0 +1,148 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 04.03.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 600                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: d1minicfg.req 600 2024-04-30 05:58:46Z                   $ #
+//#                                                                                 #
+//###################################################################################
+namespace popup\std;
+use system\Helper\wpDatabase;
+use system\std;
+
+require_once 'system/Helper/d1mini.psys';
+
+switch(std::gets('param1')) {
+	//###################################################################################
+	case d1minicfg::c_infoToSaveD1Mini:
+		d1minicfg::infoToSaveD1Mini();
+		break;
+		//###################################################################################
+	case d1minicfg::c_allChoosen:
+		d1minicfg::allChoosen();
+		break;
+		//###################################################################################
+	case d1minicfg::c_allGroup:
+		d1minicfg::allGroup();
+		break;
+	//###################################################################################
+	default:
+		//\system\html::default();
+		break;
+}
+
+class d1minicfg {
+	const c_infoToSaveD1Mini = 'infoToSaveD1Mini';
+	public static function infoToSaveD1Mini() {
+		$wpDatabase = new wpDatabase();
+		$html = '<table summary="">';
+		//$d1MiniGroup;
+		$wpDatabase->query("SELECT " .
+				"[id_d1minigroup], [name] " .
+				"FROM [d1minigroup] " .
+				"ORDER BY [name]");
+		$html .= '<tr><td>D1Mini Group:</td><td><select class="ps-input id_d1minigroup">';
+		while($erg = $wpDatabase->fetch()) $html .= self::getSelect($erg['id_d1minigroup'], $erg['name']);
+		$html .= '</select></td></tr>';
+		//$mqttBroker;
+		$wpDatabase->query("SELECT " .
+				"[id_mqttbroker], CONCAT([ip], ':', [port]) AS [server] " .
+				"FROM [WebAutomation].[dbo].[mqttbroker] " .
+				"ORDER BY [ip]");
+		$html .= '<tr><td>MQTT Broker:</td><td><select class="ps-input id_mqttbroker">';
+		while($erg = $wpDatabase->fetch()) $html .= self::getSelect($erg['id_mqttbroker'], $erg['server']);
+		$html .= '</select></td></tr>';
+		//$dBGroup;
+		$wpDatabase->query("SELECT " .
+				"[dpgroup].[id_dpgroup], CONCAT([dpnamespace].[name], ' / ', [dpgroup].[name]) AS [dpgroupname] " .
+				"FROM [dpgroup] " .
+				"INNER JOIN [dpnamespace] ON [dpgroup].[id_dpnamespace] = [dpnamespace].[id_dpnamespace] " .
+				"ORDER BY [dpnamespace].[name], [dpgroup].[name]");
+		$html .= '<tr><td>DP Group:</td><td><select class="ps-input id_dpgroup">';
+		while($erg = $wpDatabase->fetch()) $html .= self::getSelect($erg['id_dpgroup'], $erg['dpgroupname']);
+		$html .= '</select></td></tr>';
+		//$trendGroup;
+		$wpDatabase->query("SELECT " .
+				"[id_trendgroup], [name] " .
+				"FROM [trendgroup] " .
+				"ORDER BY [name]");
+		$html .= '<tr><td>Trend Group:</td><td><select class="ps-input id_trendgroup">';
+		while($erg = $wpDatabase->fetch()) $html .= self::getSelect($erg['id_trendgroup'], $erg['name']);
+		$html .= '</select></td></tr>';
+
+		echo $html . '</table>';
+	}
+	//###################################################################################
+	const c_allChoosen = 'allChoosen';
+	public static function allChoosen() {
+		$html = '
+		<h3>ausgewälte D1 Minis:</h3>
+		<ul class="names">';
+		foreach(std::posts('names') as $name) {
+			$html .= '
+			<li>'.$name.'</li>';
+		}
+		$html .= '
+		</ul>';
+		echo $html;
+	}
+	//###################################################################################
+	const c_allGroup = 'allGroup';
+	public static function allGroup() {
+		$html = '
+		<h3>ausgewälte D1 Minis:</h3>
+		<ul class="names">';
+		foreach(std::posts('names') as $name) {
+			$html .= '
+			<li>'.$name.'</li>';
+		}
+		$html .= '
+		</ul>
+		<hr />
+		<div class="table">
+		'.getD1MiniGroups().'
+		</div>';
+		echo $html;
+	}
+	//###################################################################################
+	private static function getSelect($val, $name) {
+		return "<option value='$val'>$name</option>";
+	}
+}
+
+//###################################################################################
+// Hilfsfunktionen
+//###################################################################################
+function getD1MiniGroups($defaultValue = 0) {
+	$d1minis = array('NULL' => 'keine Gruppe');
+	$database = new wpDatabase();
+	$database->query('SELECT [id_d1minigroup], [name] FROM [d1minigroup] ORDER BY [name]');
+	while($erg = $database->fetch()) $d1minis[$erg['id_d1minigroup']] = $erg['name'];
+	$html = '
+	<div class="tr">
+		<div class="td"><label for="c-group">neue D1 Mini Gruppe</label></div>
+		<div class="td">
+			<select id="c-group" class="ps-input">
+			'.createDropDown($d1minis, $defaultValue).'
+			</select>
+		</div>
+	</div>';
+	return $html;
+}
+//###################################################################################
+function createDropDown($array, $active = 0) {
+	$html = '';
+	foreach($array as $key => $value) {
+		$selected = $active == $key ? ' selected="selected"' : '';
+		$html .= '<option value="'.$key.'"'.$selected.'>'.$value.'</option>';
+	}
+	return $html;
+}

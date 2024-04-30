@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 26.01.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 585                                                     $ #
+//# Revision     : $Rev:: 595                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: project.css 585 2024-04-15 22:57:57Z                     $ #
+//# File-ID      : $Id:: project.css 595 2024-04-30 01:38:01Z                     $ #
 //#                                                                                 #
 //###################################################################################
 ?> projekt */
@@ -85,12 +85,12 @@ html.black { background:#606060 url(images/layout/black/main-border.png) repeat-
 .black .pagemenuright { background:transparent url(images/layout/black/navi-right.png) no-repeat; }
 .black .pagemenucontent { background:transparent url(images/layout/black/navi-center.png) repeat-x; }
 .black .footermenucontent { background:transparent url(images/layout/black/footer-center.png) 0px -15px repeat-x; }
+.black .ps-input, .black .ps-input * { color:#000; }
 .black .pos, .black .ps-fontgreen { color:#0F0; }
 .black .neg, .black .ps-fontred { color:#A91919; }
 .black .warn, .black .ps-fontyellow { color:#FFBF00; }
 .black .info, .black .ps-fontblue { color:#00F; }
 .black .ps-grey { color:#808080; }
-.black .ps-input, .black .ps-input * { color:#000; }
 .black .ps-tree-parent:hover { background-color:#888; border-radius:2px; }
 html.black .ps-navi-button { color:#636363; }
 .black .ps-container { background-image:linear-gradient(rgba(50,50,50,0.7) 25%, rgba(21,21,21,0.7) 100%); }

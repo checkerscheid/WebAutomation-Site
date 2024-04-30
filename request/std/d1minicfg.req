@@ -1,0 +1,290 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 04.03.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 599                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: d1minicfg.req 599 2024-04-30 05:58:15Z                   $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\std;
+use system\Helper\wpDatabase;
+use system\std, system\WebCom;
+use system\Helper\d1mini;
+
+require_once 'request/system/groups.psys';
+require_once 'system/Helper/d1mini.psys';
+
+class d1minicfg {
+	const c_menusearchd1mini = 'menusearchd1mini';
+	public static function menusearchd1mini() {
+		echo '
+			<div class="searchResult">
+				<h3 class="foundNew"></h3>
+				<div class="erg"></div>
+				<pre class="wpDebugResult"></pre>
+			</div>';
+	}
+	const c_menueditelem = 'menueditelem';
+	public static function menueditelem() {
+		$html = '
+			<h1>D1 Mini Details</h1>
+			<hr />
+			<ul id="trend">';
+		$wpDatabase = new wpDatabase();
+		$wpDatabase->query('SELECT [id_d1minigroup], [name] FROM [d1minigroup] ORDER BY [name]');
+		while($erg = $wpDatabase->fetch()) {
+			$html .= '
+				<li class="ps-tree-parent d1minigroupfolder" data-d1minigroup="'.$erg['id_d1minigroup'].'">'.$erg['name'].'</li>
+				<li data-d1minis="'.$erg['id_d1minigroup'].'"></li>';
+		}
+		$html .= '
+				<li class="ps-tree-parent d1minigroupfolder" data-d1minigroup="NULL">D1 Minis ohne Gruppe</li>
+				<li data-d1minis="NULL"></li>
+			</ul>';
+		echo $html;
+	}
+	const c_startFreakaZoneSearch = 'startFreakaZoneSearch';
+	public static function startFreakaZoneSearch() {
+		header(wpJSON_HEADER);
+		$WebCom = new WebCom(5);
+		echo $WebCom->send('StartD1MiniSearch');
+	}
+	const c_saveSearchedDevice = 'saveSearchedDevice';
+	public static function saveSearchedDevice() {
+		$d1m = new d1mini(std::posts('IP'));
+		$d1m->insertDevice(std::posts('id_d1minigroup'), std::posts('id_mqttbroker'), std::posts('id_dpgroup'), std::posts('id_trendgroup'));
+		/*
+		 $WebCom = new WebCom();
+		 echo $WebCom->send('AddD1Mini', "$newID");
+		 */
+		echo 'S_OK';
+	}
+	const c_getd1minis = 'getd1minis';
+	public static function getd1minis() {
+		$wpDatabase = new wpDatabase();
+		$wpDatabase->query("
+			SELECT
+				[id_d1mini], [name], [description], [ip], [mac], [version], [active]
+			FROM [d1mini]
+			WHERE [id_d1minigroup] ".(std::posts('d1minigroup') == 'NULL' ? 'IS NULL' : ' = '.std::posts('d1minigroup'))."
+			ORDER BY [name]");
+		$html = '
+<ul class="d1miniingroup" data-group="'.std::posts('d1minigroup').'">
+	<li><hr /></li>
+	<li>
+		<div class="table forall">
+			<div class="tr">
+				<div class="td"><span>Markierung:</span></div>
+				<div class="td">
+					<span class="ps-button markall">alle</span>
+					<span class="ps-button markno">keine</span>
+				</div>
+			</div>
+			<div class="tr">
+				<div class="td"><span>markierte:</span></div>
+				<div class="td">
+					<span class="ps-button allgroup" title="in Gruppe verschieben">Gruppe</span>
+					<span class="ps-button allaktiv" title="aktivieren / deaktivieren">Aktiv</span>
+					<span class="ps-button alldelete">l&ouml;schen</span>
+				</div>
+			</div>
+		</div>
+	</li>
+	<li><hr /></li>
+	<li>
+		<table summary="">
+			<thead>
+				<tr>
+					<th></th>
+					<th>Name</th>
+					<th>Beschreibung</th>
+					<th>IP</th>
+					<th>MAC</th>
+					<th>Version</th>
+					<th>SSID</th>
+					<th>UpdateMode</th>
+					<th>aktiv</th>
+					<th></th>
+					<th></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>';
+		while($erg = $wpDatabase->fetch()) {
+			$html .= '
+				<tr class="D1MiniDevice" data-id="' . $erg['id_d1mini'] . '" data-name="' . $erg['name'] . '">
+					<td class="buttonbox">
+						<span class="ps-checkbox">'.wpHTML_EMPTY.'</span>
+					</td>
+					<td data-column="name">
+						<div class="buttonContainer">
+							<span class="ps-hover-noborder ps-image-button ps-refresh"></span>
+						</div>
+						<span class="stored">' . $erg['name'] . '</span><br />
+						<span class="smallfont name"></span>
+					</td>
+					<td data-column="description">
+						<div class="buttonContainer">
+							<span class="ps-hover-noborder ps-image-button ps-refresh"></span>
+						</div>
+						<span class="stored">' . $erg['description'] . '</span><br />
+						<span class="smallfont description"></span>
+					</td>
+					<td data-column="ip">
+						<div class="buttonContainer">
+							<span class="ps-hover-noborder ps-image-button ps-refresh"></span>
+							<a href="http://' . $erg['ip'] . '/print" target="_blank" class="ps-hover-noborder ps-image-button ps-edit" title="Debug"></a>
+							<a href="http://' . $erg['ip'] . '/status" target="_blank" class="ps-hover-noborder ps-image-button ps-info" title="Status"></a>
+						</div>
+						<span class="stored">' . $erg['ip'] . '</span><br />
+						<span class="smallfont ip"></span>
+					</td>
+					<td data-column="mac">
+						<div class="buttonContainer">
+							<span class="ps-hover-noborder ps-image-button ps-refresh"></span>
+						</div>
+						<span class="stored">' . $erg['mac'] . '</span><br />
+						<span class="smallfont mac"></span>
+					</td>
+					<td data-column="version">
+						<div class="buttonContainer">
+							<span class="ps-hover-noborder ps-image-button ps-refresh"></span>
+						</div>
+						<span class="stored">' . $erg['version'] . '</span><br />
+						<span class="smallfont version"></span>
+					</td>
+					<td data-column="ssid">
+						<span class="ssid"></span>
+					</td>
+					<td data-column="updatemode">
+						<span class="updatemode"></span>
+					</td>
+					<td>' . ($erg['active'] == 1 ? '<span class="ps-fontgreen">aktiv</span>' : '<span class="ps-fontyellow">deaktiviert</span>') . '</td>
+					<td class="buttonbox"><span class="ps-button forceupdate" title="Force MQTT Update">MQTT Update</span></td>
+					<td class="buttonbox"><span class="ps-button setupmode" title="Set FW Update Mode On">Update Mode</span></td>
+					<td class="buttonbox"><span class="ps-button restartdevice">neu starten</span></td>
+				</tr>';
+		}
+		$html .= '
+			</tbody>
+		</table>
+	</li>
+</ul>';
+		echo $html;
+	}
+	const c_getalld1minisettings = 'getalld1minisettings';
+	public static function getalld1minisettings() {
+		header('Content-Type: application/json');
+		$WebCom = new WebCom();
+		echo $WebCom->send('getAllD1MiniSettings');
+	}
+	const c_updateColumn = 'updateColumn';
+	public static function updateColumn($id, $column, $value) {
+		$wpDatabase = new wpDatabase();
+		if($value != '') {
+			$sql = "UPDATE [d1mini] SET [$column] = '$value' WHERE [id_d1mini] = $id";
+			$wpDatabase->query($sql);
+		}
+	}
+	const c_setcmd = 'setcmd';
+	public static function setcmd($name, $cmd) {
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniCmd', "$name%~%$cmd");
+	}
+	const c_allGroup = 'allGroup';
+	public static function allGroup() {
+		$where = '';
+		foreach(std::posts('ids', array()) as $ids) {
+			$where .= '[id_d1mini] = '.$ids.' OR ';
+		}
+		$database = new wpDatabase();
+		$database->query("UPDATE [d1mini] SET
+			[id_d1minigroup] = ".std::posts('newgroup')."
+			WHERE ".substr($where, 0, -4));
+		echo '{"erg": "S_OK"}';
+	}
+	const c_allActive = 'allActive';
+	public static function allActive() {
+		$where = '';
+		foreach(std::posts('ids', array()) as $ids) {
+			$where .= '[id_d1mini] = '.$ids.' OR ';
+		}
+		$database = new wpDatabase();
+		$database->query("UPDATE [d1mini] SET
+			[active] = ".(std::posts('newaktiv') == 'True' ? '1' : '0')."
+			WHERE ".substr($where, 0, -4));
+	}
+	const c_allDelete = 'allDelete';
+	public static function allDelete() {
+		$fortcp = '';
+		foreach(std::posts('ids', array()) as $ids) {
+			$fortcp .= $ids.'%~%';
+		}
+		$WebCom = new WebCom();
+		echo $WebCom->send('DeleteD1Mini', substr($fortcp, 0, -3));
+	}
+	private static function getSelect($val, $name) {
+		return "<option value='$val'>$name</option>";
+	}
+}
+
+switch(std::gets('param1')) {
+	//###################################################################################
+	case d1minicfg::c_menusearchd1mini:
+		d1minicfg::menusearchd1mini();
+		break;
+		//###################################################################################
+	case d1minicfg::c_menueditelem:
+		d1minicfg::menueditelem();
+		break;
+		//###################################################################################
+	case d1minicfg::c_startFreakaZoneSearch:
+		d1minicfg::startFreakaZoneSearch();
+		break;
+		//###################################################################################
+	case d1minicfg::c_saveSearchedDevice:
+		d1minicfg::saveSearchedDevice();
+		break;
+		//###################################################################################
+	case d1minicfg::c_getd1minis:
+		d1minicfg::getd1minis();
+		break;
+		//###################################################################################
+	case d1minicfg::c_getalld1minisettings:
+		d1minicfg::getalld1minisettings();
+		break;
+		//###################################################################################
+	case d1minicfg::c_updateColumn:
+		d1minicfg::updateColumn(std::posts('id'), std::posts('column'), std::posts('value'));
+		break;
+		//###################################################################################
+	case d1minicfg::c_setcmd:
+		d1minicfg::setcmd(std::posts('name'), std::posts('cmd'));
+		break;
+		//###################################################################################
+	case d1minicfg::c_allGroup:
+		d1minicfg::allGroup();
+		break;
+		//###################################################################################
+	case d1minicfg::c_allActive:
+		d1minicfg::allActive();
+		break;
+		//###################################################################################
+	case d1minicfg::c_allDelete:
+		d1minicfg::allDelete();
+		break;
+		//###################################################################################
+	default:
+		//\system\html::default();
+		break;
+}
+
+?>

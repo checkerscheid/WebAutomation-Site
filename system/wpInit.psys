@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 593                                                     $ #
+//# Revision     : $Rev:: 597                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpInit.psys 593 2024-04-29 17:50:03Z                     $ #
+//# File-ID      : $Id:: wpInit.psys 597 2024-04-30 01:43:28Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace system;
@@ -90,7 +90,7 @@ class wpInit {
 			// Popup Name
 			'name'						=> 'Projektierung',
 			// Headline => src
-			'Treiber Konfiguration'		=> array( 'dpactive', 'opcbrowse', 'opcactive', 'mqttactive', 'shellycfg', 'd1minibrowse', 'd1miniactive' ),
+			'Treiber Konfiguration'		=> array( 'dpactive', 'opcbrowse', 'opcactive', 'mqttactive', 'shellycfg', 'd1minicfg' ),
 			'Server Konfiguration'		=> array( 'alarmcfg', 'trendcfg', 'calendarcfg', 'scenecfg', 'calendarscenecfg' )
 		),
 		// Popup id
