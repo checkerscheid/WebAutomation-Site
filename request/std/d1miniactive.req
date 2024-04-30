@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 04.03.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 585                                                     $ #
+//# Revision     : $Rev:: 593                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1miniactive.req 585 2024-04-15 22:57:57Z                $ #
+//# File-ID      : $Id:: d1miniactive.req 593 2024-04-29 17:50:03Z                $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -19,27 +19,11 @@ use system\WebCom;
 use system\std;
 use system\Helper\wpDatabase;
 class d1miniactive {
-	const c_startFreakaZoneSearch = 'startFreakaZoneSearch';
-	public static function startFreakaZoneSearch() {
-		header('Content-Type: application/json');
-		$WebCom = new WebCom(5);
-		echo $WebCom->send('StartD1MiniSearch');
-	}
-	const c_saveSearchedDevice = 'saveSearchedDevice';
-	public static function saveSearchedDevice() {
-		$sql = "INSERT INTO [d1mini] ([name], [ip], [mac], [version], [active]) VALUES
-			('" . std::posts('FreakaZoneClient') . "', '" . std::posts('IP') . "', '" . std::posts('MAC') . "', '" . std::posts('Version') . "', 1)";
-		$wpDatabase = new wpDatabase();
-		$wpDatabase->query($sql);
-		$newID = $wpDatabase->lastid("d1mini");
-		$WebCom = new WebCom();
-		echo $WebCom->send('AddD1Mini', "$newID");
-	}
-	const c_getsettings = 'getsettings';
-	public static function getsettings() {
+	const c_getalld1minisettings = 'getalld1minisettings';
+	public static function getalld1minisettings() {
 		header('Content-Type: application/json');
 		$WebCom = new WebCom();
-		echo $WebCom->send('getD1MiniSettings');
+		echo $WebCom->send('getAllD1MiniSettings');
 	}
 	const c_updateColumn = 'updateColumn';
 	public static function updateColumn($id, $column, $value) {
@@ -56,16 +40,8 @@ class d1miniactive {
 
 switch(std::gets('param1')) {
 	//###################################################################################
-	case d1miniactive::c_startFreakaZoneSearch:
-		d1miniactive::startFreakaZoneSearch();
-		break;
-	//###################################################################################
-	case d1miniactive::c_saveSearchedDevice:
-		d1miniactive::saveSearchedDevice();
-		break;
-	//###################################################################################
-	case d1miniactive::c_getsettings:
-		d1miniactive::getsettings();
+	case d1miniactive::c_getalld1minisettings:
+		d1miniactive::getalld1minisettings();
 		break;
 		//###################################################################################
 	case d1miniactive::c_updateColumn:
