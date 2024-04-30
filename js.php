@@ -10,9 +10,9 @@ header('Content-Type: text/javascript; charset=utf-8');
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 568                                                     $ #
+//# Revision     : $Rev:: 593                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: js.php 568 2024-01-24 07:36:18Z                          $ #
+//# File-ID      : $Id:: js.php 593 2024-04-29 17:50:03Z                          $ #
 //#                                                                                 #
 //###################################################################################
 $st = microtime(true);

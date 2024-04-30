@@ -28,6 +28,8 @@ define('SESSION_ID', 'WebAutomation');
 class wpInit {
 	/** Debugen <b>[ true | false ]</b> */
 	public static $PDebug = true;
+	/** SQL Debugen <b>[ true | false ]</b> */
+	public static $PDebugSQL = true;
 	/** Alarmlinks automatisch für registrierte Datenpunkte eintragen <b>[ true | false ]</b> */
 	public static $SetAlarmLink = false;
 	/** Daten für den Datenbankzugriff */
