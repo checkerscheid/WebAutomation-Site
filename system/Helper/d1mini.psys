@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 26.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 595                                                     $ #
+//# Revision     : $Rev:: 603                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.psys 595 2024-04-30 01:38:01Z                     $ #
+//# File-ID      : $Id:: d1mini.psys 603 2024-05-01 06:01:25Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -30,7 +30,7 @@ class d1mini {
 
 	private $database, $webCom, $status;
 	private $idD1MiniGroup, $idMqttBroker, $idDBGroup, $idTrendGroup;
-	private $name, $description, $ip, $version, $mac;
+	private $id, $name, $description, $ip, $wpFreakaZoneVersion, $version, $mac;
 	public function __construct($ip) {
 		$this->database = new wpDatabase();
 		$this->webCom = new WebCom();
@@ -39,6 +39,7 @@ class d1mini {
 		$this->status = \json_decode($res);
 		$this->name = $this->status->FreakaZoneDevice->DeviceName;
 		$this->description = $this->status->FreakaZoneDevice->DeviceDescription;
+		$this->wpFreakaZoneVersion = $this->status->FreakaZoneDevice->wpFreakaZoneVersion;
 		$this->version = $this->status->FreakaZoneDevice->Version;
 		$this->mac = $this->status->FreakaZoneDevice->miniMAC;
 	}
@@ -68,6 +69,7 @@ class d1mini {
 		if(isset($this->status->FreakaZoneDevice->Distance)) {
 			$this->setVolume();
 		}
+		return $this->id;
 	}
 	private function setDevice() {
 		$this->mergeDivice();
@@ -115,17 +117,18 @@ MERGE INTO [d1mini] AS [TARGET]
 	USING (
 		VALUES (
 			$this->idD1MiniGroup, '$this->name', '$this->description',
-			'$this->version', '$this->ip', '$this->mac', $active
+			'$this->wpFreakaZoneVersion', '$this->version', '$this->ip', '$this->mac', $active
 		)
 	) AS [SOURCE] (
 			[id_d1minigroup], [name], [description],
-			[version], [ip], [mac], [active]
+			[wpFreakaZoneVersion], [version], [ip], [mac], [active]
 	) ON
 		[TARGET].[name] = [SOURCE].[name]
 	WHEN MATCHED THEN
 		UPDATE SET
 			[TARGET].[id_d1minigroup] = [SOURCE].[id_d1minigroup],
 			[TARGET].[description] = [SOURCE].[description],
+			[TARGET].[wpFreakaZoneVersion] = [SOURCE].[wpFreakaZoneVersion],
 			[TARGET].[version] = [SOURCE].[version],
 			[TARGET].[ip] = [SOURCE].[ip],
 			[TARGET].[mac] = [SOURCE].[mac],
@@ -133,13 +136,15 @@ MERGE INTO [d1mini] AS [TARGET]
 	WHEN NOT MATCHED THEN
 		INSERT (
 			[id_d1minigroup], [name], [description],
-			[version], [ip], [mac], [active]
+			[wpFreakaZoneVersion], [version], [ip], [mac], [active]
 		)
 		VALUES (
 			[SOURCE].[id_d1minigroup], [SOURCE].[name], [SOURCE].[description],
-			[SOURCE].[version], [SOURCE].[ip], [SOURCE].[mac], [SOURCE].[active]
-		);";
-			$this->database->query($sql);
+			[SOURCE].[wpFreakaZoneVersion], [SOURCE].[version], [SOURCE].[ip], [SOURCE].[mac], [SOURCE].[active]
+		)
+	OUTPUT [INSERTED].[id_d1mini] AS [ID];";
+		$this->database->query($sql);
+		$this->id = $this->database->fetch()['ID'];
 	}
 	private function insertTopic($aptopic) {
 		$sql = "

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 03.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 599                                                     $ #
+//# Revision     : $Rev:: 603                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.js 599 2024-04-30 05:58:15Z                    $ #
+//# File-ID      : $Id:: d1minicfg.js 603 2024-05-01 06:01:25Z                    $ #
 //#                                                                                 #
 //###################################################################################
 ?> d1minicfg */
@@ -34,6 +34,7 @@ p.page.load = function() {
 		p.page.change('#erg', 'std.d1minicfg.menu' + menuitemclicked + '.req', {table:groups.tablename}, function() {
 			if(menuitemclicked == 'searchd1mini') {
 				D1MiniSearch();
+				D1MiniRegistered();
 			}
 		});
 	});
@@ -48,7 +49,7 @@ p.page.load = function() {
 			var d1minigroup = $(this).attr('data-d1minigroup');
 			$.post('std.d1minicfg.getd1minis.req', {d1minigroup:d1minigroup}, function(data) {
 				$('[data-d1minis=' + d1minigroup + ']').html(data);
-				D1MiniRenew();
+				D1MiniRenew(d1minigroup);
 			});
 		}
 	});
@@ -236,7 +237,7 @@ p.page.load = function() {
 								} else {
 									p.page.alert('<span class="neg">' + data + '</span>', 3000);
 								}
-							});
+							}, 'json');
 						}
 					},{
 						text: 'Abbruch',
@@ -252,14 +253,15 @@ p.page.load = function() {
 	//p.getValues();
 };
 
-function D1MiniRenew() {
-	$.get('std.d1minicfg.getalld1minisettings.req', function(data) {
+function D1MiniRenew(d1minigroup) {
+	$.post('std.d1minicfg.getalld1minisettings.req', {d1minigroup:d1minigroup},  function(data) {
 		for (const [key, value] of Object.entries(data)) {
 			var mac = value.Mac.toLowerCase().replaceAll(':', '');
 			setTextIfNotStored(key, 'name', value.DeviceName);
 			setTextIfNotStored(key, 'description', value.DeviceDescription);
 			setTextIfNotStored(key, 'ip', value.Ip);
 			setTextIfNotStored(key, 'mac', mac);
+			setTextIfNotStored(key, 'wpFreakaZoneVersion', value.wpFreakaZoneVersion);
 			setTextIfNotStored(key, 'version', value.Version);
 			setTextIfNotStored(key, 'ssid', value.Ssid);
 			setTextIfNotStored(key, 'updatemode', value.UpdateMode);
@@ -290,6 +292,7 @@ function D1MiniSearch() {
 			<th>Name</th>
 			<th>IP</th>
 			<th>MAC</th>
+			<th>wpFreakaZone</th>
 			<th>Version</th>
 			<th></th>
 		</tr>
@@ -312,12 +315,16 @@ function D1MiniSearch() {
 		//$('.searchResult pre').text(JSON.stringify(data, null, 4));
 	}, 'json');
 }
+function D1MiniRegistered() {
+	$.get('std.d1minicfg.getregisteredd1minis.req');
+}
 function getHtmlNewD1Mini(name, newObj) {
 	let returns = `
 <tr>
 	<td>${newObj.FreakaZoneClient}</td>
 	<td>${newObj.IP}</td>
 	<td>${newObj.MAC}</td>
+	<td>${newObj.wpFreakaZoneVersion}</td>
 	<td>${newObj.Version}</td>
 	<td class="buttonbox"><span class="ps-button d1MiniAdd" data-key="${name}">Add</span></td>
 </tr>`;
