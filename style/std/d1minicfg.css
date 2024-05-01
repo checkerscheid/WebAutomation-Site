@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 03.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 597                                                     $ #
+//# Revision     : $Rev:: 603                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.css 597 2024-04-30 01:43:28Z                   $ #
+//# File-ID      : $Id:: d1minicfg.css 603 2024-05-01 06:01:25Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> d1miniactive */
@@ -25,12 +25,13 @@
 
 div.divupdate div, div.divinsert { border:1px solid #CCC; padding:3px 5px; margin:3px; display:inline-block; border-radius:6px; }
 
-#d1miniactive table { margin:auto; }
+#d1miniactive .erg table { margin:auto; }
 #d1miniactive td, th { padding:2px 5px; }
-#d1miniactive td { border:1px solid #CCC; }
+#d1miniactive td { border:1px solid #CCC; white-space:nowrap; }
 #d1miniactive td.buttonbox { border:none; }
+#d1miniactive .tdButton { display:flex; justify-content:space-between; }
 #d1miniactive .smallfont { font-size:11px; }
-#d1miniactive .buttonContainer { float:right; }
-#d1miniactive .buttonContainer .ps-image-button { display:inline-block; }
+/*#d1miniactive .buttonContainer { float:right; }*/
+#d1miniactive .buttonContainer .ps-image-button { display:inline-block; float:none; }
 
 #dialog select.ps-input { min-width:300px; padding:2px 5px }

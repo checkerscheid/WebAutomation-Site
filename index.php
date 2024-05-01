@@ -10,9 +10,9 @@ header('Content-Type: text/html; charset=utf-8');
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 593                                                     $ #
+//# Revision     : $Rev:: 603                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: index.php 593 2024-04-29 17:50:03Z                       $ #
+//# File-ID      : $Id:: index.php 603 2024-05-01 06:01:25Z                       $ #
 //#                                                                                 #
 //###################################################################################
 /** @var array $points */
@@ -296,7 +296,8 @@ if(security::checkGroup(security::entwickler)) {
 </body>
 </html>
 <?
-echo html::cleanOutput(ob_get_clean());
+if(wpInit::$OneLine == false) echo ob_get_clean();
+else echo html::cleanOutput(ob_get_clean());
 echo '<!-- '.(microtime(true) - $st).' -->'.PHP_EOL;
 // echo '<!-- '.(session_encode()).' -->';
 ?>

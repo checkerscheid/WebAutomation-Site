@@ -10,14 +10,15 @@ header('Content-Type: text/javascript; charset=utf-8');
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 593                                                     $ #
+//# Revision     : $Rev:: 603                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: js.php 593 2024-04-29 17:50:03Z                          $ #
+//# File-ID      : $Id:: js.php 603 2024-05-01 06:01:25Z                          $ #
 //#                                                                                 #
 //###################################################################################
 $st = microtime(true);
 use system\std;
 use system\html;
+use system\wpInit;
 require_once 'system/Helper/security.psys';
 require_once 'system/Helper/wpDatabase.psys';
 require_once 'system/Helper/wpConvert.psys';
@@ -89,6 +90,7 @@ if(file_exists('script/project.js')) include('script/project.js');
 if(file_exists('script/'.$system->getFullSrc().'.js')) include('script/'.$system->getFullSrc().'.js');
 include('script/system/system.js');
 
-echo html::cleanOutput(ob_get_clean(), true);
+if(wpInit::$OneLine == false) echo ob_get_clean();
+else echo html::cleanOutput(ob_get_clean(), true);
 echo '/* '.(microtime(true) - $st).' */'.PHP_EOL;
 // echo '/* '.(session_encode()).' */';

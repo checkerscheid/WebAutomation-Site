@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 04.03.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 599                                                     $ #
+//# Revision     : $Rev:: 603                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.req 599 2024-04-30 05:58:15Z                   $ #
+//# File-ID      : $Id:: d1minicfg.req 603 2024-05-01 06:01:25Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -60,19 +60,16 @@ class d1minicfg {
 	const c_saveSearchedDevice = 'saveSearchedDevice';
 	public static function saveSearchedDevice() {
 		$d1m = new d1mini(std::posts('IP'));
-		$d1m->insertDevice(std::posts('id_d1minigroup'), std::posts('id_mqttbroker'), std::posts('id_dpgroup'), std::posts('id_trendgroup'));
-		/*
-		 $WebCom = new WebCom();
-		 echo $WebCom->send('AddD1Mini', "$newID");
-		 */
-		echo 'S_OK';
+		$newID = $d1m->insertDevice(std::posts('id_d1minigroup'), std::posts('id_mqttbroker'), std::posts('id_dpgroup'), std::posts('id_trendgroup'));
+		$WebCom = new WebCom();
+		echo $WebCom->send('AddD1Mini', $newID);
 	}
 	const c_getd1minis = 'getd1minis';
 	public static function getd1minis() {
 		$wpDatabase = new wpDatabase();
 		$wpDatabase->query("
 			SELECT
-				[id_d1mini], [name], [description], [ip], [mac], [version], [active]
+				[id_d1mini], [name], [description], [ip], [mac], [wpFreakaZoneVersion], [version], [active]
 			FROM [d1mini]
 			WHERE [id_d1minigroup] ".(std::posts('d1minigroup') == 'NULL' ? 'IS NULL' : ' = '.std::posts('d1minigroup'))."
 			ORDER BY [name]");
@@ -108,6 +105,7 @@ class d1minicfg {
 					<th>Beschreibung</th>
 					<th>IP</th>
 					<th>MAC</th>
+					<th>wpFreakaZone</th>
 					<th>Version</th>
 					<th>SSID</th>
 					<th>UpdateMode</th>
@@ -125,41 +123,72 @@ class d1minicfg {
 						<span class="ps-checkbox">'.wpHTML_EMPTY.'</span>
 					</td>
 					<td data-column="name">
-						<div class="buttonContainer">
-							<span class="ps-hover-noborder ps-image-button ps-refresh"></span>
+						<div class="tdButton">
+							<div>
+								<span class="stored">' . $erg['name'] . '</span><br />
+								<span class="smallfont ps-fontyellow name"></span>
+							</div>
+							<div class="buttonContainer">
+								<span class="ps-hover-noborder ps-image-button ps-refresh"></span>
+							</div>
 						</div>
-						<span class="stored">' . $erg['name'] . '</span><br />
-						<span class="smallfont name"></span>
 					</td>
 					<td data-column="description">
-						<div class="buttonContainer">
-							<span class="ps-hover-noborder ps-image-button ps-refresh"></span>
+						<div class="tdButton">
+							<div>
+								<span class="stored">' . $erg['description'] . '</span><br />
+								<span class="smallfont ps-fontyellow description"></span>
+							</div>
+							<div class="buttonContainer">
+								<span class="ps-hover-noborder ps-image-button ps-refresh"></span>
+							</div>
 						</div>
-						<span class="stored">' . $erg['description'] . '</span><br />
-						<span class="smallfont description"></span>
 					</td>
 					<td data-column="ip">
-						<div class="buttonContainer">
-							<span class="ps-hover-noborder ps-image-button ps-refresh"></span>
-							<a href="http://' . $erg['ip'] . '/print" target="_blank" class="ps-hover-noborder ps-image-button ps-edit" title="Debug"></a>
-							<a href="http://' . $erg['ip'] . '/status" target="_blank" class="ps-hover-noborder ps-image-button ps-info" title="Status"></a>
+						<div class="tdButton">
+							<div>
+								<span class="stored">' . $erg['ip'] . '</span><br />
+								<span class="smallfont ps-fontyellow ip"></span>
+							</div>
+							<div class="buttonContainer">
+								<span class="ps-hover-noborder ps-image-button ps-refresh"></span>
+								<a href="http://' . $erg['ip'] . '/print" target="_blank" class="ps-hover-noborder ps-image-button ps-edit" title="Debug"></a>
+								<a href="http://' . $erg['ip'] . '/status" target="_blank" class="ps-hover-noborder ps-image-button ps-info" title="Status"></a>
+							</div>
 						</div>
-						<span class="stored">' . $erg['ip'] . '</span><br />
-						<span class="smallfont ip"></span>
 					</td>
 					<td data-column="mac">
-						<div class="buttonContainer">
-							<span class="ps-hover-noborder ps-image-button ps-refresh"></span>
+						<div class="tdButton">
+							<div>
+								<span class="stored">' . $erg['mac'] . '</span><br />
+								<span class="smallfont ps-fontyellow mac"></span>
+							</div>
+							<div class="buttonContainer">
+								<span class="ps-hover-noborder ps-image-button ps-refresh"></span>
+							</div>
 						</div>
-						<span class="stored">' . $erg['mac'] . '</span><br />
-						<span class="smallfont mac"></span>
+					</td>
+					<td data-column="wpFreakaZoneVersion">
+						<div class="tdButton">
+							<div>
+								<span class="stored">' . $erg['wpFreakaZoneVersion'] . '</span><br />
+								<span class="smallfont ps-fontyellow wpFreakaZoneVersion"></span>
+							</div>
+							<div class="buttonContainer">
+								<span class="ps-hover-noborder ps-image-button ps-refresh"></span>
+							</div>
+						</div>
 					</td>
 					<td data-column="version">
-						<div class="buttonContainer">
-							<span class="ps-hover-noborder ps-image-button ps-refresh"></span>
+						<div class="tdButton">
+							<div>
+								<span class="stored">' . $erg['version'] . '</span><br />
+								<span class="smallfont ps-fontyellow version"></span>
+							</div>
+							<div class="buttonContainer">
+								<span class="ps-hover-noborder ps-image-button ps-refresh"></span>
+							</div>
 						</div>
-						<span class="stored">' . $erg['version'] . '</span><br />
-						<span class="smallfont version"></span>
 					</td>
 					<td data-column="ssid">
 						<span class="ssid"></span>
@@ -182,6 +211,38 @@ class d1minicfg {
 	}
 	const c_getalld1minisettings = 'getalld1minisettings';
 	public static function getalld1minisettings() {
+		header('Content-Type: application/json');
+		$sql = "SELECT [id_d1mini], [ip] FROM [d1mini] WHERE [id_d1minigroup] = " . std::posts('d1minigroup');
+		$wpDatabase = new wpDatabase();
+		$wpDatabase->query($sql);
+		$returns = "{";
+		$dividor = '';
+		while($erg = $wpDatabase->fetch()) {
+			$WebCom = new WebCom();
+			$d1miniText = $WebCom->send('getD1MiniStatus', $erg['ip']);
+			$jsontext = json_decode($d1miniText);
+			if(isset($jsontext->FreakaZoneDevice)) {
+				$wpFZ = $jsontext->FreakaZoneDevice;
+				//std::test_array($wpFZ);
+				$returns .= $dividor .
+					'"' . $wpFZ->DeviceName . '":{' .
+					'"DeviceName":"' . $wpFZ->DeviceName . '",' .
+					'"DeviceDescription":"' . $wpFZ->DeviceDescription . '",' .
+					(isset($wpFZ->wpFreakaZoneVersion) ? '"wpFreakaZoneVersion":"' . $wpFZ->wpFreakaZoneVersion . '",' : '') .
+					'"Version":"' . $wpFZ->Version . '",' .
+					'"Ip":"' . $erg['ip'] . '",' .
+					'"Mac":"' . $wpFZ->MAC . '",' .
+					//'"Ssid":"' . $wpFZ->DeviceName . '",' .
+					'"UpdateMode":' . ($wpFZ->UpdateMode ? 'true' : 'false') .
+					'}';
+			}
+			$dividor = ',';
+		}
+		$returns .= '}';
+		echo $returns;
+	}
+	const c_getregisteredd1minis = 'getregisteredd1minis';
+	public static function getregisteredd1minis() {
 		header('Content-Type: application/json');
 		$WebCom = new WebCom();
 		echo $WebCom->send('getAllD1MiniSettings');
@@ -224,6 +285,7 @@ class d1minicfg {
 	}
 	const c_allDelete = 'allDelete';
 	public static function allDelete() {
+		header(wpJSON_HEADER);
 		$fortcp = '';
 		foreach(std::posts('ids', array()) as $ids) {
 			$fortcp .= $ids.'%~%';
@@ -260,6 +322,10 @@ switch(std::gets('param1')) {
 		//###################################################################################
 	case d1minicfg::c_getalld1minisettings:
 		d1minicfg::getalld1minisettings();
+		break;
+		//###################################################################################
+	case d1minicfg::c_getregisteredd1minis:
+		d1minicfg::getregisteredd1minis();
 		break;
 		//###################################################################################
 	case d1minicfg::c_updateColumn:

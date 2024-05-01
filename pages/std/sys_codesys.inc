@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 09.12.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 550                                                     $ #
+//# Revision     : $Rev:: 603                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: sys_codesys.inc 550 2023-12-25 03:02:54Z                 $ #
+//# File-ID      : $Id:: sys_codesys.inc 603 2024-05-01 06:01:25Z                 $ #
 //#                                                                                 #
 //###################################################################################
 /**
@@ -41,6 +41,7 @@ $points = array(
 	'Watchdog'				=> 'Watchdog',
 	'WatchdogMinutes'		=> 'WatchdogMinutes',
 );
+//\phpinfo();
 ?>
 
 <div id="codesys">

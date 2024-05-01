@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 597                                                     $ #
+//# Revision     : $Rev:: 603                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpInit.psys 597 2024-04-30 01:43:28Z                     $ #
+//# File-ID      : $Id:: wpInit.psys 603 2024-05-01 06:01:25Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace system;
@@ -30,6 +30,8 @@ class wpInit {
 	public static $PDebug = true;
 	/** SQL Debugen <b>[ true | false ]</b> */
 	public static $PDebugSQL = true;
+	/** SQL Debugen <b>[ true | false ]</b> */
+	public static $OneLine = false;
 	/** Alarmlinks automatisch für registrierte Datenpunkte eintragen <b>[ true | false ]</b> */
 	public static $SetAlarmLink = false;
 	/** Daten für den Datenbankzugriff */

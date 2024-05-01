@@ -10,12 +10,13 @@ header('Content-Type: text/html; charset=utf-8');
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 550                                                     $ #
+//# Revision     : $Rev:: 603                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: popup.php 550 2023-12-25 03:02:54Z                       $ #
+//# File-ID      : $Id:: popup.php 603 2024-05-01 06:01:25Z                       $ #
 //#                                                                                 #
 //###################################################################################
 use system\stdAjax;
+use system\wpInit;
 $st = microtime(true);
 require_once 'system/Helper/security.psys';
 require_once 'system/Helper/wpDatabase.psys';
@@ -33,6 +34,6 @@ if(file_exists('popup/'.$system->getFullSrc().'.req')) {
 	header("HTTP/1.0 404 Not Found");
 	echo 'Error File not found';
 }
-
-echo \system\html::cleanOutput(ob_get_clean());
+if(wpInit::$OneLine == false) echo ob_get_clean();
+else echo \system\html::cleanOutput(ob_get_clean());
 echo '<!-- '.(microtime(true) - $st).' -->';
