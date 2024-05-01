@@ -19,6 +19,7 @@ use system\WebCom;
 /**
  * ermittelt den D1 Mini CompiledWith und ordnet ihm MQTT und Datenpunkte zu
  * @author Checker
+ * @todo SQL, connect D1Mini to MQTT Topic
  */
 class d1mini {
 	const DHT = 'DHT';

@@ -196,7 +196,9 @@ class d1minicfg {
 					<td data-column="updatemode">
 						<span class="updatemode"></span>
 					</td>
-					<td>' . ($erg['active'] == 1 ? '<span class="ps-fontgreen">aktiv</span>' : '<span class="ps-fontyellow">deaktiviert</span>') . '</td>
+					<td>
+						' . ($erg['active'] == 1 ? '<span class="ps-fontgreen">aktiv</span>' : '<span class="ps-fontyellow">deaktiviert</span>') . '
+					</td>
 					<td class="buttonbox">
 						<div class="buttonContainer">
 							<span class="ps-hover-noborder ps-image-button ps-send forceupdate" title="Force MQTT Update"></span>
