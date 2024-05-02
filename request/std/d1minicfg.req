@@ -60,7 +60,7 @@ class d1minicfg {
 	const c_saveSearchedDevice = 'saveSearchedDevice';
 	public static function saveSearchedDevice() {
 		$d1m = new d1mini(std::posts('IP'));
-		$newID = $d1m->insertDevice(std::posts('id_d1minigroup'), std::posts('id_mqttbroker'), std::posts('id_dpgroup'), std::posts('id_trendgroup'));
+		$newID = $d1m->insertDevice(std::posts('id_d1minigroup'), std::posts('id_mqttgroup'), std::posts('id_dpgroup'), std::posts('id_trendgroup'));
 		$WebCom = new WebCom();
 		echo $WebCom->send('AddD1Mini', $newID);
 	}
