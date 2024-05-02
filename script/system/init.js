@@ -1753,7 +1753,4 @@ var dragqueen = {
 	}
 };
 
-timezoneJS.timezone.zoneFileBasePath = 'system/tz';
-timezoneJS.timezone.defaultZoneFile = ['europe.txt'];
-timezoneJS.timezone.init({async: true});
 

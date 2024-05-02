@@ -40,6 +40,10 @@ var autoloadtrenddatatimer = null;
 var autoloadtrenddatastarted = false;
 var autoloadtrenddataseconds = 0;
 
+timezoneJS.timezone.zoneFileBasePath = 'system/tz';
+timezoneJS.timezone.defaultZoneFile = ['europe.txt'];
+timezoneJS.timezone.init({async: true});
+
 p.page.load = function() {
 
 	$.get('std.trendselect.getusertrends.req', function(data) {

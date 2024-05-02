@@ -40,6 +40,7 @@ class uebersicht {
 		'WZ_HT3'		=> 'Wohnzimmer',
 		'SZ_RU'			=> 'Schlafzimmer',
 		'BU_RU'			=> 'Büro',
+		'KU_RU'			=> 'Küche',
 		'BA_RU'			=> 'Bad',
 		'KZ_HTp'		=> 'Kinderzimmer',
 		'KE'			=> 'Keller',
@@ -54,6 +55,7 @@ class uebersicht {
 		'WZ_HT3'		=> 'Wohnzimmer',
 		'SZ_RU'			=> 'Schlafzimmer',
 		'BU_RU'			=> 'Büro',
+		'KU_RU'			=> 'Küche',
 		'BA_RU'			=> 'Bad',
 		'BA_SP'			=> 'Bad Spiegelbeleuchtung',
 		'KZ_HTp'		=> 'Kinderzimmer',
@@ -207,6 +209,11 @@ class uebersicht {
 					<td colspan="2">Büro:</td>
 					<td colspan="2"><span data-ws="BU_RU_LDR" class="ps-input">undefined</span></td>
 					<td colspan="2"><span data-ws="BU_RU_BM" class="ps-input <?=wpa::$GreyGreen ?>">undefined</span></td>
+				</tr>
+				<tr>
+					<td colspan="2">Küche:</td>
+					<td colspan="2"></td>
+					<td colspan="2"><span data-ws="KU_RU_BM" class="ps-input <?=wpa::$GreyGreen ?>">undefined</span></td>
 				</tr>
 				<tr>
 					<td colspan="2">Bad:</td>
