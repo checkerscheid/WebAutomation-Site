@@ -19,6 +19,7 @@ use system\WebCom;
 /**
  * ermittelt den D1 Mini CompiledWith und ordnet ihm MQTT und Datenpunkte zu
  * @author Checker
+ * @todo SQL, connect D1Mini to MQTT Topic
  */
 class d1mini {
 	const DHT = 'DHT';
@@ -29,7 +30,7 @@ class d1mini {
 	const Distance = 'Distance';
 
 	private $database, $webCom, $status;
-	private $idD1MiniGroup, $idMqttBroker, $idDBGroup, $idTrendGroup;
+	private $idD1MiniGroup, $idMqttGroup, $idDBGroup, $idTrendGroup;
 	private $id, $name, $description, $ip, $wpFreakaZoneVersion, $version, $mac;
 	public function __construct($ip) {
 		$this->database = new wpDatabase();
@@ -43,30 +44,30 @@ class d1mini {
 		$this->version = $this->status->FreakaZoneDevice->Version;
 		$this->mac = $this->status->FreakaZoneDevice->miniMAC;
 	}
-	public function insertDevice($idD1MiniGroup, $idMqttBroker, $idDBGroup, $idTrendGroup) {
+	public function insertDevice($idD1MiniGroup, $idMqttroup, $idDBGroup, $idTrendGroup) {
 		$this->idD1MiniGroup = $idD1MiniGroup;
-		$this->idMqttBroker = $idMqttBroker;
+		$this->idMqttGroup = $idMqttroup;
 		$this->idDBGroup = $idDBGroup;
 		$this->idTrendGroup = $idTrendGroup;
 
 		$this->setDevice();
 		$this->setRSSI();
-		if(isset($this->status->FreakaZoneDevice->HT)) {
+		if(isset($this->status->FreakaZoneDevice->Debug->HT)) {
 			$this->setHT();
 		}
-		if(isset($this->status->FreakaZoneDevice->LDR)) {
+		if(isset($this->status->FreakaZoneDevice->Debug->LDR)) {
 			$this->setLDR();
 		}
-		if(isset($this->status->FreakaZoneDevice->Light)) {
+		if(isset($this->status->FreakaZoneDevice->Debug->Light)) {
 			$this->setLight();
 		}
-		if(isset($this->status->FreakaZoneDevice->BM)) {
+		if(isset($this->status->FreakaZoneDevice->Debug->BM)) {
 			$this->setBM();
 		}
-		if(isset($this->status->FreakaZoneDevice->Rain)) {
+		if(isset($this->status->FreakaZoneDevice->Debug->Rain)) {
 			$this->setRain();
 		}
-		if(isset($this->status->FreakaZoneDevice->Distance)) {
+		if(isset($this->status->FreakaZoneDevice->Debug->Distance)) {
 			$this->setVolume();
 		}
 		return $this->id;
@@ -75,7 +76,7 @@ class d1mini {
 		$this->mergeDivice();
 	}
 	private function setRSSI() {
-		$id_mqtttopic = $this->insertTopic('info/WIFI/RSSI');
+		$id_mqtttopic = $this->insertTopic('info/WiFi/RSSI');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'Rssi', 'Signal', 'db', 0, -130, 0);
 		$this->mergeTrend($id_dp, 'Signal', 120);
 	}
@@ -149,14 +150,14 @@ MERGE INTO [d1mini] AS [TARGET]
 	private function insertTopic($aptopic) {
 		$sql = "
 INSERT INTO [mqtttopic]
-	([id_mqttbroker], [topic])
+	([id_mqttgroup], [id_d1mini], [topic])
 OUTPUT [INSERTED].[id_mqtttopic] AS [ID]
 VALUES
-	(" . $this->idMqttBroker . ", '" . $this->name . "/info/WiFi/RSSI')";
+	(" . $this->idMqttGroup . ", " . $this->id . ",'" . $this->name . "/" . $aptopic . "')";
 		$this->database->query($sql);
 		return $this->database->fetch()['ID'];
 	}
-	private function mergeDP($idtopic, $apname, $apdec, $unit = '', $nks = '', $min = 0, $max = 100, $active = 1) {
+	private function mergeDP($idtopic, $apname, $apdec, $unit = 'NULL', $nks = 'NULL', $min = 0, $max = 100, $active = 1) {
 		$sql = "
 MERGE INTO [dp] AS [TARGET]
 	USING (

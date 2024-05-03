@@ -71,7 +71,7 @@ p.page.load = function() {
 					text:'OK',
 					click: function() {
 						myData['id_d1minigroup'] = $('#dialog .id_d1minigroup').val();
-						myData['id_mqttbroker'] = $('#dialog .id_mqttbroker').val();
+						myData['id_mqttgroup'] = $('#dialog .id_mqttgroup').val();
 						myData['id_dpgroup'] = $('#dialog .id_dpgroup').val();
 						myData['id_trendgroup'] = $('#dialog .id_trendgroup').val();
 						$.post('std.d1minicfg.saveSearchedDevice.req', myData, function(data) {
@@ -90,7 +90,7 @@ p.page.load = function() {
 		});
 	});
 //###################################################################################
-	$('#erg').on('click', '.D1MiniDevice .ps-refresh', function() {
+	$('#erg').on('click', '.D1MiniDevice .ps-export', function() {
 		var tr = $(this).parents('tr:first');
 		var td = $(this).parents('td:first');
 		var id = $(tr).attr('data-id');
@@ -98,20 +98,26 @@ p.page.load = function() {
 		var value = $(td).find('.smallfont.' + column).text();
 		$.post('std.d1minicfg.updateColumn.req', {id:id, column:column, value:value}, function() {
 			$(td).find('.stored').text(value);
-			$(td).find('.ps-refresh').addClass('ps-hidden');
+			$(td).find('.ps-export').addClass('ps-hidden');
 			$(td).find('.smallfont').addClass('ps-hidden');
 		});
 	});
 	$('#erg').on('click', '.D1MiniDevice .forceupdate', function() {
 		var name = $(this).parents('tr.D1MiniDevice').attr('data-name');
+		var d1minigroup = $(this).parents('.d1miniingroup:first').attr('data-group');
 		$.post('std.d1minicfg.setcmd.req', {name:name,cmd:'ForceMqttUpdate'}, function(data) {
-			if(data == 'S_OK') D1MiniRenew();
+			if(data == 'S_OK') {
+				D1MiniRenew(d1minigroup);
+			}
 		});
 	});
 	$('#erg').on('click', '.D1MiniDevice .setupmode', function() {
 		var name = $(this).parents('tr.D1MiniDevice').attr('data-name');
+		var d1minigroup = $(this).parents('.d1miniingroup:first').attr('data-group');
 		$.post('std.d1minicfg.setcmd.req', {name:name,cmd:'UpdateFW'}, function(data) {
-			if(data == 'S_OK') D1MiniRenew();
+			if(data == 'S_OK') {
+				D1MiniRenew(d1minigroup);
+			}
 		});
 	});
 	$('#erg').on('click', '.D1MiniDevice .restartdevice', function() {
@@ -261,21 +267,23 @@ function D1MiniRenew(d1minigroup) {
 			setTextIfNotStored(key, 'description', value.DeviceDescription);
 			setTextIfNotStored(key, 'ip', value.Ip);
 			setTextIfNotStored(key, 'mac', mac);
-			setTextIfNotStored(key, 'wpFreakaZoneVersion', value.wpFreakaZoneVersion);
+			var wpFZVersion = typeof value.wpFreakaZoneVersion == 'undefined' ? '' : value.wpFreakaZoneVersion;
+			setTextIfNotStored(key, 'wpFreakaZoneVersion', wpFZVersion);
 			setTextIfNotStored(key, 'version', value.Version);
-			setTextIfNotStored(key, 'ssid', value.Ssid);
-			setTextIfNotStored(key, 'updatemode', value.UpdateMode);
+			//setTextIfNotStored(key, 'ssid', value.Ssid);
+			var updateMode = value.UpdateMode ? '<span class="ps-fontyellow">aktiv</span>' : '<span class="ps-fontgreen">deaktiviert</span>';
+			setTextIfNotStored(key, 'updatemode', updateMode);
 		}
 	}, 'json');
 }
 function setTextIfNotStored(name, column, givenValue) {
 	var td = $(`tr[data-name=${name}] td[data-column=${column}]`);
-	$(td).find('.ps-refresh').addClass('ps-hidden');
+	$(td).find('.ps-export').addClass('ps-hidden');
 	$(td).find(`.${column}`).addClass('ps-hidden');
 	var storedValue = $(td).find('.stored').text();
 	if(givenValue != storedValue) {
-		$(td).find('.ps-refresh').removeClass('ps-hidden');
-		$(td).find(`.${column}`).text(givenValue).removeClass('ps-hidden');
+		$(td).find('.ps-export').removeClass('ps-hidden');
+		$(td).find(`.${column}`).html(givenValue).removeClass('ps-hidden');
 	}
 }
 function D1MiniSearch() {

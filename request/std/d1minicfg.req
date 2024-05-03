@@ -60,7 +60,7 @@ class d1minicfg {
 	const c_saveSearchedDevice = 'saveSearchedDevice';
 	public static function saveSearchedDevice() {
 		$d1m = new d1mini(std::posts('IP'));
-		$newID = $d1m->insertDevice(std::posts('id_d1minigroup'), std::posts('id_mqttbroker'), std::posts('id_dpgroup'), std::posts('id_trendgroup'));
+		$newID = $d1m->insertDevice(std::posts('id_d1minigroup'), std::posts('id_mqttgroup'), std::posts('id_dpgroup'), std::posts('id_trendgroup'));
 		$WebCom = new WebCom();
 		echo $WebCom->send('AddD1Mini', $newID);
 	}
@@ -107,7 +107,7 @@ class d1minicfg {
 					<th>MAC</th>
 					<th>wpFreakaZone</th>
 					<th>Version</th>
-					<th>SSID</th>
+					<!--th>SSID</th-->
 					<th>UpdateMode</th>
 					<th>aktiv</th>
 					<th></th>
@@ -129,7 +129,7 @@ class d1minicfg {
 								<span class="smallfont ps-fontyellow name"></span>
 							</div>
 							<div class="buttonContainer">
-								<span class="ps-hover-noborder ps-image-button ps-refresh"></span>
+								<span class="ps-hover-noborder ps-image-button ps-export" title="von D1 Mini übernehmen"></span>
 							</div>
 						</div>
 					</td>
@@ -140,7 +140,7 @@ class d1minicfg {
 								<span class="smallfont ps-fontyellow description"></span>
 							</div>
 							<div class="buttonContainer">
-								<span class="ps-hover-noborder ps-image-button ps-refresh"></span>
+								<span class="ps-hover-noborder ps-image-button ps-export" title="von D1 Mini übernehmen"></span>
 							</div>
 						</div>
 					</td>
@@ -151,9 +151,9 @@ class d1minicfg {
 								<span class="smallfont ps-fontyellow ip"></span>
 							</div>
 							<div class="buttonContainer">
-								<span class="ps-hover-noborder ps-image-button ps-refresh"></span>
-								<a href="http://' . $erg['ip'] . '/print" target="_blank" class="ps-hover-noborder ps-image-button ps-edit" title="Debug"></a>
-								<a href="http://' . $erg['ip'] . '/status" target="_blank" class="ps-hover-noborder ps-image-button ps-info" title="Status"></a>
+								<span class="ps-hover-noborder ps-image-button ps-export" title="von D1 Mini übernehmen"></span>
+								<a href="http://' . $erg['ip'] . '/print" target="_blank" class="ps-hover-noborder ps-image-button ps-conversation" title="Debug"></a>
+								<a href="http://' . $erg['ip'] . '/status" target="_blank" class="ps-hover-noborder ps-image-button ps-status" title="Status"></a>
 							</div>
 						</div>
 					</td>
@@ -164,7 +164,7 @@ class d1minicfg {
 								<span class="smallfont ps-fontyellow mac"></span>
 							</div>
 							<div class="buttonContainer">
-								<span class="ps-hover-noborder ps-image-button ps-refresh"></span>
+								<span class="ps-hover-noborder ps-image-button ps-export" title="von D1 Mini übernehmen"></span>
 							</div>
 						</div>
 					</td>
@@ -175,7 +175,7 @@ class d1minicfg {
 								<span class="smallfont ps-fontyellow wpFreakaZoneVersion"></span>
 							</div>
 							<div class="buttonContainer">
-								<span class="ps-hover-noborder ps-image-button ps-refresh"></span>
+								<span class="ps-hover-noborder ps-image-button ps-export" title="von D1 Mini übernehmen"></span>
 							</div>
 						</div>
 					</td>
@@ -186,20 +186,26 @@ class d1minicfg {
 								<span class="smallfont ps-fontyellow version"></span>
 							</div>
 							<div class="buttonContainer">
-								<span class="ps-hover-noborder ps-image-button ps-refresh"></span>
+								<span class="ps-hover-noborder ps-image-button ps-export" title="von D1 Mini übernehmen"></span>
 							</div>
 						</div>
 					</td>
-					<td data-column="ssid">
+					<!--td data-column="ssid">
 						<span class="ssid"></span>
-					</td>
+					</td-->
 					<td data-column="updatemode">
 						<span class="updatemode"></span>
 					</td>
-					<td>' . ($erg['active'] == 1 ? '<span class="ps-fontgreen">aktiv</span>' : '<span class="ps-fontyellow">deaktiviert</span>') . '</td>
-					<td class="buttonbox"><span class="ps-button forceupdate" title="Force MQTT Update">MQTT Update</span></td>
-					<td class="buttonbox"><span class="ps-button setupmode" title="Set FW Update Mode On">Update Mode</span></td>
-					<td class="buttonbox"><span class="ps-button restartdevice">neu starten</span></td>
+					<td>
+						' . ($erg['active'] == 1 ? '<span class="ps-fontgreen">aktiv</span>' : '<span class="ps-fontyellow">deaktiviert</span>') . '
+					</td>
+					<td class="buttonbox">
+						<div class="buttonContainer">
+							<span class="ps-hover-noborder ps-image-button ps-send forceupdate" title="Force MQTT Update"></span>
+							<span class="ps-hover-noborder ps-image-button ps-import setupmode" title="Set FW Update Mode On"></span>
+							<span class="ps-hover-noborder ps-image-button ps-refresh restartdevice" title="neu starten"></span>
+						</div>
+					</td>
 				</tr>';
 		}
 		$html .= '
