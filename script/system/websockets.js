@@ -21,7 +21,7 @@ require_once 'system/Helper/wpa.psys';
 var ws = {
 	logEnabled: false,
 	connection: null,
-	connectionstring: 'ws://192.168.80.203/Remote',
+	connectionstring: 'ws://ltChecker.FreakaZone.com/Remote',
 	registered: [],
 	toalive: null,
 	alive: 0,

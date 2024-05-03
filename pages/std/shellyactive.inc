@@ -23,7 +23,7 @@ $headline = $database->fetch();
 	<h1><?=$headline['name']?></h1>
 	<div class="ps-flex-container">
 		<div>
-			Scan: 192.168.80.<input type="text" class="ps-input ShellyIpFrom" value="154" /> To <input type="text" class="ps-input ShellyIpTo" value="163" />
+			Scan: 172.17.0.<input type="text" class="ps-input ShellyIpFrom" value="1" /> To <input type="text" class="ps-input ShellyIpTo" value="29" />
 			<span class="ps-button scan" data-method="do-scan">scan</span>
 			<hr />
 			<div id="ergScan"></div>

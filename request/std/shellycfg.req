@@ -87,7 +87,7 @@ switch(std::gets('param1')) {
 				<h1>Neue Shelly suchen / anlegen</h1>
 				<hr />
 				<div>
-					Scan: <input type="text" class="ps-input ShellyIpNet" value="192.168.80" />.<input type="text" class="ps-input ShellyIpFrom" value="30" /> To <input type="text" class="ps-input ShellyIpTo" value="39" />
+					Scan: <input type="text" class="ps-input ShellyIpNet" value="172.17.0" />.<input type="text" class="ps-input ShellyIpFrom" value="0" /> To <input type="text" class="ps-input ShellyIpTo" value="29" />
 					<span class="ps-button do-scan" data-method="do-scan">scan</span>
 					<hr />
 					<div id="ergScan" class="table shellylist">
