@@ -54,11 +54,12 @@ class d1minicfg {
 		$html .= '</select></td></tr>';
 		//$mqttBroker;
 		$wpDatabase->query("SELECT " .
-				"[id_mqttbroker], CONCAT([ip], ':', [port]) AS [server] " .
-				"FROM [WebAutomation].[dbo].[mqttbroker] " .
-				"ORDER BY [ip]");
-		$html .= '<tr><td>MQTT Broker:</td><td><select class="ps-input id_mqttbroker">';
-		while($erg = $wpDatabase->fetch()) $html .= self::getSelect($erg['id_mqttbroker'], $erg['server']);
+				"[id_mqttgroup], CONCAT([mqttbroker].[name], ' (', [address], ':', [port], ') - ', [mqttgroup].[name]) AS [server] " .
+				"FROM [mqttgroup] " .
+				"INNER JOIN [mqttbroker] ON [mqttbroker].[id_mqttbroker] = [mqttgroup].[id_mqttbroker] ".
+				"ORDER BY [mqttbroker].[name], [mqttgroup].[name]");
+		$html .= '<tr><td>MQTT Gruppe:</td><td><select class="ps-input id_mqttgroup">';
+		while($erg = $wpDatabase->fetch()) $html .= self::getSelect($erg['id_mqttgroup'], $erg['server']);
 		$html .= '</select></td></tr>';
 		//$dBGroup;
 		$wpDatabase->query("SELECT " .

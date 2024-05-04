@@ -398,6 +398,10 @@ span.ps-checkbox, label.ps-checkbox { display:inline-block; }
 .ps-image-button.ps-active { background:transparent url(images/layout/menu_logout.png) center center no-repeat; }
 .ps-image-button.ps-export { background:transparent url(images/layout/ic_menu_save.png) center center no-repeat; }
 .ps-image-button.ps-import { background:transparent url(images/layout/ic_menu_upload.png) center center no-repeat; }
+.ps-image-button.ps-send { background:transparent url(images/layout/ic_menu_send.png) center center no-repeat; }
+.ps-image-button.ps-restart { background:transparent url(images/layout/ic_menu_restart.png) center center no-repeat; }
+.ps-image-button.ps-conversation { background:transparent url(images/layout/ic_menu_conversation.png) center center no-repeat; }
+.ps-image-button.ps-status { background:transparent url(images/layout/ic_menu_status.png) center center no-repeat; }
 
 .ps-image-status { display:inline-block; width:24px; height:24px; margin-left:2px; background:transparent center left no-repeat; }
 .ps-image-status.alarm, .ps-image-status.trend, .ps-image-status.calendar,
