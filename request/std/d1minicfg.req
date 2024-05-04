@@ -59,17 +59,25 @@ class d1minicfg {
 	}
 	const c_saveSearchedDevice = 'saveSearchedDevice';
 	public static function saveSearchedDevice() {
+		header(wpJSON_HEADER);
+		echo '{"msg":"';
 		$d1m = new d1mini(std::posts('IP'));
 		$newID = $d1m->insertDevice(std::posts('id_d1minigroup'), std::posts('id_mqttgroup'), std::posts('id_dpgroup'), std::posts('id_trendgroup'));
 		$WebCom = new WebCom();
+		echo '","erg":"';
 		echo $WebCom->send('AddD1Mini', $newID);
+		echo '"}';
 	}
 	const c_renewDevice = 'renewDevice';
 	public static function renewDevice() {
+		header(wpJSON_HEADER);
+		echo '{"msg":"';
 		$d1m = new d1mini(std::posts('IP'));
-		$newID = $d1m->insertDevice(std::posts('id_d1minigroup'), std::posts('id_mqttbroker'), std::posts('id_dpgroup'), std::posts('id_trendgroup'));
+		$newID = $d1m->insertDevice(std::posts('id_d1minigroup'), std::posts('id_mqttgroup'), std::posts('id_dpgroup'), std::posts('id_trendgroup'));
 		$WebCom = new WebCom();
+		echo '","erg":"';
 		echo $WebCom->send('AddD1Mini', $newID);
+		echo '"}';
 	}
 	const c_getd1minis = 'getd1minis';
 	public static function getd1minis() {
@@ -327,6 +335,10 @@ switch(std::gets('param1')) {
 		//###################################################################################
 	case d1minicfg::c_saveSearchedDevice:
 		d1minicfg::saveSearchedDevice();
+		break;
+		//###################################################################################
+	case d1minicfg::c_renewDevice:
+		d1minicfg::renewDevice();
 		break;
 		//###################################################################################
 	case d1minicfg::c_getd1minis:

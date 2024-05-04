@@ -75,12 +75,14 @@ p.page.load = function() {
 						myData['id_dpgroup'] = $('#dialog .id_dpgroup').val();
 						myData['id_trendgroup'] = $('#dialog .id_trendgroup').val();
 						$.post('std.d1minicfg.saveSearchedDevice.req', myData, function(data) {
-							if(data == 'S_OK') {
+							console.log(data);
+							if(data.erg == 'S_OK') {
+								p.page.alert(data.msg);
 								$('#dialog').dialog('close');
 							} else {
-								p.page.alert(data);
+								p.page.alertred(data.msg, 10000);
 							}
-						});
+						}, 'json');
 					}
 				},{
 					text: 'Abbruch',
@@ -98,16 +100,18 @@ p.page.load = function() {
 					text:'OK',
 					click: function() {
 						myData['id_d1minigroup'] = $('#dialog .id_d1minigroup').val();
-						myData['id_mqttbroker'] = $('#dialog .id_mqttbroker').val();
+						myData['id_mqttgroup'] = $('#dialog .id_mqttgroup').val();
 						myData['id_dpgroup'] = $('#dialog .id_dpgroup').val();
 						myData['id_trendgroup'] = $('#dialog .id_trendgroup').val();
 						$.post('std.d1minicfg.renewDevice.req', myData, function(data) {
-							if(data == 'S_OK') {
+							console.log(data);
+							if(data.erg == 'S_OK') {
+								p.page.alert(data.msg);
 								$('#dialog').dialog('close');
 							} else {
-								p.page.alert(data);
+								p.page.alertred(data.msg, 10000);
 							}
-						});
+						}, 'json');
 					}
 				},{
 					text: 'Abbruch',
