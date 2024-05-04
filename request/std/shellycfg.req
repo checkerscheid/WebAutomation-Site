@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 15.05.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 582                                                     $ #
+//# Revision     : $Rev:: 605                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: shellycfg.req 582 2024-04-10 06:45:45Z                   $ #
+//# File-ID      : $Id:: shellycfg.req 605 2024-05-03 13:06:51Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;

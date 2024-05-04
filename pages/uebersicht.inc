@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 593                                                     $ #
+//# Revision     : $Rev:: 605                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 593 2024-04-29 17:50:03Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 605 2024-05-03 13:06:51Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -212,7 +212,7 @@ class uebersicht {
 				</tr>
 				<tr>
 					<td colspan="2">Küche:</td>
-					<td colspan="2"></td>
+					<td colspan="2"><span data-ws="KU_RU_LDR" class="ps-input">undefined</span></td>
 					<td colspan="2"><span data-ws="KU_RU_BM" class="ps-input <?=wpa::$GreyGreen ?>">undefined</span></td>
 				</tr>
 				<tr>
