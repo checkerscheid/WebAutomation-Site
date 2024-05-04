@@ -89,6 +89,33 @@ p.page.load = function() {
 			});
 		});
 	});
+	$('#erg').on('click', '.D1MiniDevice .ps-export', function() {
+		var myData = { IP: $(this).attr('data-ip') };
+		$.get('std.d1minicfg.infoToSaveD1Mini.pop', function(data) {
+			$('#dialog').html(data).dialog({
+				title: 'D1 Mini MQTT und Trend erneuern', modal: true, width: p.popup.width.middle,
+				buttons: [{
+					text:'OK',
+					click: function() {
+						myData['id_d1minigroup'] = $('#dialog .id_d1minigroup').val();
+						myData['id_mqttbroker'] = $('#dialog .id_mqttbroker').val();
+						myData['id_dpgroup'] = $('#dialog .id_dpgroup').val();
+						myData['id_trendgroup'] = $('#dialog .id_trendgroup').val();
+						$.post('std.d1minicfg.renewDevice.req', myData, function(data) {
+							if(data == 'S_OK') {
+								$('#dialog').dialog('close');
+							} else {
+								p.page.alert(data);
+							}
+						});
+					}
+				},{
+					text: 'Abbruch',
+					click: function() { $('#dialog').dialog('close'); }
+				}]
+			});
+		});
+	});
 //###################################################################################
 	$('#erg').on('click', '.D1MiniDevice .ps-export', function() {
 		var tr = $(this).parents('tr:first');
