@@ -75,12 +75,43 @@ p.page.load = function() {
 						myData['id_dpgroup'] = $('#dialog .id_dpgroup').val();
 						myData['id_trendgroup'] = $('#dialog .id_trendgroup').val();
 						$.post('std.d1minicfg.saveSearchedDevice.req', myData, function(data) {
-							if(data == 'S_OK') {
+							console.log(data);
+							if(data.erg == 'S_OK') {
+								p.page.alert(data.msg);
 								$('#dialog').dialog('close');
 							} else {
-								p.page.alert(data);
+								p.page.alertred(data.msg, 10000);
 							}
-						});
+						}, 'json');
+					}
+				},{
+					text: 'Abbruch',
+					click: function() { $('#dialog').dialog('close'); }
+				}]
+			});
+		});
+	});
+	$('#erg').on('click', '.D1MiniDevice .ps-export', function() {
+		var myData = { IP: $(this).attr('data-ip') };
+		$.get('std.d1minicfg.infoToSaveD1Mini.pop', function(data) {
+			$('#dialog').html(data).dialog({
+				title: 'D1 Mini MQTT und Trend erneuern', modal: true, width: p.popup.width.middle,
+				buttons: [{
+					text:'OK',
+					click: function() {
+						myData['id_d1minigroup'] = $('#dialog .id_d1minigroup').val();
+						myData['id_mqttgroup'] = $('#dialog .id_mqttgroup').val();
+						myData['id_dpgroup'] = $('#dialog .id_dpgroup').val();
+						myData['id_trendgroup'] = $('#dialog .id_trendgroup').val();
+						$.post('std.d1minicfg.renewDevice.req', myData, function(data) {
+							console.log(data);
+							if(data.erg == 'S_OK') {
+								p.page.alert(data.msg);
+								$('#dialog').dialog('close');
+							} else {
+								p.page.alertred(data.msg, 10000);
+							}
+						}, 'json');
 					}
 				},{
 					text: 'Abbruch',

@@ -43,6 +43,7 @@ class d1mini {
 		$this->wpFreakaZoneVersion = $this->status->FreakaZoneDevice->wpFreakaZoneVersion;
 		$this->version = $this->status->FreakaZoneDevice->Version;
 		$this->mac = $this->status->FreakaZoneDevice->miniMAC;
+		echo "save '" . $this->name . "' (" . $this->ip . ") ";
 	}
 	public function insertDevice($idD1MiniGroup, $idMqttroup, $idDBGroup, $idTrendGroup) {
 		$this->idD1MiniGroup = $idD1MiniGroup;
@@ -79,38 +80,46 @@ class d1mini {
 		$id_mqtttopic = $this->insertTopic('info/WiFi/RSSI');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'Rssi', 'Signal', 'db', 0, -130, 0);
 		$this->mergeTrend($id_dp, 'Signal', 120);
+		echo "saved: 'Signal' ";
 	}
 	private function setHT() {
 		$id_mqtttopic_temp = $this->insertTopic('Temperature');
 		$id_dp_temp = $this->mergeDP($id_mqtttopic_temp, 'Temp', 'Temperatur', '°C', 1, -50);
 		$this->mergeTrend($id_dp_temp, 'Temperatur');
+		echo "saved: 'Temperatur' ";
 		$id_mqtttopic_hum = $this->insertTopic('Humidity');
 		$id_dp_hum = $this->mergeDP($id_mqtttopic_hum, 'Hum', 'Feuchte', '%rF', 0);
 		$this->mergeTrend($id_dp_hum, 'Feuchte');
+		echo "saved: 'Feuchte' ";
 	}
 	private function setLDR() {
 		$id_mqtttopic = $this->insertTopic('LDR');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'LDR', 'LDR', 'lux', 0, 0, 1024);
 		$this->mergeTrend($id_dp, 'LDR');
+		echo "saved: 'LDR' ";
 	}
 	private function setLight() {
 		$id_mqtttopic = $this->insertTopic('Light');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'Light', 'Licht', 'lux', 0, 0, 1024);
 		$this->mergeTrend($id_dp, 'Licht');
+		echo "saved: 'Licht' ";
 	}
 	private function setBM() {
 		$id_mqtttopic = $this->insertTopic('BM');
 		$this->mergeDP($id_mqtttopic, 'BM', 'Bewegung', '1:Bewegung;0:Stille;');
+		echo "saved: 'Bewegung' ";
 	}
 	private function setRain() {
 		$id_mqtttopic = $this->insertTopic('Rain');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'Rain', 'Regen', 'l/min', 3, 0, 10);
-		$this->mergeTrend($id_dp, 'Licht');
+		$this->mergeTrend($id_dp, 'Regen');
+		echo "saved: 'Regen' ";
 	}
 	private function setVolume() {
 		$id_mqtttopic = $this->insertTopic('Volume');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'Vol', 'Füllstand', 'l', 0, 0, 10000);
 		$this->mergeTrend($id_dp, 'Füllstand', 120);
+		echo "saved: 'Füllstand' ";
 	}
 	private function mergeDivice($active = 1) {
 		$sql = "
