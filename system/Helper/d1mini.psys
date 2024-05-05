@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 26.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 603                                                     $ #
+//# Revision     : $Rev:: 607                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.psys 603 2024-05-01 06:01:25Z                     $ #
+//# File-ID      : $Id:: d1mini.psys 607 2024-05-05 13:40:32Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -40,7 +40,8 @@ class d1mini {
 		$this->status = \json_decode($res);
 		$this->name = $this->status->FreakaZoneDevice->DeviceName;
 		$this->description = $this->status->FreakaZoneDevice->DeviceDescription;
-		$this->wpFreakaZoneVersion = $this->status->FreakaZoneDevice->wpFreakaZoneVersion;
+		$this->wpFreakaZoneVersion = isset($this->status->FreakaZoneDevice->wpFreakaZoneVersion) ?
+			$this->status->FreakaZoneDevice->wpFreakaZoneVersion : '';
 		$this->version = $this->status->FreakaZoneDevice->Version;
 		$this->mac = $this->status->FreakaZoneDevice->miniMAC;
 		echo "save '" . $this->name . "' (" . $this->ip . ") ";
@@ -53,6 +54,7 @@ class d1mini {
 
 		$this->setDevice();
 		$this->setRSSI();
+		$this->setOnline();
 		if(isset($this->status->FreakaZoneDevice->Debug->HT)) {
 			$this->setHT();
 		}
@@ -81,6 +83,11 @@ class d1mini {
 		$id_dp = $this->mergeDP($id_mqtttopic, 'Rssi', 'Signal', 'db', 0, -130, 0);
 		$this->mergeTrend($id_dp, 'Signal', 120);
 		echo "saved: 'Signal' ";
+	}
+	private function setOnline() {
+		$id_mqtttopic = $this->insertTopic('info/Online');
+		$this->mergeDP($id_mqtttopic, 'Online', 'Online', '0:offline;1:online;');
+		echo "saved: 'Online' ";
 	}
 	private function setHT() {
 		$id_mqtttopic_temp = $this->insertTopic('Temperature');
@@ -158,11 +165,28 @@ MERGE INTO [d1mini] AS [TARGET]
 	}
 	private function insertTopic($aptopic) {
 		$sql = "
-INSERT INTO [mqtttopic]
-	([id_mqttgroup], [id_d1mini], [topic])
-OUTPUT [INSERTED].[id_mqtttopic] AS [ID]
-VALUES
-	(" . $this->idMqttGroup . ", " . $this->id . ",'" . $this->name . "/" . $aptopic . "')";
+MERGE INTO [mqtttopic] AS [TARGET]
+	USING (
+		VALUES (
+			" . $this->idMqttGroup . ", " . $this->id . ",'" . $this->name . "/" . $aptopic . "'
+		)
+	) AS [SOURCE] (
+			[id_mqttgroup], [id_d1mini], [topic]
+	) ON
+		[TARGET].[topic] = [SOURCE].[topic]
+	WHEN MATCHED THEN
+		UPDATE SET
+			[TARGET].[id_mqttgroup] = [SOURCE].[id_mqttgroup],
+			[TARGET].[id_d1mini] = [SOURCE].[id_d1mini],
+			[TARGET].[topic] = [SOURCE].[topic]
+	WHEN NOT MATCHED THEN
+		INSERT (
+			[id_mqttgroup], [id_d1mini], [topic]
+		)
+		VALUES (
+			[SOURCE].[id_mqttgroup], [SOURCE].[id_d1mini], [SOURCE].[topic]
+		)
+	OUTPUT [INSERTED].[id_mqtttopic] AS [ID];";
 		$this->database->query($sql);
 		return $this->database->fetch()['ID'];
 	}
