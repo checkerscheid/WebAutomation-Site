@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 04.03.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 603                                                     $ #
+//# Revision     : $Rev:: 607                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.req 603 2024-05-01 06:01:25Z                   $ #
+//# File-ID      : $Id:: d1minicfg.req 607 2024-05-05 13:40:32Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -144,7 +144,7 @@ class d1minicfg {
 								<span class="smallfont ps-fontyellow name"></span>
 							</div>
 							<div class="buttonContainer">
-								<span class="ps-hover-noborder ps-image-button ps-export" title="von D1 Mini übernehmen"></span>
+								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice" title="von D1 Mini übernehmen"></span>
 							</div>
 						</div>
 					</td>
@@ -155,7 +155,7 @@ class d1minicfg {
 								<span class="smallfont ps-fontyellow description"></span>
 							</div>
 							<div class="buttonContainer">
-								<span class="ps-hover-noborder ps-image-button ps-export" title="von D1 Mini übernehmen"></span>
+								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice" title="von D1 Mini übernehmen"></span>
 							</div>
 						</div>
 					</td>
@@ -166,7 +166,7 @@ class d1minicfg {
 								<span class="smallfont ps-fontyellow ip"></span>
 							</div>
 							<div class="buttonContainer">
-								<span class="ps-hover-noborder ps-image-button ps-export" title="von D1 Mini übernehmen"></span>
+								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice" title="von D1 Mini übernehmen"></span>
 								<a href="http://' . $erg['ip'] . '/print" target="_blank" class="ps-hover-noborder ps-image-button ps-conversation" title="Debug"></a>
 								<a href="http://' . $erg['ip'] . '/status" target="_blank" class="ps-hover-noborder ps-image-button ps-status" title="Status"></a>
 							</div>
@@ -179,7 +179,7 @@ class d1minicfg {
 								<span class="smallfont ps-fontyellow mac"></span>
 							</div>
 							<div class="buttonContainer">
-								<span class="ps-hover-noborder ps-image-button ps-export" title="von D1 Mini übernehmen"></span>
+								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice" title="von D1 Mini übernehmen"></span>
 							</div>
 						</div>
 					</td>
@@ -190,7 +190,7 @@ class d1minicfg {
 								<span class="smallfont ps-fontyellow wpFreakaZoneVersion"></span>
 							</div>
 							<div class="buttonContainer">
-								<span class="ps-hover-noborder ps-image-button ps-export" title="von D1 Mini übernehmen"></span>
+								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice" title="von D1 Mini übernehmen"></span>
 							</div>
 						</div>
 					</td>
@@ -201,12 +201,12 @@ class d1minicfg {
 								<span class="smallfont ps-fontyellow version"></span>
 							</div>
 							<div class="buttonContainer">
-								<span class="ps-hover-noborder ps-image-button ps-export" title="von D1 Mini übernehmen"></span>
+								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice" title="von D1 Mini übernehmen"></span>
 							</div>
 						</div>
 					</td>
 					<td>
-						<span class="ps-hover-noborder ps-image-button ps-export" data-ip="' . $erg['ip'] . '"></span>
+						<span class="ps-hover-noborder ps-image-button ps-export renewMqtt" data-ip="' . $erg['ip'] . '"></span>
 					</td>
 					<td data-column="updatemode">
 						<span class="updatemode"></span>

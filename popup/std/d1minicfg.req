@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 04.03.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 600                                                     $ #
+//# Revision     : $Rev:: 607                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.req 600 2024-04-30 05:58:46Z                   $ #
+//# File-ID      : $Id:: d1minicfg.req 607 2024-05-05 13:40:32Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace popup\std;

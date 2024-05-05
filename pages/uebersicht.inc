@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 605                                                     $ #
+//# Revision     : $Rev:: 607                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 605 2024-05-03 13:06:51Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 607 2024-05-05 13:40:32Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -68,10 +68,23 @@ class uebersicht {
 		'SY_WM'			=> 'Waschmaschine',
 		'GA_WE_Ost'		=> 'Wetterstation Ost',
 		'GA_WE_Sued'	=> 'Wetterstation Süd',
+		'GA_WE_West'	=> 'Wetterstation West',
 		'WG1_HTp'		=> 'EG Wintergarten',
 		'SZ1_HT'		=> 'EG Schlafzimmer',
 		'GA1_FS'		=> 'EG Gartenhaus',
-		'FL2_HT'		=> 'OG Flur'
+		'FL2_HT'		=> 'OG Flur',
+		'BasisEmpty'	=> 'BasisEmpty'
+	);
+	private static $d1Minis = array(
+		'BA_RU',
+		'BasisEmpty',
+		'BU_RU',
+		'GA_WE_Ost',
+		'GA_WE_Sued',
+		'GA_WE_West',
+		'GA1_FS',
+		'KU_RU',
+		'SZ_RU'
 	);
 	public static function getD1HT() {
 		$returns = '';
@@ -126,8 +139,14 @@ class uebersicht {
 		foreach(uebersicht::$RSSI as $dp => $name) {
 			$returns .= '
 				<tr>
-					<td>' . $name . ':</td>
-					<td><span data-ws="' . $dp . '_Rssi" class="' . wpa::$rssi . '">undefined</span></td>
+					<td colspan="2">' . $name . ':</td>
+					<td colspan="2"><span data-ws="' . $dp . '_Rssi" class="' . wpa::$rssi . '">undefined</span></td>
+					<td colspan="2">';
+			if(in_array($dp, uebersicht::$d1Minis)) {
+				$returns .= '<span data-ws="' . $dp . '_Online" class="ps-input ' . wpa::$RedGreen . '">-</span>';
+			}
+			$returns .= '
+					</td>
 				</tr>';
 		}
 		return $returns;
@@ -189,15 +208,15 @@ class uebersicht {
 				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
 					<td colspan="3">Füllstand:</td>
-					<td colspan="3"><span data-ws="GA1_FS_VOL" class="ps-input">undefined</span></td>
+					<td colspan="3"><span data-ws="GA1_FS_Vol" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
 					<td colspan="3">Füllstand Höhe (RAW):</td>
-					<td colspan="3"><span data-ws="GA1_FS_RAW" class="ps-input">undefined</span></td>
+					<td colspan="3"><span data-ws="GA1_FS_Raw" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
 					<td colspan="3">Füllstand Höhe (AVG):</td>
-					<td colspan="3"><span data-ws="GA1_FS_AVG" class="ps-input">undefined</span></td>
+					<td colspan="3"><span data-ws="GA1_FS_Avg" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
 					<td colspan="2"></td>
@@ -251,38 +270,38 @@ class uebersicht {
 		</table>
 	</div>
 	<div class="ps-container">
-		<table id="EnergieSignal">
+		<table id="Energie">
 			<tbody>
-				<tr><td colspan="2"><h2>Wetter</h2></td></tr>
-				<tr><td colspan="2"><hr /></td></tr>
+				<tr><td colspan="6"><h2>Wetter</h2></td></tr>
+				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
-					<td>Sonne:</td>
-					<td><span data-ws="Sonne" class="ps-input <?=wpa::$BlueYellow ?>">undefined</span></td>
+					<td colspan="3">Sonne:</td>
+					<td colspan="3"><span data-ws="Sonne" class="ps-input <?=wpa::$BlueYellow ?>">undefined</span></td>
 				</tr>
 				<tr>
-					<td>Aufgang:</td>
-					<td><span data-ws="Sonnenaufgang" class="ps-input <?=wpa::$formattime ?>">undefined</span></td>
+					<td colspan="3">Aufgang:</td>
+					<td colspan="3"><span data-ws="Sonnenaufgang" class="ps-input <?=wpa::$formattime ?>">undefined</span></td>
 				</tr>
 				<tr>
-					<td>Untergang:</td>
-					<td><span data-ws="Sonnenuntergang" class="ps-input <?=wpa::$formattime ?>">undefined</span></td>
+					<td colspan="3">Untergang:</td>
+					<td colspan="3"><span data-ws="Sonnenuntergang" class="ps-input <?=wpa::$formattime ?>">undefined</span></td>
 				</tr>
-				<tr><td colspan="2"><h2>Wetterstation</h2></td></tr>
-				<tr><td colspan="2"><hr /></td></tr>
+				<tr><td colspan="6"><h2>Wetterstation</h2></td></tr>
+				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
-					<td>Licht Osten:</td>
-					<td><span data-ws="GA_WE_Ost_Light" class="ps-input">undefined</span></td>
-				</tr>
-				<tr>
-					<td>Licht Süden:</td>
-					<td><span data-ws="GA_WE_Sued_Light" class="ps-input">undefined</span></td>
+					<td colspan="3">Licht Osten:</td>
+					<td colspan="3"><span data-ws="GA_WE_Ost_Light" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
-					<td>Regen:</td>
-					<td><span data-ws="GA_WE_Ost_Rain" class="ps-input">undefined</span></td>
+					<td colspan="3">Licht Süden:</td>
+					<td colspan="3"><span data-ws="GA_WE_Sued_Light" class="ps-input">undefined</span></td>
 				</tr>
-				<tr><td colspan="2"><h2>Signalstärke</h2></td></tr>
-				<tr><td colspan="2"><hr /></td></tr>
+				<tr>
+					<td colspan="3">Regen:</td>
+					<td colspan="3"><span data-ws="GA_WE_Ost_Rain" class="ps-input">undefined</span></td>
+				</tr>
+				<tr><td colspan="6"><h2>Signalstärke</h2></td></tr>
+				<tr><td colspan="6"><hr /></td></tr>
 				<?=uebersicht::getRSSI() ?>
 			</tbody>
 		</table>
