@@ -85,9 +85,9 @@ class d1mini {
 		echo "saved: 'Signal' ";
 	}
 	private function setOnline() {
-		$id_mqtttopic = $this->insertTopic('info/Online');
-		$this->mergeDP($id_mqtttopic, 'Online', 'Online', '0:offline;1:online;');
-		echo "saved: 'Online' ";
+		$id_mqtttopic = $this->insertTopic('ERROR/Online');
+		$this->mergeDP($id_mqtttopic, 'Online', 'Online', '0:online;1:offline;');
+		echo "saved: 'Online Error' ";
 	}
 	private function setHT() {
 		$id_mqtttopic_temp = $this->insertTopic('Temperature');
