@@ -68,7 +68,6 @@ html.black { background:#606060 url(images/layout/black/main-border.png) repeat-
 	background:transparent url(images/layout/black/main-border.png) repeat-y left top; }
 .black * { color:#ececfb; }
 .black .ui-button-text { color:#000; }
-.black .pagecontent { background-color:#606060; }
 .black #header { background-color:#000; }
 .black #footerLinks { background:transparent url(images/layout/black/footer-left.png) top left no-repeat; }
 .black #footerRechts { background:transparent url(images/layout/black/footer-right.png) top right no-repeat; }

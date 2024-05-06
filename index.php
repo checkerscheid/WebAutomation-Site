@@ -63,7 +63,7 @@ unset($_SESSION[SESSION_ID]['ActiveAlarms']);
 <!DOCTYPE html>
 <html id="html"<?=($sdata->Whitemode ? '' : ' class="black"')?>>
 <head>
-	<title>WebAutomation.local [<?=$system->getFullSrc()?>]</title>
+	<title>Checker WebAutomation [<?=$system->getFullSrc()?>]</title>
 	<meta charset="utf-8" />
 	<meta name="author" content="Christian Scheid" />
 	<!--meta name="viewport" content="width=800" /-->

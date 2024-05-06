@@ -20,14 +20,12 @@ use system\wpInit
 * { margin:0; padding:0; box-sizing:content-box; }
 html { height:100%; min-width:450px; overflow-y:scroll;
 	background:transparent url(images/layout/Main_oben_rechts.png) repeat-y right top; }
-body { height:100%; background-color:#FFF;
-	background:transparent url(images/layout/Main_oben_links.png) repeat-y left top; }
+body { height:100%; background:transparent url(images/layout/Main_oben_links.png) repeat-y left top; }
 body * { font-family:Arial; font-size:12px; color:#636363; }
 body.nomark *:not(input) { user-select:none; }
 body.touch .pagecontent * { font-size:15px; font-weight:bold; }
 /* body.nomark #onlinealarm_wrapper * { font-size:1.05em; } */
 #contentAll { min-height:100%; }
-.pagecontent { background-color:#FFF; }
 * html #contentRight { height:100%; }
 * html #contentLeft { height:100%; }
 * html #contentAll { height:100%; }
