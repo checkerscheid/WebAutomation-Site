@@ -23,6 +23,8 @@ require_once 'request/system/groups.psys';
 require_once 'system/Helper/d1mini.psys';
 
 class d1minicfg {
+	static $maxFreakaZoneVersion;
+	static $maxVersion;
 	const c_menusearchd1mini = 'menusearchd1mini';
 	public static function menusearchd1mini() {
 		echo '
@@ -34,11 +36,21 @@ class d1minicfg {
 	}
 	const c_menueditelem = 'menueditelem';
 	public static function menueditelem() {
+		$wpDatabase = new wpDatabase();
+		$wpDatabase->query('SELECT TOP 1 [wpFreakaZoneVersion] FROM [D1Mini] ORDER BY [wpFreakaZoneVersion] DESC');
+		$erg = $wpDatabase->fetch();
+		d1minicfg::$maxFreakaZoneVersion = $erg['wpFreakaZoneVersion'];
+		$wpDatabase->query('SELECT TOP 1 [version] FROM [D1Mini] ORDER BY [version] DESC');
+		$erg = $wpDatabase->fetch();
+		d1minicfg::$maxVersion = $erg['version'];
 		$html = '
 			<h1>D1 Mini Details</h1>
+			<div class="versionContainer">
+				<span>wpFreakaZone Lib: ' . d1minicfg::$maxFreakaZoneVersion . '</span>
+				<span>BasisEmpty: ' . d1minicfg::$maxVersion . '</span>
+			</div>
 			<hr />
 			<ul id="trend">';
-		$wpDatabase = new wpDatabase();
 		$wpDatabase->query('SELECT [id_d1minigroup], [name] FROM [d1minigroup] ORDER BY [name]');
 		while($erg = $wpDatabase->fetch()) {
 			$html .= '
@@ -82,6 +94,12 @@ class d1minicfg {
 	const c_getd1minis = 'getd1minis';
 	public static function getd1minis() {
 		$wpDatabase = new wpDatabase();
+		$wpDatabase->query('SELECT TOP 1 [wpFreakaZoneVersion] FROM [D1Mini] ORDER BY [wpFreakaZoneVersion] DESC');
+		$erg = $wpDatabase->fetch();
+		d1minicfg::$maxFreakaZoneVersion = $erg['wpFreakaZoneVersion'];
+		$wpDatabase->query('SELECT TOP 1 [version] FROM [D1Mini] ORDER BY [version] DESC');
+		$erg = $wpDatabase->fetch();
+		d1minicfg::$maxVersion = $erg['version'];
 		$wpDatabase->query("
 			SELECT
 				[id_d1mini], [name], [description], [ip], [mac], [wpFreakaZoneVersion], [version], [active]
@@ -132,6 +150,14 @@ class d1minicfg {
 			</thead>
 			<tbody>';
 		while($erg = $wpDatabase->fetch()) {
+			$updatelib = 'ps-fontyellow';
+			if(d1minicfg::$maxFreakaZoneVersion == $erg['wpFreakaZoneVersion'] ) {
+				$updatelib = 'ps-fontgreen';
+			}
+			$update = 'ps-fontyellow';
+			if(d1minicfg::$maxVersion == $erg['version'] ) {
+				$update = 'ps-fontgreen';
+			}
 			$html .= '
 				<tr class="D1MiniDevice" data-id="' . $erg['id_d1mini'] . '" data-name="' . $erg['name'] . '">
 					<td class="buttonbox">
@@ -186,7 +212,7 @@ class d1minicfg {
 					<td data-column="wpFreakaZoneVersion">
 						<div class="tdButton">
 							<div>
-								<span class="stored">' . $erg['wpFreakaZoneVersion'] . '</span><br />
+								<span class="stored ' . $updatelib . '">' . $erg['wpFreakaZoneVersion'] . '</span><br />
 								<span class="smallfont ps-fontyellow wpFreakaZoneVersion"></span>
 							</div>
 							<div class="buttonContainer">
@@ -197,7 +223,7 @@ class d1minicfg {
 					<td data-column="version">
 						<div class="tdButton">
 							<div>
-								<span class="stored">' . $erg['version'] . '</span><br />
+								<span class="stored ' . $update . '">' . $erg['version'] . '</span><br />
 								<span class="smallfont ps-fontyellow version"></span>
 							</div>
 							<div class="buttonContainer">
