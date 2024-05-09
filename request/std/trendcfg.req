@@ -314,10 +314,15 @@ switch(std::gets('param1')) {
 		break;
 //###################################################################################
 	case trendcfg::c_savealldelete:
+		$wpDatabase = new wpDatabase();
 		$fortcp = '';
+		$forsql = array();
 		foreach($_POST['ids'] as $ids) {
 			$fortcp .= $ids.'%~%';
+			$forsql[] = "[id_trend] = " . $ids;
 		}
+		$sql = "DELETE FROM [trend] WHERE " . implode(' OR ', $forsql);
+		$wpDatabase->query($sql);
 		$WebCom = new WebCom();
 		echo $WebCom->send('DeleteTrend', substr($fortcp, 0, -3));
 		break;

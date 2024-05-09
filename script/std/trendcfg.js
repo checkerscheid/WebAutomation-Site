@@ -201,7 +201,7 @@ p.page.load = function() {
 		var names = [];
 		$(tr).find('[data-idtrend]').each(function() {
 			if($(this).find('.ps-checkbox').hasClass('checked')) {
-				ids.push($(this).attr('data-id'));
+				ids.push($(this).attr('data-idtrend'));
 				names.push($(this).find('.ps-checkbox').text());
 			}
 		});
@@ -240,7 +240,7 @@ p.page.load = function() {
 		var names = [];
 		$(tr).find('[data-idtrend]').each(function() {
 			if($(this).find('.ps-checkbox').hasClass('checked')) {
-				ids.push($(this).attr('data-id'));
+				ids.push($(this).attr('data-idtrend'));
 				names.push($(this).find('.ps-checkbox').text());
 			}
 		});
@@ -279,7 +279,7 @@ p.page.load = function() {
 		var names = [];
 		$(tr).find('[data-idtrend]').each(function() {
 			if($(this).find('.ps-checkbox').hasClass('checked')) {
-				ids.push($(this).attr('data-id'));
+				ids.push($(this).attr('data-idtrend'));
 				names.push($(this).find('.ps-checkbox').text());
 			}
 		});
