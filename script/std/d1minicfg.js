@@ -305,6 +305,7 @@ function D1MiniRenew(d1minigroup) {
 			//setTextIfNotStored(key, 'ssid', value.Ssid);
 			var updateMode = value.UpdateMode ? '<span class="ps-fontyellow">aktiv</span>' : '<span class="ps-fontgreen">deaktiviert</span>';
 			setTextIfNotStored(key, 'updatemode', updateMode);
+			setTextIfNotStored(key, 'compiledWith', value.compiledWith);
 		}
 	}, 'json');
 }

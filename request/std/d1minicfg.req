@@ -143,6 +143,7 @@ class d1minicfg {
 					<th>MQTT</th>
 					<th>UpdateMode</th>
 					<th>aktiv</th>
+					<th>compiledWith</th>
 					<th></th>
 					<th></th>
 					<th></th>
@@ -240,6 +241,9 @@ class d1minicfg {
 					<td>
 						' . ($erg['active'] == 1 ? '<span class="ps-fontgreen">aktiv</span>' : '<span class="ps-fontyellow">deaktiviert</span>') . '
 					</td>
+					<td data-column="compiledWith">
+						<span class="compiledWith"></span>
+					</td>
 					<td class="buttonbox">
 						<div class="buttonContainer">
 							<span class="ps-hover-noborder ps-image-button ps-send forceupdate" title="Force MQTT Update"></span>
@@ -271,6 +275,10 @@ class d1minicfg {
 			if(isset($jsontext->FreakaZoneDevice)) {
 				$wpFZ = $jsontext->FreakaZoneDevice;
 				//std::test_array($wpFZ);
+				$compiledWith = array();
+				foreach($wpFZ->Debug as $module => $active) {
+					$compiledWith[] = $module;
+				}
 				$returns .= $dividor .
 					'"' . $wpFZ->DeviceName . '":{' .
 					'"DeviceName":"' . $wpFZ->DeviceName . '",' .
@@ -280,7 +288,8 @@ class d1minicfg {
 					'"Ip":"' . $erg['ip'] . '",' .
 					'"Mac":"' . $wpFZ->MAC . '",' .
 					//'"Ssid":"' . $wpFZ->DeviceName . '",' .
-					'"UpdateMode":' . ($wpFZ->UpdateMode ? 'true' : 'false') .
+					'"UpdateMode":' . ($wpFZ->UpdateMode ? 'true' : 'false') . ',' .
+					'"compiledWith":"' . implode(', ', $compiledWith) . '"'.
 					'}';
 			}
 			$dividor = ',';
