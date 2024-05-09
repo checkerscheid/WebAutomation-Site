@@ -46,10 +46,12 @@ class uebersicht {
 		'KE'			=> 'Keller',
 		'GA_WE_Ost'		=> 'Wetterstation Ost',
 		'GA_WE_Sued'	=> 'Wetterstation Süd',
+		'GA_WE_West'	=> 'Wetterstation West',
 		'WG1_HTp'		=> 'Wintergarten',
 		'SZ1_HT'		=> 'Schlafzimmer',
 		'GA1_FS'		=> 'Gartenhaus',
-		'FL2_HT'		=> 'Flur'
+		'FL2_HT'		=> 'Flur',
+		'GA2_WE_Gaube'	=> 'Wetterstation Gaube'
 	);
 	private static $RSSI = array(
 		'WZ_HT3'		=> 'Wohnzimmer',
@@ -73,6 +75,7 @@ class uebersicht {
 		'SZ1_HT'		=> 'EG Schlafzimmer',
 		'GA1_FS'		=> 'EG Gartenhaus',
 		'FL2_HT'		=> 'OG Flur',
+		'GA2_WE_Gaube'	=> 'Wetterstation Gaube',
 		'BasisEmpty'	=> 'BasisEmpty'
 	);
 	private static $d1Minis = array(
@@ -84,7 +87,8 @@ class uebersicht {
 		'GA_WE_West',
 		'GA1_FS',
 		'KU_RU',
-		'SZ_RU'
+		'SZ_RU',
+		'GA2_WE_Gaube'
 	);
 	public static function getD1HT() {
 		$returns = '';
@@ -297,8 +301,16 @@ class uebersicht {
 					<td colspan="3"><span data-ws="GA_WE_Sued_Light" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
-					<td colspan="3">Regen:</td>
+					<td colspan="3">Licht Westen:</td>
+					<td colspan="3"><span data-ws="GA_WE_West_Light" class="ps-input">undefined</span></td>
+				</tr>
+				<tr>
+					<td colspan="3">Regen Ost:</td>
 					<td colspan="3"><span data-ws="GA_WE_Ost_Rain" class="ps-input">undefined</span></td>
+				</tr>
+				<tr>
+					<td colspan="3">Regen West:</td>
+					<td colspan="3"><span data-ws="GA_WE_West_Rain" class="ps-input">undefined</span></td>
 				</tr>
 				<tr><td colspan="6"><h2>Signalstärke</h2></td></tr>
 				<tr><td colspan="6"><hr /></td></tr>
