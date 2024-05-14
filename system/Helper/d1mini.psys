@@ -32,48 +32,60 @@ class d1mini {
 	private $database, $webCom, $status;
 	private $idD1MiniGroup, $idMqttGroup, $idDBGroup, $idTrendGroup;
 	private $id, $name, $description, $ip, $wpFreakaZoneVersion, $version, $mac;
+	private $canInserted;
 	public function __construct($ip) {
 		$this->database = new wpDatabase();
 		$this->webCom = new WebCom();
 		$this->ip = $ip;
+		$this->canInserted = false;
 		$res = $this->webCom->send('getD1MiniStatus', $ip);
 		$this->status = \json_decode($res);
-		$this->name = $this->status->FreakaZoneDevice->DeviceName;
-		$this->description = $this->status->FreakaZoneDevice->DeviceDescription;
-		$this->wpFreakaZoneVersion = isset($this->status->FreakaZoneDevice->wpFreakaZoneVersion) ?
-			$this->status->FreakaZoneDevice->wpFreakaZoneVersion : '';
-		$this->version = $this->status->FreakaZoneDevice->Version;
-		$this->mac = $this->status->FreakaZoneDevice->miniMAC;
-		echo "save '" . $this->name . "' (" . $this->ip . ") ";
+		if(\json_last_error() == JSON_ERROR_NONE) {
+			$this->canInserted = true;
+			$this->name = $this->status->FreakaZoneDevice->DeviceName;
+			$this->description = $this->status->FreakaZoneDevice->DeviceDescription;
+			$this->wpFreakaZoneVersion = isset($this->status->FreakaZoneDevice->wpFreakaZoneVersion) ?
+				$this->status->FreakaZoneDevice->wpFreakaZoneVersion : '';
+			$this->version = $this->status->FreakaZoneDevice->Version;
+			$this->mac = $this->status->FreakaZoneDevice->miniMAC;
+			echo "save '" . $this->name . "' (" . $this->ip . ") ";
+		} else {
+			echo \json_last_error_msg();
+		}
 	}
 	public function insertDevice($idD1MiniGroup, $idMqttroup, $idDBGroup, $idTrendGroup) {
 		$this->idD1MiniGroup = $idD1MiniGroup;
 		$this->idMqttGroup = $idMqttroup;
 		$this->idDBGroup = $idDBGroup;
 		$this->idTrendGroup = $idTrendGroup;
-
-		$this->setDevice();
-		$this->setRSSI();
-		$this->setOnline();
-		if(isset($this->status->FreakaZoneDevice->Debug->HT)) {
-			$this->setHT();
+		if($this->canInserted) {
+			$this->setDevice();
+			$this->setRSSI();
+			$this->setOnline();
+			if(isset($this->status->FreakaZoneDevice->Debug->HT)) {
+				$this->setHT();
+			}
+			if(isset($this->status->FreakaZoneDevice->Debug->LDR)) {
+				$this->setLDR();
+			}
+			if(isset($this->status->FreakaZoneDevice->Debug->Light)) {
+				$this->setLight();
+			}
+			if(isset($this->status->FreakaZoneDevice->Debug->BM)) {
+				$this->setBM();
+			}
+			if(isset($this->status->FreakaZoneDevice->Debug->Rain)) {
+				$this->setRain();
+			}
+			if(isset($this->status->FreakaZoneDevice->Debug->Distance)) {
+				$this->setVolume();
+			}
+			if(isset($this->status->FreakaZoneDevice->Debug->Moisture)) {
+				$this->setMoisture();
+			}
+			return $this->id;
 		}
-		if(isset($this->status->FreakaZoneDevice->Debug->LDR)) {
-			$this->setLDR();
-		}
-		if(isset($this->status->FreakaZoneDevice->Debug->Light)) {
-			$this->setLight();
-		}
-		if(isset($this->status->FreakaZoneDevice->Debug->BM)) {
-			$this->setBM();
-		}
-		if(isset($this->status->FreakaZoneDevice->Debug->Rain)) {
-			$this->setRain();
-		}
-		if(isset($this->status->FreakaZoneDevice->Debug->Distance)) {
-			$this->setVolume();
-		}
-		return $this->id;
+		return 0;
 	}
 	private function setDevice() {
 		$this->mergeDivice();
@@ -127,6 +139,12 @@ class d1mini {
 		$id_dp = $this->mergeDP($id_mqtttopic, 'Vol', 'Füllstand', 'l', 0, 0, 10000);
 		$this->mergeTrend($id_dp, 'Füllstand', 120);
 		echo "saved: 'Füllstand' ";
+	}
+	private function setMoisture() {
+		$id_mqtttopic = $this->insertTopic('Moisture');
+		$id_dp = $this->mergeDP($id_mqtttopic, 'Moisture', 'Moisture', '%', 0);
+		$this->mergeTrend($id_dp, 'Moisture');
+		echo "saved: 'Moisture' ";
 	}
 	private function mergeDivice($active = 1) {
 		$sql = "

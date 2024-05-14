@@ -46,7 +46,8 @@ class uebersicht {
 		'KE'			=> 'Keller',
 		'GA_WE_Ost'		=> 'Wetterstation Ost',
 		'GA_WE_Sued'	=> 'Wetterstation Süd',
-		'GA_WE_West'	=> 'Wetterstation West',
+		'GA2_WE_Gaube'	=> 'Wetterstation Gaube',
+		'BasisTest'		=> 'Breadorad',
 		'WG1_HTp'		=> 'Wintergarten',
 		'SZ1_HT'		=> 'Schlafzimmer',
 		'GA1_FS'		=> 'Gartenhaus',
@@ -70,17 +71,16 @@ class uebersicht {
 		'SY_WM'			=> 'Waschmaschine',
 		'GA_WE_Ost'		=> 'Wetterstation Ost',
 		'GA_WE_Sued'	=> 'Wetterstation Süd',
-		'GA_WE_West'	=> 'Wetterstation West',
+		'GA2_WE_Gaube'	=> 'Wetterstation Gaube',
+		'BasisTest'		=> 'Breadorad',
 		'WG1_HTp'		=> 'EG Wintergarten',
 		'SZ1_HT'		=> 'EG Schlafzimmer',
 		'GA1_FS'		=> 'EG Gartenhaus',
-		'FL2_HT'		=> 'OG Flur',
-		'GA2_WE_Gaube'	=> 'Wetterstation Gaube',
-		'BasisEmpty'	=> 'BasisEmpty'
+		'FL2_HT'		=> 'OG Flur'
 	);
 	private static $d1Minis = array(
 		'BA_RU',
-		'BasisEmpty',
+		'BasisTest',
 		'BU_RU',
 		'GA_WE_Ost',
 		'GA_WE_Sued',
@@ -270,6 +270,16 @@ class uebersicht {
 					<td colspan="3">internal getShellyStatus:</td>
 					<td colspan="3"><span class="ps-button getShellyStatus">anfordern</span></td>
 				</tr>
+				<tr><td colspan="6"><h2>Breadboard</h2></td></tr>
+				<tr><td colspan="6"><hr /></td></tr>
+				<tr>
+					<td colspan="3">Licht</td>
+					<td colspan="3"><span data-ws="BasisTest_Light" class="ps-input">undefined</span></td>
+				</tr>
+				<tr>
+					<td colspan="3">Blume</td>
+					<td colspan="3"><span data-ws="BasisTest_Moisture" class="ps-input">undefined</span></td>
+				</tr>
 			</tbody>
 		</table>
 	</div>
@@ -301,16 +311,12 @@ class uebersicht {
 					<td colspan="3"><span data-ws="GA_WE_Sued_Light" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
-					<td colspan="3">Licht Westen:</td>
-					<td colspan="3"><span data-ws="GA_WE_West_Light" class="ps-input">undefined</span></td>
-				</tr>
-				<tr>
 					<td colspan="3">Regen Ost:</td>
 					<td colspan="3"><span data-ws="GA_WE_Ost_Rain" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
-					<td colspan="3">Regen West:</td>
-					<td colspan="3"><span data-ws="GA_WE_West_Rain" class="ps-input">undefined</span></td>
+					<td colspan="3">Regen Gaube:</td>
+					<td colspan="3"><span data-ws="GA2_WE_Gaube_Rain" class="ps-input">undefined</span></td>
 				</tr>
 				<tr><td colspan="6"><h2>Signalstärke</h2></td></tr>
 				<tr><td colspan="6"><hr /></td></tr>

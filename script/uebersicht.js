@@ -19,7 +19,8 @@
 //<? require_once('system/websockets.js') ?>
 var getdimmervalue = true;
 var configwithtimeout = [];
-ws.logEnabled = true;
+
+ws.logEnabled = false;
 
 const lautsprecher = '192.168.80.122';
 const kamin = '192.168.80.124';
