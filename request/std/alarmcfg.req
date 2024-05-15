@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 568                                                     $ #
+//# Revision     : $Rev:: 609                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: alarmcfg.req 568 2024-01-24 07:36:18Z                    $ #
+//# File-ID      : $Id:: alarmcfg.req 609 2024-05-15 14:54:17Z                    $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $idgroups */
