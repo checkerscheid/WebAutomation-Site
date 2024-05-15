@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 03.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 603                                                     $ #
+//# Revision     : $Rev:: 608                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.js 603 2024-05-01 06:01:25Z                    $ #
+//# File-ID      : $Id:: d1minicfg.js 608 2024-05-09 20:38:50Z                    $ #
 //#                                                                                 #
 //###################################################################################
 ?> d1minicfg */
@@ -91,7 +91,7 @@ p.page.load = function() {
 			});
 		});
 	});
-	$('#erg').on('click', '.D1MiniDevice .ps-export', function() {
+	$('#erg').on('click', '.D1MiniDevice .renewMqtt', function() {
 		var myData = { IP: $(this).attr('data-ip') };
 		$.get('std.d1minicfg.infoToSaveD1Mini.pop', function(data) {
 			$('#dialog').html(data).dialog({
@@ -122,7 +122,8 @@ p.page.load = function() {
 		});
 	});
 //###################################################################################
-	$('#erg').on('click', '.D1MiniDevice .ps-export', function() {
+	$('#erg').on('click', '.D1MiniDevice .saveFromDevice', function() {
+		var that = $(this);
 		var tr = $(this).parents('tr:first');
 		var td = $(this).parents('td:first');
 		var id = $(tr).attr('data-id');
@@ -130,7 +131,7 @@ p.page.load = function() {
 		var value = $(td).find('.smallfont.' + column).text();
 		$.post('std.d1minicfg.updateColumn.req', {id:id, column:column, value:value}, function() {
 			$(td).find('.stored').text(value);
-			$(td).find('.ps-export').addClass('ps-hidden');
+			$(that).addClass('ps-hidden');
 			$(td).find('.smallfont').addClass('ps-hidden');
 		});
 	});
@@ -305,6 +306,7 @@ function D1MiniRenew(d1minigroup) {
 			//setTextIfNotStored(key, 'ssid', value.Ssid);
 			var updateMode = value.UpdateMode ? '<span class="ps-fontyellow">aktiv</span>' : '<span class="ps-fontgreen">deaktiviert</span>';
 			setTextIfNotStored(key, 'updatemode', updateMode);
+			setTextIfNotStored(key, 'compiledWith', value.compiledWith);
 		}
 	}, 'json');
 }

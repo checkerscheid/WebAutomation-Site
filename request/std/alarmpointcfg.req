@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 550                                                     $ #
+//# Revision     : $Rev:: 609                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: alarmpointcfg.req 550 2023-12-25 03:02:54Z               $ #
+//# File-ID      : $Id:: alarmpointcfg.req 609 2024-05-15 14:54:17Z               $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -51,16 +51,16 @@ switch(std::gets('param1')) {
 //###################################################################################
 	case alarmpointcfg::c_addalarm:
 		$database = new wpDatabase();
-		$database->query('SELECT [d].[id_opcdatapoint], [d].[name]
-				FROM [opcdatapoint] [d]
-				LEFT OUTER JOIN [alarm] [a] ON [d].[id_opcdatapoint] = [a].[id_opcdatapoint]
-				WHERE [a].[id_alarm] IS NULL ORDER BY [d].[name]');
+		$database->query('SELECT [dp].[id_dp], [dp].[name]
+				FROM [dp]
+				LEFT OUTER JOIN [alarm] [a] ON [dp].[id_dp] = [a].[id_dp]
+				WHERE [a].[id_alarm] IS NULL ORDER BY [dp].[name]');
 		echo '<span>Filter:</span><input type="text" class="ps-input newdpfilter" />';
 		echo '<span class="markall ps-button">alle markieren</span>';
 		echo '<hr />';
 		echo '<ul id="SelectNewAlarms">';
 		while($erg = $database->fetch()) {
-			echo '<li class="ps-checkbox" data-value="'.$erg['id_opcdatapoint'].'">
+			echo '<li class="ps-checkbox" data-value="'.$erg['id_dp'].'">
 					'.$erg['name']. '</li>';
 		}
 		echo '</ul>';
@@ -69,9 +69,9 @@ switch(std::gets('param1')) {
 	case alarmpointcfg::c_savenewalarm:
 		if(std::posts('newAlarm') != '') {
 			$database = new wpDatabase();
-			$database->query('INSERT INTO [alarm] ([id_opcdatapoint], [name], [text])
-					SELECT TOP 1 '.std::posts('newAlarm').', [opcdatapoint].[name], ISNULL([description], [name]) AS [text]
-					FROM [opcdatapoint] WHERE [opcdatapoint].[id_opcdatapoint] = '.std::posts('newAlarm').'
+			$database->query('INSERT INTO [alarm] ([id_dp], [name], [text])
+					SELECT TOP 1 '.std::posts('newAlarm').', [dp].[name], ISNULL([description], [name]) AS [text]
+					FROM [dp] WHERE [dp].[id_dp] = '.std::posts('newAlarm').'
 			');
 			echo $database->lastid('alarm');
 		}
@@ -82,9 +82,9 @@ switch(std::gets('param1')) {
 			if(count(std::posts('newAlarms')) > 0) {
 				$database = new wpDatabase();
 				foreach(std::posts('newAlarms') as $newAlarm) {
-					$database->query('INSERT INTO [alarm] ([id_opcdatapoint], [name], [text])
-							SELECT TOP 1 '.$newAlarm.', [opcdatapoint].[name], ISNULL([description], [name]) AS [text]
-							FROM [opcdatapoint] WHERE [opcdatapoint].[id_opcdatapoint] = '.$newAlarm.'
+					$database->query('INSERT INTO [alarm] ([id_dp], [name], [text])
+							SELECT TOP 1 '.$newAlarm.', [dp].[name], ISNULL([description], [name]) AS [text]
+							FROM [dp] WHERE [dp].[id_dp] = '.$newAlarm.'
 					');
 				}
 			}

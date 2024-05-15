@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 585                                                     $ #
+//# Revision     : $Rev:: 605                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: trendselect.js 585 2024-04-15 22:57:57Z                  $ #
+//# File-ID      : $Id:: trendselect.js 605 2024-05-03 13:06:51Z                  $ #
 //#                                                                                 #
 //###################################################################################
 ?> trendselect */
@@ -39,6 +39,10 @@ var timeto;
 var autoloadtrenddatatimer = null;
 var autoloadtrenddatastarted = false;
 var autoloadtrenddataseconds = 0;
+
+timezoneJS.timezone.zoneFileBasePath = 'system/tz';
+timezoneJS.timezone.defaultZoneFile = ['europe.txt'];
+timezoneJS.timezone.init({async: true});
 
 p.page.load = function() {
 

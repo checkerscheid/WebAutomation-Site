@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 591                                                     $ #
+//# Revision     : $Rev:: 609                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.js 591 2024-04-24 20:57:52Z                   $ #
+//# File-ID      : $Id:: uebersicht.js 609 2024-05-15 14:54:17Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> uebersicht */
@@ -19,7 +19,8 @@
 //<? require_once('system/websockets.js') ?>
 var getdimmervalue = true;
 var configwithtimeout = [];
-ws.logEnabled = true;
+
+ws.logEnabled = false;
 
 const lautsprecher = '192.168.80.122';
 const kamin = '192.168.80.124';

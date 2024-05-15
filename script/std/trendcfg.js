@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 15.05.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 568                                                     $ #
+//# Revision     : $Rev:: 608                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: trendcfg.js 568 2024-01-24 07:36:18Z                     $ #
+//# File-ID      : $Id:: trendcfg.js 608 2024-05-09 20:38:50Z                     $ #
 //#                                                                                 #
 //###################################################################################
 ?> trendcfg */
@@ -201,7 +201,7 @@ p.page.load = function() {
 		var names = [];
 		$(tr).find('[data-idtrend]').each(function() {
 			if($(this).find('.ps-checkbox').hasClass('checked')) {
-				ids.push($(this).attr('data-id'));
+				ids.push($(this).attr('data-idtrend'));
 				names.push($(this).find('.ps-checkbox').text());
 			}
 		});
@@ -240,7 +240,7 @@ p.page.load = function() {
 		var names = [];
 		$(tr).find('[data-idtrend]').each(function() {
 			if($(this).find('.ps-checkbox').hasClass('checked')) {
-				ids.push($(this).attr('data-id'));
+				ids.push($(this).attr('data-idtrend'));
 				names.push($(this).find('.ps-checkbox').text());
 			}
 		});
@@ -279,7 +279,7 @@ p.page.load = function() {
 		var names = [];
 		$(tr).find('[data-idtrend]').each(function() {
 			if($(this).find('.ps-checkbox').hasClass('checked')) {
-				ids.push($(this).attr('data-id'));
+				ids.push($(this).attr('data-idtrend'));
 				names.push($(this).find('.ps-checkbox').text());
 			}
 		});

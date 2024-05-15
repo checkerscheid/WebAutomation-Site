@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 550                                                     $ #
+//# Revision     : $Rev:: 609                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: alarmhistorics.req 550 2023-12-25 03:02:54Z              $ #
+//# File-ID      : $Id:: alarmhistorics.req 609 2024-05-15 14:54:17Z              $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -105,7 +105,7 @@ switch(std::gets('param1')) {
 		if($_POST['fldp'][0] != 'All') {
 			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
 			foreach($_POST['fldp'] as $filter) {
-				$where .= " [opc].[opcname] = '".$filter."' OR";
+				$where .= " [dp].[name] = '".$filter."' OR";
 			}
 			$where = substr($where, 0, -3).')';
 		}
@@ -124,7 +124,7 @@ switch(std::gets('param1')) {
 
 		$sql = "SELECT DISTINCT([ag].[name]) AS [group] FROM [alarmhistoric] [ah]
 					INNER JOIN [alarm] [a] ON [ah].[id_alarm] = [a].[id_alarm]
-					INNER JOIN [opcdatapoint] [opc] ON [opc].[id_opcdatapoint] = [a].[id_opcdatapoint]
+					INNER JOIN [dp] ON [dp].[id_dp] = [a].[id_dp]
 					INNER JOIN [alarmtype] [at] ON [a].[id_alarmtype] = [at].[id_alarmtype]
 					INNER JOIN [alarmgroup] [ag] ON [a].[id_alarmgroup] = [ag].[id_alarmgroup]
 					LEFT OUTER JOIN [alarmgroups1] [ag1] ON [a].[id_alarmgroups1] = [ag1].[id_alarmgroups1]
@@ -202,7 +202,7 @@ switch(std::gets('param1')) {
 		if($_POST['fldp'][0] != 'All') {
 			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
 			foreach($_POST['fldp'] as $filter) {
-				$where .= " [opc].[opcname] = '".$filter."' OR";
+				$where .= " [dp].[name] = '".$filter."' OR";
 			}
 			$where = substr($where, 0, -3).')';
 		}
@@ -221,7 +221,7 @@ switch(std::gets('param1')) {
 
 		$sql = "SELECT DISTINCT([ag1].[name]) AS [group1] FROM [alarmhistoric] [ah]
 					INNER JOIN [alarm] [a] ON [ah].[id_alarm] = [a].[id_alarm]
-					INNER JOIN [opcdatapoint] [opc] ON [opc].[id_opcdatapoint] = [a].[id_opcdatapoint]
+					INNER JOIN [dp] ON [dp].[id_dp] = [a].[id_dp]
 					INNER JOIN [alarmtype] [at] ON [a].[id_alarmtype] = [at].[id_alarmtype]
 					INNER JOIN [alarmgroup] [ag] ON [a].[id_alarmgroup] = [ag].[id_alarmgroup]
 					LEFT OUTER JOIN [alarmgroups1] [ag1] ON [a].[id_alarmgroups1] = [ag1].[id_alarmgroups1]
@@ -299,7 +299,7 @@ switch(std::gets('param1')) {
 		if($_POST['fldp'][0] != 'All') {
 			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
 			foreach($_POST['fldp'] as $filter) {
-				$where .= " [opc].[opcname] = '".$filter."' OR";
+				$where .= " [dp].[name] = '".$filter."' OR";
 			}
 			$where = substr($where, 0, -3).')';
 		}
@@ -318,7 +318,7 @@ switch(std::gets('param1')) {
 
 		$sql = "SELECT DISTINCT([ag2].[name]) AS [group2] FROM [alarmhistoric] [ah]
 					INNER JOIN [alarm] [a] ON [ah].[id_alarm] = [a].[id_alarm]
-					INNER JOIN [opcdatapoint] [opc] ON [opc].[id_opcdatapoint] = [a].[id_opcdatapoint]
+					INNER JOIN [dp] ON [dp].[id_dp] = [a].[id_dp]
 					INNER JOIN [alarmtype] [at] ON [a].[id_alarmtype] = [at].[id_alarmtype]
 					INNER JOIN [alarmgroup] [ag] ON [a].[id_alarmgroup] = [ag].[id_alarmgroup]
 					LEFT OUTER JOIN [alarmgroups1] [ag1] ON [a].[id_alarmgroups1] = [ag1].[id_alarmgroups1]
@@ -396,7 +396,7 @@ switch(std::gets('param1')) {
 		if($_POST['fldp'][0] != 'All') {
 			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
 			foreach($_POST['fldp'] as $filter) {
-				$where .= " [opc].[opcname] = '".$filter."' OR";
+				$where .= " [dp].[name] = '".$filter."' OR";
 			}
 			$where = substr($where, 0, -3).')';
 		}
@@ -415,7 +415,7 @@ switch(std::gets('param1')) {
 
 		$sql = "SELECT DISTINCT([ag3].[name]) AS [group3] FROM [alarmhistoric] [ah]
 					INNER JOIN [alarm] [a] ON [ah].[id_alarm] = [a].[id_alarm]
-					INNER JOIN [opcdatapoint] [opc] ON [opc].[id_opcdatapoint] = [a].[id_opcdatapoint]
+					INNER JOIN [dp] ON [dp].[id_dp] = [a].[id_dp]
 					INNER JOIN [alarmtype] [at] ON [a].[id_alarmtype] = [at].[id_alarmtype]
 					INNER JOIN [alarmgroup] [ag] ON [a].[id_alarmgroup] = [ag].[id_alarmgroup]
 					LEFT OUTER JOIN [alarmgroups1] [ag1] ON [a].[id_alarmgroups1] = [ag1].[id_alarmgroups1]
@@ -493,7 +493,7 @@ switch(std::gets('param1')) {
 		if($_POST['fldp'][0] != 'All') {
 			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
 			foreach($_POST['fldp'] as $filter) {
-				$where .= " [opc].[opcname] = '".$filter."' OR";
+				$where .= " [dp].[dpname] = '".$filter."' OR";
 			}
 			$where = substr($where, 0, -3).')';
 		}
@@ -512,7 +512,7 @@ switch(std::gets('param1')) {
 
 		$sql = "SELECT DISTINCT([ag4].[name]) AS [group4] FROM [alarmhistoric] [ah]
 					INNER JOIN [alarm] [a] ON [ah].[id_alarm] = [a].[id_alarm]
-					INNER JOIN [opcdatapoint] [opc] ON [opc].[id_opcdatapoint] = [a].[id_opcdatapoint]
+					INNER JOIN [dp] ON [dp].[id_dp] = [a].[id_dp]
 					INNER JOIN [alarmtype] [at] ON [a].[id_alarmtype] = [at].[id_alarmtype]
 					INNER JOIN [alarmgroup] [ag] ON [a].[id_alarmgroup] = [ag].[id_alarmgroup]
 					LEFT OUTER JOIN [alarmgroups1] [ag1] ON [a].[id_alarmgroups1] = [ag1].[id_alarmgroups1]
@@ -590,7 +590,7 @@ switch(std::gets('param1')) {
 		if($_POST['fldp'][0] != 'All') {
 			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
 			foreach($_POST['fldp'] as $filter) {
-				$where .= " [opc].[opcname] = '".$filter."' OR";
+				$where .= " [dp].[name] = '".$filter."' OR";
 			}
 			$where = substr($where, 0, -3).')';
 		}
@@ -609,7 +609,7 @@ switch(std::gets('param1')) {
 
 		$sql = "SELECT DISTINCT([ag5].[name]) AS [group5] FROM [alarmhistoric] [ah]
 					INNER JOIN [alarm] [a] ON [ah].[id_alarm] = [a].[id_alarm]
-					INNER JOIN [opcdatapoint] [opc] ON [opc].[id_opcdatapoint] = [a].[id_opcdatapoint]
+					INNER JOIN [dp] ON [dp].[id_dp] = [a].[id_dp]
 					INNER JOIN [alarmtype] [at] ON [a].[id_alarmtype] = [at].[id_alarmtype]
 					INNER JOIN [alarmgroup] [ag] ON [a].[id_alarmgroup] = [ag].[id_alarmgroup]
 					LEFT OUTER JOIN [alarmgroups1] [ag1] ON [a].[id_alarmgroups1] = [ag1].[id_alarmgroups1]
@@ -687,7 +687,7 @@ switch(std::gets('param1')) {
 		if($_POST['fldp'][0] != 'All') {
 			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
 			foreach($_POST['fldp'] as $filter) {
-				$where .= " [opc].[opcname] = '".$filter."' OR";
+				$where .= " [dp].[name] = '".$filter."' OR";
 			}
 			$where = substr($where, 0, -3).')';
 		}
@@ -706,7 +706,7 @@ switch(std::gets('param1')) {
 
 		$sql = "SELECT DISTINCT([at].[name]) AS [type] FROM [alarmhistoric] [ah]
 					INNER JOIN [alarm] [a] ON [ah].[id_alarm] = [a].[id_alarm]
-					INNER JOIN [opcdatapoint] [opc] ON [opc].[id_opcdatapoint] = [a].[id_opcdatapoint]
+					INNER JOIN [dp] ON [dp].[id_dp] = [a].[id_dp]
 					INNER JOIN [alarmtype] [at] ON [a].[id_alarmtype] = [at].[id_alarmtype]
 					INNER JOIN [alarmgroup] [ag] ON [a].[id_alarmgroup] = [ag].[id_alarmgroup]
 					LEFT OUTER JOIN [alarmgroups1] [ag1] ON [a].[id_alarmgroups1] = [ag1].[id_alarmgroups1]
@@ -802,9 +802,9 @@ switch(std::gets('param1')) {
 		}
 		if($where == 'WHERE ') $where = '';
 
-		$sql = "SELECT DISTINCT([opc].[opcname]) AS [opcname] FROM [alarmhistoric] [ah]
+		$sql = "SELECT DISTINCT([dp].[name]) AS [name] FROM [alarmhistoric] [ah]
 				INNER JOIN [alarm] [a] ON [ah].[id_alarm] = [a].[id_alarm]
-				INNER JOIN [opcdatapoint] [opc] ON [a].[id_opcdatapoint] = [opc].[id_opcdatapoint]
+				INNER JOIN [dp] ON [dp].[id_dp] = [a].[id_dp]
 				INNER JOIN [alarmtype] [at] ON [a].[id_alarmtype] = [at].[id_alarmtype]
 				INNER JOIN [alarmgroup] [ag] ON [a].[id_alarmgroup] = [ag].[id_alarmgroup]
 				LEFT OUTER JOIN [alarmgroups1] [ag1] ON [a].[id_alarmgroups1] = [ag1].[id_alarmgroups1]
@@ -812,16 +812,16 @@ switch(std::gets('param1')) {
 				LEFT OUTER JOIN [alarmgroups3] [ag3] ON [a].[id_alarmgroups3] = [ag3].[id_alarmgroups3]
 				LEFT OUTER JOIN [alarmgroups4] [ag4] ON [a].[id_alarmgroups4] = [ag4].[id_alarmgroups4]
 				LEFT OUTER JOIN [alarmgroups5] [ag5] ON [a].[id_alarmgroups5] = [ag5].[id_alarmgroups5]
-				".$where." ORDER BY [opc].[opcname]";
+				".$where." ORDER BY [dp].[name]";
 
 		$database->query($sql);;
 
 		while($erg = $database->fetch()) {
 			$checked = '';
-			if($_POST['fldp'][0] == 'All' || in_array($erg['opcname'], $_POST['fldp'])) {
+			if($_POST['fldp'][0] == 'All' || in_array($erg['name'], $_POST['fldp'])) {
 				$checked = ' checked';
 			}
-			echo '<li class="ps-checkbox'.$checked.'">'.$erg['opcname'].'</li>';
+			echo '<li class="ps-checkbox'.$checked.'">'.$erg['name'].'</li>';
 		}
 		break;
 //###################################################################################
@@ -883,7 +883,7 @@ switch(std::gets('param1')) {
 		if($_POST['fldp'][0] != 'All') {
 			$where .= $where == 'WHERE ' ? ' (' : ' AND (';
 			foreach($_POST['fldp'] as $filter) {
-				$where .= " [opc].[opcname] = '".$filter."' OR";
+				$where .= " [dp].[name] = '".$filter."' OR";
 			}
 			$where = substr($where, 0, -3).')';
 		}
@@ -899,7 +899,7 @@ switch(std::gets('param1')) {
 
 		$sql = "SELECT DISTINCT([ah].[quitfrom]) AS [quitfrom] FROM [alarmhistoric] [ah]
 					INNER JOIN [alarm] [a] ON [ah].[id_alarm] = [a].[id_alarm]
-					INNER JOIN [opcdatapoint] [opc] ON [opc].[id_opcdatapoint] = [a].[id_opcdatapoint]
+					INNER JOIN [dp] ON [dp].[id_dp] = [a].[id_dp]
 					INNER JOIN [alarmtype] [at] ON [a].[id_alarmtype] = [at].[id_alarmtype]
 					INNER JOIN [alarmgroup] [ag] ON [a].[id_alarmgroup] = [ag].[id_alarmgroup]
 					LEFT OUTER JOIN [alarmgroups1] [ag1] ON [a].[id_alarmgroups1] = [ag1].[id_alarmgroups1]
@@ -973,7 +973,7 @@ function getTable($where, $arrayGroup, $arrayGroup1, $arrayGroup2, $arrayGroup3,
 	}
 	$scriptstart = microtime(true);
 
-	$sql = 'SELECT [d].[opcname], [a].[name], ISNULL([ah].[text], [a].[text]) AS [text], [at].[name] AS [type], [ag5].[name] AS [group5], [ag4].[name] AS [group4], [ag3].[name] AS [group3], [ag2].[name] AS [group2], [ag1].[name] AS [group1], [ag].[name] AS [group], [ah].[come], [ah].[gone], [ah].[quit], [ah].[quitfrom], [ah].[quittext]
+	$sql = 'SELECT [dp].[name] AS [dpname], [a].[name], ISNULL([ah].[text], [a].[text]) AS [text], [at].[name] AS [type], [ag5].[name] AS [group5], [ag4].[name] AS [group4], [ag3].[name] AS [group3], [ag2].[name] AS [group2], [ag1].[name] AS [group1], [ag].[name] AS [group], [ah].[come], [ah].[gone], [ah].[quit], [ah].[quitfrom], [ah].[quittext]
 			FROM [alarmhistoric] [ah]
 			INNER JOIN [alarm] [a] ON [ah].[id_alarm] = [a].[id_alarm]
 			INNER JOIN [alarmtype] [at] ON [a].[id_alarmtype] = [at].[id_alarmtype]
@@ -983,7 +983,7 @@ function getTable($where, $arrayGroup, $arrayGroup1, $arrayGroup2, $arrayGroup3,
 			LEFT OUTER JOIN [alarmgroups3] [ag3] ON [a].[id_alarmgroups3] = [ag3].[id_alarmgroups3]
 			LEFT OUTER JOIN [alarmgroups2] [ag2] ON [a].[id_alarmgroups2] = [ag2].[id_alarmgroups2]
 			LEFT OUTER JOIN [alarmgroups1] [ag1] ON [a].[id_alarmgroups1] = [ag1].[id_alarmgroups1]
-			INNER JOIN [opcdatapoint] [d] ON [a].[id_opcdatapoint] = [d].[id_opcdatapoint]
+			INNER JOIN [dp] ON [a].[id_dp] = [dp].[id_dp]
 			'.$where.' ORDER BY [ah].[come] DESC';
 
 	$database->query($sql);
@@ -997,7 +997,7 @@ function getTable($where, $arrayGroup, $arrayGroup1, $arrayGroup2, $arrayGroup3,
 				($arrayGroup4[0] == 'All' || in_array($erg['group4'], $arrayGroup4)) &&
 				($arrayGroup5[0] == 'All' || in_array($erg['group5'], $arrayGroup5)) &&
 				($arrayType[0] == 'All' || in_array($erg['type'], $arrayType)) &&
-				($arrayDP[0] == 'All' || in_array($erg['opcname'], $arrayDP)) &&
+				($arrayDP[0] == 'All' || in_array($erg['dpname'], $arrayDP)) &&
 				($arrayFrom[0] == 'All' || in_array($erg['quitfrom'], $arrayFrom))
 			) {
 			echo '<tr>';
@@ -1025,7 +1025,7 @@ function getTable($where, $arrayGroup, $arrayGroup1, $arrayGroup2, $arrayGroup3,
 			echo '<td>'.$erg['text'].'</td>';
 			echo '<td>'.$erg['type'].'</td>';
 			echo '<td>'.$erg['quittext'].'</td>';
-			echo '<td>'.$erg['opcname'].'</td>';
+			echo '<td>'.$erg['dpname'].'</td>';
 			echo '</tr>';
 		}
 	}

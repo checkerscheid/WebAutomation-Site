@@ -9,9 +9,9 @@
 //# Author       : Matthias Kotulla                                                 #
 //# Date         : 29.02.2016                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 550                                                     $ #
+//# Revision     : $Rev:: 609                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: alarming.inc 550 2023-12-25 03:02:54Z                    $ #
+//# File-ID      : $Id:: alarming.inc 609 2024-05-15 14:54:17Z                    $ #
 //#                                                                                 #
 //###################################################################################
 /**
@@ -79,7 +79,11 @@ for($i = $actualgroup; $i>=0; $i--){
 
 //echo 'var groupid='.$groupid.'; var alarmgroup='.$topgroup.'; function getGroupid() { return groupid; }; function getAlarmgroup() { return alarmgroup; };';
 if($actualgroup != 0){
-	$database->query('SELECT DISTINCT [a].[id_alarmgroups'.$actualgroup.'] AS [id], [ag].[name] FROM [alarm] [a] INNER JOIN [alarmgroups'.$actualgroup.'] [ag] ON [ag].[id_alarmgroups'.$actualgroup.'] = [a].[id_alarmgroups'.$actualgroup.'] ORDER BY [name]');
+	$database->query('SELECT DISTINCT
+			[a].[id_alarmgroups'.$actualgroup.'] AS [id], [ag].[name]
+		FROM [alarm] [a]
+		INNER JOIN [alarmgroups'.$actualgroup.'] [ag] ON [ag].[id_alarmgroups'.$actualgroup.'] = [a].[id_alarmgroups'.$actualgroup.']
+		ORDER BY [name]');
 	while($erg = $database->fetch()) {
 		echo '<li class="ps-tree-parent" data-actualgroup="'.$actualgroup.'" data-idgroup'.$actualgroup.'="'.$erg['id'].'" ';
 			for($i = 5; $i>$actualgroup; $i--){
@@ -106,7 +110,10 @@ if($actualgroup != 0){
 		//echo '<li><ul data-alarms="'.$topGroup.'"></ul></li>';
 	}
 
-	$database->query('SELECT DISTINCT [id_alarm] AS [id] FROM [alarm] WHERE [id_alarmgroups'.$actualgroup.'] IS NULL AND [id_alarmgroup] IS NOT NULL');
+	$database->query('SELECT DISTINCT
+		[id_alarm] AS [id]
+		FROM [alarm]
+		WHERE [id_alarmgroups'.$actualgroup.'] IS NULL AND [id_alarmgroup] IS NOT NULL');
 	if($erg = $database->fetch()) {
 		echo '<li class="ps-tree-parent" data-actualgroup="'.$actualgroup.'" data-idgroup'.$actualgroup.'="NULL" ';
 		for($i = 5; $i>$actualgroup; $i--){
@@ -133,7 +140,10 @@ if($actualgroup != 0){
 		//echo '<li><ul data-alarms="'.$topGroup.'"></ul></li>';
 	}
 } else {
-	$database->query('SELECT DISTINCT [a].[id_alarmgroup] AS [id], [ag].[name] FROM [alarm] [a] INNER JOIN [alarmgroup] [ag] ON [ag].[id_alarmgroup] = [a].[id_alarmgroup] ORDER BY [name]');
+	$database->query('SELECT DISTINCT
+		[a].[id_alarmgroup] AS [id], [ag].[name]
+		FROM [alarm] [a] INNER JOIN [alarmgroup] [ag] ON [ag].[id_alarmgroup] = [a].[id_alarmgroup]
+		ORDER BY [name]');
 	while($erg = $database->fetch()) {
 		echo '<li class="ps-tree-parent" data-actualgroup="'.$actualgroup.'" data-idgroup5="X" data-idgroup4="X" data-idgroup3="X" data-idgroup2="X" data-idgroup1="X" data-idgroup0="'.$erg['id'].'">'.$erg['name'].'</li>';
 		echo '<li><ul data-actualgroupalarms="'.$actualgroup.'" data-alarms="XXXXX'.$erg['id'].'"></ul></li>';

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 15.05.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 593                                                     $ #
+//# Revision     : $Rev:: 608                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: trendcfg.req 593 2024-04-29 17:50:03Z                    $ #
+//# File-ID      : $Id:: trendcfg.req 608 2024-05-09 20:38:50Z                    $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -314,10 +314,15 @@ switch(std::gets('param1')) {
 		break;
 //###################################################################################
 	case trendcfg::c_savealldelete:
+		$wpDatabase = new wpDatabase();
 		$fortcp = '';
+		$forsql = array();
 		foreach($_POST['ids'] as $ids) {
 			$fortcp .= $ids.'%~%';
+			$forsql[] = "[id_trend] = " . $ids;
 		}
+		$sql = "DELETE FROM [trend] WHERE " . implode(' OR ', $forsql);
+		$wpDatabase->query($sql);
 		$WebCom = new WebCom();
 		echo $WebCom->send('DeleteTrend', substr($fortcp, 0, -3));
 		break;

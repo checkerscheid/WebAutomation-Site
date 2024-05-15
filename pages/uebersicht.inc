@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 593                                                     $ #
+//# Revision     : $Rev:: 609                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 593 2024-04-29 17:50:03Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 609 2024-05-15 14:54:17Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -40,20 +40,25 @@ class uebersicht {
 		'WZ_HT3'		=> 'Wohnzimmer',
 		'SZ_RU'			=> 'Schlafzimmer',
 		'BU_RU'			=> 'Büro',
+		'KU_RU'			=> 'Küche',
 		'BA_RU'			=> 'Bad',
 		'KZ_HTp'		=> 'Kinderzimmer',
 		'KE'			=> 'Keller',
 		'GA_WE_Ost'		=> 'Wetterstation Ost',
 		'GA_WE_Sued'	=> 'Wetterstation Süd',
+		'GA2_WE_Gaube'	=> 'Wetterstation Gaube',
+		'BasisTest'		=> 'Breadboard',
 		'WG1_HTp'		=> 'Wintergarten',
 		'SZ1_HT'		=> 'Schlafzimmer',
 		'GA1_FS'		=> 'Gartenhaus',
-		'FL2_HT'		=> 'Flur'
+		'FL2_HT'		=> 'Flur',
+		'GA2_WE_Gaube'	=> 'Wetterstation Gaube'
 	);
 	private static $RSSI = array(
 		'WZ_HT3'		=> 'Wohnzimmer',
 		'SZ_RU'			=> 'Schlafzimmer',
 		'BU_RU'			=> 'Büro',
+		'KU_RU'			=> 'Küche',
 		'BA_RU'			=> 'Bad',
 		'BA_SP'			=> 'Bad Spiegelbeleuchtung',
 		'KZ_HTp'		=> 'Kinderzimmer',
@@ -66,10 +71,24 @@ class uebersicht {
 		'SY_WM'			=> 'Waschmaschine',
 		'GA_WE_Ost'		=> 'Wetterstation Ost',
 		'GA_WE_Sued'	=> 'Wetterstation Süd',
+		'GA2_WE_Gaube'	=> 'Wetterstation Gaube',
+		'BasisTest'		=> 'Breadboard',
 		'WG1_HTp'		=> 'EG Wintergarten',
 		'SZ1_HT'		=> 'EG Schlafzimmer',
 		'GA1_FS'		=> 'EG Gartenhaus',
 		'FL2_HT'		=> 'OG Flur'
+	);
+	private static $d1Minis = array(
+		'BA_RU',
+		'BasisTest',
+		'BU_RU',
+		'GA_WE_Ost',
+		'GA_WE_Sued',
+		'GA_WE_West',
+		'GA1_FS',
+		'KU_RU',
+		'SZ_RU',
+		'GA2_WE_Gaube'
 	);
 	public static function getD1HT() {
 		$returns = '';
@@ -124,8 +143,14 @@ class uebersicht {
 		foreach(uebersicht::$RSSI as $dp => $name) {
 			$returns .= '
 				<tr>
-					<td>' . $name . ':</td>
-					<td><span data-ws="' . $dp . '_Rssi" class="' . wpa::$rssi . '">undefined</span></td>
+					<td colspan="2">' . $name . ':</td>
+					<td colspan="2"><span data-ws="' . $dp . '_Rssi" class="' . wpa::$rssi . '">undefined</span></td>
+					<td colspan="2">';
+			if(in_array($dp, uebersicht::$d1Minis)) {
+				$returns .= '<span data-ws="' . $dp . '_Online" class="ps-input ' . wpa::$GreenRed . '">-</span>';
+			}
+			$returns .= '
+					</td>
 				</tr>';
 		}
 		return $returns;
@@ -187,15 +212,15 @@ class uebersicht {
 				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
 					<td colspan="3">Füllstand:</td>
-					<td colspan="3"><span data-ws="GA1_FS_VOL" class="ps-input">undefined</span></td>
+					<td colspan="3"><span data-ws="GA1_FS_Vol" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
 					<td colspan="3">Füllstand Höhe (RAW):</td>
-					<td colspan="3"><span data-ws="GA1_FS_RAW" class="ps-input">undefined</span></td>
+					<td colspan="3"><span data-ws="GA1_FS_Raw" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
 					<td colspan="3">Füllstand Höhe (AVG):</td>
-					<td colspan="3"><span data-ws="GA1_FS_AVG" class="ps-input">undefined</span></td>
+					<td colspan="3"><span data-ws="GA1_FS_Avg" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
 					<td colspan="2"></td>
@@ -207,6 +232,11 @@ class uebersicht {
 					<td colspan="2">Büro:</td>
 					<td colspan="2"><span data-ws="BU_RU_LDR" class="ps-input">undefined</span></td>
 					<td colspan="2"><span data-ws="BU_RU_BM" class="ps-input <?=wpa::$GreyGreen ?>">undefined</span></td>
+				</tr>
+				<tr>
+					<td colspan="2">Küche:</td>
+					<td colspan="2"><span data-ws="KU_RU_LDR" class="ps-input">undefined</span></td>
+					<td colspan="2"><span data-ws="KU_RU_BM" class="ps-input <?=wpa::$GreyGreen ?>">undefined</span></td>
 				</tr>
 				<tr>
 					<td colspan="2">Bad:</td>
@@ -240,42 +270,56 @@ class uebersicht {
 					<td colspan="3">internal getShellyStatus:</td>
 					<td colspan="3"><span class="ps-button getShellyStatus">anfordern</span></td>
 				</tr>
+				<tr><td colspan="6"><h2>Breadboard</h2></td></tr>
+				<tr><td colspan="6"><hr /></td></tr>
+				<tr>
+					<td colspan="3">Licht</td>
+					<td colspan="3"><span data-ws="BasisTest_Light" class="ps-input">undefined</span></td>
+				</tr>
+				<tr>
+					<td colspan="3">Blume</td>
+					<td colspan="3"><span data-ws="BasisTest_Moisture" class="ps-input">undefined</span></td>
+				</tr>
 			</tbody>
 		</table>
 	</div>
 	<div class="ps-container">
-		<table id="EnergieSignal">
+		<table id="Energie">
 			<tbody>
-				<tr><td colspan="2"><h2>Wetter</h2></td></tr>
-				<tr><td colspan="2"><hr /></td></tr>
+				<tr><td colspan="6"><h2>Wetter</h2></td></tr>
+				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
-					<td>Sonne:</td>
-					<td><span data-ws="Sonne" class="ps-input <?=wpa::$BlueYellow ?>">undefined</span></td>
+					<td colspan="3">Sonne:</td>
+					<td colspan="3"><span data-ws="Sonne" class="ps-input <?=wpa::$BlueYellow ?>">undefined</span></td>
 				</tr>
 				<tr>
-					<td>Aufgang:</td>
-					<td><span data-ws="Sonnenaufgang" class="ps-input <?=wpa::$formattime ?>">undefined</span></td>
+					<td colspan="3">Aufgang:</td>
+					<td colspan="3"><span data-ws="Sonnenaufgang" class="ps-input <?=wpa::$formattime ?>">undefined</span></td>
 				</tr>
 				<tr>
-					<td>Untergang:</td>
-					<td><span data-ws="Sonnenuntergang" class="ps-input <?=wpa::$formattime ?>">undefined</span></td>
+					<td colspan="3">Untergang:</td>
+					<td colspan="3"><span data-ws="Sonnenuntergang" class="ps-input <?=wpa::$formattime ?>">undefined</span></td>
 				</tr>
-				<tr><td colspan="2"><h2>Wetterstation</h2></td></tr>
-				<tr><td colspan="2"><hr /></td></tr>
+				<tr><td colspan="6"><h2>Wetterstation</h2></td></tr>
+				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
-					<td>Licht Osten:</td>
-					<td><span data-ws="GA_WE_Ost_Light" class="ps-input">undefined</span></td>
-				</tr>
-				<tr>
-					<td>Licht Süden:</td>
-					<td><span data-ws="GA_WE_Sued_Light" class="ps-input">undefined</span></td>
+					<td colspan="3">Licht Osten:</td>
+					<td colspan="3"><span data-ws="GA_WE_Ost_Light" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
-					<td>Regen:</td>
-					<td><span data-ws="GA_WE_Ost_Rain" class="ps-input">undefined</span></td>
+					<td colspan="3">Licht Süden:</td>
+					<td colspan="3"><span data-ws="GA_WE_Sued_Light" class="ps-input">undefined</span></td>
 				</tr>
-				<tr><td colspan="2"><h2>Signalstärke</h2></td></tr>
-				<tr><td colspan="2"><hr /></td></tr>
+				<tr>
+					<td colspan="3">Regen Ost:</td>
+					<td colspan="3"><span data-ws="GA_WE_Ost_Rain" class="ps-input">undefined</span></td>
+				</tr>
+				<tr>
+					<td colspan="3">Regen Gaube:</td>
+					<td colspan="3"><span data-ws="GA2_WE_Gaube_Rain" class="ps-input">undefined</span></td>
+				</tr>
+				<tr><td colspan="6"><h2>Signalstärke</h2></td></tr>
+				<tr><td colspan="6"><hr /></td></tr>
 				<?=uebersicht::getRSSI() ?>
 			</tbody>
 		</table>

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 585                                                     $ #
+//# Revision     : $Rev:: 609                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: system.psys 585 2024-04-15 22:57:57Z                     $ #
+//# File-ID      : $Id:: system.psys 609 2024-05-15 14:54:17Z                     $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $sdata */
@@ -943,7 +943,9 @@ class getScript {
 	 */
 	public static function getActiveAlarms($AlarmCount) {
 		$WebCom = new WebCom();
-		$answer = new TCPencode($WebCom->send('ActiveAlarms'));
+		$WebComErg = $WebCom->send('ActiveAlarms');
+		//echo $WebComErg;
+		$answer = new TCPencode($WebComErg);
 		$TheArray = $answer->getArray();
 		$updaterequired = false;
 		if(std::arrays($TheArray, 'Alarme') == '' || count($TheArray['Alarme']) != $AlarmCount) $updaterequired = true;
@@ -959,8 +961,6 @@ class getScript {
 					if($object['Gone'] != "-" && $object['Quit'] != "-") $priority += 10;
 					switch($object['Type']) {
 						case 'Alarm': $priority += 7; break;
-						case 'Plantmode': $priority += 7; break;
-						case 'Plantmode Bacnet': $priority += 7; break;
 						case 'Störung': $priority += 6; break;
 						case 'gefallen': $priority += 5; break;
 						case 'Warnung': $priority += 4; break;
@@ -1006,7 +1006,7 @@ class getScript {
 					}
 					$js .= '"'.($i++).'":"'.$object['Name'].'",';
 					$js .= '"'.($i++).'":"'.$object['Type'].'",';
-					$js .= '"'.($i++).'":"'.$object['OpcName'].'",';
+					$js .= '"'.($i++).'":"'.$object['DpName'].'",';
 					$js .= '"'.($i++).'":"'.$object['id'].'",';
 					$js .= '"'.($i++).'":"'.$object['AlarmUpdate'].'",';
 					$js .= '"'.($i++).'":'.$priority;

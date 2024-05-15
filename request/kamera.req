@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 21.03.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 580                                                     $ #
+//# Revision     : $Rev:: 605                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: kamera.req 580 2024-03-24 01:56:57Z                      $ #
+//# File-ID      : $Id:: kamera.req 605 2024-05-03 13:06:51Z                      $ #
 //#                                                                                 #
 //###################################################################################
 namespace request;
@@ -20,10 +20,10 @@ use system\std;
 $ip = '';
 switch(\strtolower(std::gets('param1'))) {
 	case 'kameraeingang':
-		$ip = '192.168.80.101';
+		$ip = 'KameraEingang.FreakaZone.com';
 		break;
 	case 'kameragarten':
-		$ip = '192.168.80.102';
+		$ip = 'KameraGarten.FreakaZone.com';
 		break;
 }
 if($ip != '') {

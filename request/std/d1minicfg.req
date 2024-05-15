@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 04.03.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 603                                                     $ #
+//# Revision     : $Rev:: 609                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.req 603 2024-05-01 06:01:25Z                   $ #
+//# File-ID      : $Id:: d1minicfg.req 609 2024-05-15 14:54:17Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -23,6 +23,8 @@ require_once 'request/system/groups.psys';
 require_once 'system/Helper/d1mini.psys';
 
 class d1minicfg {
+	static $maxFreakaZoneVersion;
+	static $maxVersion;
 	const c_menusearchd1mini = 'menusearchd1mini';
 	public static function menusearchd1mini() {
 		echo '
@@ -34,11 +36,21 @@ class d1minicfg {
 	}
 	const c_menueditelem = 'menueditelem';
 	public static function menueditelem() {
+		$wpDatabase = new wpDatabase();
+		$wpDatabase->query('SELECT TOP 1 [wpFreakaZoneVersion] FROM [D1Mini] ORDER BY [wpFreakaZoneVersion] DESC');
+		$erg = $wpDatabase->fetch();
+		d1minicfg::$maxFreakaZoneVersion = $erg['wpFreakaZoneVersion'];
+		$wpDatabase->query('SELECT TOP 1 [version] FROM [D1Mini] ORDER BY [version] DESC');
+		$erg = $wpDatabase->fetch();
+		d1minicfg::$maxVersion = $erg['version'];
 		$html = '
 			<h1>D1 Mini Details</h1>
+			<div class="versionContainer">
+				<span>wpFreakaZone Lib: ' . d1minicfg::$maxFreakaZoneVersion . '</span>
+				<span>BasisEmpty: ' . d1minicfg::$maxVersion . '</span>
+			</div>
 			<hr />
 			<ul id="trend">';
-		$wpDatabase = new wpDatabase();
 		$wpDatabase->query('SELECT [id_d1minigroup], [name] FROM [d1minigroup] ORDER BY [name]');
 		while($erg = $wpDatabase->fetch()) {
 			$html .= '
@@ -63,9 +75,11 @@ class d1minicfg {
 		echo '{"msg":"';
 		$d1m = new d1mini(std::posts('IP'));
 		$newID = $d1m->insertDevice(std::posts('id_d1minigroup'), std::posts('id_mqttgroup'), std::posts('id_dpgroup'), std::posts('id_trendgroup'));
-		$WebCom = new WebCom();
-		echo '","erg":"';
-		echo $WebCom->send('AddD1Mini', $newID);
+		if($newID > 0) {
+			$WebCom = new WebCom();
+			echo '","erg":"';
+			echo $WebCom->send('AddD1Mini', $newID);
+		}
 		echo '"}';
 	}
 	const c_renewDevice = 'renewDevice';
@@ -82,6 +96,12 @@ class d1minicfg {
 	const c_getd1minis = 'getd1minis';
 	public static function getd1minis() {
 		$wpDatabase = new wpDatabase();
+		$wpDatabase->query('SELECT TOP 1 [wpFreakaZoneVersion] FROM [D1Mini] ORDER BY [wpFreakaZoneVersion] DESC');
+		$erg = $wpDatabase->fetch();
+		d1minicfg::$maxFreakaZoneVersion = $erg['wpFreakaZoneVersion'];
+		$wpDatabase->query('SELECT TOP 1 [version] FROM [D1Mini] ORDER BY [version] DESC');
+		$erg = $wpDatabase->fetch();
+		d1minicfg::$maxVersion = $erg['version'];
 		$wpDatabase->query("
 			SELECT
 				[id_d1mini], [name], [description], [ip], [mac], [wpFreakaZoneVersion], [version], [active]
@@ -125,6 +145,7 @@ class d1minicfg {
 					<th>MQTT</th>
 					<th>UpdateMode</th>
 					<th>aktiv</th>
+					<th>compiledWith</th>
 					<th></th>
 					<th></th>
 					<th></th>
@@ -132,6 +153,14 @@ class d1minicfg {
 			</thead>
 			<tbody>';
 		while($erg = $wpDatabase->fetch()) {
+			$updatelib = 'ps-fontyellow';
+			if(d1minicfg::$maxFreakaZoneVersion == $erg['wpFreakaZoneVersion'] ) {
+				$updatelib = 'ps-fontgreen';
+			}
+			$update = 'ps-fontyellow';
+			if(d1minicfg::$maxVersion == $erg['version'] ) {
+				$update = 'ps-fontgreen';
+			}
 			$html .= '
 				<tr class="D1MiniDevice" data-id="' . $erg['id_d1mini'] . '" data-name="' . $erg['name'] . '">
 					<td class="buttonbox">
@@ -144,7 +173,7 @@ class d1minicfg {
 								<span class="smallfont ps-fontyellow name"></span>
 							</div>
 							<div class="buttonContainer">
-								<span class="ps-hover-noborder ps-image-button ps-export" title="von D1 Mini übernehmen"></span>
+								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice" title="von D1 Mini übernehmen"></span>
 							</div>
 						</div>
 					</td>
@@ -155,7 +184,7 @@ class d1minicfg {
 								<span class="smallfont ps-fontyellow description"></span>
 							</div>
 							<div class="buttonContainer">
-								<span class="ps-hover-noborder ps-image-button ps-export" title="von D1 Mini übernehmen"></span>
+								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice" title="von D1 Mini übernehmen"></span>
 							</div>
 						</div>
 					</td>
@@ -166,7 +195,7 @@ class d1minicfg {
 								<span class="smallfont ps-fontyellow ip"></span>
 							</div>
 							<div class="buttonContainer">
-								<span class="ps-hover-noborder ps-image-button ps-export" title="von D1 Mini übernehmen"></span>
+								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice" title="von D1 Mini übernehmen"></span>
 								<a href="http://' . $erg['ip'] . '/print" target="_blank" class="ps-hover-noborder ps-image-button ps-conversation" title="Debug"></a>
 								<a href="http://' . $erg['ip'] . '/status" target="_blank" class="ps-hover-noborder ps-image-button ps-status" title="Status"></a>
 							</div>
@@ -179,40 +208,43 @@ class d1minicfg {
 								<span class="smallfont ps-fontyellow mac"></span>
 							</div>
 							<div class="buttonContainer">
-								<span class="ps-hover-noborder ps-image-button ps-export" title="von D1 Mini übernehmen"></span>
+								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice" title="von D1 Mini übernehmen"></span>
 							</div>
 						</div>
 					</td>
 					<td data-column="wpFreakaZoneVersion">
 						<div class="tdButton">
 							<div>
-								<span class="stored">' . $erg['wpFreakaZoneVersion'] . '</span><br />
+								<span class="stored ' . $updatelib . '">' . $erg['wpFreakaZoneVersion'] . '</span><br />
 								<span class="smallfont ps-fontyellow wpFreakaZoneVersion"></span>
 							</div>
 							<div class="buttonContainer">
-								<span class="ps-hover-noborder ps-image-button ps-export" title="von D1 Mini übernehmen"></span>
+								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice" title="von D1 Mini übernehmen"></span>
 							</div>
 						</div>
 					</td>
 					<td data-column="version">
 						<div class="tdButton">
 							<div>
-								<span class="stored">' . $erg['version'] . '</span><br />
+								<span class="stored ' . $update . '">' . $erg['version'] . '</span><br />
 								<span class="smallfont ps-fontyellow version"></span>
 							</div>
 							<div class="buttonContainer">
-								<span class="ps-hover-noborder ps-image-button ps-export" title="von D1 Mini übernehmen"></span>
+								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice" title="von D1 Mini übernehmen"></span>
 							</div>
 						</div>
 					</td>
 					<td>
-						<span class="ps-hover-noborder ps-image-button ps-export" data-ip="' . $erg['ip'] . '"></span>
+						<span class="ps-hover-noborder ps-image-button ps-export renewMqtt" data-ip="' . $erg['ip'] . '"></span>
 					</td>
 					<td data-column="updatemode">
 						<span class="updatemode"></span>
 					</td>
 					<td>
 						' . ($erg['active'] == 1 ? '<span class="ps-fontgreen">aktiv</span>' : '<span class="ps-fontyellow">deaktiviert</span>') . '
+					</td>
+					<td data-column="compiledWith">
+						<span class="compiledWith"></span>
 					</td>
 					<td class="buttonbox">
 						<div class="buttonContainer">
@@ -241,10 +273,15 @@ class d1minicfg {
 		while($erg = $wpDatabase->fetch()) {
 			$WebCom = new WebCom();
 			$d1miniText = $WebCom->send('getD1MiniStatus', $erg['ip']);
-			$jsontext = json_decode($d1miniText);
+			$jsontext = \json_decode($d1miniText);
 			if(isset($jsontext->FreakaZoneDevice)) {
 				$wpFZ = $jsontext->FreakaZoneDevice;
 				//std::test_array($wpFZ);
+				$compiledWith = array();
+				foreach($wpFZ->Debug as $module => $active) {
+					$compiledWith[] = $module;
+					$active; // need only key
+				}
 				$returns .= $dividor .
 					'"' . $wpFZ->DeviceName . '":{' .
 					'"DeviceName":"' . $wpFZ->DeviceName . '",' .
@@ -254,10 +291,11 @@ class d1minicfg {
 					'"Ip":"' . $erg['ip'] . '",' .
 					'"Mac":"' . $wpFZ->MAC . '",' .
 					//'"Ssid":"' . $wpFZ->DeviceName . '",' .
-					'"UpdateMode":' . ($wpFZ->UpdateMode ? 'true' : 'false') .
+					'"UpdateMode":' . ($wpFZ->UpdateMode ? 'true' : 'false') . ',' .
+					'"compiledWith":"' . implode(', ', $compiledWith) . '"'.
 					'}';
+				$dividor = ',';
 			}
-			$dividor = ',';
 		}
 		$returns .= '}';
 		echo $returns;
