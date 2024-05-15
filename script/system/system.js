@@ -1053,12 +1053,13 @@ function getOnlineAlarms() {
 	});
 	$.get('std.request.activealarm.' + CountAlarms + '.req', function(data) {
 		var TheAlarms = {};
+		wpAlarm = data.wpAlarm;
 		WatchDogByte = data.WatchDogByte;
 		pDate = data.pDate;
 		pTime = data.pTime;
 		$('.footerdatetime').html('<span class="ps-sm-hide">Datum: </span>'+pDate+'<span class="ps-sm-hide">, Uhrzeit:</span> '+pTime);
 
-		for(var Alarm in data.wpAlarm) {
+		for(var Alarm in wpAlarm) {
 			var alarmid = wpAlarm[Alarm][8 + AlarmRowAdd];
 
 			if ($('#dialog'+alarmid).length == 0){

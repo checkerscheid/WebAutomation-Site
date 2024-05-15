@@ -166,13 +166,12 @@ switch(std::gets('param1')) {
 		$database = new wpDatabase();
 
 		$sql =	"SELECT DISTINCT
-				[d].[opcname], [d].[name], [t].[name] AS [type], [a].[id_alarm], [a].[text],
+				[dp].[name], [t].[name] AS [type], [a].[id_alarm], [a].[text],
 				[g0].[name] AS [groups0], [g1].[name] AS [groups1], [g2].[name] AS [groups2], [g3].[name] AS [groups3],
 				[g4].[name] AS [groups4], [g5].[name] AS [groups5],
-				[c].[description], [a].[min], [a].[max], [a].[delay], [ae].[id_alarm] AS [showinfo] FROM [alarm] [a]
-				LEFT OUTER JOIN [alarmtoescalation] [ae] ON [ae].[id_alarm] = [a].[id_alarm]
+				[c].[description], [a].[min], [a].[max], [a].[delay] FROM [alarm] [a]
 				INNER JOIN [alarmgroup] AS [g0] ON [g0].[id_alarmgroup] = [a].[id_alarmgroup]
-				INNER JOIN [opcdatapoint] [d] ON [d].[id_opcdatapoint] = [a].[id_opcdatapoint]
+				INNER JOIN [dp] ON [dp].[id_dp] = [a].[id_dp]
 				INNER JOIN [alarmtype] [t] ON [t].[id_alarmtype] = [a].[id_alarmtype]
 				INNER JOIN [alarmcondition] [c] ON [c].[id_alarmcondition] = [a].[id_alarmcondition]
 				LEFT OUTER JOIN [alarmgroups1] AS [g1] ON [g1].[id_alarmgroups1] = [a].[id_alarmgroups1]
@@ -180,7 +179,7 @@ switch(std::gets('param1')) {
 				LEFT OUTER JOIN [alarmgroups3] AS [g3] ON [g3].[id_alarmgroups3] = [a].[id_alarmgroups3]
 				LEFT OUTER JOIN [alarmgroups4] AS [g4] ON [g4].[id_alarmgroups4] = [a].[id_alarmgroups4]
 				LEFT OUTER JOIN [alarmgroups5] AS [g5] ON [g5].[id_alarmgroups5] = [a].[id_alarmgroups5]
-				WHERE [d].[opcname] LIKE '%".std::posts('filtertext')."%'";
+				WHERE [dp].[name] LIKE '%".std::posts('filtertext')."%'";
 
 		if($system->useAlarmGroup5()){
 			$sql .= " OR [g5].[name] LIKE '%".std::posts('filtertext')."%'";
@@ -255,7 +254,7 @@ switch(std::gets('param1')) {
 		<hr />
 			<div class="table">
 				<div class="tr">
-					<div class="th">OPC Name</div>
+					<div class="th">Name</div>
 					<div class="th">Alarmtyp</div>
 					<div class="th">Beschreibung</div>
 					'.($system->useAlarmGroup5() ? '<div class="th">'.$system->nameAlarmGroup5().'</div>' : '').'
@@ -274,8 +273,8 @@ switch(std::gets('param1')) {
 			$database->query($sql);
 
 			while($erg = $database->fetch()) {
-				echo '<div class="tr" data-name="'.$erg['opcname'].'" data-id="'.$erg['id_alarm'].'">';
-				echo '<div class="td"><span class="ps-checkbox">'.$erg['opcname'].'</span></div>';
+				echo '<div class="tr" data-name="'.$erg['name'].'" data-id="'.$erg['id_alarm'].'">';
+				echo '<div class="td"><span class="ps-checkbox">'.$erg['name'].'</span></div>';
 				//echo '<div class="td"><span>'.$erg['name'].'</span></div>';
 				echo '<div class="td"><span class="tr-alarmtyp">'.$erg['type'].'</span></div>';
 				echo '<div class="td"><span class="tr-alarmtext">'.$erg['text'].'</div>';
@@ -313,9 +312,9 @@ switch(std::gets('param1')) {
 //###################################################################################
 	case alarmcfg::c_menunewalarms:
 		$database = new wpDatabase();
-		$database->query('SELECT [s].[id_opcserver], [s].[name]
-				FROM [opcserver] [s]
-				ORDER BY [s].[name]');
+		$database->query('SELECT [ns].[id_dpnamespace], [ns].[name]
+				FROM [dpnamespace] [ns]
+				ORDER BY [ns].[name]');
 		echo '<h1>Neue Alarme anlegen</h1>';
 		//echo '<span>Filter:</span><input type="text" class="ps-input newdpfilter" />';
 		echo '<span class="markall ps-button">alle markieren</span>';
@@ -324,25 +323,25 @@ switch(std::gets('param1')) {
 		echo '<hr />';
 		echo '<ul id="newalarms">';
 		while($erg = $database->fetch()) {
-			echo '<li class="ps-tree-parent newServer" data-server="'.$erg['id_opcserver'].'">'.$erg['name'].'</li>';
-			echo '<li data-groups="'.$erg['id_opcserver'].'"></li>';
+			echo '<li class="ps-tree-parent newServer" data-server="'.$erg['id_dpnamespace'].'">'.$erg['name'].'</li>';
+			echo '<li data-groups="'.$erg['id_dpnamespace'].'"></li>';
 		}
 		echo '</ul>';
 		break;
 	//###################################################################################
 	case alarmcfg::c_getnewgroups:
 		$database = new wpDatabase();
-		$database->query('SELECT [g].[id_opcgroup], [g].[name]
-				FROM [opcgroup] [g]
-				WHERE [id_opcserver] = '.std::posts('server').'
+		$database->query('SELECT [g].[id_dpgroup], [g].[name]
+				FROM [dpgroup] [g]
+				WHERE [id_dpnamespace] = '.std::posts('server').'
 				ORDER BY [g].[name]');
 		echo '<ul class="SelectNewGroups">';
 		if($database->hasRows() == 0) {
 			echo '<li>Es sind keine Items mehr zum hinzufügen übrig</li>';
 		} else {
 			while($erg = $database->fetch()) {
-				echo '<li class="ps-tree-parent newGroup" data-group="'.$erg['id_opcgroup'].'">'.$erg['name'].'</li>';
-				echo '<li data-alarms="'.$erg['id_opcgroup'].'"></li>';
+				echo '<li class="ps-tree-parent newGroup" data-group="'.$erg['id_dpgroup'].'">'.$erg['name'].'</li>';
+				echo '<li data-alarms="'.$erg['id_dpgroup'].'"></li>';
 			}
 		}
 		echo '</ul>';
@@ -350,17 +349,17 @@ switch(std::gets('param1')) {
 //###################################################################################
 	case alarmcfg::c_getnewalarms:
 		$database = new wpDatabase();
-		$database->query('SELECT [d].[id_opcdatapoint], [d].[name]
-				FROM [opcdatapoint] [d]
-				LEFT OUTER JOIN [alarm] [a] ON [d].[id_opcdatapoint] = [a].[id_opcdatapoint]
-				WHERE [a].[id_alarm] IS NULL AND [id_opcgroup] = '.std::posts('group').'
-				ORDER BY [d].[name]');
+		$database->query('SELECT [dp].[id_dp], [dp].[name]
+				FROM [dp]
+				LEFT OUTER JOIN [alarm] [a] ON [dp].[id_dp] = [a].[id_dp]
+				WHERE [a].[id_alarm] IS NULL AND [id_dpgroup] = '.std::posts('group').'
+				ORDER BY [dp].[name]');
 		echo '<ul class="SelectNewAlarms">';
 		if($database->hasRows() == 0) {
 			echo '<li>Es sind keine Items mehr zum hinzufügen übrig</li>';
 		} else {
 			while($erg = $database->fetch()) {
-				echo '<li class="ps-checkbox" data-value="'.$erg['id_opcdatapoint'].'">'.$erg['name']. '</li>';
+				echo '<li class="ps-checkbox" data-value="'.$erg['id_dp'].'">'.$erg['name']. '</li>';
 			}
 		}
 		echo '</ul>';
@@ -679,7 +678,7 @@ function getAlarms($idgroup5, $idgroup4, $idgroup3, $idgroup2, $idgroup1, $idgro
 			<li>
 				<div class="table">
 					<div class="tr">
-						<div class="th">OPC Name</div>
+						<div class="th">Name</div>
 						<div class="th">Alarmtyp</div>
 						<div class="th">Beschreibung</div>
 						<div class="th">Link</div>
@@ -697,11 +696,11 @@ function getAlarms($idgroup5, $idgroup4, $idgroup3, $idgroup2, $idgroup1, $idgro
 					</div>';
 		//! TODO Alarm delay anzeigen
 		if($idgroup0 == 'NULL') {
-			$database->query('SELECT [d].[opcname], [d].[name], [t].[name] AS [type], [a].[id_alarm], [a].[text], [a].[link],
+			$database->query('SELECT [dp].[name], [dp].[name], [t].[name] AS [type], [a].[id_alarm], [a].[text], [a].[link],
 					[g1].[name] AS [groups1], [g2].[name] AS [groups2], [g3].[name] AS [groups3],
 					[g4].[name] AS [groups4], [g5].[name] AS [groups5],
 					[c].[description], [a].[min], [a].[max], [a].[delay] FROM [alarm] [a]
-					INNER JOIN [opcdatapoint] [d] ON [d].[id_opcdatapoint] = [a].[id_opcdatapoint]
+					INNER JOIN [dp] ON [dp].[id_dp] = [a].[id_dp]
 					INNER JOIN [alarmtype] [t] ON [t].[id_alarmtype] = [a].[id_alarmtype]
 					INNER JOIN [alarmcondition] [c] ON [c].[id_alarmcondition] = [a].[id_alarmcondition]
 					LEFT OUTER JOIN [alarmgroups1] AS [g1] ON [g1].[id_alarmgroups1] = [a].[id_alarmgroups1]
@@ -709,9 +708,9 @@ function getAlarms($idgroup5, $idgroup4, $idgroup3, $idgroup2, $idgroup1, $idgro
 					LEFT OUTER JOIN [alarmgroups3] AS [g3] ON [g3].[id_alarmgroups3] = [a].[id_alarmgroups3]
 					LEFT OUTER JOIN [alarmgroups4] AS [g4] ON [g4].[id_alarmgroups4] = [a].[id_alarmgroups4]
 					LEFT OUTER JOIN [alarmgroups5] AS [g5] ON [g5].[id_alarmgroups5] = [a].[id_alarmgroups5]
-					WHERE [a].[id_alarmgroup] IS NULL ORDER BY [d].[opcname]');
+					WHERE [a].[id_alarmgroup] IS NULL ORDER BY [dp].[name]');
 			while($erg = $database->fetch()) {
-				echo '<div class="tr" data-name="'.$erg['opcname'].'" data-id="'.$erg['id_alarm'].'">';
+				echo '<div class="tr" data-name="'.$erg['name'].'" data-id="'.$erg['id_alarm'].'">';
 				echo '<div class="td"><span class="ps-checkbox">'.$erg['name'].'</span></div>';
 				//echo '<div class="td"><span>'.$erg['name'].'</span></div>';
 				echo '<div class="td"><span class="tr-alarmtyp">'.$erg['type'].'</span></div>';
@@ -743,12 +742,12 @@ function getAlarms($idgroup5, $idgroup4, $idgroup3, $idgroup2, $idgroup1, $idgro
 			}
 		} else {
 			$sql =	'SELECT
-					[d].[opcname], [d].[name], [t].[name] AS [type], [a].[id_alarm], [a].[text], [a].[link],
+					[dp].[name], [dp].[name], [t].[name] AS [type], [a].[id_alarm], [a].[text], [a].[link],
 					[g0].[name] AS [groups0], [g1].[name] AS [groups1], [g2].[name] AS [groups2], [g3].[name] AS [groups3],
 					[g4].[name] AS [groups4], [g5].[name] AS [groups5],
 					[c].[description], [a].[min], [a].[max], [a].[delay] FROM [alarm] [a]
 					INNER JOIN [alarmgroup] AS [g0] ON [g0].[id_alarmgroup] = [a].[id_alarmgroup]
-					INNER JOIN [opcdatapoint] [d] ON [d].[id_opcdatapoint] = [a].[id_opcdatapoint]
+					INNER JOIN [dp] ON [dp].[id_dp] = [a].[id_dp]
 					INNER JOIN [alarmtype] [t] ON [t].[id_alarmtype] = [a].[id_alarmtype]
 					INNER JOIN [alarmcondition] [c] ON [c].[id_alarmcondition] = [a].[id_alarmcondition]
 					LEFT OUTER JOIN [alarmgroups1] AS [g1] ON [g1].[id_alarmgroups1] = [a].[id_alarmgroups1]
@@ -778,12 +777,12 @@ function getAlarms($idgroup5, $idgroup4, $idgroup3, $idgroup2, $idgroup1, $idgro
 				}
 			}
 
-			$sql .= $sqlwhere . ' ORDER BY [d].[opcname]';
+			$sql .= $sqlwhere . ' ORDER BY [dp].[name]';
 
 			$database->query($sql);
 
 			while($erg = $database->fetch()) {
-				echo '<div class="tr" data-name="'.$erg['opcname'].'" data-id="'.$erg['id_alarm'].'">';
+				echo '<div class="tr" data-name="'.$erg['name'].'" data-id="'.$erg['id_alarm'].'">';
 				echo '<div class="td"><span class="ps-checkbox">'.$erg['name'].'</span></div>';
 				//echo '<div class="td"><span>'.$erg['name'].'</span></div>';
 				echo '<div class="td"><span class="tr-alarmtyp">'.$erg['type'].'</span></div>';
