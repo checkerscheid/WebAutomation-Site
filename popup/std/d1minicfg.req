@@ -78,6 +78,14 @@ class d1minicfg {
 		$html .= '<tr><td>Trend Group:</td><td><select class="ps-input id_trendgroup">';
 		while($erg = $wpDatabase->fetch()) $html .= self::getSelect($erg['id_trendgroup'], $erg['name']);
 		$html .= '</select></td></tr>';
+		//$alarmGroup;
+		$wpDatabase->query("SELECT " .
+				"[id_alarmgroup], [name] " .
+				"FROM [alarmgroup] " .
+				"ORDER BY [name]");
+		$html .= '<tr><td>Alarm Group:</td><td><select class="ps-input id_alarmgroup">';
+		while($erg = $wpDatabase->fetch()) $html .= self::getSelect($erg['id_alarmgroup'], $erg['name']);
+		$html .= '</select></td></tr>';
 
 		echo $html . '</table>';
 	}
