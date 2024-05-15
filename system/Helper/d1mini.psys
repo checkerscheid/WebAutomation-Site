@@ -30,48 +30,63 @@ class d1mini {
 	const Distance = 'Distance';
 
 	private $database, $webCom, $status;
-	private $idD1MiniGroup, $idMqttGroup, $idDBGroup, $idTrendGroup;
+	private $idD1MiniGroup, $idMqttGroup, $idDBGroup, $idTrendGroup, $idAlarmGroup;
 	private $id, $name, $description, $ip, $wpFreakaZoneVersion, $version, $mac;
+	private $canInserted;
 	public function __construct($ip) {
 		$this->database = new wpDatabase();
 		$this->webCom = new WebCom();
 		$this->ip = $ip;
+		$this->canInserted = false;
 		$res = $this->webCom->send('getD1MiniStatus', $ip);
 		$this->status = \json_decode($res);
-		$this->name = $this->status->FreakaZoneDevice->DeviceName;
-		$this->description = $this->status->FreakaZoneDevice->DeviceDescription;
-		$this->wpFreakaZoneVersion = $this->status->FreakaZoneDevice->wpFreakaZoneVersion;
-		$this->version = $this->status->FreakaZoneDevice->Version;
-		$this->mac = $this->status->FreakaZoneDevice->miniMAC;
-		echo "save '" . $this->name . "' (" . $this->ip . ") ";
+		if(\json_last_error() == JSON_ERROR_NONE) {
+			$this->canInserted = true;
+			$this->name = $this->status->FreakaZoneDevice->DeviceName;
+			$this->description = $this->status->FreakaZoneDevice->DeviceDescription;
+			$this->wpFreakaZoneVersion = isset($this->status->FreakaZoneDevice->wpFreakaZoneVersion) ?
+			$this->status->FreakaZoneDevice->wpFreakaZoneVersion : '';
+			$this->version = $this->status->FreakaZoneDevice->Version;
+			$this->mac = $this->status->FreakaZoneDevice->miniMAC;
+			echo "save '" . $this->name . "' (" . $this->ip . ") ";
+		} else {
+			echo \json_last_error_msg();
+		}
 	}
-	public function insertDevice($idD1MiniGroup, $idMqttroup, $idDBGroup, $idTrendGroup) {
+	public function insertDevice($idD1MiniGroup, $idMqttroup, $idDBGroup, $idTrendGroup, $idAlarmGroup) {
 		$this->idD1MiniGroup = $idD1MiniGroup;
 		$this->idMqttGroup = $idMqttroup;
 		$this->idDBGroup = $idDBGroup;
 		$this->idTrendGroup = $idTrendGroup;
-
-		$this->setDevice();
-		$this->setRSSI();
-		if(isset($this->status->FreakaZoneDevice->Debug->HT)) {
-			$this->setHT();
+		$this->idAlarmGroup = $idAlarmGroup;
+		if($this->canInserted) {
+			$this->setDevice();
+			$this->setRSSI();
+			$this->setOnline();
+			$this->setRest();
+			if(isset($this->status->FreakaZoneDevice->Debug->HT)) {
+				$this->setHT();
+			}
+			if(isset($this->status->FreakaZoneDevice->Debug->LDR)) {
+				$this->setLDR();
+			}
+			if(isset($this->status->FreakaZoneDevice->Debug->Light)) {
+				$this->setLight();
+			}
+			if(isset($this->status->FreakaZoneDevice->Debug->BM)) {
+				$this->setBM();
+			}
+			if(isset($this->status->FreakaZoneDevice->Debug->Rain)) {
+				$this->setRain();
+			}
+			if(isset($this->status->FreakaZoneDevice->Debug->Distance)) {
+				$this->setVolume();
+			}
+			if(isset($this->status->FreakaZoneDevice->Debug->Moisture)) {
+				$this->setMoisture();
+			}
+			return $this->id;
 		}
-		if(isset($this->status->FreakaZoneDevice->Debug->LDR)) {
-			$this->setLDR();
-		}
-		if(isset($this->status->FreakaZoneDevice->Debug->Light)) {
-			$this->setLight();
-		}
-		if(isset($this->status->FreakaZoneDevice->Debug->BM)) {
-			$this->setBM();
-		}
-		if(isset($this->status->FreakaZoneDevice->Debug->Rain)) {
-			$this->setRain();
-		}
-		if(isset($this->status->FreakaZoneDevice->Debug->Distance)) {
-			$this->setVolume();
-		}
-		return $this->id;
 	}
 	private function setDevice() {
 		$this->mergeDivice();
@@ -82,6 +97,18 @@ class d1mini {
 		$this->mergeTrend($id_dp, 'Signal', 120);
 		echo "saved: 'Signal' ";
 	}
+	private function setOnline() {
+		$id_mqtttopic = $this->insertTopic('ERROR/Online');
+		$id_dp = $this->mergeDP($id_mqtttopic, 'Online', 'Online', '0:online;1:offline;');
+		$this->mergeAlarm($id_dp, 'Online', 'Online');
+		echo "saved: 'Online Error' ";
+	}
+	private function setRest() {
+		$id_mqtttopic = $this->insertTopic('ERROR/Rest');
+		$id_dp = $this->mergeDP($id_mqtttopic, 'ERROR_Rest', 'Rest Error', '0:Ok;1:Error;');
+		$this->mergeAlarm($id_dp, 'ERROR_Rest', 'Rest Error');
+		echo "saved: 'Rest Error' ";
+	}
 	private function setHT() {
 		$id_mqtttopic_temp = $this->insertTopic('Temperature');
 		$id_dp_temp = $this->mergeDP($id_mqtttopic_temp, 'Temp', 'Temperatur', '°C', 1, -50);
@@ -91,18 +118,30 @@ class d1mini {
 		$id_dp_hum = $this->mergeDP($id_mqtttopic_hum, 'Hum', 'Feuchte', '%rF', 0);
 		$this->mergeTrend($id_dp_hum, 'Feuchte');
 		echo "saved: 'Feuchte' ";
+		$id_mqtttopic_err = $this->insertTopic('ERROR/HT');
+		$id_dp_err = $this->mergeDP($id_mqtttopic_err, 'ERROR_HT', 'HT Error', '0:Ok;1:Error;');
+		$this->mergeAlarm($id_dp_err, 'ERROR_HT', 'HT Error');
+		echo "saved: 'HT Error' ";
 	}
 	private function setLDR() {
 		$id_mqtttopic = $this->insertTopic('LDR');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'LDR', 'LDR', 'lux', 0, 0, 1024);
 		$this->mergeTrend($id_dp, 'LDR');
 		echo "saved: 'LDR' ";
+		$id_mqtttopic_err = $this->insertTopic('ERROR/LDR');
+		$id_dp_err = $this->mergeDP($id_mqtttopic_err, 'ERROR_LDR', 'LDR Error', '0:Ok;1:Error;');
+		$this->mergeAlarm($id_dp_err, 'ERROR_LDR', 'LDR Error');
+		echo "saved: 'LDR Error' ";
 	}
 	private function setLight() {
 		$id_mqtttopic = $this->insertTopic('Light');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'Light', 'Licht', 'lux', 0, 0, 1024);
 		$this->mergeTrend($id_dp, 'Licht');
 		echo "saved: 'Licht' ";
+		$id_mqtttopic_err = $this->insertTopic('ERROR/Licht');
+		$id_dp_err = $this->mergeDP($id_mqtttopic_err, 'ERROR_Licht', 'Licht Error', '0:Ok;1:Error;');
+		$this->mergeAlarm($id_dp_err, 'ERROR_Licht', 'Licht Error');
+		echo "saved: 'Licht Error' ";
 	}
 	private function setBM() {
 		$id_mqtttopic = $this->insertTopic('BM');
@@ -114,12 +153,30 @@ class d1mini {
 		$id_dp = $this->mergeDP($id_mqtttopic, 'Rain', 'Regen', 'l/min', 3, 0, 10);
 		$this->mergeTrend($id_dp, 'Regen');
 		echo "saved: 'Regen' ";
+		$id_mqtttopic_err = $this->insertTopic('ERROR/Rain');
+		$id_dp_err = $this->mergeDP($id_mqtttopic_err, 'ERROR_Rain', 'Regen Error', '0:Ok;1:Error;');
+		$this->mergeAlarm($id_dp_err, 'ERROR_Rain', 'Regen Error');
+		echo "saved: 'Regen Error' ";
 	}
 	private function setVolume() {
 		$id_mqtttopic = $this->insertTopic('Volume');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'Vol', 'Füllstand', 'l', 0, 0, 10000);
 		$this->mergeTrend($id_dp, 'Füllstand', 120);
 		echo "saved: 'Füllstand' ";
+		$id_mqtttopic_err = $this->insertTopic('ERROR/Distance');
+		$id_dp_err = $this->mergeDP($id_mqtttopic_err, 'ERROR_Distance', 'Volume Error', '0:Ok;1:Error;');
+		$this->mergeAlarm($id_dp_err, 'ERROR_Distance', 'Volume Error');
+		echo "saved: 'Volume Error' ";
+	}
+	private function setMoisture() {
+		$id_mqtttopic = $this->insertTopic('Moisture');
+		$id_dp = $this->mergeDP($id_mqtttopic, 'Moisture', 'Moisture', '%', 0);
+		$this->mergeTrend($id_dp, 'Moisture');
+		echo "saved: 'Moisture' ";
+		$id_mqtttopic_err = $this->insertTopic('ERROR/Moisture');
+		$id_dp_err = $this->mergeDP($id_mqtttopic_err, 'ERROR_Moisture', 'Blume Error', '0:Ok;1:Error;');
+		$this->mergeAlarm($id_dp_err, 'ERROR_Moisture', 'Blume Error');
+		echo "saved: 'Blume Error' ";
 	}
 	private function mergeDivice($active = 1) {
 		$sql = "
@@ -166,12 +223,12 @@ VALUES
 		$this->database->query($sql);
 		return $this->database->fetch()['ID'];
 	}
-	private function mergeDP($idtopic, $apname, $apdec, $unit = 'NULL', $nks = 'NULL', $min = 0, $max = 100, $active = 1) {
+	private function mergeDP($idtopic, $apname, $apdesc, $unit = 'NULL', $nks = 'NULL', $min = 0, $max = 100, $active = 1) {
 		$sql = "
 MERGE INTO [dp] AS [TARGET]
 	USING (
 		VALUES (
-			$this->idDBGroup, $idtopic, '" . $this->name . "_" . $apname . "', '$this->description $apdec',
+			$this->idDBGroup, $idtopic, '" . $this->name . "_" . $apname . "', '$this->description $apdesc',
 			'$unit', $nks, $min, $max, $active
 		)
 	) AS [SOURCE] (
@@ -230,6 +287,39 @@ MERGE INTO [trend] AS [TARGET]
 			[SOURCE].[name], [SOURCE].[intervall], [SOURCE].[active]
 		);";
 		$this->database->query($sql);
+	}
+	private function mergeAlarm($id_dp, $apname, $apdesc, $alarmtype = 1, $alarmcondition = 1, $min = 1) {
+		$sql = "
+MERGE INTO [alarm] AS [TARGET]
+	USING (
+		VALUES (
+			$id_dp, $this->idAlarmGroup, '" . $this->name . "_" . $apname . "', '$this->description $apdesc',
+			$alarmtype, $alarmcondition, $min
+		)
+	) AS [SOURCE] (
+		[id_dp], [id_alarmgroup], [name], [text],
+		[id_alarmtype], [id_alarmcondition], [min]
+	) ON
+		[TARGET].[id_dp] = [SOURCE].[id_dp]
+	WHEN MATCHED THEN
+		UPDATE SET
+			[TARGET].[id_dp] = [SOURCE].[id_dp],
+			[TARGET].[id_alarmgroup] = [SOURCE].[id_alarmgroup],
+			[TARGET].[name] = [SOURCE].[name],
+			[TARGET].[text] = [SOURCE].[text],
+			[TARGET].[id_alarmtype] = [SOURCE].[id_alarmtype],
+			[TARGET].[id_alarmcondition] = [SOURCE].[id_alarmcondition],
+			[TARGET].[min] = [SOURCE].[min]
+	WHEN NOT MATCHED THEN
+		INSERT (
+			[id_dp], [id_alarmgroup], [name], [text],
+			[id_alarmtype], [id_alarmcondition], [min]
+		)
+		VALUES (
+			[SOURCE].[id_dp], [SOURCE].[id_alarmgroup], [SOURCE].[name], [SOURCE].[text],
+			[SOURCE].[id_alarmtype], [SOURCE].[id_alarmcondition], [SOURCE].[min]
+		);";
+			$this->database->query($sql);
 	}
 }
 ?>

@@ -103,6 +103,7 @@ p.page.load = function() {
 						myData['id_mqttgroup'] = $('#dialog .id_mqttgroup').val();
 						myData['id_dpgroup'] = $('#dialog .id_dpgroup').val();
 						myData['id_trendgroup'] = $('#dialog .id_trendgroup').val();
+						myData['id_alarmgroup'] = $('#dialog .id_alarmgroup').val();
 						$.post('std.d1minicfg.renewDevice.req', myData, function(data) {
 							console.log(data);
 							if(data.erg == 'S_OK') {
