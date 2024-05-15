@@ -179,12 +179,6 @@ class d1mini {
 		$this->mergeAlarm($id_dp_err, 'ERROR_Moisture', 'Blume Error');
 		echo "saved: 'Blume Error' ";
 	}
-	private function setMoisture() {
-		$id_mqtttopic = $this->insertTopic('Moisture');
-		$id_dp = $this->mergeDP($id_mqtttopic, 'Moisture', 'Moisture', '%', 0);
-		$this->mergeTrend($id_dp, 'Moisture');
-		echo "saved: 'Moisture' ";
-	}
 	private function mergeDivice($active = 1) {
 		$sql = "
 MERGE INTO [d1mini] AS [TARGET]
