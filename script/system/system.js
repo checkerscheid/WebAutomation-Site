@@ -529,7 +529,7 @@ $(document).ready(function() {
 		});
 	});
 	$('.alarmsettingspopup').on('click', '.quitall', function(ev) {
-		ev.stopPropagation();
+		//ev.stopPropagation();
 		isbig = false;
 		toquit = [];
 		$('#onlinealarm tbody tr').each(function() {
@@ -550,7 +550,7 @@ $(document).ready(function() {
 		});
 	});
 	$('.alarmsettingspopup').on('click', '.quitallinaktiv', function(ev) {
-		ev.stopPropagation();
+		//ev.stopPropagation();
 		isbig = false;
 		toquit = [];
 		$('#onlinealarm tbody tr').each(function() {
@@ -1043,131 +1043,107 @@ function getOnlineAlarms() {
 	lastWatchDogByte = WatchDogByte;
 	/*<? if(security::checkLevel(wpInit::$reqgroupalarm)) { ?>*/
 	var AktAlarms = {};
-	var CountAlarms = 0;
+	var AlarmPriority = $('#onlinealarm').attr('data-priority');
 	$('#onlinealarm tbody tr').each(function() {
 		var id = $(this).data('alarmid');
 		if(typeof(id) != 'undefined') {
 			AktAlarms[id] = $(this).data('lastupdate');
-			CountAlarms++;
 		}
 	});
-	$.get('std.request.activealarm.' + CountAlarms + '.req', function(data) {
+	$.get('std.request.activealarm.' + AlarmPriority + '.req', function(data) {
 		var TheAlarms = {};
 		wpAlarm = data.wpAlarm;
 		WatchDogByte = data.WatchDogByte;
 		pDate = data.pDate;
 		pTime = data.pTime;
+		var secondReqNeeded = false;
 		$('.footerdatetime').html('<span class="ps-sm-hide">Datum: </span>'+pDate+'<span class="ps-sm-hide">, Uhrzeit:</span> '+pTime);
 
-		for(var Alarm in wpAlarm) {
-			var alarmid = wpAlarm[Alarm][8 + AlarmRowAdd];
+		if(AlarmPriority != data.AlarmPriority) {
+			$('#onlinealarm_wrapper').addClass('ps-loading');
+			for(var Alarm in wpAlarm) {
+				var alarmid = wpAlarm[Alarm][8 + AlarmRowAdd];
 
-			if ($('#dialog'+alarmid).length == 0){
-				$('body').append('<div id="dialog'+alarmid+'" class="alarmpopup"></div>');
-			}
-
-			TheAlarms[alarmid] = wpAlarm[Alarm][9 + AlarmRowAdd];
-			if(typeof(AktAlarms[alarmid]) == 'undefined') {
-				p.log.write('Create Alarm: ' + alarmid);
-				TheAlarmTable.row.add(wpAlarm[Alarm], false);
-				TheAlarmTable.draw();
-				$('#AlarmID' + alarmid).data('alarmid', alarmid);
-				$('#AlarmID' + alarmid).data('lastupdate', wpAlarm[Alarm][9 + AlarmRowAdd]);
-				if(!firstalarmcontact &&
-					//todo: Algorithmus schreiben der die Indizes
-					//wpAlarm[Alarm][10 + AlarmRowAdd] > 32 && $.inArray(wpAlarm[Alarm][AlarmRowGroup5], fltgroup5aktiv) != -1) {
-					wpAlarm[Alarm][10 + AlarmRowAdd] > 32) {
-
-					alarmsound.play();
-					/*<? if(security::logedin() && $system->useAlarmingmodule()){ ?>*/
-					if(showpopup == true){
-						$.post('std.alarming.alarmingpopup.req', {id:alarmid}, function() {
-							$('#dialog'+getID()).html(getHTML()).dialog({
-								title: 'Alarmierung', modal: false, width: '950px',
-								buttons: [{
-									text:'OK',
-									click: function() {
-										$(this).dialog('close');
-										$(this).remove();
-										//$('.alarmpopup'+alarmid).remove();
-									}
-								}]
-							});
-						}, 'script');
-					}
-					/*<? } ?>*/
-				}
-			} else {
-				if(AktAlarms[alarmid] != wpAlarm[Alarm][9 + AlarmRowAdd]) {
-					p.log.write('Update Alarm: ' + alarmid);
-					if($('#onlinealarm tbody tr').length == 1) {
-						TheAlarmTable.clear();
-					} else {
-						TheAlarmTable.row($('#AlarmID' + alarmid)).remove();
-					}
+				TheAlarms[alarmid] = wpAlarm[Alarm][9 + AlarmRowAdd];
+				if(typeof(AktAlarms[alarmid]) == 'undefined') {
+					console.log('Create Alarm: ' + alarmid);
+					TheAlarmTable.row.add(wpAlarm[Alarm], false);
 					TheAlarmTable.draw();
-				}
-			}
-		}
-		if(firstalarmcontact) {
-			firstalarmcontact = false;
-		}
-		wpAlarmupdate = (data.updaterequired == 'True') ? true : false;
-		if(wpAlarmupdate) {
-			$('#onlinealarm tbody tr').each(function() {
-				if(!$(this).find('td:first').hasClass('dataTables_empty')) {
-					var alarmid = $(this).data('alarmid');
-					if(!p.keyexist(alarmid, TheAlarms)) {
-						p.log.write('Delete Alarm: ' + alarmid);
+					$('#AlarmID' + alarmid).data('alarmid', alarmid);
+					$('#AlarmID' + alarmid).data('lastupdate', wpAlarm[Alarm][9 + AlarmRowAdd]);
+					if(wpAlarm[Alarm][10 + AlarmRowAdd] > 32) {
+						alarmsound.play();
+					}
+				} else {
+					if(AktAlarms[alarmid] != wpAlarm[Alarm][9 + AlarmRowAdd]) {
+						console.log('Update Alarm: ' + alarmid);
 						if($('#onlinealarm tbody tr').length == 1) {
 							TheAlarmTable.clear();
 						} else {
 							TheAlarmTable.row($('#AlarmID' + alarmid)).remove();
 						}
+						TheAlarmTable.draw();
+						secondReqNeeded = true;
+					}
+				}
+			}
+			$('#onlinealarm tbody tr').each(function() {
+				if(!$(this).find('td:first').hasClass('dataTables_empty')) {
+					var alarmid = $(this).data('alarmid');
+					if(typeof(TheAlarms[alarmid]) == 'undefined') {
+						console.log('Delete Alarm: ' + alarmid);
+						if($('#onlinealarm tbody tr').length == 1) {
+							TheAlarmTable.clear();
+						} else {
+							TheAlarmTable.row($('#AlarmID' + alarmid)).remove();
+						}
+						secondReqNeeded = true;
 					}
 				}
 			});
-			wpAlarmupdate = false;
+			if(!secondReqNeeded) {
+				$('#onlinealarm').attr('data-priority', data.AlarmPriority);
+			}
+			TheAlarmTable.draw();
+			setflttype();
+			if(flttypefill == 'true') {
+				flttypeaktiv = flttype;
+				flttypefill = 'false';
+			}
+			setfltgroup();
+			if(fltgroupfill == 'true') {
+				fltgroupaktiv = fltgroup;
+				fltgroupfill = 'false';
+			}
+			setfltgroup1();
+			if(fltgroup1fill == 'true') {
+				fltgroup1aktiv = fltgroup1;
+				fltgroup1fill = 'false';
+			}
+			setfltgroup2();
+			if(fltgroup2fill == 'true') {
+				fltgroup2aktiv = fltgroup2;
+				fltgroup2fill = 'false';
+			}
+			setfltgroup3();
+			if(fltgroup3fill == 'true') {
+				fltgroup3aktiv = fltgroup3;
+				fltgroup3fill = 'false';
+			}
+			setfltgroup4();
+			if(fltgroup4fill == 'true') {
+				fltgroup4aktiv = fltgroup4;
+				fltgroup4fill = 'false';
+			}
+			setfltgroup5();
+			if(fltgroup5fill == 'true') {
+				fltgroup5aktiv = fltgroup5;
+				fltgroup5fill = 'false';
+			}
+	
+			$('#onlinealarm_wrapper').removeClass('ps-loading');
+			filtertable();
 		}
-		if (data.updaterequired == 'True') TheAlarmTable.draw();
-		setflttype();
-		if(flttypefill == 'true') {
-			flttypeaktiv = flttype;
-			flttypefill = 'false';
-		}
-		setfltgroup();
-		if(fltgroupfill == 'true') {
-			fltgroupaktiv = fltgroup;
-			fltgroupfill = 'false';
-		}
-		setfltgroup1();
-		if(fltgroup1fill == 'true') {
-			fltgroup1aktiv = fltgroup1;
-			fltgroup1fill = 'false';
-		}
-		setfltgroup2();
-		if(fltgroup2fill == 'true') {
-			fltgroup2aktiv = fltgroup2;
-			fltgroup2fill = 'false';
-		}
-		setfltgroup3();
-		if(fltgroup3fill == 'true') {
-			fltgroup3aktiv = fltgroup3;
-			fltgroup3fill = 'false';
-		}
-		setfltgroup4();
-		if(fltgroup4fill == 'true') {
-			fltgroup4aktiv = fltgroup4;
-			fltgroup4fill = 'false';
-		}
-		setfltgroup5();
-		if(fltgroup5fill == 'true') {
-			fltgroup5aktiv = fltgroup5;
-			fltgroup5fill = 'false';
-		}
-
-		$('#onlinealarm_wrapper').removeClass('ps-loading');
-		filtertable();
 		if(data.wpWartung == 'True') {
 			$('.setWartung').text('Wartung ausschalten');
 			$('#onlinealarm_wrapper th').addClass('bgred');
