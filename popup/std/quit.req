@@ -16,7 +16,6 @@
 //###################################################################################
 namespace popup\std;
 use system\Helper\wpDatabase;
-use system\std;
 $database= new wpDatabase();
 
 ?>
@@ -26,10 +25,13 @@ $database= new wpDatabase();
 		<input id="oskinput" class="ps-input" type="text" /><br />
 		<span>letzte Meldungen:</span><br />
 		<select id="oskselect" class="ps-input">
+			<option value="" disabled selected>letzte Meldungen</option>
 <?
-	$database->query("SELECT [quittext], MAX([come]) FROM [alarmhistoric] GROUP BY [quittext] ORDER BY MAX([come]) DESC");
+	$database->query("SELECT [quittext] FROM [alarmhistoric] GROUP BY [quittext] ORDER BY MAX([come]) DESC");
 	while($erg = $database->fetch()) {
-		echo '<option value="' . $erg['quittext'] . '">' . $erg['quittext'] . '</option>';
+		if($erg['quittext'] != '') {
+			echo '<option value="' . $erg['quittext'] . '">' . $erg['quittext'] . '</option>';
+		}
 	}
 ?>
 		</select>

@@ -263,7 +263,7 @@ if(security::checkGroup(security::entwickler)) {
 			<span class="show-dp ps-button">Datenpunkte einblenden</span>
 		</div>
 		<? if(security::checkLevel(wpInit::$reqgroupalarm)) { ?>
-		<table id="onlinealarm">
+		<table id="onlinealarm" data-priority="0">
 			<thead>
 				<tr>
 					<th>Kommt</th>
