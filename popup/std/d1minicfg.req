@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 04.03.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 607                                                     $ #
+//# Revision     : $Rev:: 610                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.req 607 2024-05-05 13:40:32Z                   $ #
+//# File-ID      : $Id:: d1minicfg.req 610 2024-05-15 20:26:33Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace popup\std;
@@ -77,6 +77,14 @@ class d1minicfg {
 				"ORDER BY [name]");
 		$html .= '<tr><td>Trend Group:</td><td><select class="ps-input id_trendgroup">';
 		while($erg = $wpDatabase->fetch()) $html .= self::getSelect($erg['id_trendgroup'], $erg['name']);
+		$html .= '</select></td></tr>';
+		//$alarmGroup;
+		$wpDatabase->query("SELECT " .
+				"[id_alarmgroup], [name] " .
+				"FROM [alarmgroup] " .
+				"ORDER BY [name]");
+		$html .= '<tr><td>Alarm Group:</td><td><select class="ps-input id_alarmgroup">';
+		while($erg = $wpDatabase->fetch()) $html .= self::getSelect($erg['id_alarmgroup'], $erg['name']);
 		$html .= '</select></td></tr>';
 
 		echo $html . '</table>';

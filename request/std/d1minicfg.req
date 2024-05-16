@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 04.03.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 608                                                     $ #
+//# Revision     : $Rev:: 610                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.req 608 2024-05-09 20:38:50Z                   $ #
+//# File-ID      : $Id:: d1minicfg.req 610 2024-05-15 20:26:33Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -87,7 +87,7 @@ class d1minicfg {
 		header(wpJSON_HEADER);
 		echo '{"msg":"';
 		$d1m = new d1mini(std::posts('IP'));
-		$newID = $d1m->insertDevice(std::posts('id_d1minigroup'), std::posts('id_mqttgroup'), std::posts('id_dpgroup'), std::posts('id_trendgroup'));
+		$newID = $d1m->insertDevice(std::posts('id_d1minigroup'), std::posts('id_mqttgroup'), std::posts('id_dpgroup'), std::posts('id_trendgroup'), std::posts('id_alarmgroup'));
 		$WebCom = new WebCom();
 		echo '","erg":"';
 		echo $WebCom->send('AddD1Mini', $newID);

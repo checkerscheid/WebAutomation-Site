@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 608                                                     $ #
+//# Revision     : $Rev:: 609                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 608 2024-05-09 20:38:50Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 609 2024-05-15 14:54:17Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -47,7 +47,7 @@ class uebersicht {
 		'GA_WE_Ost'		=> 'Wetterstation Ost',
 		'GA_WE_Sued'	=> 'Wetterstation Süd',
 		'GA2_WE_Gaube'	=> 'Wetterstation Gaube',
-		'BasisTest'		=> 'Breadorad',
+		'BasisTest'		=> 'Breadboard',
 		'WG1_HTp'		=> 'Wintergarten',
 		'SZ1_HT'		=> 'Schlafzimmer',
 		'GA1_FS'		=> 'Gartenhaus',
@@ -72,7 +72,7 @@ class uebersicht {
 		'GA_WE_Ost'		=> 'Wetterstation Ost',
 		'GA_WE_Sued'	=> 'Wetterstation Süd',
 		'GA2_WE_Gaube'	=> 'Wetterstation Gaube',
-		'BasisTest'		=> 'Breadorad',
+		'BasisTest'		=> 'Breadboard',
 		'WG1_HTp'		=> 'EG Wintergarten',
 		'SZ1_HT'		=> 'EG Schlafzimmer',
 		'GA1_FS'		=> 'EG Gartenhaus',

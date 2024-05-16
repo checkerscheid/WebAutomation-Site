@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 03.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 608                                                     $ #
+//# Revision     : $Rev:: 610                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.js 608 2024-05-09 20:38:50Z                    $ #
+//# File-ID      : $Id:: d1minicfg.js 610 2024-05-15 20:26:33Z                    $ #
 //#                                                                                 #
 //###################################################################################
 ?> d1minicfg */
@@ -103,6 +103,7 @@ p.page.load = function() {
 						myData['id_mqttgroup'] = $('#dialog .id_mqttgroup').val();
 						myData['id_dpgroup'] = $('#dialog .id_dpgroup').val();
 						myData['id_trendgroup'] = $('#dialog .id_trendgroup').val();
+						myData['id_alarmgroup'] = $('#dialog .id_alarmgroup').val();
 						$.post('std.d1minicfg.renewDevice.req', myData, function(data) {
 							console.log(data);
 							if(data.erg == 'S_OK') {
