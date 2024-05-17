@@ -26,6 +26,7 @@ $headline = $database->fetch();
 		<li><span class="ps-button" data-target="groups">D1 Mini Gruppen</span></li>
 		<li><span class="ps-button" data-target="searchd1mini">Neuen D1 Mini anlegen</span></li>
 		<li><span class="ps-button" data-target="editelem">D1 Mini</span></li>
+		<li><span class="ps-button" data-target="serversettings">D1 Mini Server</span></li>
 	</ul>
 	<hr />
 	<div id="d1minicfg">

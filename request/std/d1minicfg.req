@@ -63,6 +63,49 @@ class d1minicfg {
 			</ul>';
 		echo $html;
 	}
+	const c_menuserversettings = 'menuserversettings';
+	public static function menuserversettings() {
+		$WebCom = new WebCom();
+		$erg = $WebCom->send("cGetD1MiniServer");
+		$s = \json_decode($erg);
+		$OnlineTogglerSendIntervall = 'ERROR';
+		$OnlineTogglerWait = 'ERROR';
+		if(\json_last_error() == JSON_ERROR_NONE) {
+			$OnlineTogglerSendIntervall = $s->OnlineTogglerSendIntervall;
+			$OnlineTogglerWait = $s->OnlineTogglerWait;
+		}
+		$html = '
+			<h1>D1 Mini Server</h1>
+			<div class="settingsContainer">
+				<table summary="">
+					<tbody>
+						<tr>
+							<td>
+								<label for="OnlineTogglerSendIntervall">OnlineTogglerSendIntervall</label>
+							</td>
+							<td>
+								<input id="OnlineTogglerSendIntervall" class="wp-input" value="' . $OnlineTogglerSendIntervall . '" />
+							</td>
+							<td>
+								<span class="wp-button OnlineTogglerSendIntervall">save</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="OnlineTogglerWait">OnlineTogglerWait</label>
+							</td>
+							<td>
+								<input id="OnlineTogglerWait" class="wp-input" value="' . $OnlineTogglerWait . '" />
+							</td>
+							<td>
+								<span class="wp-button OnlineTogglerWait">save</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>';
+		echo $html;
+	}
 	const c_startFreakaZoneSearch = 'startFreakaZoneSearch';
 	public static function startFreakaZoneSearch() {
 		header(wpJSON_HEADER);
