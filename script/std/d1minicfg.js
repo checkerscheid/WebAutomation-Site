@@ -289,6 +289,24 @@ p.page.load = function() {
 		}
 	});
 //###################################################################################
+	$('#erg').on('click', '.OnlineTogglerSendIntervall', function() {
+		var newVal = $('#OnlineTogglerSendIntervall').val();
+		$.post('std.d1minicfg.setServerSetting.req', {key:'OnlineTogglerSendIntervall', val:newVal}, function(data) {
+			if(data.erg != 'S_OK') {
+				p.alertred(data.msg, 5000);
+			}
+		}, 'json');
+	});
+//###################################################################################
+	$('#erg').on('click', '.OnlineTogglerWait', function() {
+		var newVal = $('#OnlineTogglerWait').val();
+		$.post('std.d1minicfg.setServerSetting.req', {key:'OnlineTogglerSendIntervall', val:newVal}, function(data) {
+			if(data.erg != 'S_OK') {
+				p.alertred(data.msg, 5000);
+			}
+		}, 'json');
+	});
+//###################################################################################
 	//p.getValues();
 };
 

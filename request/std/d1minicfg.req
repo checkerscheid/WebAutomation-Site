@@ -66,7 +66,7 @@ class d1minicfg {
 	const c_menuserversettings = 'menuserversettings';
 	public static function menuserversettings() {
 		$WebCom = new WebCom();
-		$erg = $WebCom->send("cGetD1MiniServer");
+		$erg = $WebCom->send("GetD1MiniServer");
 		$s = \json_decode($erg);
 		$OnlineTogglerSendIntervall = 'ERROR';
 		$OnlineTogglerWait = 'ERROR';
@@ -84,10 +84,10 @@ class d1minicfg {
 								<label for="OnlineTogglerSendIntervall">OnlineTogglerSendIntervall</label>
 							</td>
 							<td>
-								<input id="OnlineTogglerSendIntervall" class="wp-input" value="' . $OnlineTogglerSendIntervall . '" />
+								<input id="OnlineTogglerSendIntervall" class="ps-input" type="text" value="' . $OnlineTogglerSendIntervall . '" />
 							</td>
 							<td>
-								<span class="wp-button OnlineTogglerSendIntervall">save</span>
+								<span class="ps-button OnlineTogglerSendIntervall">save</span>
 							</td>
 						</tr>
 						<tr>
@@ -95,10 +95,10 @@ class d1minicfg {
 								<label for="OnlineTogglerWait">OnlineTogglerWait</label>
 							</td>
 							<td>
-								<input id="OnlineTogglerWait" class="wp-input" value="' . $OnlineTogglerWait . '" />
+								<input id="OnlineTogglerWait" class="ps-input" type="text" value="' . $OnlineTogglerWait . '" />
 							</td>
 							<td>
-								<span class="wp-button OnlineTogglerWait">save</span>
+								<span class="ps-button OnlineTogglerWait">save</span>
 							</td>
 						</tr>
 					</tbody>
@@ -395,6 +395,11 @@ class d1minicfg {
 		$WebCom = new WebCom();
 		echo $WebCom->send('DeleteD1Mini', substr($fortcp, 0, -3));
 	}
+	const c_setServerSetting = 'setServerSetting';
+	public static function setServerSetting() {
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniServer', std::posts('key') . '%~%' . std::posts('val'));
+	}
 	private static function getSelect($val, $name) {
 		return "<option value='$val'>$name</option>";
 	}
@@ -408,6 +413,10 @@ switch(std::gets('param1')) {
 		//###################################################################################
 	case d1minicfg::c_menueditelem:
 		d1minicfg::menueditelem();
+		break;
+		//###################################################################################
+	case d1minicfg::c_menuserversettings:
+		d1minicfg::menuserversettings();
 		break;
 		//###################################################################################
 	case d1minicfg::c_startFreakaZoneSearch:
@@ -452,6 +461,10 @@ switch(std::gets('param1')) {
 		//###################################################################################
 	case d1minicfg::c_allDelete:
 		d1minicfg::allDelete();
+		break;
+		//###################################################################################
+	case d1minicfg::c_setServerSetting:
+		d1minicfg::setServerSetting();
 		break;
 		//###################################################################################
 	default:
