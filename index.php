@@ -10,9 +10,9 @@ header('Content-Type: text/html; charset=utf-8');
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 611                                                     $ #
+//# Revision     : $Rev:: 613                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: index.php 611 2024-05-16 23:40:44Z                       $ #
+//# File-ID      : $Id:: index.php 613 2024-05-17 00:45:52Z                       $ #
 //#                                                                                 #
 //###################################################################################
 /** @var array $points */
