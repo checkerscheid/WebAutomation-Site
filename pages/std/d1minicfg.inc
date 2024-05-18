@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 03.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 599                                                     $ #
+//# Revision     : $Rev:: 614                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.inc 599 2024-04-30 05:58:15Z                   $ #
+//# File-ID      : $Id:: d1minicfg.inc 614 2024-05-18 01:53:00Z                   $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
