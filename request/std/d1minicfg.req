@@ -395,6 +395,12 @@ class d1minicfg {
 		$WebCom = new WebCom();
 		echo $WebCom->send('DeleteD1Mini', substr($fortcp, 0, -3));
 	}
+	const c_getServerSettings = 'getServerSettings';
+	public static function getServerSettings() {
+		header(wpJSON_HEADER);
+		$WebCom = new WebCom();
+		echo $WebCom->send("GetD1MiniServer");
+	}
 	const c_setServerSetting = 'setServerSetting';
 	public static function setServerSetting() {
 		$WebCom = new WebCom();
@@ -461,6 +467,10 @@ switch(std::gets('param1')) {
 		//###################################################################################
 	case d1minicfg::c_allDelete:
 		d1minicfg::allDelete();
+		break;
+		//###################################################################################
+	case d1minicfg::c_getServerSettings:
+		d1minicfg::getServerSettings();
 		break;
 		//###################################################################################
 	case d1minicfg::c_setServerSetting:

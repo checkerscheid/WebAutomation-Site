@@ -293,23 +293,30 @@ p.page.load = function() {
 		var newVal = $('#OnlineTogglerSendIntervall').val();
 		$.post('std.d1minicfg.setServerSetting.req', {key:'OnlineTogglerSendIntervall', val:newVal}, function(data) {
 			if(data.erg != 'S_OK') {
-				p.alertred(data.msg, 5000);
+				p.page.alertred(data.msg, 5000);
+				D1MiniServerRenew();
 			}
 		}, 'json');
 	});
 //###################################################################################
 	$('#erg').on('click', '.OnlineTogglerWait', function() {
 		var newVal = $('#OnlineTogglerWait').val();
-		$.post('std.d1minicfg.setServerSetting.req', {key:'OnlineTogglerSendIntervall', val:newVal}, function(data) {
+		$.post('std.d1minicfg.setServerSetting.req', {key:'OnlineTogglerWait', val:newVal}, function(data) {
 			if(data.erg != 'S_OK') {
-				p.alertred(data.msg, 5000);
+				p.page.alertred(data.msg, 5000);
+				D1MiniServerRenew();
 			}
 		}, 'json');
 	});
 //###################################################################################
 	//p.getValues();
 };
-
+function D1MiniServerRenew() {
+	$.get('std.d1minicfg.getServerSettings.req', function(renewVal) {
+		$('#OnlineTogglerSendIntervall').val(renewVal.OnlineTogglerSendIntervall);
+		$('#OnlineTogglerWait').val(renewVal.OnlineTogglerWait);
+	}, 'json');
+}
 function D1MiniRenew(d1minigroup) {
 	$.post('std.d1minicfg.getalld1minisettings.req', {d1minigroup:d1minigroup},  function(data) {
 		for (const [key, value] of Object.entries(data)) {
