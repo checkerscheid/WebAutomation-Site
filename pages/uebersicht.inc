@@ -38,6 +38,7 @@ class uebersicht {
 	);
 	private static $HT = array(
 		'WZ_HT3'		=> 'Wohnzimmer',
+		'WZ_PF_FE'		=> 'Wohzimmer Pflanze am Fenster',
 		'SZ_RU'			=> 'Schlafzimmer',
 		'BU_RU'			=> 'Büro',
 		'KU_RU'			=> 'Küche',
@@ -56,6 +57,7 @@ class uebersicht {
 	);
 	private static $RSSI = array(
 		'WZ_HT3'		=> 'Wohnzimmer',
+		'WZ_PF_FE'		=> 'Wohzimmer Pflanze am Fenster',
 		'SZ_RU'			=> 'Schlafzimmer',
 		'BU_RU'			=> 'Büro',
 		'KU_RU'			=> 'Küche',
@@ -79,6 +81,7 @@ class uebersicht {
 		'FL2_HT'		=> 'OG Flur'
 	);
 	private static $d1Minis = array(
+		'WZ_PF_FE',
 		'BA_RU',
 		'BasisTest',
 		'BU_RU',
@@ -287,8 +290,12 @@ class uebersicht {
 					<td colspan="3"><span data-ws="BasisTest_Light" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
-					<td colspan="3">Blume</td>
+					<td colspan="3">Pflanze an der Terrasse</td>
 					<td colspan="3"><span data-ws="BasisTest_Moisture" class="ps-input">undefined</span></td>
+				</tr>
+				<tr>
+					<td colspan="3">Pflanze am Fenster</td>
+					<td colspan="3"><span data-ws="WZ_PF_FE_Moisture" class="ps-input">undefined</span></td>
 				</tr>
 				<tr><td colspan="6"><h2>Test</h2></td></tr>
 				<tr><td colspan="6"><hr /></td></tr>
