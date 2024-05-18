@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 04.03.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 614                                                     $ #
+//# Revision     : $Rev:: 615                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.req 614 2024-05-18 01:53:00Z                   $ #
+//# File-ID      : $Id:: d1minicfg.req 615 2024-05-18 02:54:54Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -60,6 +60,8 @@ class d1minicfg {
 		$html .= '
 				<li class="ps-tree-parent d1minigroupfolder" data-d1minigroup="NULL">D1 Minis ohne Gruppe</li>
 				<li data-d1minis="NULL"></li>
+				<li class="ps-tree-parent d1minigroupfolder" data-d1minigroup="All">Alle D1 Minis</li>
+				<li data-d1minis="All"></li>
 			</ul>';
 		echo $html;
 	}
@@ -117,7 +119,7 @@ class d1minicfg {
 		header(wpJSON_HEADER);
 		echo '{"msg":"';
 		$d1m = new d1mini(std::posts('IP'));
-		$newID = $d1m->insertDevice(std::posts('id_d1minigroup'), std::posts('id_mqttgroup'), std::posts('id_dpgroup'), std::posts('id_trendgroup'));
+		$newID = $d1m->insertDevice(std::posts('id_d1minigroup'), std::posts('id_mqttgroup'), std::posts('id_dpgroup'), std::posts('id_trendgroup'), std::posts('id_alarmgroup'));
 		if($newID > 0) {
 			$WebCom = new WebCom();
 			echo '","erg":"';
@@ -145,12 +147,17 @@ class d1minicfg {
 		$wpDatabase->query('SELECT TOP 1 [version] FROM [D1Mini] ORDER BY [version] DESC');
 		$erg = $wpDatabase->fetch();
 		d1minicfg::$maxVersion = $erg['version'];
-		$wpDatabase->query("
+		$sql = "
 			SELECT
 				[id_d1mini], [name], [description], [ip], [mac], [wpFreakaZoneVersion], [version], [active]
-			FROM [d1mini]
-			WHERE [id_d1minigroup] ".(std::posts('d1minigroup') == 'NULL' ? 'IS NULL' : ' = '.std::posts('d1minigroup'))."
-			ORDER BY [name]");
+			FROM [d1mini]";
+		if(std::posts('d1minigroup') != 'All') {
+			$sql .= "
+			WHERE [id_d1minigroup] " . (std::posts('d1minigroup') == 'NULL' ? 'IS NULL' : ' = '.std::posts('d1minigroup'));
+		}
+		$sql .= "
+			ORDER BY [name]";
+		$wpDatabase->query($sql);
 		$html = '
 <ul class="d1miniingroup" data-group="'.std::posts('d1minigroup').'">
 	<li><hr /></li>
@@ -308,7 +315,8 @@ class d1minicfg {
 	const c_getalld1minisettings = 'getalld1minisettings';
 	public static function getalld1minisettings() {
 		header('Content-Type: application/json');
-		$sql = "SELECT [id_d1mini], [ip] FROM [d1mini] WHERE [id_d1minigroup] = " . std::posts('d1minigroup');
+		$sql = "SELECT [id_d1mini], [ip] FROM [d1mini]";
+		if(std::posts('d1minigroup') != 'All') $sql .= " WHERE [id_d1minigroup] = " . std::posts('d1minigroup');
 		$wpDatabase = new wpDatabase();
 		$wpDatabase->query($sql);
 		$returns = "{";
