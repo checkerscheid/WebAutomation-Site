@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 03.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 608                                                     $ #
+//# Revision     : $Rev:: 614                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.js 608 2024-05-09 20:38:50Z                    $ #
+//# File-ID      : $Id:: d1minicfg.js 614 2024-05-18 01:53:00Z                    $ #
 //#                                                                                 #
 //###################################################################################
 ?> d1minicfg */
@@ -289,9 +289,34 @@ p.page.load = function() {
 		}
 	});
 //###################################################################################
+	$('#erg').on('click', '.OnlineTogglerSendIntervall', function() {
+		var newVal = $('#OnlineTogglerSendIntervall').val();
+		$.post('std.d1minicfg.setServerSetting.req', {key:'OnlineTogglerSendIntervall', val:newVal}, function(data) {
+			if(data.erg != 'S_OK') {
+				p.page.alertred(data.msg, 5000);
+				D1MiniServerRenew();
+			}
+		}, 'json');
+	});
+//###################################################################################
+	$('#erg').on('click', '.OnlineTogglerWait', function() {
+		var newVal = $('#OnlineTogglerWait').val();
+		$.post('std.d1minicfg.setServerSetting.req', {key:'OnlineTogglerWait', val:newVal}, function(data) {
+			if(data.erg != 'S_OK') {
+				p.page.alertred(data.msg, 5000);
+				D1MiniServerRenew();
+			}
+		}, 'json');
+	});
+//###################################################################################
 	//p.getValues();
 };
-
+function D1MiniServerRenew() {
+	$.get('std.d1minicfg.getServerSettings.req', function(renewVal) {
+		$('#OnlineTogglerSendIntervall').val(renewVal.OnlineTogglerSendIntervall);
+		$('#OnlineTogglerWait').val(renewVal.OnlineTogglerWait);
+	}, 'json');
+}
 function D1MiniRenew(d1minigroup) {
 	$.post('std.d1minicfg.getalld1minisettings.req', {d1minigroup:d1minigroup},  function(data) {
 		for (const [key, value] of Object.entries(data)) {

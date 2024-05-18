@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 04.03.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 609                                                     $ #
+//# Revision     : $Rev:: 614                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.req 609 2024-05-15 14:54:17Z                   $ #
+//# File-ID      : $Id:: d1minicfg.req 614 2024-05-18 01:53:00Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -61,6 +61,49 @@ class d1minicfg {
 				<li class="ps-tree-parent d1minigroupfolder" data-d1minigroup="NULL">D1 Minis ohne Gruppe</li>
 				<li data-d1minis="NULL"></li>
 			</ul>';
+		echo $html;
+	}
+	const c_menuserversettings = 'menuserversettings';
+	public static function menuserversettings() {
+		$WebCom = new WebCom();
+		$erg = $WebCom->send("GetD1MiniServer");
+		$s = \json_decode($erg);
+		$OnlineTogglerSendIntervall = 'ERROR';
+		$OnlineTogglerWait = 'ERROR';
+		if(\json_last_error() == JSON_ERROR_NONE) {
+			$OnlineTogglerSendIntervall = $s->OnlineTogglerSendIntervall;
+			$OnlineTogglerWait = $s->OnlineTogglerWait;
+		}
+		$html = '
+			<h1>D1 Mini Server</h1>
+			<div class="settingsContainer">
+				<table summary="">
+					<tbody>
+						<tr>
+							<td>
+								<label for="OnlineTogglerSendIntervall">OnlineTogglerSendIntervall</label>
+							</td>
+							<td>
+								<input id="OnlineTogglerSendIntervall" class="ps-input" type="text" value="' . $OnlineTogglerSendIntervall . '" />
+							</td>
+							<td>
+								<span class="ps-button OnlineTogglerSendIntervall">save</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="OnlineTogglerWait">OnlineTogglerWait</label>
+							</td>
+							<td>
+								<input id="OnlineTogglerWait" class="ps-input" type="text" value="' . $OnlineTogglerWait . '" />
+							</td>
+							<td>
+								<span class="ps-button OnlineTogglerWait">save</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>';
 		echo $html;
 	}
 	const c_startFreakaZoneSearch = 'startFreakaZoneSearch';
@@ -352,6 +395,17 @@ class d1minicfg {
 		$WebCom = new WebCom();
 		echo $WebCom->send('DeleteD1Mini', substr($fortcp, 0, -3));
 	}
+	const c_getServerSettings = 'getServerSettings';
+	public static function getServerSettings() {
+		header(wpJSON_HEADER);
+		$WebCom = new WebCom();
+		echo $WebCom->send("GetD1MiniServer");
+	}
+	const c_setServerSetting = 'setServerSetting';
+	public static function setServerSetting() {
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniServer', std::posts('key') . '%~%' . std::posts('val'));
+	}
 	private static function getSelect($val, $name) {
 		return "<option value='$val'>$name</option>";
 	}
@@ -365,6 +419,10 @@ switch(std::gets('param1')) {
 		//###################################################################################
 	case d1minicfg::c_menueditelem:
 		d1minicfg::menueditelem();
+		break;
+		//###################################################################################
+	case d1minicfg::c_menuserversettings:
+		d1minicfg::menuserversettings();
 		break;
 		//###################################################################################
 	case d1minicfg::c_startFreakaZoneSearch:
@@ -409,6 +467,14 @@ switch(std::gets('param1')) {
 		//###################################################################################
 	case d1minicfg::c_allDelete:
 		d1minicfg::allDelete();
+		break;
+		//###################################################################################
+	case d1minicfg::c_getServerSettings:
+		d1minicfg::getServerSettings();
+		break;
+		//###################################################################################
+	case d1minicfg::c_setServerSetting:
+		d1minicfg::setServerSetting();
 		break;
 		//###################################################################################
 	default:

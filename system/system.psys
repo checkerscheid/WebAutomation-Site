@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 609                                                     $ #
+//# Revision     : $Rev:: 613                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: system.psys 609 2024-05-15 14:54:17Z                     $ #
+//# File-ID      : $Id:: system.psys 613 2024-05-17 00:45:52Z                     $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $sdata */
@@ -941,20 +941,19 @@ class getScript {
 	/**
 	 * generiert die Daten der aktiven Alarme
 	 */
-	public static function getActiveAlarms($AlarmCount) {
+	public static function getActiveAlarms($AlarmPriority) {
 		$WebCom = new WebCom();
 		$WebComErg = $WebCom->send('ActiveAlarms');
 		//echo $WebComErg;
 		$answer = new TCPencode($WebComErg);
 		$TheArray = $answer->getArray();
-		$updaterequired = false;
-		if(std::arrays($TheArray, 'Alarme') == '' || count($TheArray['Alarme']) != $AlarmCount) $updaterequired = true;
+		//std::test_array($TheArray);
+		$newAlarmPriority = 0;
 		$js = '{"WatchDogByte":"'.std::arrays($TheArray, 'WatchDog').'","pDateTime":"new Date('.std::arrays($TheArray, 'DateTime').')","pDate":"'.std::arrays($TheArray, 'Date').'","pTime":"'.std::arrays($TheArray, 'Time').'","wpAlarm":[';
 		if(std::arrays($_SESSION[SESSION_ID], 'ActiveAlarms') == '') $_SESSION[SESSION_ID]['ActiveAlarms'] = array();
 		if(std::arrays($TheArray, 'Alarme') != '') {
-			foreach($TheArray['Alarme'] as $object) {
-				if(std::arrays($_SESSION[SESSION_ID]['ActiveAlarms'], $object['id']) != $object['AlarmUpdate'] ||
-						$updaterequired) {
+			if($newAlarmPriority != $AlarmPriority) {
+				foreach($TheArray['Alarme'] as $object) {
 					$priority = 0;
 					if($object['Gone'] == "-" && $object['Quit'] == "-") $priority += 30;
 					if($object['Gone'] == "-" && $object['Quit'] != "-") $priority += 20;
@@ -970,6 +969,7 @@ class getScript {
 						case 'Hand': $priority += 2; break;
 						case 'Meldung': $priority += 1; break;
 					}
+					$newAlarmPriority += $priority;
 					$typeText = 'Alarm';
 					if($object['Type'] == 'Störung') $typeText = 'Störung';
 					if($object['Type'] == 'Warnung') $typeText = 'Warnung';
@@ -1021,7 +1021,7 @@ class getScript {
 			echo $js.']';
 			unset($_SESSION[SESSION_ID]['ActiveAlarms']);
 		}
-		echo ',"wpWartung":"'.std::arrays($TheArray, 'Wartung').'","updaterequired":"'.(($updaterequired) ? 'True' : 'False').'"}';
+		echo ',"wpWartung":"'.std::arrays($TheArray, 'Wartung').'","AlarmPriority":"'.$newAlarmPriority.'"}';
 	}
 	/**
 	 * generiert die erweiterten Daten der registrierten Items
