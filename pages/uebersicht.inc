@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 616                                                     $ #
+//# Revision     : $Rev:: 618                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 616 2024-05-19 11:09:05Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 618 2024-05-20 14:53:51Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -38,7 +38,7 @@ class uebersicht {
 	);
 	private static $HT = array(
 		'WZ_HT3'		=> 'Wohnzimmer',
-		'WZ_PF_FE'		=> 'Wohzimmer Pflanze am Fenster',
+		'WZ_PF_FE'		=> 'Pflanze am Fenster',
 		'SZ_RU'			=> 'Schlafzimmer',
 		'BU_RU'			=> 'Büro',
 		'KU_RU'			=> 'Küche',
@@ -57,7 +57,7 @@ class uebersicht {
 	);
 	private static $RSSI = array(
 		'WZ_HT3'		=> 'Wohnzimmer',
-		'WZ_PF_FE'		=> 'Wohzimmer Pflanze am Fenster',
+		'WZ_PF_FE'		=> 'Pflanze am Fenster',
 		'SZ_RU'			=> 'Schlafzimmer',
 		'BU_RU'			=> 'Büro',
 		'KU_RU'			=> 'Küche',
