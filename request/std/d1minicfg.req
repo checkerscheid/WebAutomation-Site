@@ -329,8 +329,11 @@ class d1minicfg {
 				$wpFZ = $jsontext->FreakaZoneDevice;
 				//std::test_array($wpFZ);
 				$compiledWith = array();
+				$compiledWidthExclude = array('EEPROM', 'WiFi', 'MQTT', 'Search', 'Rest');
 				foreach($wpFZ->Debug as $module => $active) {
-					$compiledWith[] = $module;
+					if(!\in_array($module, $compiledWidthExclude)) {
+						$compiledWith[] = $module;
+					}
 					$active; // need only key
 				}
 				$returns .= $dividor .
