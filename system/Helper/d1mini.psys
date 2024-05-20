@@ -107,7 +107,7 @@ class d1mini {
 	private function setRest() {
 		$id_mqtttopic = $this->insertTopic('ERROR/Rest');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'ERROR_Rest', 'Rest Error', '0:Ok;1:Error;');
-		$this->mergeAlarm($id_dp, 'ERROR_Rest', 'Rest Error');
+		$this->mergeAlarm($id_dp, 'ERROR_Rest', 'Rest Error', 3);
 		echo "saved: 'Rest Error' ";
 	}
 	private function setHT() {
