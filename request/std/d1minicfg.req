@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 04.03.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 615                                                     $ #
+//# Revision     : $Rev:: 618                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.req 615 2024-05-18 02:54:54Z                   $ #
+//# File-ID      : $Id:: d1minicfg.req 618 2024-05-20 14:53:51Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -329,8 +329,11 @@ class d1minicfg {
 				$wpFZ = $jsontext->FreakaZoneDevice;
 				//std::test_array($wpFZ);
 				$compiledWith = array();
+				$compiledWithExclude = array('EEPROM', 'WiFi', 'MQTT', 'Search', 'Rest');
 				foreach($wpFZ->Debug as $module => $active) {
-					$compiledWith[] = $module;
+					if(!\in_array($module, $compiledWithExclude)) {
+						$compiledWith[] = $module;
+					}
 					$active; // need only key
 				}
 				$returns .= $dividor .
