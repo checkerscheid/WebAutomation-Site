@@ -310,6 +310,17 @@ p.page.load = function() {
 		}, 'json');
 	});
 //###################################################################################
+	$('#erg').on('click', '.setAllCycle', function() {
+		var plugin = $(this).attr('data-plugin');
+		var current = 'setAll' + plugin + 'Cycle';
+		var newVal = $('#' + current).val();
+		$.post('std.d1minicfg.setAllCycle.req', {key:plugin, val:newVal}, function(data) {
+			if(data.erg != 'S_OK') {
+				p.page.alertred(data.msg, 5000);
+			}
+		}, 'json');
+	});
+//###################################################################################
 	//p.getValues();
 };
 function D1MiniServerRenew() {
