@@ -226,8 +226,6 @@ class d1minicfg {
 					<th>aktiv</th>
 					<th>compiledWith</th>
 					<th></th>
-					<th></th>
-					<th></th>
 				</tr>
 			</thead>
 			<tbody>';
@@ -332,6 +330,13 @@ class d1minicfg {
 							<span class="ps-hover-noborder ps-image-button ps-refresh restartdevice" title="neu starten"></span>
 						</div>
 					</td>
+				</tr>
+				<tr class="D1MiniDeviceJson" data-json="' . $erg['name'] . '">
+					<td class="buttonbox"></td>
+					<td colspan="10" class="json">
+						<pre></pre>
+					</td>
+					<td class="buttonbox"></td>
 				</tr>';
 		}
 		$html .= '
@@ -414,7 +419,7 @@ class d1minicfg {
 		$erg = self::getD1MiniSettings();
 		$D1Minis = \json_decode($erg);
 		$key = (std::posts('key') == 'DHT11' || std::posts('key') == 'DHT22') ? 'HT' : std::posts('key');
-		$WebCom = new WebCom();
+		//$WebCom = new WebCom();
 		foreach($D1Minis as $name => $D1Mini) {
 			if(isset($D1Mini->compiledWith) && str_contains($D1Mini->compiledWith, $key)) {
 				echo 'publishTopic: ' . $name . '/settings/' . $key . '/maxCycle%~%' . std::posts('val');
@@ -457,7 +462,8 @@ class d1minicfg {
 				'"Mac":"' . $wpFZ->MAC . '",' .
 				//'"Ssid":"' . $wpFZ->DeviceName . '",' .
 				'"UpdateMode":' . ($wpFZ->UpdateMode ? 'true' : 'false') . ',' .
-				'"compiledWith":"' . implode(', ', $compiledWith) . '"'.
+				'"compiledWith":"' . implode(', ', $compiledWith) . '",'.
+				'"D1MiniText":' . $d1miniText .
 				'}';
 				$dividor = ',';
 			}

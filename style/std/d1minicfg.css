@@ -35,5 +35,6 @@ div.divupdate div, div.divinsert { border:1px solid #CCC; padding:3px 5px; margi
 #d1miniactive .buttonContainer .ps-image-button { display:inline-block; float:none; }
 #d1miniactive .versionContainer { margin:15px; text-align:center; }
 #d1miniactive .versionContainer span { padding:5px 10px; border:1px solid #CCC; border-radius:3px; }
-
+#d1miniactive [data-column="name"] .stored { cursor:pointer; }
+#d1miniactive .showJson.closed { height:0px; overflow:hidden; }
 #dialog select.ps-input { min-width:300px; padding:2px 5px }
