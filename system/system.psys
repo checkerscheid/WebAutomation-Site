@@ -1004,7 +1004,6 @@ class getScript {
 					} else {
 						$js .= '"'.($i++).'":"<a href=\"' . $object['Link'] . '\">' . $object['Text'] . '</a>",';
 					}
-					$js .= '"'.($i++).'":"'.$object['Name'].'",';
 					$js .= '"'.($i++).'":"'.$object['Type'].'",';
 					$js .= '"'.($i++).'":"'.$object['DpName'].'",';
 					$js .= '"'.($i++).'":"'.$object['id'].'",';

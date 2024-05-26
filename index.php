@@ -276,7 +276,6 @@ if(security::checkGroup(security::entwickler)) {
 					<?=(($system->useAlarmGroup1()) ? '<th>'.$system->nameAlarmGroup1().'</th>' : '')?>
 					<th>Gruppe</th>
 					<th>Beschreibung</th>
-					<th>Text</th>
 					<th>Typ</th>
 					<th>Datenpunkt</th>
 					<th>AlarmID</th>

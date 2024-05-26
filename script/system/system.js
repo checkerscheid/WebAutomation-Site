@@ -501,9 +501,9 @@ $(document).ready(function() {
 			sZeroRecords: 'Keine Alarme gefunden'
 		},
 		aoColumnDefs: [
-		               {type: 'de_datetime', targets:[0,1,2]},
-		               {visible: showdp, targets:[7 + AlarmRowAdd]},
-		               {visible: false, targets:[5 + AlarmRowAdd,8 + AlarmRowAdd,9 + AlarmRowAdd,10 + AlarmRowAdd]}
+			{type: 'de_datetime', targets:[0,1,2]},
+			{visible: showdp, targets:[6 + AlarmRowAdd]},
+			{visible: false, targets:[7 + AlarmRowAdd,8 + AlarmRowAdd,9 + AlarmRowAdd]}
 		],
 		//sScrollY: "125px",
 		bPaginate: false,
@@ -512,7 +512,7 @@ $(document).ready(function() {
 		bFilter: false,
 		bInfo: false,
 		bAutoWidth: false,
-		aaSorting: [[10 + AlarmRowAdd,'desc'],[0,'desc'],[2,'desc']]
+		aaSorting: [[9 + AlarmRowAdd,'desc'],[0,'desc'],[2,'desc']]
 	});
 	$('#onlinealarm_wrapper').addClass('ps-loading');
 	$('#onlinealarm').on('click', '.toquit', function() {
@@ -857,12 +857,12 @@ $(document).ready(function() {
 	});
 	$('.alarmsettingspopup').on('click', '.defaultsort', function(ev) {
 		ev.stopPropagation();
-		TheAlarmTable.order([[10 + AlarmRowAdd,'desc'],[0,'desc'],[2,'desc']]).draw();
+		TheAlarmTable.order([[9 + AlarmRowAdd,'desc'],[0,'desc'],[2,'desc']]).draw();
 	});
 	$('.alarmsettingspopup').on('click', '.show-dp', function(ev) {
 		ev.stopPropagation();
 		showdp = !showdp;
-		TheAlarmTable.column(7 + AlarmRowAdd).visible(showdp);
+		TheAlarmTable.column(6 + AlarmRowAdd).visible(showdp);
 		$('.show-dp').text(showdp ? 'Datenpunkte ausblenden' : 'Datenpunkte einblenden');
 	});
 	getOnlineAlarms();
@@ -1062,9 +1062,9 @@ function getOnlineAlarms() {
 		if(AlarmPriority != data.AlarmPriority) {
 			$('#onlinealarm_wrapper').addClass('ps-loading');
 			for(var Alarm in wpAlarm) {
-				var alarmid = wpAlarm[Alarm][8 + AlarmRowAdd];
+				var alarmid = wpAlarm[Alarm][7 + AlarmRowAdd];
 
-				TheAlarms[alarmid] = wpAlarm[Alarm][9 + AlarmRowAdd];
+				TheAlarms[alarmid] = wpAlarm[Alarm][8 + AlarmRowAdd];
 				if(typeof(AktAlarms[alarmid]) == 'undefined') {
 					console.log('Create Alarm: ' + alarmid);
 					TheAlarmTable.row.add(wpAlarm[Alarm], false);
@@ -1075,7 +1075,7 @@ function getOnlineAlarms() {
 						alarmsound.play();
 					}
 				} else {
-					if(AktAlarms[alarmid] != wpAlarm[Alarm][9 + AlarmRowAdd]) {
+					if(AktAlarms[alarmid] != wpAlarm[Alarm][8 + AlarmRowAdd]) {
 						console.log('Update Alarm: ' + alarmid);
 						if($('#onlinealarm tbody tr').length == 1) {
 							TheAlarmTable.clear();
