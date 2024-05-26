@@ -54,13 +54,18 @@ p.page.load = function() {
 		}
 	});
 //###################################################################################
-		// Markierungen
-		$('#erg').on('click', '.markall', function() {
-			$('#erg .ps-checkbox:not(.ps-disabled)').addClass('checked');
-		});
-		$('#erg').on('click', '.markno', function() {
-			$('#erg .ps-checkbox:not(.ps-disabled)').removeClass('checked');
-		});
+	// Markierungen
+	$('#erg').on('click', '.markall', function() {
+		$('#erg .ps-checkbox:not(.ps-disabled)').addClass('checked');
+	});
+	$('#erg').on('click', '.markno', function() {
+		$('#erg .ps-checkbox:not(.ps-disabled)').removeClass('checked');
+	});
+//###################################################################################
+	$('#erg').on('click', '[data-column="name"] .stored', function() {
+		var name = $(this).text();
+		$('[data-json="' + name + '"]').find('.showJson').toggleClass('closed');
+	});
 //###################################################################################
 	$('#d1minicfg').on('click', '.searchResult .d1MiniAdd', function() {
 		var myData = $('.searchResult').data('foundNew')[$(this).attr('data-key')]['Iam'];
@@ -310,6 +315,17 @@ p.page.load = function() {
 		}, 'json');
 	});
 //###################################################################################
+	$('#erg').on('click', '.setAllCycle', function() {
+		var plugin = $(this).attr('data-plugin');
+		var current = 'setAll' + plugin + 'Cycle';
+		var newVal = $('#' + current).val();
+		$.post('std.d1minicfg.setAllCycle.req', {key:plugin, val:newVal}, function(data) {
+			if(data.erg != 'S_OK') {
+				p.page.alertred(data.msg, 5000);
+			}
+		}, 'json');
+	});
+//###################################################################################
 	//p.getValues();
 };
 function D1MiniServerRenew() {
@@ -333,6 +349,12 @@ function D1MiniRenew(d1minigroup) {
 			var updateMode = value.UpdateMode ? '<span class="ps-fontyellow">aktiv</span>' : '<span class="ps-fontgreen">deaktiviert</span>';
 			setTextIfNotStored(key, 'updatemode', updateMode);
 			setTextIfNotStored(key, 'compiledWith', value.compiledWith);
+			var td = $(`tr[data-json=${key}] td.json`);
+			$(td).html('<div class="showJsonContainer">' +
+				'<div>' +
+					'<pre class="showJson closed">' + JSON.stringify(value.D1MiniText, null, '\t') + '</pre>' +
+				'</div>' +
+			'</div>');
 		}
 	}, 'json');
 }
