@@ -290,8 +290,12 @@ class uebersicht {
 					<td colspan="3"><span data-ws="BasisTest_Light" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
-					<td colspan="3">Pflanze an der Terrasse</td>
+					<td colspan="3">Pflanze auf'm Tisch</td>
 					<td colspan="3"><span data-ws="BasisTest_Moisture" class="ps-input">undefined</span></td>
+				</tr>
+				<tr>
+					<td colspan="3">Pflanze zur Terrasse</td>
+					<td colspan="3"><span data-ws="WZ_PF_TE_Moisture" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
 					<td colspan="3">Pflanze am Fenster</td>
