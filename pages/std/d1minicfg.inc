@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 03.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 599                                                     $ #
+//# Revision     : $Rev:: 614                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.inc 599 2024-04-30 05:58:15Z                   $ #
+//# File-ID      : $Id:: d1minicfg.inc 614 2024-05-18 01:53:00Z                   $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
@@ -26,6 +26,7 @@ $headline = $database->fetch();
 		<li><span class="ps-button" data-target="groups">D1 Mini Gruppen</span></li>
 		<li><span class="ps-button" data-target="searchd1mini">Neuen D1 Mini anlegen</span></li>
 		<li><span class="ps-button" data-target="editelem">D1 Mini</span></li>
+		<li><span class="ps-button" data-target="serversettings">D1 Mini Server</span></li>
 	</ul>
 	<hr />
 	<div id="d1minicfg">

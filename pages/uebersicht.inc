@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 609                                                     $ #
+//# Revision     : $Rev:: 618                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 609 2024-05-15 14:54:17Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 618 2024-05-20 14:53:51Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -38,6 +38,7 @@ class uebersicht {
 	);
 	private static $HT = array(
 		'WZ_HT3'		=> 'Wohnzimmer',
+		'WZ_PF_FE'		=> 'Pflanze am Fenster',
 		'SZ_RU'			=> 'Schlafzimmer',
 		'BU_RU'			=> 'Büro',
 		'KU_RU'			=> 'Küche',
@@ -56,6 +57,7 @@ class uebersicht {
 	);
 	private static $RSSI = array(
 		'WZ_HT3'		=> 'Wohnzimmer',
+		'WZ_PF_FE'		=> 'Pflanze am Fenster',
 		'SZ_RU'			=> 'Schlafzimmer',
 		'BU_RU'			=> 'Büro',
 		'KU_RU'			=> 'Küche',
@@ -79,6 +81,7 @@ class uebersicht {
 		'FL2_HT'		=> 'OG Flur'
 	);
 	private static $d1Minis = array(
+		'WZ_PF_FE',
 		'BA_RU',
 		'BasisTest',
 		'BU_RU',
@@ -287,8 +290,16 @@ class uebersicht {
 					<td colspan="3"><span data-ws="BasisTest_Light" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
-					<td colspan="3">Blume</td>
+					<td colspan="3">Pflanze auf'm Tisch</td>
 					<td colspan="3"><span data-ws="BasisTest_Moisture" class="ps-input">undefined</span></td>
+				</tr>
+				<tr>
+					<td colspan="3">Pflanze zur Terrasse</td>
+					<td colspan="3"><span data-ws="WZ_PF_TE_Moisture" class="ps-input">undefined</span></td>
+				</tr>
+				<tr>
+					<td colspan="3">Pflanze am Fenster</td>
+					<td colspan="3"><span data-ws="WZ_PF_FE_Moisture" class="ps-input">undefined</span></td>
 				</tr>
 				<tr><td colspan="6"><h2>Test</h2></td></tr>
 				<tr><td colspan="6"><hr /></td></tr>

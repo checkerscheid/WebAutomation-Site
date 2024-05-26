@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 04.03.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 610                                                     $ #
+//# Revision     : $Rev:: 619                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.req 610 2024-05-15 20:26:33Z                   $ #
+//# File-ID      : $Id:: d1minicfg.req 619 2024-05-26 02:22:52Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -39,15 +39,15 @@ class d1minicfg {
 		$wpDatabase = new wpDatabase();
 		$wpDatabase->query('SELECT TOP 1 [wpFreakaZoneVersion] FROM [D1Mini] ORDER BY [wpFreakaZoneVersion] DESC');
 		$erg = $wpDatabase->fetch();
-		d1minicfg::$maxFreakaZoneVersion = $erg['wpFreakaZoneVersion'];
+		self::$maxFreakaZoneVersion = $erg['wpFreakaZoneVersion'];
 		$wpDatabase->query('SELECT TOP 1 [version] FROM [D1Mini] ORDER BY [version] DESC');
 		$erg = $wpDatabase->fetch();
-		d1minicfg::$maxVersion = $erg['version'];
+		self::$maxVersion = $erg['version'];
 		$html = '
 			<h1>D1 Mini Details</h1>
 			<div class="versionContainer">
-				<span>wpFreakaZone Lib: ' . d1minicfg::$maxFreakaZoneVersion . '</span>
-				<span>BasisEmpty: ' . d1minicfg::$maxVersion . '</span>
+				<span>wpFreakaZone Lib: ' . self::$maxFreakaZoneVersion . '</span>
+				<span>BasisEmpty: ' . self::$maxVersion . '</span>
 			</div>
 			<hr />
 			<ul id="trend">';
@@ -60,7 +60,81 @@ class d1minicfg {
 		$html .= '
 				<li class="ps-tree-parent d1minigroupfolder" data-d1minigroup="NULL">D1 Minis ohne Gruppe</li>
 				<li data-d1minis="NULL"></li>
+				<li class="ps-tree-parent d1minigroupfolder" data-d1minigroup="All">Alle D1 Minis</li>
+				<li data-d1minis="All"></li>
 			</ul>';
+		echo $html;
+	}
+	const c_menuserversettings = 'menuserversettings';
+	public static function menuserversettings() {
+		$WebCom = new WebCom();
+		$erg = $WebCom->send("GetD1MiniServer");
+		$s = \json_decode($erg);
+		$OnlineTogglerSendIntervall = 'ERROR';
+		$OnlineTogglerWait = 'ERROR';
+		if(\json_last_error() == JSON_ERROR_NONE) {
+			$OnlineTogglerSendIntervall = $s->OnlineTogglerSendIntervall;
+			$OnlineTogglerWait = $s->OnlineTogglerWait;
+		}
+		$compiledWith = array(
+			'DHT11', 'DHT22',
+			'wpLDR', 'wpLight',
+			'wpBM',
+			'wpRain', 'wpMoisture',
+			'wpDistance'
+		);
+		$html = '
+			<h1>D1 Mini Server</h1>
+			<div class="settingsContainer">
+				<table summary="">
+					<tbody>
+						<tr>
+							<td>
+								<label for="OnlineTogglerSendIntervall">OnlineTogglerSendIntervall</label>
+							</td>
+							<td>
+								<input id="OnlineTogglerSendIntervall" class="ps-input" type="text" value="' . $OnlineTogglerSendIntervall . '" />
+							</td>
+							<td>
+								<span class="ps-button OnlineTogglerSendIntervall">save</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label for="OnlineTogglerWait">OnlineTogglerWait</label>
+							</td>
+							<td>
+								<input id="OnlineTogglerWait" class="ps-input" type="text" value="' . $OnlineTogglerWait . '" />
+							</td>
+							<td>
+								<span class="ps-button OnlineTogglerWait">save</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<h1>D1 Mini Settings</h1>
+			<div class="settingsContainer">
+				<table summary="">
+					<tbody>';
+		foreach($compiledWith as $plugin) {
+			$html .= '
+						<tr>
+							<td>
+								<label for="setAll' . $plugin . 'Cycle">setAll' . $plugin . 'Cycle</label>
+							</td>
+							<td>
+								<input id="setAll' . $plugin . 'Cycle" class="ps-input" type="text" placeholder="setAll' . $plugin . 'Cycle" />
+							</td>
+							<td>
+								<span class="ps-button setAllCycle" data-plugin="' . $plugin . '">save</span>
+							</td>
+						</tr>';
+		}
+		$html .= '
+					</tbody>
+				</table>
+			</div>';
 		echo $html;
 	}
 	const c_startFreakaZoneSearch = 'startFreakaZoneSearch';
@@ -74,7 +148,7 @@ class d1minicfg {
 		header(wpJSON_HEADER);
 		echo '{"msg":"';
 		$d1m = new d1mini(std::posts('IP'));
-		$newID = $d1m->insertDevice(std::posts('id_d1minigroup'), std::posts('id_mqttgroup'), std::posts('id_dpgroup'), std::posts('id_trendgroup'));
+		$newID = $d1m->insertDevice(std::posts('id_d1minigroup'), std::posts('id_mqttgroup'), std::posts('id_dpgroup'), std::posts('id_trendgroup'), std::posts('id_alarmgroup'));
 		if($newID > 0) {
 			$WebCom = new WebCom();
 			echo '","erg":"';
@@ -102,12 +176,17 @@ class d1minicfg {
 		$wpDatabase->query('SELECT TOP 1 [version] FROM [D1Mini] ORDER BY [version] DESC');
 		$erg = $wpDatabase->fetch();
 		d1minicfg::$maxVersion = $erg['version'];
-		$wpDatabase->query("
+		$sql = "
 			SELECT
 				[id_d1mini], [name], [description], [ip], [mac], [wpFreakaZoneVersion], [version], [active]
-			FROM [d1mini]
-			WHERE [id_d1minigroup] ".(std::posts('d1minigroup') == 'NULL' ? 'IS NULL' : ' = '.std::posts('d1minigroup'))."
-			ORDER BY [name]");
+			FROM [d1mini]";
+		if(std::posts('d1minigroup') != 'All') {
+			$sql .= "
+			WHERE [id_d1minigroup] " . (std::posts('d1minigroup') == 'NULL' ? 'IS NULL' : ' = '.std::posts('d1minigroup'));
+		}
+		$sql .= "
+			ORDER BY [name]";
+		$wpDatabase->query($sql);
 		$html = '
 <ul class="d1miniingroup" data-group="'.std::posts('d1minigroup').'">
 	<li><hr /></li>
@@ -146,8 +225,6 @@ class d1minicfg {
 					<th>UpdateMode</th>
 					<th>aktiv</th>
 					<th>compiledWith</th>
-					<th></th>
-					<th></th>
 					<th></th>
 				</tr>
 			</thead>
@@ -253,6 +330,13 @@ class d1minicfg {
 							<span class="ps-hover-noborder ps-image-button ps-refresh restartdevice" title="neu starten"></span>
 						</div>
 					</td>
+				</tr>
+				<tr class="D1MiniDeviceJson" data-json="' . $erg['name'] . '">
+					<td class="buttonbox"></td>
+					<td colspan="10" class="json">
+						<pre></pre>
+					</td>
+					<td class="buttonbox"></td>
 				</tr>';
 		}
 		$html .= '
@@ -265,40 +349,7 @@ class d1minicfg {
 	const c_getalld1minisettings = 'getalld1minisettings';
 	public static function getalld1minisettings() {
 		header('Content-Type: application/json');
-		$sql = "SELECT [id_d1mini], [ip] FROM [d1mini] WHERE [id_d1minigroup] = " . std::posts('d1minigroup');
-		$wpDatabase = new wpDatabase();
-		$wpDatabase->query($sql);
-		$returns = "{";
-		$dividor = '';
-		while($erg = $wpDatabase->fetch()) {
-			$WebCom = new WebCom();
-			$d1miniText = $WebCom->send('getD1MiniStatus', $erg['ip']);
-			$jsontext = \json_decode($d1miniText);
-			if(isset($jsontext->FreakaZoneDevice)) {
-				$wpFZ = $jsontext->FreakaZoneDevice;
-				//std::test_array($wpFZ);
-				$compiledWith = array();
-				foreach($wpFZ->Debug as $module => $active) {
-					$compiledWith[] = $module;
-					$active; // need only key
-				}
-				$returns .= $dividor .
-					'"' . $wpFZ->DeviceName . '":{' .
-					'"DeviceName":"' . $wpFZ->DeviceName . '",' .
-					'"DeviceDescription":"' . $wpFZ->DeviceDescription . '",' .
-					(isset($wpFZ->wpFreakaZoneVersion) ? '"wpFreakaZoneVersion":"' . $wpFZ->wpFreakaZoneVersion . '",' : '') .
-					'"Version":"' . $wpFZ->Version . '",' .
-					'"Ip":"' . $erg['ip'] . '",' .
-					'"Mac":"' . $wpFZ->MAC . '",' .
-					//'"Ssid":"' . $wpFZ->DeviceName . '",' .
-					'"UpdateMode":' . ($wpFZ->UpdateMode ? 'true' : 'false') . ',' .
-					'"compiledWith":"' . implode(', ', $compiledWith) . '"'.
-					'}';
-				$dividor = ',';
-			}
-		}
-		$returns .= '}';
-		echo $returns;
+		echo self::getD1MiniSettings(std::posts('d1minigroup'));
 	}
 	const c_getregisteredd1minis = 'getregisteredd1minis';
 	public static function getregisteredd1minis() {
@@ -352,8 +403,73 @@ class d1minicfg {
 		$WebCom = new WebCom();
 		echo $WebCom->send('DeleteD1Mini', substr($fortcp, 0, -3));
 	}
+	const c_getServerSettings = 'getServerSettings';
+	public static function getServerSettings() {
+		header(wpJSON_HEADER);
+		$WebCom = new WebCom();
+		echo $WebCom->send("GetD1MiniServer");
+	}
+	const c_setServerSetting = 'setServerSetting';
+	public static function setServerSetting() {
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniServer', std::posts('key') . '%~%' . std::posts('val'));
+	}
+	const c_setAllCycle = 'setAllCycle';
+	public static function setAllCycle() {
+		$erg = self::getD1MiniSettings();
+		$D1Minis = \json_decode($erg);
+		$key = (std::posts('key') == 'DHT11' || std::posts('key') == 'DHT22') ? 'HT' : std::posts('key');
+		//$WebCom = new WebCom();
+		foreach($D1Minis as $name => $D1Mini) {
+			if(isset($D1Mini->compiledWith) && str_contains($D1Mini->compiledWith, $key)) {
+				echo 'publishTopic: ' . $name . '/settings/' . $key . '/maxCycle%~%' . std::posts('val');
+				//$WebCom->send('publishTopic', $name . '/settings/' . $key . '/maxCycle%~%' . std::posts('val'));
+			}
+		}
+	}
 	private static function getSelect($val, $name) {
 		return "<option value='$val'>$name</option>";
+	}
+	private static function getD1MiniSettings($selectAll = 'All') {
+		$sql = "SELECT [id_d1mini], [ip] FROM [d1mini]";
+		if($selectAll != 'All') $sql .= " WHERE [id_d1minigroup] = " . $selectAll;
+		$wpDatabase = new wpDatabase();
+		$wpDatabase->query($sql);
+		$returns = "{";
+		$dividor = '';
+		while($erg = $wpDatabase->fetch()) {
+			$WebCom = new WebCom();
+			$d1miniText = $WebCom->send('getD1MiniStatus', $erg['ip']);
+			$jsontext = \json_decode($d1miniText);
+			if(isset($jsontext->FreakaZoneDevice)) {
+				$wpFZ = $jsontext->FreakaZoneDevice;
+				//std::test_array($wpFZ);
+				$compiledWith = array();
+				$compiledWithExclude = array('EEPROM', 'WiFi', 'MQTT', 'Search', 'Rest');
+				foreach($wpFZ->Debug as $module => $active) {
+					if(!\in_array($module, $compiledWithExclude)) {
+						$compiledWith[] = $module;
+					}
+					$active; // need only key
+				}
+				$returns .= $dividor .
+				'"' . $wpFZ->DeviceName . '":{' .
+				'"DeviceName":"' . $wpFZ->DeviceName . '",' .
+				'"DeviceDescription":"' . $wpFZ->DeviceDescription . '",' .
+				(isset($wpFZ->wpFreakaZoneVersion) ? '"wpFreakaZoneVersion":"' . $wpFZ->wpFreakaZoneVersion . '",' : '') .
+				'"Version":"' . $wpFZ->Version . '",' .
+				'"Ip":"' . $erg['ip'] . '",' .
+				'"Mac":"' . $wpFZ->MAC . '",' .
+				//'"Ssid":"' . $wpFZ->DeviceName . '",' .
+				'"UpdateMode":' . ($wpFZ->UpdateMode ? 'true' : 'false') . ',' .
+				'"compiledWith":"' . implode(', ', $compiledWith) . '",'.
+				'"D1MiniText":' . $d1miniText .
+				'}';
+				$dividor = ',';
+			}
+		}
+		$returns .= '}';
+		return $returns;
 	}
 }
 
@@ -365,6 +481,10 @@ switch(std::gets('param1')) {
 		//###################################################################################
 	case d1minicfg::c_menueditelem:
 		d1minicfg::menueditelem();
+		break;
+		//###################################################################################
+	case d1minicfg::c_menuserversettings:
+		d1minicfg::menuserversettings();
 		break;
 		//###################################################################################
 	case d1minicfg::c_startFreakaZoneSearch:
@@ -409,6 +529,18 @@ switch(std::gets('param1')) {
 		//###################################################################################
 	case d1minicfg::c_allDelete:
 		d1minicfg::allDelete();
+		break;
+		//###################################################################################
+	case d1minicfg::c_getServerSettings:
+		d1minicfg::getServerSettings();
+		break;
+		//###################################################################################
+	case d1minicfg::c_setServerSetting:
+		d1minicfg::setServerSetting();
+		break;
+		//###################################################################################
+	case d1minicfg::c_setAllCycle:
+		d1minicfg::setAllCycle();
 		break;
 		//###################################################################################
 	default:

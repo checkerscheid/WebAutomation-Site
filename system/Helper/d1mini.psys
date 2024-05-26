@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 26.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 610                                                     $ #
+//# Revision     : $Rev:: 619                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.psys 610 2024-05-15 20:26:33Z                     $ #
+//# File-ID      : $Id:: d1mini.psys 619 2024-05-26 02:22:52Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -107,7 +107,7 @@ class d1mini {
 	private function setRest() {
 		$id_mqtttopic = $this->insertTopic('ERROR/Rest');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'ERROR_Rest', 'Rest Error', '0:Ok;1:Error;');
-		$this->mergeAlarm($id_dp, 'ERROR_Rest', 'Rest Error');
+		$this->mergeAlarm($id_dp, 'ERROR_Rest', 'Rest Error', 3);
 		echo "saved: 'Rest Error' ";
 	}
 	private function setHT() {
@@ -174,6 +174,9 @@ class d1mini {
 		$id_dp = $this->mergeDP($id_mqtttopic, 'Moisture', 'Moisture', '%', 0);
 		$this->mergeTrend($id_dp, 'Moisture');
 		echo "saved: 'Moisture' ";
+		$id_mqtttopic_errmin = $this->insertTopic('ERROR/MoistureMin');
+		$id_dp_errmin = $this->mergeDP($id_mqtttopic_errmin, 'ERROR_MoistureMin', 'Blume zu trocken', '0:Ok;1:zu trocken;');
+		$this->mergeAlarm($id_dp_errmin, 'ERROR_MoistureMin', 'Blume zu trocken');
 		$id_mqtttopic_err = $this->insertTopic('ERROR/Moisture');
 		$id_dp_err = $this->mergeDP($id_mqtttopic_err, 'ERROR_Moisture', 'Blume Error', '0:Ok;1:Error;');
 		$this->mergeAlarm($id_dp_err, 'ERROR_Moisture', 'Blume Error');

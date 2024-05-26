@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 03.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 610                                                     $ #
+//# Revision     : $Rev:: 619                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.js 610 2024-05-15 20:26:33Z                    $ #
+//# File-ID      : $Id:: d1minicfg.js 619 2024-05-26 02:22:52Z                    $ #
 //#                                                                                 #
 //###################################################################################
 ?> d1minicfg */
@@ -54,13 +54,18 @@ p.page.load = function() {
 		}
 	});
 //###################################################################################
-		// Markierungen
-		$('#erg').on('click', '.markall', function() {
-			$('#erg .ps-checkbox:not(.ps-disabled)').addClass('checked');
-		});
-		$('#erg').on('click', '.markno', function() {
-			$('#erg .ps-checkbox:not(.ps-disabled)').removeClass('checked');
-		});
+	// Markierungen
+	$('#erg').on('click', '.markall', function() {
+		$('#erg .ps-checkbox:not(.ps-disabled)').addClass('checked');
+	});
+	$('#erg').on('click', '.markno', function() {
+		$('#erg .ps-checkbox:not(.ps-disabled)').removeClass('checked');
+	});
+//###################################################################################
+	$('#erg').on('click', '[data-column="name"] .stored', function() {
+		var name = $(this).text();
+		$('[data-json="' + name + '"]').find('.showJson').toggleClass('closed');
+	});
 //###################################################################################
 	$('#d1minicfg').on('click', '.searchResult .d1MiniAdd', function() {
 		var myData = $('.searchResult').data('foundNew')[$(this).attr('data-key')]['Iam'];
@@ -74,6 +79,7 @@ p.page.load = function() {
 						myData['id_mqttgroup'] = $('#dialog .id_mqttgroup').val();
 						myData['id_dpgroup'] = $('#dialog .id_dpgroup').val();
 						myData['id_trendgroup'] = $('#dialog .id_trendgroup').val();
+						myData['id_alarmgroup'] = $('#dialog .id_alarmgroup').val();
 						$.post('std.d1minicfg.saveSearchedDevice.req', myData, function(data) {
 							console.log(data);
 							if(data.erg == 'S_OK') {
@@ -289,9 +295,45 @@ p.page.load = function() {
 		}
 	});
 //###################################################################################
+	$('#erg').on('click', '.OnlineTogglerSendIntervall', function() {
+		var newVal = $('#OnlineTogglerSendIntervall').val();
+		$.post('std.d1minicfg.setServerSetting.req', {key:'OnlineTogglerSendIntervall', val:newVal}, function(data) {
+			if(data.erg != 'S_OK') {
+				p.page.alertred(data.msg, 5000);
+				D1MiniServerRenew();
+			}
+		}, 'json');
+	});
+//###################################################################################
+	$('#erg').on('click', '.OnlineTogglerWait', function() {
+		var newVal = $('#OnlineTogglerWait').val();
+		$.post('std.d1minicfg.setServerSetting.req', {key:'OnlineTogglerWait', val:newVal}, function(data) {
+			if(data.erg != 'S_OK') {
+				p.page.alertred(data.msg, 5000);
+				D1MiniServerRenew();
+			}
+		}, 'json');
+	});
+//###################################################################################
+	$('#erg').on('click', '.setAllCycle', function() {
+		var plugin = $(this).attr('data-plugin');
+		var current = 'setAll' + plugin + 'Cycle';
+		var newVal = $('#' + current).val();
+		$.post('std.d1minicfg.setAllCycle.req', {key:plugin, val:newVal}, function(data) {
+			if(data.erg != 'S_OK') {
+				p.page.alertred(data.msg, 5000);
+			}
+		}, 'json');
+	});
+//###################################################################################
 	//p.getValues();
 };
-
+function D1MiniServerRenew() {
+	$.get('std.d1minicfg.getServerSettings.req', function(renewVal) {
+		$('#OnlineTogglerSendIntervall').val(renewVal.OnlineTogglerSendIntervall);
+		$('#OnlineTogglerWait').val(renewVal.OnlineTogglerWait);
+	}, 'json');
+}
 function D1MiniRenew(d1minigroup) {
 	$.post('std.d1minicfg.getalld1minisettings.req', {d1minigroup:d1minigroup},  function(data) {
 		for (const [key, value] of Object.entries(data)) {
@@ -307,6 +349,12 @@ function D1MiniRenew(d1minigroup) {
 			var updateMode = value.UpdateMode ? '<span class="ps-fontyellow">aktiv</span>' : '<span class="ps-fontgreen">deaktiviert</span>';
 			setTextIfNotStored(key, 'updatemode', updateMode);
 			setTextIfNotStored(key, 'compiledWith', value.compiledWith);
+			var td = $(`tr[data-json=${key}] td.json`);
+			$(td).html('<div class="showJsonContainer">' +
+				'<div>' +
+					'<pre class="showJson closed">' + JSON.stringify(value.D1MiniText, null, '\t') + '</pre>' +
+				'</div>' +
+			'</div>');
 		}
 	}, 'json');
 }
