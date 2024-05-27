@@ -554,7 +554,7 @@ table.dataTable thead th.noborder { border:none; }
 .aktusername { float:left; margin:20px 0 0 20px; line-height:21px; font-size:14px;
 	font-weight:bold; }
 .aktusername a { line-height:21px; font-size:14px; font-weight:bold; }
-.aktusername .AutologoffTime { font-size:10px; padding-left:5px; }
+.aktusername .Autologoff * { font-size:10px; padding-left:5px; }
 
 .LED_aus { width:21px; height:21px;
 	background:transparent url(images/layout/LED_aus.png) no-repeat; }

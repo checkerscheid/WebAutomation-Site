@@ -196,7 +196,11 @@ if(security::checkGroup(security::entwickler)) {
 							echo '</a>';
 						}
 						if(security::checkGroup(security::benutzer)) {
-							echo '<span class="AutologoffTime">'.wpHTML_EMPTY.'</span>';
+							echo '
+<span class="Autologoff">
+	<span class="ps-sm-hide"><span class="ps-md-hide">automatisches </span>Abmelden in </span>
+	<span class="AutologoffTime">'.wpHTML_EMPTY.'</span>
+</span>';
 						}
 ?>
 					</span>
@@ -276,7 +280,6 @@ if(security::checkGroup(security::entwickler)) {
 					<?=(($system->useAlarmGroup1()) ? '<th>'.$system->nameAlarmGroup1().'</th>' : '')?>
 					<th>Gruppe</th>
 					<th>Beschreibung</th>
-					<th>Text</th>
 					<th>Typ</th>
 					<th>Datenpunkt</th>
 					<th>AlarmID</th>

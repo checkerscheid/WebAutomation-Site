@@ -106,23 +106,17 @@ switch(std::gets('param1')) {
 						echo 'data-idgroup'.$i.'="X"';
 					}
 				echo '>'.$erg['name'].'</li>';
-
 				echo '<li><ul data-actualgroupalarms="'.$actualgroup.'" data-alarms="';
-
 				for($i = 5; $i>$actualgroup; $i--){
 					echo 'X';
 				}
-
 				echo $erg['id'];
-
 				for($i = $actualgroup-1; $i>=0; $i--){
 					echo 'X';
 				}
-
 				echo '"></ul></li>';
 				//echo '<li><ul data-alarms="'.$topGroup.'"></ul></li>';
 			}
-
 			$database->query('SELECT DISTINCT [id_alarm] AS [id] FROM [alarm] WHERE [id_alarmgroups'.$actualgroup.'] IS NULL AND [id_alarmgroup] IS NOT NULL');
 			if($erg = $database->fetch()) {
 				echo '<li class="ps-tree-parent" data-actualgroup="'.$actualgroup.'" data-idgroup'.$actualgroup.'="NULL" ';
@@ -133,19 +127,14 @@ switch(std::gets('param1')) {
 					echo 'data-idgroup'.$i.'="X"';
 				}
 				echo '>"'.$groupnames[$actualgroup].'" nicht angegeben</li>';
-
 				echo '<li><ul data-actualgroupalarms="'.$actualgroup.'" data-alarms="';
-
 				for($i = 5; $i>$actualgroup; $i--){
 					echo 'X';
 				}
-
 				echo 'NULL';
-
 				for($i = $actualgroup-1; $i>=0; $i--){
 					echo 'X';
 				}
-
 				echo '"></ul></li>';
 				//echo '<li><ul data-alarms="'.$topGroup.'"></ul></li>';
 			}
@@ -156,15 +145,12 @@ switch(std::gets('param1')) {
 				echo '<li><ul class="alarmsingroup" data-actualgroupalarms="'.$actualgroup.'" data-alarms="XXXXX'.$erg['id'].'"></ul></li>';
 			}
 		}
-
 		echo '<li class="ps-tree-parent" data-actualgroup="'.$actualgroup.'" data-idgroup5="NULL" data-idgroup4="NULL" data-idgroup3="NULL" data-idgroup2="NULL" data-idgroup1="NULL" data-idgroup0="NULL">inaktive Alarme</li>';
 		echo '<li><ul class="alarmsingroup" data-idgroup0="NULL" data-actualgroupalarms="'.$actualgroup.'" data-alarms="NULL"></ul></li>';
-
 		break;
 //###################################################################################
 	case alarmcfg::c_filter:
 		$database = new wpDatabase();
-
 		$sql =	"SELECT DISTINCT
 				[dp].[name], [t].[name] AS [type], [a].[id_alarm], [a].[text],
 				[g0].[name] AS [groups0], [g1].[name] AS [groups1], [g2].[name] AS [groups2], [g3].[name] AS [groups3],
@@ -180,7 +166,6 @@ switch(std::gets('param1')) {
 				LEFT OUTER JOIN [alarmgroups4] AS [g4] ON [g4].[id_alarmgroups4] = [a].[id_alarmgroups4]
 				LEFT OUTER JOIN [alarmgroups5] AS [g5] ON [g5].[id_alarmgroups5] = [a].[id_alarmgroups5]
 				WHERE [dp].[name] LIKE '%".std::posts('filtertext')."%'";
-
 		if($system->useAlarmGroup5()){
 			$sql .= " OR [g5].[name] LIKE '%".std::posts('filtertext')."%'";
 		}
@@ -196,18 +181,15 @@ switch(std::gets('param1')) {
 		if($system->useAlarmGroup1()){
 			$sql .= " OR [g1].[name] LIKE '%".std::posts('filtertext')."%'";
 		}
-
 		$sql .= " OR [g0].[name] LIKE '%".std::posts('filtertext')."%'";
 		$sql .= " OR [c].[description] LIKE '%".std::posts('filtertext')."%'";
 		$sql .= " OR [t].[name] LIKE '%".std::posts('filtertext')."%'";
 		$sql .= " OR [a].[text] LIKE '%".std::posts('filtertext')."%'";
-
 		$hasAlarms = FALSE;
 		$database->query($sql);
 		if($database->fetch()){
 			$hasAlarms = TRUE;
 		}
-
 		if($hasAlarms == TRUE){
 			echo '<ul id="alarms" class="alarmsingroup"><li>
 			<div class="table">
@@ -221,10 +203,8 @@ switch(std::gets('param1')) {
 				<div class="tr">
 					<div class="td"><span>markierte:</span></div>
 					<div class="td">';
-
 			echo '<span class="ps-button alltype" title="Alarmtyp ändern">Alarmtyp</span>';
 			echo '<span class="ps-button alllink" title="Link ändern">Link</span>';
-
 		if($system->useAlarmGroup5()){
 			echo '<span class="ps-button allgroup5" title="'.$system->nameAlarmGroup5().' ändern">'.$system->nameAlarmGroup5().'</span>';
 		}
@@ -240,16 +220,13 @@ switch(std::gets('param1')) {
 		if($system->useAlarmGroup1()){
 			echo '<span class="ps-button allgroup1" title="'.$system->nameAlarmGroup1().' ändern">'.$system->nameAlarmGroup1().'</span>';
 		}
-
 		echo '<span class="ps-button allgroup" title="in Gruppe verschieben">Gruppe</span>';
 		echo '<span class="ps-button allcondition" title="Bedingung ändern">Bedingung</span>';
-
 		echo '
 						<span class="ps-button alldelete">l&ouml;schen</span>
 					</div>
 				</div>
 			</div>';
-
 			echo '
 		<hr />
 			<div class="table">
@@ -269,9 +246,7 @@ switch(std::gets('param1')) {
 					<div class="th">Verz&ouml;gerung</div>
 					<div class="th"></div>
 				</div>';
-
 			$database->query($sql);
-
 			while($erg = $database->fetch()) {
 				echo '<div class="tr" data-name="'.$erg['name'].'" data-id="'.$erg['id_alarm'].'">';
 				echo '<div class="td"><span class="ps-checkbox">'.$erg['name'].'</span></div>';
@@ -293,21 +268,17 @@ switch(std::gets('param1')) {
 									echo '<div class="td"><span class="tr-min">'.$erg['min'].'</div>';
 									echo '<div class="td"><span class="tr-max">'.$erg['max'].'</div>';
 									echo '<div class="td"><span class="tr-delay">'.$erg['delay'].' sek</div>';
-
 									echo '<div class="td">';
 									echo '<div class="td">
 											<span class="ps-button alarmedit">bearbeiten</span>
 											<span class="ps-button alarmdelete">l&ouml;schen</span>
 										</div>';
-
 									echo '</div></div>';
 			}
 		} else {
 			echo 'Es wurden keine aktiven Alarme für "'.std::posts('filtertext').'" gefunden.';
 		}
-
 		echo '</div></li></ul>';
-
 		break;
 //###################################################################################
 	case alarmcfg::c_menunewalarms:
@@ -396,32 +367,26 @@ switch(std::gets('param1')) {
 		} else {
 			getAlarms('NULL', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL');
 		}
-
 		break;
 //###################################################################################
 	default:
 		//\system\html::default();
 		break;
 }
-
 function getInnerGroups($actualgroup, $idgroup5, $idgroup4, $idgroup3, $idgroup2, $idgroup1, $idgroup0){
-
 	global $system;
-
 	$usegroup = array();
 	$usegroup[5] = $system->useAlarmGroup5();
 	$usegroup[4] = $system->useAlarmGroup4();
 	$usegroup[3] = $system->useAlarmGroup3();
 	$usegroup[2] = $system->useAlarmGroup2();
 	$usegroup[1] = $system->useAlarmGroup1();
-
 	$groupnames = array();
 	$groupnames[5] = $system->nameAlarmGroup5();
 	$groupnames[4] = $system->nameAlarmGroup4();
 	$groupnames[3] = $system->nameAlarmGroup3();
 	$groupnames[2] = $system->nameAlarmGroup2();
 	$groupnames[1] = $system->nameAlarmGroup1();
-
 	$idgroup = array();
 	$idgroup[5] = $idgroup5;
 	$idgroup[4] = $idgroup4;
@@ -429,24 +394,22 @@ function getInnerGroups($actualgroup, $idgroup5, $idgroup4, $idgroup3, $idgroup2
 	$idgroup[2] = $idgroup2;
 	$idgroup[1] = $idgroup1;
 	$idgroup[0] = $idgroup0;
-
 	$database = new wpDatabase();
-
 	while($actualgroup != 1 && !$usegroup[$actualgroup-1]){
 		$actualgroup--;
 	}
-
 	//TODO: Im Moment darf keine Gruppe zwischendrin fehlen
-
 	if($actualgroup != 1){
-		$sql = 'SELECT DISTINCT [a].[id_alarmgroups'.($actualgroup-1).'] AS [id], [ag].[name] FROM [alarm] [a] INNER JOIN [alarmgroups'.($actualgroup-1).'] [ag] ON [ag].[id_alarmgroups'.($actualgroup-1).'] = [a].[id_alarmgroups'.($actualgroup-1).']';
-		$sql2 = 'SELECT [id_alarm] FROM [alarm]';
+		$sql = '
+SELECT DISTINCT
+	[a].[id_alarmgroups'.($actualgroup-1).'] AS [id], [ag].[name]
+FROM [alarm] [a]
+INNER JOIN [alarmgroups'.($actualgroup-1).'] [ag] ON [ag].[id_alarmgroups'.($actualgroup-1).'] = [a].[id_alarmgroups'.($actualgroup-1).']';
+		$sql2 = 'SELECT [id_alarm], [text] FROM [alarm]';
 	} else {
 		$sql = 'SELECT DISTINCT [a].[id_alarmgroup] AS [id], [ag].[name] FROM [alarm] [a] INNER JOIN [alarmgroup] [ag] ON [ag].[id_alarmgroup] = [a].[id_alarmgroup]';
 	}
-
 	$sqlWhere = ' WHERE';
-
 	$hasWhere = FALSE;
 	for($i = 5; $i>$actualgroup-1; $i--){
 		if($usegroup[$i]){
@@ -461,101 +424,74 @@ function getInnerGroups($actualgroup, $idgroup5, $idgroup4, $idgroup3, $idgroup2
 			$hasWhere = TRUE;
 		}
 	}
-
 	if($hasWhere){
-		$sql .= $sqlWhere .' ORDER BY [name]';
+		$sql .= $sqlWhere .' ORDER BY [ag].[name]';
 	} else {
-		$sql .= ' ORDER BY [name]';
+		$sql .= ' ORDER BY [ag].[name]';
 	}
-
 	$database->query($sql);
 	while($erg = $database->fetch()) {
 		echo '<li class="ps-tree-parent" data-actualgroup="'.($actualgroup-1).'"';
-
 		for($i = 5; $i>$actualgroup-1; $i--){
 			echo 'data-idgroup'.$i.'="'.$idgroup[$i].'"';
 		}
-
 		echo 'data-idgroup'.($actualgroup-1).'="'.$erg['id'].'"';
-
 		for($i = $actualgroup-1; $i>=0; $i--){
 			echo 'data-idgroup'.$i.'="X"';
 		}
 		echo '>'.$erg['name'].'</li>';
-
 		if($actualgroup != 1){
 			echo '<li><ul data-actualgroupalarms="'.($actualgroup-1).'" data-alarms="';
 		} else {
 			echo '<li><ul class="alarmsingroup"';
-
 			for($i = 5; $i>$actualgroup-1; $i--){
 				echo ' data-idgroup'.$i.'="'.$idgroup[$i].'"';
 			}
-
 			echo ' data-idgroup'.($actualgroup-1).'="'.$erg['id'].'"';
-
 			echo ' data-actualgroupalarms="'.($actualgroup-1).'" data-alarms="';
 		}
-
 		for($i = 5; $i>$actualgroup-1; $i--){
 			echo $idgroup[$i];
 		}
-
 		echo $erg['id'];
-
 		for($i = $actualgroup-2; $i>=0; $i--){
 			echo 'X';
 		}
-
 		echo '"></ul></li>';
 	}
-
 	if($actualgroup != 1){
-		$sql2 .= $sqlWhere . ' AND [id_alarmgroups'.($actualgroup-1).'] IS NULL AND [id_alarmgroup] IS NOT NULL ORDER BY [name]';
-
+		$sql2 .= $sqlWhere . ' AND [id_alarmgroups'.($actualgroup-1).'] IS NULL AND [id_alarmgroup] IS NOT NULL ORDER BY [text]';
 		$database->query($sql2);
 		if($erg = $database->fetch()) {
 			echo '<li class="ps-tree-parent" data-actualgroup="'.($actualgroup-1).'"';
-
 			for($i = 5; $i>$actualgroup-1; $i--){
 				echo 'data-idgroup'.$i.'="'.$idgroup[$i].'"';
 			}
-
 			echo 'data-idgroup'.($actualgroup-1).'="NULL"';
-
 			for($i = $actualgroup-1; $i>=0; $i--){
 				echo 'data-idgroup'.$i.'="X"';
 			}
-
 			echo '>"'.$groupnames[$actualgroup-1].'" nicht angegeben</li>';
-
 			echo '<li><ul data-actualgroupalarms="'.($actualgroup-1).'" data-alarms="';
-
 			for($i = 5; $i>$actualgroup-1; $i--){
 				echo $idgroup[$i];
 			}
-
 			echo 'NULL';
-
 			for($i = $actualgroup-2; $i>=0; $i--){
 				echo 'X';
 			}
-
 			echo '"></ul></li>';
 		}
 	}
 }
 function getAlarms($idgroup5, $idgroup4, $idgroup3, $idgroup2, $idgroup1, $idgroup0){
-
 	global $system;
 	$database = new wpDatabase();
-
 	if($idgroup0 == 'NULL'){
 		$emptyCheck = 'SELECT [id_alarm] FROM [alarm] WHERE [id_alarmgroup] IS NULL';
 	} else {
 		$emptyCheck = 'SELECT [id_alarm] FROM [alarm] WHERE';
 		$sqlWhere = '';
-
 		if($system->useAlarmGroup5()){
 			if($idgroup5 != 'NULL'){
 				$sqlWhere .= ' [id_alarmgroups5] = '.$idgroup5;
@@ -563,7 +499,6 @@ function getAlarms($idgroup5, $idgroup4, $idgroup3, $idgroup2, $idgroup1, $idgro
 				$sqlWhere .= ' [id_alarmgroups5] IS NULL';
 			}
 		}
-
 		if($system->useAlarmGroup4()){
 			if($sqlWhere != ''){
 				$sqlWhere .= ' AND';
@@ -574,7 +509,6 @@ function getAlarms($idgroup5, $idgroup4, $idgroup3, $idgroup2, $idgroup1, $idgro
 				$sqlWhere .= ' [id_alarmgroups4] IS NULL';
 			}
 		}
-
 		if($system->useAlarmGroup3()){
 			if($sqlWhere != ''){
 				$sqlWhere .= ' AND';
@@ -585,7 +519,6 @@ function getAlarms($idgroup5, $idgroup4, $idgroup3, $idgroup2, $idgroup1, $idgro
 				$sqlWhere .= ' [id_alarmgroups3] IS NULL';
 			}
 		}
-
 		if($system->useAlarmGroup2()){
 			if($sqlWhere != ''){
 				$sqlWhere .= ' AND';
@@ -596,7 +529,6 @@ function getAlarms($idgroup5, $idgroup4, $idgroup3, $idgroup2, $idgroup1, $idgro
 				$sqlWhere .= ' [id_alarmgroups2] IS NULL';
 			}
 		}
-
 		if($system->useAlarmGroup1()){
 			if($sqlWhere != ''){
 				$sqlWhere .= ' AND';
@@ -607,23 +539,17 @@ function getAlarms($idgroup5, $idgroup4, $idgroup3, $idgroup2, $idgroup1, $idgro
 				$sqlWhere .= ' [id_alarmgroups1] IS NULL';
 			}
 		}
-
 		if($sqlWhere != ''){
 			$sqlWhere .= ' AND';
 		}
-
 		$sqlWhere .= ' [id_alarmgroup] = '.$idgroup0;
-
 		$emptyCheck .= $sqlWhere;
 	}
-
 	$database->query($emptyCheck);
-
 	$hasAlarms = FALSE;
 	while($database->fetch()){
 		$hasAlarms = TRUE;
 	}
-
 	if($hasAlarms == TRUE){
 		//<ul class="alarmsingroup" data-group="'.std::posts('group').'">
 		echo '
@@ -640,13 +566,11 @@ function getAlarms($idgroup5, $idgroup4, $idgroup3, $idgroup2, $idgroup1, $idgro
 					<div class="tr">
 						<div class="td"><span>markierte:</span></div>
 						<div class="td">';
-
 		if($idgroup0 != 'NULL') {
 			echo '<span class="ps-button alltype" title="Alarmtyp ändern">Alarmtyp</span>';
 			echo '<span class="ps-button alllink" title="Link ändern">Link</span>';
 		}
 		echo '<span class="ps-button allgroup" title="in Gruppe verschieben">Gruppe</span>';
-
 		if($system->useAlarmGroup5()){
 			echo '<span class="ps-button allgroup5" title="'.$system->nameAlarmGroup5().' ändern">'.$system->nameAlarmGroup5().'</span>';
 		}
@@ -662,11 +586,9 @@ function getAlarms($idgroup5, $idgroup4, $idgroup3, $idgroup2, $idgroup1, $idgro
 		if($system->useAlarmGroup1()){
 			echo '<span class="ps-button allgroup1" title="'.$system->nameAlarmGroup1().' ändern">'.$system->nameAlarmGroup1().'</span>';
 		}
-
 		if($idgroup0 != 'NULL') {
 			echo '<span class="ps-button allcondition" title="Bedingung ändern">Bedingung</span>';
 		}
-
 		echo'
 							<span class="ps-button alldelete">l&ouml;schen</span>
 						</div>
@@ -756,16 +678,13 @@ function getAlarms($idgroup5, $idgroup4, $idgroup3, $idgroup2, $idgroup1, $idgro
 					LEFT OUTER JOIN [alarmgroups4] AS [g4] ON [g4].[id_alarmgroups4] = [a].[id_alarmgroups4]
 					LEFT OUTER JOIN [alarmgroups5] AS [g5] ON [g5].[id_alarmgroups5] = [a].[id_alarmgroups5]
 					WHERE [a].[id_alarmgroup] = '.$idgroup0;
-
 			$groupids = array();
-
 			$groupids[5] = $idgroup5;
 			$groupids[4] = $idgroup4;
 			$groupids[3] = $idgroup3;
 			$groupids[2] = $idgroup2;
 			$groupids[1] = $idgroup1;
 			$groupids[0] = $idgroup0;
-
 			$sqlwhere = '';
 			for($i = 5; $i >= 1; $i--){
 				if($groupids[$i] != 'X'){
@@ -776,11 +695,8 @@ function getAlarms($idgroup5, $idgroup4, $idgroup3, $idgroup2, $idgroup1, $idgro
 					}
 				}
 			}
-
 			$sql .= $sqlwhere . ' ORDER BY [dp].[name]';
-
 			$database->query($sql);
-
 			while($erg = $database->fetch()) {
 				echo '<div class="tr" data-name="'.$erg['name'].'" data-id="'.$erg['id_alarm'].'">';
 				echo '<div class="td"><span class="ps-checkbox">'.$erg['name'].'</span></div>';
@@ -808,7 +724,6 @@ function getAlarms($idgroup5, $idgroup4, $idgroup3, $idgroup2, $idgroup1, $idgro
 				echo '<div class="td"><span class="tr-min">'.$erg['min'].'</div>';
 				echo '<div class="td"><span class="tr-max">'.$erg['max'].'</div>';
 				echo '<div class="td"><span class="tr-delay">'.$erg['delay'].' sek</div>';
-
 				echo '<div class="td"><span class="ps-button alarmedit">bearbeiten</span>
 						<span class="ps-button alarmdelete">l&ouml;schen</span>
 					</div>';
@@ -818,8 +733,6 @@ function getAlarms($idgroup5, $idgroup4, $idgroup3, $idgroup2, $idgroup1, $idgro
 	} else {
 		echo 'Diese Alarmgruppe ist leer';
 	}
-
 	echo '</div></li>';
 }
-
 ?>

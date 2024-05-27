@@ -213,7 +213,7 @@ class security {
 		$datetime = new \DateTime();
 		$minutes = is_Numeric($minutes) ? $minutes : 15;
 		$datetime->add(new \DateInterval('PT'.$minutes.'M'));
-		return wpConvert::getDateTimeforJS($datetime);
+		return wpConvert::getDateTimeforJSnewDate($datetime);
 	}
 	/**
 	 * setzt die Zeit des Auto Logoff

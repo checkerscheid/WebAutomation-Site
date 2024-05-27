@@ -92,6 +92,12 @@ class wpConvert {
 		}
 		return null;
 	}
+	public static function getDateTimeforJSnewDate($date) {
+		if($date instanceof \DateTime) {
+			return $date->format('Y-m-d\TH:i:s');
+		}
+		return null;
+	}
 	public static function getTimeforJS($date) {
 		if($date instanceof \DateTime) {
 			$returns = '';

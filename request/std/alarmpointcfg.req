@@ -94,7 +94,7 @@ switch(std::gets('param1')) {
 //###################################################################################
 	case alarmpointcfg::c_getonealarm:
 		$database = new wpDatabase();
-		$database->query('SELECT [name], [text], [link], [id_alarmgroup],
+		$database->query('SELECT [text], [link], [id_alarmgroup],
 				[id_alarmgroups1], [id_alarmgroups2], [id_alarmgroups3], [id_alarmgroups4], [id_alarmgroups5],
 				[id_alarmtype], [id_alarmcondition], [min], [max], [delay]
 				FROM [alarm] WHERE [id_alarm] = '.std::posts('id'));
