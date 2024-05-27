@@ -301,6 +301,10 @@ class uebersicht {
 					<td colspan="3">Pflanze am Fenster</td>
 					<td colspan="3"><span data-ws="WZ_PF_FE_Moisture" class="ps-input">undefined</span></td>
 				</tr>
+				<tr>
+					<td colspan="3">Pflanze am Fenster, 2. rechts</td>
+					<td colspan="3"><span data-ws="WZ_PF_FE_RE2_Moisture" class="ps-input">undefined</span></td>
+				</tr>
 				<tr><td colspan="6"><h2>Test</h2></td></tr>
 				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
