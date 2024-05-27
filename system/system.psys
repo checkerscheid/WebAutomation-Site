@@ -949,7 +949,7 @@ class getScript {
 		$TheArray = $answer->getArray();
 		//std::test_array($TheArray);
 		$newAlarmPriority = 0;
-		$js = '{"WatchDogByte":"'.std::arrays($TheArray, 'WatchDog').'","pDateTime":"new Date('.std::arrays($TheArray, 'DateTime').')","pDate":"'.std::arrays($TheArray, 'Date').'","pTime":"'.std::arrays($TheArray, 'Time').'","wpAlarm":[';
+		$js = '{"WatchDogByte":"'.std::arrays($TheArray, 'WatchDog').'","serverDateTime":"'.std::arrays($TheArray, 'DateTime').'","serverDate":"'.std::arrays($TheArray, 'Date').'","serverTime":"'.std::arrays($TheArray, 'Time').'","wpAlarm":[';
 		if(std::arrays($_SESSION[SESSION_ID], 'ActiveAlarms') == '') $_SESSION[SESSION_ID]['ActiveAlarms'] = array();
 		if(std::arrays($TheArray, 'Alarme') != '') {
 			if($newAlarmPriority != $AlarmPriority) {
@@ -1077,9 +1077,9 @@ class getScript {
 		$answer = new TCPencode($WebCom->send('ActiveSystem'));
 		$TheArray = $answer->getArray();
 		echo 'WatchDogByte='.std::arrays($TheArray, 'WatchDog').';';
-		echo 'pDateTime="'.std::arrays($TheArray, 'DateTime').'";';
-		echo 'pDate="'.std::arrays($TheArray, 'Date').'";';
-		echo 'pTime="'.std::arrays($TheArray, 'Time').'";';
+		echo 'serverDateTime="'.std::arrays($TheArray, 'DateTime').'";';
+		echo 'serverDate="'.std::arrays($TheArray, 'Date').'";';
+		echo 'serverTime="'.std::arrays($TheArray, 'Time').'";';
 		echo 'AlarmsCome='.std::arrays($TheArray, 'AlarmsCome').';';
 		echo 'AlarmsGone='.std::arrays($TheArray, 'AlarmsGone').';';
 		echo 'AlarmsQuit='.std::arrays($TheArray, 'AlarmsQuit').';';

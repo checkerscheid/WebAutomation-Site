@@ -49,6 +49,7 @@ switch(std::gets('param1')) {
 		break;
 //###################################################################################
 	case request::c_activealarm:
+		header(wpJSON_HEADER);
 		getScript::getActiveAlarms(std::gets('param2'));
 		break;
 //###################################################################################

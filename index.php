@@ -196,7 +196,11 @@ if(security::checkGroup(security::entwickler)) {
 							echo '</a>';
 						}
 						if(security::checkGroup(security::benutzer)) {
-							echo '<span class="AutologoffTime">'.wpHTML_EMPTY.'</span>';
+							echo '
+<span class="Autologoff">
+	<span class="ps-sm-hide"><span class="ps-md-hide">automatisches </span>Abmelden in </span>
+	<span class="AutologoffTime">'.wpHTML_EMPTY.'</span>
+</span>';
 						}
 ?>
 					</span>
