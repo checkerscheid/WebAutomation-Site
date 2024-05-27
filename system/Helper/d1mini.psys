@@ -314,11 +314,11 @@ MERGE INTO [trend] AS [TARGET]
 MERGE INTO [alarm] AS [TARGET]
 	USING (
 		VALUES (
-			$id_dp, $this->idAlarmGroup, '" . $this->name . "_" . $apname . "', '$this->description $apdesc',
+			$id_dp, $this->idAlarmGroup, '$this->description $apdesc',
 			$alarmtype, $alarmcondition, $min
 		)
 	) AS [SOURCE] (
-		[id_dp], [id_alarmgroup], [name], [text],
+		[id_dp], [id_alarmgroup], [text],
 		[id_alarmtype], [id_alarmcondition], [min]
 	) ON
 		[TARGET].[id_dp] = [SOURCE].[id_dp]
@@ -326,18 +326,17 @@ MERGE INTO [alarm] AS [TARGET]
 		UPDATE SET
 			[TARGET].[id_dp] = [SOURCE].[id_dp],
 			[TARGET].[id_alarmgroup] = [SOURCE].[id_alarmgroup],
-			[TARGET].[name] = [SOURCE].[name],
 			[TARGET].[text] = [SOURCE].[text],
 			[TARGET].[id_alarmtype] = [SOURCE].[id_alarmtype],
 			[TARGET].[id_alarmcondition] = [SOURCE].[id_alarmcondition],
 			[TARGET].[min] = [SOURCE].[min]
 	WHEN NOT MATCHED THEN
 		INSERT (
-			[id_dp], [id_alarmgroup], [name], [text],
+			[id_dp], [id_alarmgroup], [text],
 			[id_alarmtype], [id_alarmcondition], [min]
 		)
 		VALUES (
-			[SOURCE].[id_dp], [SOURCE].[id_alarmgroup], [SOURCE].[name], [SOURCE].[text],
+			[SOURCE].[id_dp], [SOURCE].[id_alarmgroup], [SOURCE].[text],
 			[SOURCE].[id_alarmtype], [SOURCE].[id_alarmcondition], [SOURCE].[min]
 		);";
 			$this->database->query($sql);
