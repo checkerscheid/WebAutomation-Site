@@ -298,8 +298,16 @@ class uebersicht {
 					<td colspan="3"><span data-ws="WZ_PF_TE_Moisture" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
-					<td colspan="3">Pflanze am Fenster</td>
+					<td colspan="3">Pflanze am Fenster in der Ecke</td>
 					<td colspan="3"><span data-ws="WZ_PF_FE_Moisture" class="ps-input">undefined</span></td>
+				</tr>
+				<tr>
+					<td colspan="3">Pflanze am Fenster, links</td>
+					<td colspan="3"><span data-ws="WZ_PF_FE_LI_Moisture" class="ps-input">undefined</span></td>
+				</tr>
+				<tr>
+					<td colspan="3">Pflanze am Fenster, 1. rechts</td>
+					<td colspan="3"><span data-ws="WZ_PF_FE_RE1_Moisture" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
 					<td colspan="3">Pflanze am Fenster, 2. rechts</td>
