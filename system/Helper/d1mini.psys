@@ -76,6 +76,9 @@ class d1mini {
 			if(isset($this->status->FreakaZoneDevice->Debug->BM)) {
 				$this->setBM();
 			}
+			if(isset($this->status->FreakaZoneDevice->Debug->Relais)) {
+				$this->setRelais();
+			}
 			if(isset($this->status->FreakaZoneDevice->Debug->Rain)) {
 				$this->setRain();
 			}
@@ -148,6 +151,11 @@ class d1mini {
 		$id_mqtttopic = $this->insertTopic('BM');
 		$this->mergeDP($id_mqtttopic, 'BM', 'Bewegung', '1:Bewegung;0:Stille;');
 		echo "saved: 'Bewegung' ";
+	}
+	private function setRelais() {
+		$id_mqtttopic = $this->insertTopic('Relais/Out');
+		$id_dp = $this->mergeDP($id_mqtttopic, 'Pumpe', 'Pumpe', '0:Aus;1:Ein;');
+		$this->mergeTrend($id_dp, 'Pumpe');
 	}
 	private function setRain() {
 		$id_mqtttopic = $this->insertTopic('Rain');
