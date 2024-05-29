@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 582                                                     $ #
+//# Revision     : $Rev:: 620                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: request.req 582 2024-04-10 06:45:45Z                     $ #
+//# File-ID      : $Id:: request.req 620 2024-05-29 01:27:42Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -49,6 +49,7 @@ switch(std::gets('param1')) {
 		break;
 //###################################################################################
 	case request::c_activealarm:
+		header(wpJSON_HEADER);
 		getScript::getActiveAlarms(std::gets('param2'));
 		break;
 //###################################################################################

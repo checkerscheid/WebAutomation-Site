@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 609                                                     $ #
+//# Revision     : $Rev:: 620                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: alarmpointcfg.req 609 2024-05-15 14:54:17Z               $ #
+//# File-ID      : $Id:: alarmpointcfg.req 620 2024-05-29 01:27:42Z               $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -94,7 +94,7 @@ switch(std::gets('param1')) {
 //###################################################################################
 	case alarmpointcfg::c_getonealarm:
 		$database = new wpDatabase();
-		$database->query('SELECT [name], [text], [link], [id_alarmgroup],
+		$database->query('SELECT [text], [link], [id_alarmgroup],
 				[id_alarmgroups1], [id_alarmgroups2], [id_alarmgroups3], [id_alarmgroups4], [id_alarmgroups5],
 				[id_alarmtype], [id_alarmcondition], [min], [max], [delay]
 				FROM [alarm] WHERE [id_alarm] = '.std::posts('id'));

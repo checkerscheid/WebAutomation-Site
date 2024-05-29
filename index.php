@@ -10,9 +10,9 @@ header('Content-Type: text/html; charset=utf-8');
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 613                                                     $ #
+//# Revision     : $Rev:: 620                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: index.php 613 2024-05-17 00:45:52Z                       $ #
+//# File-ID      : $Id:: index.php 620 2024-05-29 01:27:42Z                       $ #
 //#                                                                                 #
 //###################################################################################
 /** @var array $points */
@@ -196,7 +196,11 @@ if(security::checkGroup(security::entwickler)) {
 							echo '</a>';
 						}
 						if(security::checkGroup(security::benutzer)) {
-							echo '<span class="AutologoffTime">'.wpHTML_EMPTY.'</span>';
+							echo '
+<span class="Autologoff">
+	<span class="ps-sm-hide"><span class="ps-md-hide">automatisches </span>Abmelden in </span>
+	<span class="AutologoffTime">'.wpHTML_EMPTY.'</span>
+</span>';
 						}
 ?>
 					</span>
@@ -276,7 +280,6 @@ if(security::checkGroup(security::entwickler)) {
 					<?=(($system->useAlarmGroup1()) ? '<th>'.$system->nameAlarmGroup1().'</th>' : '')?>
 					<th>Gruppe</th>
 					<th>Beschreibung</th>
-					<th>Text</th>
 					<th>Typ</th>
 					<th>Datenpunkt</th>
 					<th>AlarmID</th>

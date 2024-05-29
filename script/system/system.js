@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 611                                                     $ #
+//# Revision     : $Rev:: 620                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: system.js 611 2024-05-16 23:40:44Z                       $ #
+//# File-ID      : $Id:: system.js 620 2024-05-29 01:27:42Z                       $ #
 //#                                                                                 #
 //###################################################################################
 use system\wpInit;
@@ -86,45 +86,38 @@ if(isset($_SESSION[SESSION_ID]['ALARMTABLE']['FLTGROUP5']) &&
 if(strlen($fltgroup5aktiv) > 3) $fltgroup5aktiv = substr($fltgroup5aktiv, 1, -3);
 
 ?> system */
-<?
 //global $system;
 
-if($system->useAlarmGroup5()){
-	echo 'var useAlarmGroup5 = true;';
-} else {
-	echo 'var useAlarmGroup5 = false;';
-}
-if($system->useAlarmGroup4()){
-	echo 'var useAlarmGroup4 = true;';
-} else {
-	echo 'var useAlarmGroup4 = false;';
-}
-if($system->useAlarmGroup3()){
-	echo 'var useAlarmGroup3 = true;';
-} else {
-	echo 'var useAlarmGroup3 = false;';
-}
-if($system->useAlarmGroup2()){
-	echo 'var useAlarmGroup2 = true;';
-} else {
-	echo 'var useAlarmGroup2 = false;';
-}
-if($system->useAlarmGroup1()){
-	echo 'var useAlarmGroup1 = true;';
-} else {
-	echo 'var useAlarmGroup1 = false;';
-}
-
-echo 'var showpopup = false;';
-if(security::logedin() && $system->useAlarmingmodule()){
-	$database = new wpatabase();
-	$database->query("SELECT [showpopup] FROM [user] WHERE [login] ='".$_SESSION[SESSION_ID]['USER']."'");
-	while($erg = $database->fetch()) { $showpopup = $erg['showpopup']; }
-	if($showpopup == 1){
-		echo 'showpopup = true;';
-	}
-}
-?>
+var useAlarmGroup5;
+var useAlarmGroup4;
+var useAlarmGroup3;
+var useAlarmGroup2;
+var useAlarmGroup1;
+/* <? if($system->useAlarmGroup5()){ ?> */
+	useAlarmGroup5 = true;
+/* <? } else { ?> */
+	useAlarmGroup5 = false;
+/* <? } ?> */
+/* <? if($system->useAlarmGroup4()){ ?> */
+	useAlarmGroup4 = true;
+/* <? } else { ?> */
+	useAlarmGroup4 = false;
+/* <? } ?> */
+/* <? if($system->useAlarmGroup3()){ ?> */
+	useAlarmGroup3 = true;
+/* <? } else { ?> */
+	useAlarmGroup3 = false;
+/* <? } ?> */
+/* <? if($system->useAlarmGroup2()){ ?> */
+	useAlarmGroup2 = true;
+/* <? } else { ?> */
+	useAlarmGroup2 = false;
+/* <? } ?> */
+/* <? if($system->useAlarmGroup1()){ ?> */
+	useAlarmGroup1 = true;
+/* <? } else { ?> */
+	useAlarmGroup1 = false;
+/* <? } ?> */
 
 var TheAlarmTable;
 var wpResult;
@@ -161,15 +154,15 @@ var showdp = false;
 var isbig = false;
 var firstclick = true;
 var toquit = [];
-var pDateTime = 'Datum: 01.01.1970, Uhrzeit: 00:00:00';
-var pDate;
-var pTime;
+var serverDateTime = 'Datum: 01.01.1970, Uhrzeit: 00:00:00';
+var serverDate;
+var serverTime;
 var sessionisset = "<?=(isset($_SESSION[SESSION_ID]['TOUCH']) && $_SESSION[SESSION_ID]['TOUCH'] == '1' ? '1' : '0')?>";
 var markisset = "<?=(isset($_SESSION[SESSION_ID]['MARK']) && $_SESSION[SESSION_ID]['MARK'] == '1' ? '1' : '0')?>";
 var draggrid = [5, 5];
 var isLogedIn = '<?=((isset($_SESSION[SESSION_ID]["LEVEL"]) && $_SESSION[SESSION_ID]["LEVEL"] > 10) ? "TRUE" : "FALSE")?>';
-/* <? if(isset($_SESSION[SESSION_ID]["AUTOLOGOFF"])) {?> */
-var ForceAutoLogOff = new Date(<?=$_SESSION[SESSION_ID]["AUTOLOGOFF"]?>);
+/* <?if(isset($_SESSION[SESSION_ID]["AUTOLOGOFF"])) {?> */
+var ForceAutoLogOff = new Date('<?=$_SESSION[SESSION_ID]["AUTOLOGOFF"]?>');
 /* <? } else {?> */
 var ForceAutoLogOff = '';
 /* <? }?> */
@@ -178,6 +171,17 @@ var popupids = [];
 var HeightFooterHeader;
 var HeightHeader;
 var HeightFooter;
+
+const AlarmRowCome = 0;
+const AlarmRowGone = 1;
+const AlarmRowQuit = 2;
+const AlarmRowGroup = 3 + AlarmRowAdd;
+const AlarmRowText = 4 + AlarmRowAdd;
+const AlarmRowType = 5 + AlarmRowAdd;
+const AlarmRowDpName = 6 + AlarmRowAdd;
+const AlarmRowAlarmId = 7 + AlarmRowAdd;
+const AlarmRowLastUpdate = 8 + AlarmRowAdd;
+const AlarmRowPrio = 9 + AlarmRowAdd;
 
 $(document).ready(function() {
 	$('html').css({overflowY:'hidden'});
@@ -501,9 +505,9 @@ $(document).ready(function() {
 			sZeroRecords: 'Keine Alarme gefunden'
 		},
 		aoColumnDefs: [
-		               {type: 'de_datetime', targets:[0,1,2]},
-		               {visible: showdp, targets:[7 + AlarmRowAdd]},
-		               {visible: false, targets:[5 + AlarmRowAdd,8 + AlarmRowAdd,9 + AlarmRowAdd,10 + AlarmRowAdd]}
+			{type: 'de_datetime', targets:[AlarmRowCome, AlarmRowGone, AlarmRowQuit]},
+			{visible: showdp, targets:[AlarmRowDpName]},
+			{visible: false, targets:[AlarmRowAlarmId, AlarmRowLastUpdate, AlarmRowPrio]}
 		],
 		//sScrollY: "125px",
 		bPaginate: false,
@@ -512,7 +516,7 @@ $(document).ready(function() {
 		bFilter: false,
 		bInfo: false,
 		bAutoWidth: false,
-		aaSorting: [[10 + AlarmRowAdd,'desc'],[0,'desc'],[2,'desc']]
+		aaSorting: [[AlarmRowPrio,'desc'],[AlarmRowCome,'desc'],[AlarmRowQuit,'desc']]
 	});
 	$('#onlinealarm_wrapper').addClass('ps-loading');
 	$('#onlinealarm').on('click', '.toquit', function() {
@@ -857,12 +861,12 @@ $(document).ready(function() {
 	});
 	$('.alarmsettingspopup').on('click', '.defaultsort', function(ev) {
 		ev.stopPropagation();
-		TheAlarmTable.order([[10 + AlarmRowAdd,'desc'],[0,'desc'],[2,'desc']]).draw();
+		TheAlarmTable.order([[AlarmRowPrio,'desc'],[AlarmRowCome,'desc'],[AlarmRowQuit,'desc']]).draw();
 	});
 	$('.alarmsettingspopup').on('click', '.show-dp', function(ev) {
 		ev.stopPropagation();
 		showdp = !showdp;
-		TheAlarmTable.column(7 + AlarmRowAdd).visible(showdp);
+		TheAlarmTable.column(AlarmRowDpName).visible(showdp);
 		$('.show-dp').text(showdp ? 'Datenpunkte ausblenden' : 'Datenpunkte einblenden');
 	});
 	getOnlineAlarms();
@@ -874,8 +878,8 @@ $(document).ready(function() {
 
 function filtertable() {
 	$('#onlinealarm tbody tr').each(function() {
-		var typetext = $(this).find('td:eq(' + (5 + AlarmRowAdd) + ')').text();
-		var grouptext = $(this).find('td:eq(' + (3 + AlarmRowAdd) + ')').text();
+		var typetext = $(this).find('td:eq(' + (AlarmRowType) + ')').text();
+		var grouptext = $(this).find('td:eq(' + (AlarmRowGroup) + ')').text();
 		var group1text = $(this).find('td:eq(' + AlarmRowGroup1 + ')').text();
 		var group2text = $(this).find('td:eq(' + AlarmRowGroup2 + ')').text();
 		var group3text = $(this).find('td:eq(' + AlarmRowGroup3 + ')').text();
@@ -895,16 +899,16 @@ function filtertable() {
 	if(flttypeaktiv[0] == '') flttypeaktiv.splice(0,flttypeaktiv.length);
 	if(flttype[0] == '') flttype.splice(0,flttype.length);
 	if(p.arrayEquals(flttype, flttypeaktiv, false)) {
-		$('#onlinealarm thead tr').find('th:eq(' + (5 + AlarmRowAdd) + ')').removeClass('neg');
+		$('#onlinealarm thead tr').find('th:eq(' + AlarmRowType + ')').removeClass('neg');
 	} else {
-		$('#onlinealarm thead tr').find('th:eq(' + (5 + AlarmRowAdd) + ')').addClass('neg');
+		$('#onlinealarm thead tr').find('th:eq(' + AlarmRowType + ')').addClass('neg');
 	}
 	if(fltgroupaktiv[0] == '') fltgroupaktiv.splice(0,fltgroupaktiv.length);
 	if(fltgroup[0] == '') fltgroup.splice(0,fltgroup.length);
 	if(p.arrayEquals(fltgroup, fltgroupaktiv, false)) {
-		$('#onlinealarm thead tr').find('th:eq(' + (3 + AlarmRowAdd) + ')').removeClass('neg');
+		$('#onlinealarm thead tr').find('th:eq(' + AlarmRowGroup + ')').removeClass('neg');
 	} else {
-		$('#onlinealarm thead tr').find('th:eq(' + (3 + AlarmRowAdd) + ')').addClass('neg');
+		$('#onlinealarm thead tr').find('th:eq(' + AlarmRowGroup + ')').addClass('neg');
 	}
 	if(AlarmRowGroup1 > 0) {
 		//if(fltgroup1aktiv[0] == '') fltgroup1aktiv.splice(0,fltgroup1aktiv.length);
@@ -956,7 +960,7 @@ function filtertable() {
 function setflttype() {
 	flttype.splice(0,flttype.length);
 	$('#onlinealarm tbody tr').each(function() {
-		var filter = $(this).find('td:eq(' + (5 + AlarmRowAdd) + ')').text();
+		var filter = $(this).find('td:eq(' + AlarmRowType + ')').text();
 		if($.inArray(filter, flttype) == -1) {
 			flttype.push(filter);
 			//p.log.write('Type filter: ' + filter);
@@ -966,7 +970,7 @@ function setflttype() {
 function setfltgroup() {
 	fltgroup.splice(0,fltgroup.length);
 	$('#onlinealarm tbody tr').each(function() {
-		var filter = $(this).find('td:eq(' + (3 + AlarmRowAdd) + ')').text();
+		var filter = $(this).find('td:eq(' + AlarmRowGroup + ')').text();
 		if($.inArray(filter, fltgroup) == -1) {
 			fltgroup.push(filter);
 			//p.log.write('Group filter: ' + filter);
@@ -1042,68 +1046,66 @@ var firstalarmcontact = true;
 function getOnlineAlarms() {
 	lastWatchDogByte = WatchDogByte;
 	/*<? if(security::checkLevel(wpInit::$reqgroupalarm)) { ?>*/
-	var AktAlarms = {};
+	/// elements = id: lastupdate
+	var shownAlarms = {};
 	var AlarmPriority = $('#onlinealarm').attr('data-priority');
 	$('#onlinealarm tbody tr').each(function() {
 		var id = $(this).data('alarmid');
 		if(typeof(id) != 'undefined') {
-			AktAlarms[id] = $(this).data('lastupdate');
+			shownAlarms[id] = $(this).data('lastupdate');
 		}
 	});
 	$.get('std.request.activealarm.' + AlarmPriority + '.req', function(data) {
-		var TheAlarms = {};
+		/// elements = id: lastupdate
+		var responsedAlarms = {};
 		wpAlarm = data.wpAlarm;
 		WatchDogByte = data.WatchDogByte;
-		pDate = data.pDate;
-		pTime = data.pTime;
-		var secondReqNeeded = false;
-		$('.footerdatetime').html('<span class="ps-sm-hide">Datum: </span>'+pDate+'<span class="ps-sm-hide">, Uhrzeit:</span> '+pTime);
+		serverDate = data.serverDate;
+		serverTime = data.serverTime;
+		serverDateTime = new Date(data.serverDateTime);
+		$('.footerdatetime').html('<span class="ps-sm-hide">Datum: </span>'+serverDate+'<span class="ps-sm-hide">, Uhrzeit:</span> '+serverTime);
 
 		if(AlarmPriority != data.AlarmPriority) {
 			$('#onlinealarm_wrapper').addClass('ps-loading');
 			for(var Alarm in wpAlarm) {
-				var alarmid = wpAlarm[Alarm][8 + AlarmRowAdd];
+				var alarmid = wpAlarm[Alarm][AlarmRowAlarmId];
 
-				TheAlarms[alarmid] = wpAlarm[Alarm][9 + AlarmRowAdd];
-				if(typeof(AktAlarms[alarmid]) == 'undefined') {
+				responsedAlarms[alarmid] = wpAlarm[Alarm][AlarmRowLastUpdate];
+				if(typeof(shownAlarms[alarmid]) == 'undefined') {
 					console.log('Create Alarm: ' + alarmid);
 					TheAlarmTable.row.add(wpAlarm[Alarm], false);
 					TheAlarmTable.draw();
 					$('#AlarmID' + alarmid).data('alarmid', alarmid);
-					$('#AlarmID' + alarmid).data('lastupdate', wpAlarm[Alarm][9 + AlarmRowAdd]);
-					if(wpAlarm[Alarm][10 + AlarmRowAdd] > 32) {
+					$('#AlarmID' + alarmid).data('lastupdate', wpAlarm[Alarm][AlarmRowLastUpdate]);
+					if(wpAlarm[Alarm][AlarmRowPrio] > 32) {
 						alarmsound.play();
 					}
 				} else {
-					if(AktAlarms[alarmid] != wpAlarm[Alarm][9 + AlarmRowAdd]) {
+					if(shownAlarms[alarmid] != wpAlarm[Alarm][AlarmRowLastUpdate]) {
 						console.log('Update Alarm: ' + alarmid);
 						if($('#onlinealarm tbody tr').length == 1) {
 							TheAlarmTable.clear();
 						} else {
 							TheAlarmTable.row($('#AlarmID' + alarmid)).remove();
 						}
-						TheAlarmTable.draw();
-						secondReqNeeded = true;
+						TheAlarmTable.row.add(wpAlarm[Alarm], false);
 					}
 				}
 			}
 			$('#onlinealarm tbody tr').each(function() {
 				if(!$(this).find('td:first').hasClass('dataTables_empty')) {
 					var alarmid = $(this).data('alarmid');
-					if(typeof(TheAlarms[alarmid]) == 'undefined') {
+					if(typeof(responsedAlarms[alarmid]) == 'undefined') {
 						console.log('Delete Alarm: ' + alarmid);
 						if($('#onlinealarm tbody tr').length == 1) {
 							TheAlarmTable.clear();
 						} else {
 							TheAlarmTable.row($('#AlarmID' + alarmid)).remove();
 						}
-						secondReqNeeded = true;
 					}
 				}
 			});
-			if(!secondReqNeeded) {
-				$('#onlinealarm').attr('data-priority', data.AlarmPriority);
-			}
+			$('#onlinealarm').attr('data-priority', data.AlarmPriority);
 			TheAlarmTable.draw();
 			setflttype();
 			if(flttypefill == 'true') {
@@ -1153,19 +1155,20 @@ function getOnlineAlarms() {
 			$('#onlinealarm_wrapper th').removeClass('bgred');
 			$('#wartungactive').addClass('ps-hidden');
 		}
-		if(data.isLogedIn == 'TRUE') {
-			var isnow = pDateTime; //new Date(pDateTime);
+		if(isLogedIn == 'TRUE') {
+			var isnow = new Date(serverDateTime);
 			if(ForceAutoLogOff != '') {
 				if(ForceAutoLogOff < isnow) {
 					location.href = 'logout.auto.htm';
 				} else {
-					$('.AutologoffTime').html('automatisches Abmelden: ' + p.time.diff(isnow, ForceAutoLogOff));
+					$('.Autologoff').removeClass('ps-hidden');
+					$('.AutologoffTime').html(p.time.diff(isnow, ForceAutoLogOff));
 				}
 			}
 		}
 	}, 'json').always(function() {
 		if(lastWatchDogByte != WatchDogByte || WatchDogByte > 0) {
-			$('.footerdatetime').html('<span class="ps-sm-hide">Datum: </span>'+pDate+'<span class="ps-sm-hide">, Uhrzeit:</span> '+pTime);
+			$('.footerdatetime').html('<span class="ps-sm-hide">Datum: </span>'+serverDate+'<span class="ps-sm-hide">, Uhrzeit:</span> '+serverTime);
 			if($('#LED1').hasClass('LED_aus')) {
 				$('#LED1').removeClass('LED_aus LED_error LED warn').addClass('LED_ein');
 				$('#LED2').removeClass('LED_ein LED_error LED warn').addClass('LED_aus');
@@ -1183,11 +1186,11 @@ function getOnlineAlarms() {
 	/*<? } else { ?>*/
 	$.get('std.request.activesystem.req', function(data) {
 		WatchDogByte = data.WatchDogByte;
-		pDate = data.pDate;
-		pTime = data.pTime;
+		serverDate = data.serverDate;
+		serverTime = data.serverTime;
 	}, 'json').always(function() {
 		if(lastWatchDogByte != WatchDogByte || WatchDogByte > 0) {
-			$('.footerdatetime').html('<span class="ps-sm-hide">Datum: </span>'+pDate+'<span class="ps-sm-hide">, Uhrzeit:</span> '+pTime);
+			$('.footerdatetime').html('<span class="ps-sm-hide">Datum: </span>'+serverDate+'<span class="ps-sm-hide">, Uhrzeit:</span> '+serverTime);
 			if($('#LED1').hasClass('LED_aus')) {
 				$('#LED1').removeClass('LED_aus LED_error LED warn').addClass('LED_ein');
 				$('#LED2').removeClass('LED_ein LED_error LED warn').addClass('LED_aus');

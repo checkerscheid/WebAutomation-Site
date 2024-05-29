@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 12.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 582                                                     $ #
+//# Revision     : $Rev:: 620                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: login.inc 582 2024-04-10 06:45:45Z                       $ #
+//# File-ID      : $Id:: login.inc 620 2024-05-29 01:27:42Z                       $ #
 //#                                                                                 #
 //###################################################################################
 /**
@@ -23,7 +23,7 @@ namespace pages\std;
 use system\Helper\cfg;
 use system\Helper\security;
 use system\std, system\wpInit;
-//require_once 'system/Helper/export.psys';
+require_once 'system/Helper/cfg.psys';
 
 if(std::gets('aktion') == 'out') {
 	$lastsrc = $sdata->LASTSRC;
@@ -78,7 +78,7 @@ if(std::posts('einloggen') == 'anmelden') {
 		if($sdata->LOGINTOSRC != '') {
 			std::href($sdata->LOGINTOSRC);
 		} else if($erg['startpage'] != '') {
-			std::href($sdata->LOGINTOUSERSRC);
+			std::href($erg['startpage']);
 		} else {
 			std::href($system->getLinkedSrc());
 		}

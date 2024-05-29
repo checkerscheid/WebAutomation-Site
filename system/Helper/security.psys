@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 562                                                     $ #
+//# Revision     : $Rev:: 620                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: security.psys 562 2024-01-16 02:08:14Z                   $ #
+//# File-ID      : $Id:: security.psys 620 2024-05-29 01:27:42Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -213,7 +213,7 @@ class security {
 		$datetime = new \DateTime();
 		$minutes = is_Numeric($minutes) ? $minutes : 15;
 		$datetime->add(new \DateInterval('PT'.$minutes.'M'));
-		return wpConvert::getDateTimeforJS($datetime);
+		return wpConvert::getDateTimeforJSnewDate($datetime);
 	}
 	/**
 	 * setzt die Zeit des Auto Logoff
