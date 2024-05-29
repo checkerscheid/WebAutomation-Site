@@ -129,6 +129,8 @@ p.page.load = function() {
 	});
 //###################################################################################
 	$('#erg').on('click', '.D1MiniDevice .saveFromDevice', function() {
+		const wpFreakaZoneLibVersion = $('#wpFreakaZoneLibVersion').text();
+		const BasisEmptyVersion = $('#BasisEmptyVersion').text();
 		var that = $(this);
 		var tr = $(this).parents('tr:first');
 		var td = $(this).parents('td:first');
@@ -137,6 +139,9 @@ p.page.load = function() {
 		var value = $(td).find('.smallfont.' + column).text();
 		$.post('std.d1minicfg.updateColumn.req', {id:id, column:column, value:value}, function() {
 			$(td).find('.stored').text(value);
+			if(wpFreakaZoneLibVersion == value || BasisEmptyVersion == value) {
+				$(td).find('.stored').removeClass('ps-fontyellow').addClass('ps-fontgreen');
+			}
 			$(that).addClass('ps-hidden');
 			$(td).find('.smallfont').addClass('ps-hidden');
 		});

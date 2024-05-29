@@ -46,8 +46,8 @@ class d1minicfg {
 		$html = '
 			<h1>D1 Mini Details</h1>
 			<div class="versionContainer">
-				<span>wpFreakaZone Lib: ' . self::$maxFreakaZoneVersion . '</span>
-				<span>BasisEmpty: ' . self::$maxVersion . '</span>
+				<span>wpFreakaZone Lib: <span id="wpFreakaZoneLibVersion">' . self::$maxFreakaZoneVersion . '</span></span>
+				<span>BasisEmpty: <span id="BasisEmptyVersion">' . self::$maxVersion . '</span></span>
 			</div>
 			<hr />
 			<ul id="trend">';
