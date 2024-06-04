@@ -151,6 +151,7 @@ var ws = {
 						} else if($(this).hasClass('<?=wpa::$indikator ?>')) {
 							let indiTemp = {"m": 21, "n": 23.5, "p": 25};
 							let indiHum = {"m": 37.5, "n": 45, "p": 50};
+							let indiPfl = {"m": 30, "n": 40, "p": 50};
 							$(this).removeClass('indi-m indi-0 indi-p indi-pp');
 							let indi;
 							let n = Number(that.value.replace(',', '.'));
@@ -158,6 +159,9 @@ var ws = {
 								indi = indiTemp;
 							}
 							if($(this).hasClass('indikator-hum')) {
+								indi = indiHum;
+							}
+							if($(this).hasClass('indikator-pfl')) {
 								indi = indiHum;
 							}
 							if(n < indi.m) $(this).addClass('indi-m');
