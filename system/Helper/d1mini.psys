@@ -31,7 +31,7 @@ class d1mini {
 
 	private $database, $webCom, $status;
 	private $idD1MiniGroup, $idMqttGroup, $idDBGroup, $idTrendGroup, $idAlarmGroup;
-	private $id, $name, $description, $ip, $wpFreakaZoneVersion, $version, $mac;
+	private $id, $name, $description, $ip, $version, $mac;
 	private $canInserted;
 	public function __construct($ip) {
 		$this->database = new wpDatabase();
@@ -44,8 +44,6 @@ class d1mini {
 			$this->canInserted = true;
 			$this->name = $this->status->FreakaZoneDevice->DeviceName;
 			$this->description = $this->status->FreakaZoneDevice->DeviceDescription;
-			$this->wpFreakaZoneVersion = isset($this->status->FreakaZoneDevice->wpFreakaZoneVersion) ?
-			$this->status->FreakaZoneDevice->wpFreakaZoneVersion : '';
 			$this->version = $this->status->FreakaZoneDevice->Version;
 			$this->mac = $this->status->FreakaZoneDevice->miniMAC;
 			echo "save '" . $this->name . "' (" . $this->ip . ") ";
@@ -196,18 +194,17 @@ MERGE INTO [d1mini] AS [TARGET]
 	USING (
 		VALUES (
 			$this->idD1MiniGroup, '$this->name', '$this->description',
-			'$this->wpFreakaZoneVersion', '$this->version', '$this->ip', '$this->mac', $active
+			'$this->version', '$this->ip', '$this->mac', $active
 		)
 	) AS [SOURCE] (
 			[id_d1minigroup], [name], [description],
-			[wpFreakaZoneVersion], [version], [ip], [mac], [active]
+			[version], [ip], [mac], [active]
 	) ON
 		[TARGET].[name] = [SOURCE].[name]
 	WHEN MATCHED THEN
 		UPDATE SET
 			[TARGET].[id_d1minigroup] = [SOURCE].[id_d1minigroup],
 			[TARGET].[description] = [SOURCE].[description],
-			[TARGET].[wpFreakaZoneVersion] = [SOURCE].[wpFreakaZoneVersion],
 			[TARGET].[version] = [SOURCE].[version],
 			[TARGET].[ip] = [SOURCE].[ip],
 			[TARGET].[mac] = [SOURCE].[mac],
@@ -215,11 +212,11 @@ MERGE INTO [d1mini] AS [TARGET]
 	WHEN NOT MATCHED THEN
 		INSERT (
 			[id_d1minigroup], [name], [description],
-			[wpFreakaZoneVersion], [version], [ip], [mac], [active]
+			[version], [ip], [mac], [active]
 		)
 		VALUES (
 			[SOURCE].[id_d1minigroup], [SOURCE].[name], [SOURCE].[description],
-			[SOURCE].[wpFreakaZoneVersion], [SOURCE].[version], [SOURCE].[ip], [SOURCE].[mac], [SOURCE].[active]
+			[SOURCE].[version], [SOURCE].[ip], [SOURCE].[mac], [SOURCE].[active]
 		)
 	OUTPUT [INSERTED].[id_d1mini] AS [ID];";
 		$this->database->query($sql);
