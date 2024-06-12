@@ -1058,7 +1058,10 @@ function getOnlineAlarms() {
 	$('#onlinealarm tbody tr').each(function() {
 		var id = $(this).data('alarmid');
 		if(typeof(id) != 'undefined') {
-			shownAlarms[id] = $(this).data('lastupdate');
+			shownAlarms[id] = {
+				'lastUpdate': $(this).data('lastupdate'),
+				'priority': $(this).data('priority')
+			}
 		}
 	});
 	$.get('std.request.activealarm.' + AlarmPriority + '.req', function(data) {
@@ -1076,18 +1079,23 @@ function getOnlineAlarms() {
 			for(var Alarm in wpAlarm) {
 				var alarmid = wpAlarm[Alarm][AlarmRowAlarmId];
 
-				responsedAlarms[alarmid] = wpAlarm[Alarm][AlarmRowLastUpdate];
+				responsedAlarms[alarmid] = {
+					'lastUpdate': wpAlarm[Alarm][AlarmRowLastUpdate],
+					'priority': wpAlarm[Alarm][AlarmRowPrio]
+				};
 				if(typeof(shownAlarms[alarmid]) == 'undefined') {
 					console.log('Create Alarm: ' + alarmid);
 					TheAlarmTable.row.add(wpAlarm[Alarm], false);
 					TheAlarmTable.draw();
 					$('#AlarmID' + alarmid).data('alarmid', alarmid);
 					$('#AlarmID' + alarmid).data('lastupdate', wpAlarm[Alarm][AlarmRowLastUpdate]);
+					$('#AlarmID' + alarmid).data('priority', wpAlarm[Alarm][AlarmRowPrio]);
 					if(wpAlarm[Alarm][AlarmRowPrio] > 32) {
 						alarmsound.play();
 					}
 				} else {
-					if(shownAlarms[alarmid] != wpAlarm[Alarm][AlarmRowLastUpdate]) {
+					if(shownAlarms[alarmid]['lastUpdate'] != wpAlarm[Alarm][AlarmRowLastUpdate] ||
+						shownAlarms[alarmid]['priority'] != wpAlarm[Alarm][AlarmRowLastUpdate]) {
 						console.log('Update Alarm: ' + alarmid);
 						if($('#onlinealarm tbody tr').length == 1) {
 							TheAlarmTable.clear();
@@ -1096,6 +1104,9 @@ function getOnlineAlarms() {
 						}
 						TheAlarmTable.row.add(wpAlarm[Alarm], false);
 						TheAlarmTable.draw();
+						$('#AlarmID' + alarmid).data('alarmid', alarmid);
+						$('#AlarmID' + alarmid).data('lastupdate', wpAlarm[Alarm][AlarmRowLastUpdate]);
+						$('#AlarmID' + alarmid).data('priority', wpAlarm[Alarm][AlarmRowPrio]);
 					}
 				}
 			}
