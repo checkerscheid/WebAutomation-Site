@@ -129,6 +129,8 @@ p.page.load = function() {
 	});
 //###################################################################################
 	$('#erg').on('click', '.D1MiniDevice .saveFromDevice', function() {
+		const wpFreakaZoneLibVersion = $('#wpFreakaZoneLibVersion').text();
+		const BasisEmptyVersion = $('#BasisEmptyVersion').text();
 		var that = $(this);
 		var tr = $(this).parents('tr:first');
 		var td = $(this).parents('td:first');
@@ -137,6 +139,9 @@ p.page.load = function() {
 		var value = $(td).find('.smallfont.' + column).text();
 		$.post('std.d1minicfg.updateColumn.req', {id:id, column:column, value:value}, function() {
 			$(td).find('.stored').text(value);
+			if(wpFreakaZoneLibVersion == value || BasisEmptyVersion == value) {
+				$(td).find('.stored').removeClass('ps-fontyellow').addClass('ps-fontgreen');
+			}
 			$(that).addClass('ps-hidden');
 			$(td).find('.smallfont').addClass('ps-hidden');
 		});
@@ -342,8 +347,6 @@ function D1MiniRenew(d1minigroup) {
 			setTextIfNotStored(key, 'description', value.DeviceDescription);
 			setTextIfNotStored(key, 'ip', value.Ip);
 			setTextIfNotStored(key, 'mac', mac);
-			var wpFZVersion = typeof value.wpFreakaZoneVersion == 'undefined' ? '' : value.wpFreakaZoneVersion;
-			setTextIfNotStored(key, 'wpFreakaZoneVersion', wpFZVersion);
 			setTextIfNotStored(key, 'version', value.Version);
 			//setTextIfNotStored(key, 'ssid', value.Ssid);
 			var updateMode = value.UpdateMode ? '<span class="ps-fontyellow">aktiv</span>' : '<span class="ps-fontgreen">deaktiviert</span>';
@@ -414,7 +417,6 @@ function getHtmlNewD1Mini(name, newObj) {
 	<td>${newObj.FreakaZoneClient}</td>
 	<td>${newObj.IP}</td>
 	<td>${newObj.MAC}</td>
-	<td>${newObj.wpFreakaZoneVersion}</td>
 	<td>${newObj.Version}</td>
 	<td class="buttonbox"><span class="ps-button d1MiniAdd" data-key="${name}">Add</span></td>
 </tr>`;

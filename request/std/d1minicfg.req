@@ -37,17 +37,13 @@ class d1minicfg {
 	const c_menueditelem = 'menueditelem';
 	public static function menueditelem() {
 		$wpDatabase = new wpDatabase();
-		$wpDatabase->query('SELECT TOP 1 [wpFreakaZoneVersion] FROM [D1Mini] ORDER BY [wpFreakaZoneVersion] DESC');
-		$erg = $wpDatabase->fetch();
-		self::$maxFreakaZoneVersion = $erg['wpFreakaZoneVersion'];
 		$wpDatabase->query('SELECT TOP 1 [version] FROM [D1Mini] ORDER BY [version] DESC');
 		$erg = $wpDatabase->fetch();
 		self::$maxVersion = $erg['version'];
 		$html = '
 			<h1>D1 Mini Details</h1>
 			<div class="versionContainer">
-				<span>wpFreakaZone Lib: ' . self::$maxFreakaZoneVersion . '</span>
-				<span>BasisEmpty: ' . self::$maxVersion . '</span>
+				<span>BasisEmpty: <span id="BasisEmptyVersion">' . self::$maxVersion . '</span></span>
 			</div>
 			<hr />
 			<ul id="trend">';
@@ -170,15 +166,12 @@ class d1minicfg {
 	const c_getd1minis = 'getd1minis';
 	public static function getd1minis() {
 		$wpDatabase = new wpDatabase();
-		$wpDatabase->query('SELECT TOP 1 [wpFreakaZoneVersion] FROM [D1Mini] ORDER BY [wpFreakaZoneVersion] DESC');
-		$erg = $wpDatabase->fetch();
-		d1minicfg::$maxFreakaZoneVersion = $erg['wpFreakaZoneVersion'];
 		$wpDatabase->query('SELECT TOP 1 [version] FROM [D1Mini] ORDER BY [version] DESC');
 		$erg = $wpDatabase->fetch();
 		d1minicfg::$maxVersion = $erg['version'];
 		$sql = "
 			SELECT
-				[id_d1mini], [name], [description], [ip], [mac], [wpFreakaZoneVersion], [version], [active]
+				[id_d1mini], [name], [description], [ip], [mac], [version], [active]
 			FROM [d1mini]";
 		if(std::posts('d1minigroup') != 'All') {
 			$sql .= "
@@ -219,7 +212,6 @@ class d1minicfg {
 					<th>Beschreibung</th>
 					<th>IP</th>
 					<th>MAC</th>
-					<th>wpFreakaZone</th>
 					<th>Version</th>
 					<th>MQTT</th>
 					<th>UpdateMode</th>
@@ -230,10 +222,6 @@ class d1minicfg {
 			</thead>
 			<tbody>';
 		while($erg = $wpDatabase->fetch()) {
-			$updatelib = 'ps-fontyellow';
-			if(d1minicfg::$maxFreakaZoneVersion == $erg['wpFreakaZoneVersion'] ) {
-				$updatelib = 'ps-fontgreen';
-			}
 			$update = 'ps-fontyellow';
 			if(d1minicfg::$maxVersion == $erg['version'] ) {
 				$update = 'ps-fontgreen';
@@ -283,17 +271,6 @@ class d1minicfg {
 							<div>
 								<span class="stored">' . $erg['mac'] . '</span><br />
 								<span class="smallfont ps-fontyellow mac"></span>
-							</div>
-							<div class="buttonContainer">
-								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice" title="von D1 Mini übernehmen"></span>
-							</div>
-						</div>
-					</td>
-					<td data-column="wpFreakaZoneVersion">
-						<div class="tdButton">
-							<div>
-								<span class="stored ' . $updatelib . '">' . $erg['wpFreakaZoneVersion'] . '</span><br />
-								<span class="smallfont ps-fontyellow wpFreakaZoneVersion"></span>
 							</div>
 							<div class="buttonContainer">
 								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice" title="von D1 Mini übernehmen"></span>
@@ -445,7 +422,8 @@ class d1minicfg {
 				$wpFZ = $jsontext->FreakaZoneDevice;
 				//std::test_array($wpFZ);
 				$compiledWith = array();
-				$compiledWithExclude = array('EEPROM', 'WiFi', 'MQTT', 'Search', 'Rest');
+				$compiledWithExclude = array('EEPROM', 'WiFi', 'MQTT', 'Search', 'Rest',
+					'Finder', 'Modules', 'OnlineToggler', 'Update', 'WebServer');
 				foreach($wpFZ->Debug as $module => $active) {
 					if(!\in_array($module, $compiledWithExclude)) {
 						$compiledWith[] = $module;
@@ -456,7 +434,6 @@ class d1minicfg {
 				'"' . $wpFZ->DeviceName . '":{' .
 				'"DeviceName":"' . $wpFZ->DeviceName . '",' .
 				'"DeviceDescription":"' . $wpFZ->DeviceDescription . '",' .
-				(isset($wpFZ->wpFreakaZoneVersion) ? '"wpFreakaZoneVersion":"' . $wpFZ->wpFreakaZoneVersion . '",' : '') .
 				'"Version":"' . $wpFZ->Version . '",' .
 				'"Ip":"' . $erg['ip'] . '",' .
 				'"Mac":"' . $wpFZ->MAC . '",' .

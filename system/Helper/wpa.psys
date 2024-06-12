@@ -27,6 +27,7 @@ class wpa {
 	public static $indikator = 'wpa-indikator';
 	public static $indikatorTemp = 'wpa-indikator indikator-temp';
 	public static $indikatorHum = 'wpa-indikator indikator-hum';
+	public static $indikatorPfl = 'wpa-indikator indikator-pfl';
 	public static $formatdate = 'wpa-formatdate';
 	public static $formattime = 'wpa-formattime';
 	public static $formatdatetime = 'wpa-formatdatetime';

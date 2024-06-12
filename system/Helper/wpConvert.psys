@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2018                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 609                                                     $ #
+//# Revision     : $Rev:: 620                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpConvert.psys 609 2024-05-15 14:54:17Z                  $ #
+//# File-ID      : $Id:: wpConvert.psys 620 2024-05-29 01:27:42Z                  $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;

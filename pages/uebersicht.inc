@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 618                                                     $ #
+//# Revision     : $Rev:: 620                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 618 2024-05-20 14:53:51Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 620 2024-05-29 01:27:42Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -38,7 +38,7 @@ class uebersicht {
 	);
 	private static $HT = array(
 		'WZ_HT3'		=> 'Wohnzimmer',
-		'WZ_PF_FE'		=> 'Pflanze am Fenster',
+		//'WZ_PF_FE'		=> 'Pflanze am Fenster',
 		'SZ_RU'			=> 'Schlafzimmer',
 		'BU_RU'			=> 'Büro',
 		'KU_RU'			=> 'Küche',
@@ -206,22 +206,45 @@ class uebersicht {
 				<tr><td colspan="6"><hr /></td></tr>
 				<?=uebersicht::getD1HT() ?>
 				<tr><td colspan="6"><h2>Wetterstation</h2></td></tr>
+				<tr>
+					<td colspan="2"></td>
+					<td colspan="2"><h2>Licht</h2></td>
+					<td colspan="2"><h2>Regen</h2></td>
+				</tr>
 				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
-					<td colspan="3">Licht Osten:</td>
-					<td colspan="3"><span data-ws="GA_WE_Ost_Light" class="ps-input">undefined</span></td>
+					<td colspan="2">Osten:</td>
+					<td colspan="2"><span data-ws="GA_WE_Ost_Light" class="ps-input">undefined</span></td>
+					<td colspan="2"><span data-ws="GA_WE_Ost_Rain" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
-					<td colspan="3">Licht Süden:</td>
-					<td colspan="3"><span data-ws="GA_WE_Sued_Light" class="ps-input">undefined</span></td>
+					<td colspan="2">Süden:</td>
+					<td colspan="2"><span data-ws="GA_WE_Sued_Light" class="ps-input">undefined</span></td>
+					<td colspan="2"></td>
 				</tr>
 				<tr>
-					<td colspan="3">Regen Ost:</td>
-					<td colspan="3"><span data-ws="GA_WE_Ost_Rain" class="ps-input">undefined</span></td>
+					<td colspan="2">Gaube:</td>
+					<td colspan="2"></td>
+					<td colspan="2"><span data-ws="GA2_WE_Gaube_Rain" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
-					<td colspan="3">Regen Gaube:</td>
-					<td colspan="3"><span data-ws="GA2_WE_Gaube_Rain" class="ps-input">undefined</span></td>
+					<td colspan="2">Innen:</td>
+					<td colspan="2"><span data-ws="BasisTest_Light" class="ps-input">undefined</span></td>
+					<td colspan="2"></td>
+				</tr>
+				<tr><td colspan="6"><h2>Wetter</h2></td></tr>
+				<tr><td colspan="6"><hr /></td></tr>
+				<tr>
+					<td colspan="3">Sonne:</td>
+					<td colspan="3"><span data-ws="Sonne" class="ps-input <?=wpa::$BlueYellow ?>">undefined</span></td>
+				</tr>
+				<tr>
+					<td colspan="3">Aufgang:</td>
+					<td colspan="3"><span data-ws="Sonnenaufgang" class="ps-input <?=wpa::$formattime ?>">undefined</span></td>
+				</tr>
+				<tr>
+					<td colspan="3">Untergang:</td>
+					<td colspan="3"><span data-ws="Sonnenuntergang" class="ps-input <?=wpa::$formattime ?>">undefined</span></td>
 				</tr>
 			</tbody>
 		</table>
@@ -269,37 +292,63 @@ class uebersicht {
 					<td colspan="2"><span data-ws="SZ_RU_LDR" class="ps-input">undefined</span></td>
 					<td colspan="2"></td>
 				</tr>
-				<tr><td colspan="6"><h2>Wetter</h2></td></tr>
+				<tr><td colspan="6"><h2>Pflanzen</h2></td></tr>
 				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
-					<td colspan="3">Sonne:</td>
-					<td colspan="3"><span data-ws="Sonne" class="ps-input <?=wpa::$BlueYellow ?>">undefined</span></td>
+					<td colspan="3">Referenztemperatur</td>
+					<td colspan="3">
+						<span data-ws="WZ_PF_FE_Temp" class="ps-input">undefined</span>
+						<span data-ws="WZ_PF_FE_Temp" class="<?=wpa::$indikatorTemp?>"><?=wpHTML_EMPTY?></span>
+					</td>
 				</tr>
 				<tr>
-					<td colspan="3">Aufgang:</td>
-					<td colspan="3"><span data-ws="Sonnenaufgang" class="ps-input <?=wpa::$formattime ?>">undefined</span></td>
-				</tr>
-				<tr>
-					<td colspan="3">Untergang:</td>
-					<td colspan="3"><span data-ws="Sonnenuntergang" class="ps-input <?=wpa::$formattime ?>">undefined</span></td>
-				</tr>
-				<tr><td colspan="6"><h2>Breadboard</h2></td></tr>
-				<tr><td colspan="6"><hr /></td></tr>
-				<tr>
-					<td colspan="3">Licht</td>
-					<td colspan="3"><span data-ws="BasisTest_Light" class="ps-input">undefined</span></td>
+					<td colspan="3">Referenzfeuchte</td>
+					<td colspan="3">
+						<span data-ws="WZ_PF_FE_Hum" class="ps-input">undefined</span>
+						<span data-ws="WZ_PF_FE_Hum" class="<?=wpa::$indikatorHum?>"><?=wpHTML_EMPTY?></span>
+					</td>
 				</tr>
 				<tr>
 					<td colspan="3">Pflanze auf'm Tisch</td>
-					<td colspan="3"><span data-ws="BasisTest_Moisture" class="ps-input">undefined</span></td>
+					<td colspan="3">
+						<span data-ws="BasisTest_Moisture" class="ps-input">undefined</span>
+						<span data-ws="BasisTest_Moisture" class="<?=wpa::$indikatorPfl?>"><?=wpHTML_EMPTY?></span>
+					</td>
 				</tr>
 				<tr>
 					<td colspan="3">Pflanze zur Terrasse</td>
-					<td colspan="3"><span data-ws="WZ_PF_TE_Moisture" class="ps-input">undefined</span></td>
+					<td colspan="3">
+						<span data-ws="WZ_PF_TE_Moisture" class="ps-input">undefined</span>
+						<span data-ws="WZ_PF_TE_Moisture" class="<?=wpa::$indikatorPfl?>"><?=wpHTML_EMPTY?></span>
+					</td>
 				</tr>
 				<tr>
-					<td colspan="3">Pflanze am Fenster</td>
-					<td colspan="3"><span data-ws="WZ_PF_FE_Moisture" class="ps-input">undefined</span></td>
+					<td colspan="3">Pflanze am Fenster in der Ecke</td>
+					<td colspan="3">
+						<span data-ws="WZ_PF_FE_Moisture" class="ps-input">undefined</span>
+						<span data-ws="WZ_PF_FE_Moisture" class="<?=wpa::$indikatorPfl?>"><?=wpHTML_EMPTY?></span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">Pflanze am Fenster, links</td>
+					<td colspan="3">
+						<span data-ws="WZ_PF_FE_LI_Moisture" class="ps-input">undefined</span>
+						<span data-ws="WZ_PF_FE_LI_Moisture" class="<?=wpa::$indikatorPfl?>"><?=wpHTML_EMPTY?></span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">Pflanze am Fenster, 1. rechts</td>
+					<td colspan="3">
+						<span data-ws="WZ_PF_FE_RE1_Moisture" class="ps-input">undefined</span>
+						<span data-ws="WZ_PF_FE_RE1_Moisture" class="<?=wpa::$indikatorPfl?>"><?=wpHTML_EMPTY?></span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">Pflanze am Fenster, 2. rechts</td>
+					<td colspan="3">
+						<span data-ws="WZ_PF_FE_RE2_Moisture" class="ps-input">undefined</span>
+						<span data-ws="WZ_PF_FE_RE2_Moisture" class="<?=wpa::$indikatorPfl?>"><?=wpHTML_EMPTY?></span>
+					</td>
 				</tr>
 				<tr><td colspan="6"><h2>Test</h2></td></tr>
 				<tr><td colspan="6"><hr /></td></tr>

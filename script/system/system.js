@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 611                                                     $ #
+//# Revision     : $Rev:: 620                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: system.js 611 2024-05-16 23:40:44Z                       $ #
+//# File-ID      : $Id:: system.js 620 2024-05-29 01:27:42Z                       $ #
 //#                                                                                 #
 //###################################################################################
 use system\wpInit;
@@ -1043,12 +1043,18 @@ function setfltgroup5() {
 	}
 }
 var firstalarmcontact = true;
+var alarmQoS = 10;
+var alarmCounter = 0;
 function getOnlineAlarms() {
 	lastWatchDogByte = WatchDogByte;
 	/*<? if(security::checkLevel(wpInit::$reqgroupalarm)) { ?>*/
 	/// elements = id: lastupdate
 	var shownAlarms = {};
 	var AlarmPriority = $('#onlinealarm').attr('data-priority');
+	if(++alarmCounter > alarmQoS) {
+		AlarmPriority = 0;
+		alarmCounter = 0;
+	}
 	$('#onlinealarm tbody tr').each(function() {
 		var id = $(this).data('alarmid');
 		if(typeof(id) != 'undefined') {
@@ -1089,6 +1095,7 @@ function getOnlineAlarms() {
 							TheAlarmTable.row($('#AlarmID' + alarmid)).remove();
 						}
 						TheAlarmTable.row.add(wpAlarm[Alarm], false);
+						TheAlarmTable.draw();
 					}
 				}
 			}
@@ -1102,6 +1109,7 @@ function getOnlineAlarms() {
 						} else {
 							TheAlarmTable.row($('#AlarmID' + alarmid)).remove();
 						}
+						TheAlarmTable.draw();
 					}
 				}
 			});
