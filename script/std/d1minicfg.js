@@ -347,8 +347,6 @@ function D1MiniRenew(d1minigroup) {
 			setTextIfNotStored(key, 'description', value.DeviceDescription);
 			setTextIfNotStored(key, 'ip', value.Ip);
 			setTextIfNotStored(key, 'mac', mac);
-			var wpFZVersion = typeof value.wpFreakaZoneVersion == 'undefined' ? '' : value.wpFreakaZoneVersion;
-			setTextIfNotStored(key, 'wpFreakaZoneVersion', wpFZVersion);
 			setTextIfNotStored(key, 'version', value.Version);
 			//setTextIfNotStored(key, 'ssid', value.Ssid);
 			var updateMode = value.UpdateMode ? '<span class="ps-fontyellow">aktiv</span>' : '<span class="ps-fontgreen">deaktiviert</span>';
@@ -419,7 +417,6 @@ function getHtmlNewD1Mini(name, newObj) {
 	<td>${newObj.FreakaZoneClient}</td>
 	<td>${newObj.IP}</td>
 	<td>${newObj.MAC}</td>
-	<td>${newObj.wpFreakaZoneVersion}</td>
 	<td>${newObj.Version}</td>
 	<td class="buttonbox"><span class="ps-button d1MiniAdd" data-key="${name}">Add</span></td>
 </tr>`;
