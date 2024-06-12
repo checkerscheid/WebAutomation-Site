@@ -154,6 +154,16 @@ class d1mini {
 		$id_mqtttopic = $this->insertTopic('Relais/Out');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'Pumpe', 'Pumpe', '0:Aus;1:Ein;');
 		$this->mergeTrend($id_dp, 'Pumpe');
+
+		$id_mqtttopicSetHand = $this->insertTopic('settings/Relais/SetHand');
+		$this->mergeDP($id_mqtttopicSetHand, 'PumpeSetHand', 'Pumpe Hand', '0:Automatik;1:Hand;');
+		$id_mqtttopicHand = $this->insertTopic('Relais/Hand');
+		$id_dp_hand = $this->mergeDP($id_mqtttopicHand, 'PumpeHand', 'Pumpe Hand', '0:Automatik;1:Hand;');
+		$this->mergeAlarm($id_dp_hand, 'PumpeHand', 'Pumpe Hand');
+
+		$id_mqtttopicHandValue = $this->insertTopic('settings/Relais/SetHandValue');
+		$this->mergeDP($id_mqtttopicHandValue, 'PumpeSetHandValue', 'Pumpe Hand Value', '0:Aus;1:Ein;');
+
 	}
 	private function setRain() {
 		$id_mqtttopic = $this->insertTopic('Rain');
