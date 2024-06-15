@@ -64,7 +64,8 @@ p.page.load = function() {
 //###################################################################################
 	$('#erg').on('click', '[data-column="name"] .stored', function() {
 		var name = $(this).text();
-		$('[data-json="' + name + '"]').find('.showJson').toggleClass('closed');
+		// $('[data-json="' + name + '"]').find('.showJson').toggleClass('closed');
+		location.href = 'std.d1mini.' + name + '.htm';
 	});
 //###################################################################################
 	$('#d1minicfg').on('click', '.searchResult .d1MiniAdd', function() {
