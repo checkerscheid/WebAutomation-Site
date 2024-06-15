@@ -43,10 +43,10 @@ class d1minicfg {
 		$html = '
 			<h1>D1 Mini Details</h1>
 			<div class="versionContainer">
-				<span>BasisEmpty: <span id="BasisEmptyVersion">' . self::$maxVersion . '</span></span>
+				<span id="BasisEmptyVersion">' . self::$maxVersion . '</span>
 			</div>
 			<hr />
-			<ul id="trend">';
+			<ul>';
 		$wpDatabase->query('SELECT [id_d1minigroup], [name] FROM [d1minigroup] ORDER BY [name]');
 		while($erg = $wpDatabase->fetch()) {
 			$html .= '
@@ -308,13 +308,13 @@ class d1minicfg {
 						</div>
 					</td>
 				</tr>
-				<tr class="D1MiniDeviceJson" data-json="' . $erg['name'] . '">
+				<!--tr class="D1MiniDeviceJson" data-json="' . $erg['name'] . '">
 					<td class="buttonbox"></td>
 					<td colspan="10" class="json">
 						<pre></pre>
 					</td>
 					<td class="buttonbox"></td>
-				</tr>';
+				</tr-->';
 		}
 		$html .= '
 			</tbody>
