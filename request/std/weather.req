@@ -21,6 +21,7 @@ use system\std;
 class weather {
 	const c_weather = 'weather';
 	const c_forecast = 'forecast';
+	const c_forecastlines = 'forecastLines';
 }
 
 switch(std::gets('param1')) {
@@ -31,6 +32,10 @@ switch(std::gets('param1')) {
 	//###################################################################################
 	case weather::c_forecast:
 		owDecode::getForecast();
+		break;
+		//###################################################################################
+	case weather::c_forecastlines:
+		owDecode::getForecastLines();
 		break;
 	//###################################################################################
 	default:

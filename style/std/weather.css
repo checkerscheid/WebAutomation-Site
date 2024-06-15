@@ -21,6 +21,8 @@
 
 .weathercontainer .condition { width:420px; }
 .weathercontainer .forecast { width:950px; }
+.weathercontainer .forecastlines { width:950px; padding:10px; }
+.weathercontainer .forecastlinesplaceholder { height:350px; }
 
 .weathercontainer .condition .big { font-size:65px; font-weight:bold; padding-left:135px; padding-top:10px;
 	float:left; text-shadow:0 0 3px #FFF; }

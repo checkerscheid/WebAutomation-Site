@@ -17,14 +17,30 @@
 namespace system\Helper;
 use system\wpInit;
 class openWeather {
-	private static $urlprepend = 'http://api.openweathermap.org/data/2.5/';
+	private const urlprepend = 'http://api.openweathermap.org/data/2.5/';
+	private static $instance;
 	private $urlappend;
+	private $debug = false;
+	private $weatherdata;
+	private $forecastdata;
 	public function __construct() {
 		$this->urlappend = '?id=' . wpInit::$weathercode . '&APPID=' . wpInit::$weatherkey . '&units=metric&lang=de';
+		$this->weatherdata = file_get_contents(self::urlprepend . 'weather' . $this->urlappend);
+		if($this->debug) {
+			$this->forecastdata = file_get_contents('system\Helper\openweatherexample.json');
+		} else {
+			$this->forecastdata = file_get_contents(self::urlprepend . 'forecast' . $this->urlappend);
+		}
+	}
+	public static function getInstance() {
+		if(!isset(self::$instance)) {
+			self::$instance = new self;
+		}
+		return self::$instance;
 	}
 	public static function getWeather() {
-		$ow = new openWeather();
-		$con = json_decode(file_get_contents(self::$urlprepend . 'weather' . $ow->urlappend));
+		$ow = openWeather::getInstance();
+		$con = json_decode($ow->weatherdata);
 		echo '
 			<div style="background:transparent url('.self::getIcon($con->weather[0]->icon).') left top no-repeat" title="'.$con->weather[0]->description.'">
 
@@ -42,8 +58,8 @@ class openWeather {
 			</div>';
 	}
 	public static function getForecast() {
-		$ow = new openWeather();
-		$con = json_decode(file_get_contents(self::$urlprepend . 'forecast' . $ow->urlappend));
+		$ow = openWeather::getInstance();
+		$con = json_decode($ow->forecastdata);
 		$aktdt = '';
 		for($i = 0; $i < $con->cnt; $i++) {
 			$akt = $con->list[$i];
@@ -70,6 +86,28 @@ class openWeather {
 		}
 		echo '
 				<div class="clearboth"></div>';
+	}
+	public static function getForecastLines() {
+		header(wpJSON_HEADER);
+		$ow = openWeather::getInstance();
+		$con = json_decode($ow->forecastdata);
+		$dataTemp = "[";
+		$dataTempMin = "[";
+		$dataTempMax = "[";
+		$dataHumidity = "[";
+		for($i = 0; $i < $con->cnt; $i++) {
+			$akt = $con->list[$i];
+			$dataTemp .= '[' . $akt->dt . ',' . $akt->main->temp . ']' . ($i < $con->cnt - 1 ? ',' : '');
+			$dataTempMin .= '[' . $akt->dt . ',' . $akt->main->temp_min . ']' . ($i < $con->cnt - 1 ? ',' : '');
+			$dataTempMax .= '[' . $akt->dt . ',' . $akt->main->temp_max . ']' . ($i < $con->cnt - 1 ? ',' : '');
+			$dataHumidity .= '[' . $akt->dt . ',' . $akt->main->humidity . ']' . ($i < $con->cnt - 1 ? ',' : '');
+		}
+		echo '{';
+		echo '"Temp":' . $dataTemp . '],';
+		echo '"TempMin":' . $dataTempMin . '],';
+		echo '"TempMax":' . $dataTempMax . '],';
+		echo '"Humidity":' . $dataHumidity . ']';
+		echo '}';
 	}
 	private static function getIcon($icon) {
 		$output = $_SERVER['DOCUMENT_ROOT'].'/images/cache/'.$icon.'.png';
