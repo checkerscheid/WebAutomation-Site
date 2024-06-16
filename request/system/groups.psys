@@ -68,18 +68,19 @@ class groups {
 	const c_groupinsert = 'groupinsert';
 	public static function groupinsert() {
 		if(std::posts('table') != '' && std::posts('name') != '') {
+			header(wpJSON_HEADER);
 			$database = new wpDatabase();
 			$database->query("INSERT INTO [" . std::posts('table') . "] ([name]) VALUES('" . std::posts('name') . "')");
 			echo '{
 				"erg": "S_OK",
-				"forhtml":"
-<div>
-	<input type=\"hidden\" value=\"'.$database->lastid().'\" />
-	<input type=\"text\" value=\"'.std::posts('name').'\" class=\"ps-input\" />
-	<input type=\"button\" value=\"speichern\" class=\"groupupdate ps-button\">
-	<input type=\"button\" value=\"entfernen\" class=\"groupupdelete ps-button\">
-</div>"
-			}';
+				"forhtml":"' .
+'<div>' .
+	'<input type=\"hidden\" value=\"'.$database->lastid().'\" />' .
+	'<input type=\"text\" value=\"'.std::posts('name').'\" class=\"ps-input\" />' .
+	'<input type=\"button\" value=\"speichern\" class=\"groupupdate ps-button\">' .
+	'<input type=\"button\" value=\"entfernen\" class=\"groupupdelete ps-button\">' .
+'</div>"' .
+			'}';
 		} else {
 			echo '{
 				"erg": "S_ERROR",
@@ -91,6 +92,7 @@ class groups {
 	const c_groupupdate = 'groupupdate';
 	public static function groupupdate() {
 		if(std::posts('table') != '' && std::posts('id') != '' && std::posts('name') != '') {
+			header(wpJSON_HEADER);
 			$database = new wpDatabase();
 			$database->query("UPDATE [" . std::posts('table') . "]
 				SET [name] = '" . std::posts('name') . "'
@@ -107,6 +109,7 @@ class groups {
 	const c_groupdelete = 'groupdelete';
 	public static function groupdelete() {
 		if(std::posts('table') != '' && std::posts('member') && std::posts('id') != '') {
+			header(wpJSON_HEADER);
 			$database = new wpDatabase();
 			if(std::posts('force') == 'true') {
 				$database->query("DELETE FROM [" . std::posts('table') . "]

@@ -63,28 +63,30 @@ class d1mini {
 			$this->setRSSI();
 			$this->setOnline();
 			$this->setRest();
-			if(isset($this->status->FreakaZoneDevice->Debug->DHT)) {
+			if($this->status->FreakaZoneDevice->useModul->DHT11 ||
+					$this->status->FreakaZoneDevice->useModul->DHT22) {
 				$this->setDHT();
 			}
-			if(isset($this->status->FreakaZoneDevice->Debug->LDR)) {
+			if($this->status->FreakaZoneDevice->useModul->LDR) {
 				$this->setLDR();
 			}
-			if(isset($this->status->FreakaZoneDevice->Debug->Light)) {
+			if($this->status->FreakaZoneDevice->useModul->Light) {
 				$this->setLight();
 			}
-			if(isset($this->status->FreakaZoneDevice->Debug->BM)) {
+			if($this->status->FreakaZoneDevice->useModul->BM) {
 				$this->setBM();
 			}
-			if(isset($this->status->FreakaZoneDevice->Debug->Relais)) {
+			if($this->status->FreakaZoneDevice->useModul->Relais ||
+					$this->status->FreakaZoneDevice->useModul->RelaisShield) {
 				$this->setRelais();
 			}
-			if(isset($this->status->FreakaZoneDevice->Debug->Rain)) {
+			if($this->status->FreakaZoneDevice->useModul->Rain) {
 				$this->setRain();
 			}
-			if(isset($this->status->FreakaZoneDevice->Debug->Distance)) {
+			if($this->status->FreakaZoneDevice->useModul->Distance) {
 				$this->setVolume();
 			}
-			if(isset($this->status->FreakaZoneDevice->Debug->Moisture)) {
+			if($this->status->FreakaZoneDevice->useModul->Moisture) {
 				$this->setMoisture();
 			}
 			return $this->id;
