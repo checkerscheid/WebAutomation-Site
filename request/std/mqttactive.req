@@ -19,11 +19,13 @@ use system\Helper\wpDatabase;
 use system\std, system\WebCom;
 
 require_once 'request/system/groups.psys';
-require_once 'request/system/dps.psys';
 
 class mqttactive {
 	// Menueeintraege
+	const c_menunewelem = 'menunewelem';
 	const c_menueditelem = 'menueditelem';
+	// browse Topics
+	const c_showbrowseresult = 'showbrowseresult';
 	// topics bearbeiten (menutopics)
 	const c_gettopics = 'gettopics';
 	const c_popallgroup = 'popallgroup';
@@ -41,6 +43,19 @@ switch(std::gets('param1')) {
 //###################################################################################
 // Menueeintraege
 //###################################################################################
+	case mqttactive::c_menunewelem:
+?>
+		<h1>Durchsuche Broker nach Topics</h1>
+		<div>
+			<span class="ps-button setBrowseMqtt">set Browse Mqtt Mode</span>
+			<span class="ps-button unsetBrowseMqtt">unset Browse Mqtt Mode</span>
+			<span class="ps-button getBrowseMqtt">show Browse Mqtt Result</span>
+		</div>
+		<hr />
+		<div class="browsedTopics">
+		</div>
+<?
+		break;
 //###################################################################################
 	case mqttactive::c_menueditelem:
 ?>
@@ -60,7 +75,39 @@ switch(std::gets('param1')) {
 		</ul>
 <?
 		break;
+//###################################################################################
+// topics bearbeiten (menutopics)
+//###################################################################################
+	case mqttactive::c_showbrowseresult:
+		$WebCom = new WebCom();
+		$jsonerg = \json_decode($WebCom->send('getBrowseMqtt'));
+		\sort($jsonerg);
+		$storedTopics = array();
+		$database = new wpDatabase();
+		$database->query('SELECT
+				[t].[id_mqtttopic], [t].[topic], [g].[name]
+				FROM [mqtttopic] [t]
+				LEFT JOIN [mqttgroup] [g] ON [g].[id_mqttgroup] = [t].[id_mqttgroup]');
+		while($erg = $database->fetch()) {
+			$storedTopics[$erg['topic']] = array(
+				'id' => $erg['id_mqtttopic'],
+				'group' => $erg['name']
+			);
+		}
 
+		//std::test_array($jsonerg);
+		//std::test_array($storedTopics);
+
+		$returns = '<ul>';
+		foreach($jsonerg as $topic) {
+			if(\array_key_exists($topic, $storedTopics)) {
+				$returns .= '<li><span class="ps-fontgreen">' . $topic . '</span>, stored in ' . $storedTopics[$topic]['group'] . '</li>';
+			} else {
+				$returns .= '<li><span class="ps-fontyellow">' . $topic . '</span></li>';
+			}
+		}
+		echo $returns;
+		break;
 //###################################################################################
 // topics bearbeiten (menutopics)
 //###################################################################################

@@ -19,23 +19,37 @@
 // p.log.level = p.log.type.info;
 
 //<? require_once 'script/system/groups.js'; ?>
-//<? require_once 'script/system/dps.js'; ?>
 
 groups.tablename = 'mqttgroup';
 groups.member = 'mqtttopic';
 groups.target = 'mqttactive';
 
-dps.tablename = 'mqtttopic';
-dps.target = 'mqttactive';
-
 p.page.load = function() {
 	groups.init();
-	dps.init();
 //###################################################################################
 // Allgemein
 //###################################################################################
 	$('#submenu').on('click', '.ps-button', function() {
 		p.page.change('#erg', 'std.mqttactive.menu' + $(this).attr('data-target') + '.req', {table:groups.tablename});
+	});
+//###################################################################################
+// Browse Topics
+//###################################################################################
+	$('#erg').on('click', '.setBrowseMqtt', function() {
+		$.get('std.request.setBrowseMqtt.req', function(data) {
+			if(data != 'S_OK') p.page.alert(data);
+		});
+	});
+	$('#erg').on('click', '.unsetBrowseMqtt', function() {
+		$.get('std.request.unsetBrowseMqtt.req', function(data) {
+			if(data != 'S_OK') p.page.alert(data);
+		});
+	});
+	$('#erg').on('click', '.getBrowseMqtt', function() {
+		$.get('std.mqttactive.showbrowseresult.req', function(data) {
+			//if(data != 'S_OK') p.page.alert(data);
+			$('.browsedTopics').html(data);
+		});
 	});
 //###################################################################################
 // Topics bearbeiten

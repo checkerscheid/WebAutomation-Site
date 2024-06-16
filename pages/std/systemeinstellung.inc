@@ -42,19 +42,19 @@ foreach($zimmer as $kurz) {
 }
 
 $wpDebug = array(
-	'wpDebug',
-	'wpDebugSQL',
-	'wpDebugOPC',
-	'wpDebugTransferID',
-	'wpDebugWatchdog',
-	'wpDebugFactor',
-	'wpDebugTrend',
-	'wpDebugCalendar',
-	'wpDebugOpcRouter',
-	'wpDebugWebSockets',
-	'wpDebugShelly',
-	'wpDebugD1Mini',
-	'wpDebugMQTT'
+	'debug',
+	'debugSQL',
+	'debugOPC',
+	'debugTransferID',
+	'debugWatchdog',
+	'debugFactor',
+	'debugTrend',
+	'debugCalendar',
+	'debugOpcRouter',
+	'debugWebSockets',
+	'debugShelly',
+	'debugD1Mini',
+	'debugMQTT'
 );
 ?>
 <div id="systemeinstellung" class="ps-flex-container">

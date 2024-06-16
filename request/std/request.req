@@ -31,7 +31,10 @@ class request {
 	const c_writemultidp = 'writemultidp';
 	const c_togglewrite = 'togglewrite';
 	const c_ForceMqttUpdate = 'ForceMqttUpdate';
-	const c_BrowseMqtt = 'BrowseMqtt';
+	const c_shellyMqttUpdate = 'shellyMqttUpdate';
+	const c_d1MiniMqttUpdate = 'd1MiniMqttUpdate';
+	const c_setBrowseMqtt = 'setBrowseMqtt';
+	const c_unsetBrowseMqtt = 'unsetBrowseMqtt';
 	const c_getBrowseMqtt = 'getBrowseMqtt';
 	const c_wpGetDebug = 'wpGetDebug';
 	const c_wpSetDebug = 'wpSetDebug';
@@ -161,18 +164,39 @@ switch(std::gets('param1')) {
 		echo $req;
 		break;
 //###################################################################################
-	case request::c_BrowseMqtt:
+	case request::c_shellyMqttUpdate:
+		$req = '';
 		$WebCom = new WebCom();
+		$req = $WebCom->send('shellyMqttUpdate');
+		echo $req;
+		break;
+//###################################################################################
+	case request::c_d1MiniMqttUpdate:
+		$req = '';
+		$WebCom = new WebCom();
+		$req = $WebCom->send('d1MiniMqttUpdate');
+		echo $req;
+		break;
+//###################################################################################
+	case request::c_setBrowseMqtt:
+		$WebCom = new WebCom();
+		$WebCom->send('ForceMqttUpdate');
 		echo $WebCom->send('setBrowseMqtt');
 		break;
-		//###################################################################################
+//###################################################################################
+	case request::c_unsetBrowseMqtt:
+		$WebCom = new WebCom();
+		echo $WebCom->send('unsetBrowseMqtt');
+		break;
+//###################################################################################
 	case request::c_getBrowseMqtt:
 		$WebCom = new WebCom();
 		echo $WebCom->send('getBrowseMqtt');
 		break;
 //###################################################################################
 	case request::c_wpGetDebug:
-		header(wpJSON_HEADER);		$req = '';
+		header(wpJSON_HEADER);
+		$req = '';
 		$WebCom = new WebCom();
 		$req = $WebCom->send('wpGetDebug');
 		echo $req;
