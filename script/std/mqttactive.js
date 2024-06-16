@@ -11,7 +11,7 @@
 //#                                                                                 #
 //# Revision     : $Rev:: 625                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: mqttactive.js 625 2024-06-16 09:23:25Z                     $ #
+//# File-ID      : $Id:: mqttactive.js 625 2024-06-16 09:23:25Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> mqttactive */
@@ -46,9 +46,10 @@ p.page.load = function() {
 		});
 	});
 	$('#erg').on('click', '.getBrowseMqtt', function() {
+		$('.browsedTopics').html('').addClass('ps-loading');
 		$.get('std.mqttactive.showbrowseresult.req', function(data) {
 			//if(data != 'S_OK') p.page.alert(data);
-			$('.browsedTopics').html(data);
+			$('.browsedTopics').removeClass('ps-loading').html(data);
 		});
 	});
 //###################################################################################

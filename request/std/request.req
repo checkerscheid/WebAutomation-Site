@@ -180,8 +180,11 @@ switch(std::gets('param1')) {
 //###################################################################################
 	case request::c_setBrowseMqtt:
 		$WebCom = new WebCom();
-		$WebCom->send('ForceMqttUpdate');
+		echo 'set browse MQTT: ';
 		echo $WebCom->send('setBrowseMqtt');
+		$WebCom = new WebCom();
+		echo '<br />Force MQTT Update: ';
+		echo $WebCom->send('ForceMqttUpdate');
 		break;
 //###################################################################################
 	case request::c_unsetBrowseMqtt:

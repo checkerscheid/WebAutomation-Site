@@ -1198,12 +1198,12 @@ class WebCom {
 	private $fehler = false;
 
 	public function __construct($timeout = 1) {
-		$this->socket = @socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+		$this->socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 		socket_set_option($this->socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => $timeout, 'usec' => 0));
 		if (!$this->socket) {
 			echo 'socket_create() fehlgeschlagen: Grund: '.socket_strerror(socket_last_error()).'<br />'."\n";
 		} else {
-			$result = @socket_connect($this->socket, wpInit::$CS_server, wpInit::$CS_port);
+			$result = socket_connect($this->socket, wpInit::$CS_server, wpInit::$CS_port);
 			if (!$result) {
 				echo 'socket_connect() fehlgeschlagen: Grund: ('.$result.') '.socket_strerror(socket_last_error($this->socket)).'<br />'."\n";
 			}
@@ -1225,8 +1225,8 @@ class WebCom {
 			if($param != '') $befehl .= '<'.$param.'>';
 		}
 		$returns = '';
-		@socket_write($this->socket, $befehl, strlen($befehl));
-		while ($out = @socket_read($this->socket, 1024)) {
+		socket_write($this->socket, $befehl, strlen($befehl));
+		while ($out = socket_read($this->socket, 1024)) {
 			$returns .= $out;
 		}
 		return $returns;
