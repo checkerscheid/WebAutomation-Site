@@ -54,10 +54,10 @@ class d1minicfg {
 				<li data-d1minis="'.$erg['id_d1minigroup'].'"></li>';
 		}
 		$html .= '
+				<li class="ps-tree-parent d1minigroupfolder" data-d1minigroup="ALL">Alle D1 Minis</li>
+				<li data-d1minis="ALL"></li>
 				<li class="ps-tree-parent d1minigroupfolder" data-d1minigroup="NULL">D1 Minis ohne Gruppe</li>
 				<li data-d1minis="NULL"></li>
-				<li class="ps-tree-parent d1minigroupfolder" data-d1minigroup="All">Alle D1 Minis</li>
-				<li data-d1minis="All"></li>
 			</ul>';
 		echo $html;
 	}
@@ -173,7 +173,7 @@ class d1minicfg {
 			SELECT
 				[id_d1mini], [name], [description], [ip], [mac], [version], [active]
 			FROM [d1mini]";
-		if(std::posts('d1minigroup') != 'All') {
+		if(std::posts('d1minigroup') != 'ALL') {
 			$sql .= "
 			WHERE [id_d1minigroup] " . (std::posts('d1minigroup') == 'NULL' ? 'IS NULL' : ' = '.std::posts('d1minigroup'));
 		}
