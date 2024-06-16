@@ -122,6 +122,8 @@ switch(std::gets('param1')) {
 					<li data-shelly="'.$erg['id_shellygroup'].'"></li>';
 		}
 		echo '
+					<li class="ps-tree-parent" data-group="ALL">Alle Shellys</li>
+					<li data-shelly="ALL"></li>
 					<li class="ps-tree-parent" data-group="NULL">Shellys ohne Gruppe</li>
 					<li data-shelly="NULL"></li>
 				</ul>
@@ -264,7 +266,13 @@ switch(std::gets('param1')) {
 							</tr>
 						</thead>
 						<tbody>';
-		$where = (std::posts('group') == 'NULL') ? "WHERE [s].[id_shellygroup] IS NULL" : "WHERE [s].[id_shellygroup] = ".std::posts('group');
+		if(std::posts('group') == 'ALL') {
+			$where = '';
+		} else if(std::posts('group') == 'NULL') {
+			$where = " WHERE [s].[id_shellygroup] IS NULL";
+		} else {
+			$where = " WHERE [s].[id_shellygroup] = ".std::posts('group');
+		}
 		$database->query("SELECT
 			[s].[id_shelly], [s].[name], [s].[ip], [s].[type], [s].[mac], [s].[un], [s].[pw], [s].[active],
 			[d1].[id_opcdatapoint] AS [idonoff], [d2].[id_opcdatapoint] AS [idtemp], [d3].[id_opcdatapoint] AS [idfeuchte], [d4].[id_opcdatapoint] AS [idlux],
