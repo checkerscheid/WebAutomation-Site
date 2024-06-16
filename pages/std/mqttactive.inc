@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 15.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 562                                                     $ #
+//# Revision     : $Rev:: 624                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: mqttactive.inc 562 2024-01-16 02:08:14Z                  $ #
+//# File-ID      : $Id:: mqttactive.inc 624 2024-06-16 09:21:59Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
