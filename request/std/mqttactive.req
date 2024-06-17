@@ -11,10 +11,11 @@
 //#                                                                                 #
 //# Revision     : $Rev:: 625                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: mqttactive.req 625 2024-06-16 09:23:25Z                    $ #
+//# File-ID      : $Id:: mqttactive.req 625 2024-06-16 09:23:25Z                  $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
+use Exception;
 use system\Helper\wpDatabase;
 use system\std, system\WebCom;
 
@@ -98,15 +99,55 @@ switch(std::gets('param1')) {
 		//std::test_array($jsonerg);
 		//std::test_array($storedTopics);
 
-		$returns = '<ul>';
+		$treeResult = array();
 		foreach($jsonerg as $topic) {
-			if(\array_key_exists($topic, $storedTopics)) {
-				$returns .= '<li><span class="ps-fontgreen">' . $topic . '</span>, stored in ' . $storedTopics[$topic]['group'] . '</li>';
-			} else {
-				$returns .= '<li><span class="ps-fontyellow">' . $topic . '</span></li>';
+			$t = explode('/', $topic);
+			$treeEntry = array();
+			if(count($t) == 1) {
+				$treeEntry[$t[0]] = $topic;
 			}
+			if(count($t) == 2) {
+				$treeEntry[$t[0]][$t[1]] = $topic;
+			}
+			if(count($t) == 3) {
+				$treeEntry[$t[0]][$t[1]][$t[2]] = $topic;
+			}
+			if(count($t) == 4) {
+				$treeEntry[$t[0]][$t[1]][$t[2]][$t[3]] = $topic;
+			}
+			if(count($t) == 5) {
+				$treeEntry[$t[0]][$t[1]][$t[2]][$t[3]][$t[4]] = $topic;
+			}
+			if(count($t) == 6) {
+				$treeEntry[$t[0]][$t[1]][$t[2]][$t[3]][$t[4]][$t[5]] = $topic;
+			}
+			if(count($t) == 7) {
+				$treeEntry[$t[0]][$t[1]][$t[2]][$t[3]][$t[4]][$t[5]][$t[6]] = $topic;
+			}
+			if(count($t) == 8) {
+				$treeEntry[$t[0]][$t[1]][$t[2]][$t[3]][$t[4]][$t[5]][$t[6]][$t[7]] = $topic;
+			}
+			if(count($t) == 9) {
+				$treeEntry[$t[0]][$t[1]][$t[2]][$t[3]][$t[4]][$t[5]][$t[6]][$t[7]][$t[8]] = $topic;
+			}
+			if(count($t) == 10) {
+				$treeEntry[$t[0]][$t[1]][$t[2]][$t[3]][$t[4]][$t[5]][$t[6]][$t[7]][$t[8]][$t[9]] = $topic;
+			}
+			$treeResult = array_merge_recursive($treeResult, $treeEntry);
 		}
-		echo $returns;
+		echo '<ul>';
+		echo generateTreeView($treeResult, $storedTopics);
+		echo '</ul>';
+
+		// $returns = '<ul>';
+		// foreach($jsonerg as $topic) {
+		// 	if(\array_key_exists($topic, $storedTopics)) {
+		// 		$returns .= '<li><span class="ps-fontgreen">' . $topic . '</span>, stored in ' . $storedTopics[$topic]['group'] . '</li>';
+		// 	} else {
+		// 		$returns .= '<li><span class="ps-fontyellow">' . $topic . '</span></li>';
+		// 	}
+		// }
+		// echo $returns;
 		break;
 //###################################################################################
 // topics bearbeiten (menutopics)
@@ -384,4 +425,33 @@ function createDropDown($array, $active = 0) {
 		$html .= '<option value="'.$key.'"'.$selected.'>'.$value.'</option>';
 	}
 	return $html;
+}
+
+$counter = 0;
+function generateTreeView($array, $storedTopics) {
+	global $counter;
+	$returns = '';
+	foreach($array as $key => $value) {
+		$counter++;
+		if(is_array($value)) {
+			$returns .= '<li class="ps-tree-parent key' . $counter . '" data-key="key' . $counter . '">';
+			$returns .= '<span>' . $key . ': </span>';
+			$returns .= '</li>';
+			$returns .= '<li>';
+			$returns .= '<ul class="ps-hidden subtopic key' . $counter . '">';
+			$returns .= generateTreeView($value, $storedTopics);
+			$returns .= '</ul>';
+			$returns .= '</li>';
+		} else {
+			$returns .= '<li>';
+			$returns .= '<span>' . $key . ': </span>';
+			if(\array_key_exists($value, $storedTopics)) {
+				$returns .= '<span class="ps-fontgreen">' . $value . '</span>, stored in ' . $storedTopics[$value]['group'] . '</li>';
+			} else {
+				$returns .= '<span class="ps-fontyellow">' . $value . '</span></li>';
+			}
+			$returns .= '</li>';
+		}
+	}
+	return $returns;
 }

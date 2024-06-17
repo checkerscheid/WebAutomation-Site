@@ -17,6 +17,9 @@
 /** @var wpDatabase $database */
 namespace pages\std;
 use system\std, system\WebCom;
+use system\Helper\wpa;
+
+require_once 'system/Helper/wpa.psys';
 
 $database->query("SELECT TOP 1 [name] FROM [webpages] WHERE [src] = 'd1mini'");
 $headline = $database->fetch();
@@ -76,7 +79,7 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 				</tr>
 				<tr>
 					<td>use Avg:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->LDR->useLDRAvg ?>" /></td>
+					<td><input type="text" class="ps-input" value="<?=($d1Mini->FreakaZoneDevice->LDR->useLDRAvg ? 'On' : 'Off') ?>" /></td>
 				</tr>
 				<tr>
 					<td>Correction:</td>
@@ -100,7 +103,7 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 				</tr>
 				<tr>
 					<td>use Avg:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Light->useLightAvg ?>" /></td>
+					<td><input type="text" class="ps-input" value="<?=($d1Mini->FreakaZoneDevice->Light->useLightAvg ? 'On' : 'Off') ?>" /></td>
 				</tr>
 				<tr>
 					<td>Correction:</td>
@@ -115,7 +118,7 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 			<table summary="">
 				<tr>
 					<td>BM:</td>
-					<td><span class="ps-input" data-ws="<?=$erg['name'] ?>_BM">undefined</span></td>
+					<td><span class="ps-input <?=wpa::GreyGreen ?>" data-ws="<?=$erg['name'] ?>_BM">undefined</span></td>
 				</tr>
 				<tr><td colspan="2"><hr /></td></tr>
 		<? if($d1Mini->FreakaZoneDevice->useModul->LDR) { ?>
@@ -142,26 +145,26 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 				<tr>
 					<td colspan="3">Pumpe Output:</td>
 					<td colspan="3">
-						<span class="ps-input" data-ws="<?=$erg['name'] ?>_Pumpe">undefined</span>
+						<span class="ps-input <?=wpa::GreyGreen ?>" data-ws="<?=$erg['name'] ?>_Pumpe">undefined</span>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="3">Modus:</td>
 					<td colspan="3">
-						<span class="ps-input" data-ws="<?=$erg['name'] ?>_PumpeHandError">undefined</span>
+						<span class="ps-input <?=wpa::GreenYellow ?>" data-ws="<?=$erg['name'] ?>_PumpeHandError">undefined</span>
 					</td>
 				</tr>
 				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
 					<td colspan="3">Automatikwert:</td>
 					<td colspan="3">
-						<span class="ps-input" data-ws="<?=$erg['name'] ?>_PumpeAuto">undefined</span>
+						<span class="ps-input <?=wpa::GreyGreen ?>" data-ws="<?=$erg['name'] ?>_PumpeAuto">undefined</span>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="3">Handwert:</td>
 					<td colspan="3">
-						<span class="ps-input" data-ws="<?=$erg['name'] ?>_PumpeHand">undefined</span>
+						<span class="ps-input <?=wpa::$GreyGreen ?>" data-ws="<?=$erg['name'] ?>_PumpeHand">undefined</span>
 					</td>
 				</tr>
 				<tr>
@@ -195,7 +198,7 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 				</tr>
 				<tr>
 					<td colspan="3">waterEmpty:</td>
-					<td colspan="3"><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Relais->Moisture->waterEmpty ?>" /></td>
+					<td colspan="3"><input type="text" class="ps-input" value="<?=($d1Mini->FreakaZoneDevice->Relais->Moisture->waterEmpty ? 'On' : 'Off') ?>" /></td>
 				</tr>
 				<tr>
 					<td colspan="3">pumpActive:</td>
@@ -224,7 +227,7 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 				</tr>
 				<tr>
 					<td>use Avg:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Rain->useRainAvg ?>" /></td>
+					<td><input type="text" class="ps-input" value="<?=($d1Mini->FreakaZoneDevice->Rain->useRainAvg ? 'On' : 'Off') ?>" /></td>
 				</tr>
 				<tr>
 					<td>Correction:</td>
@@ -248,7 +251,7 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 				</tr>
 				<tr>
 					<td>use Avg:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Moisture->useMoistureAvg ?>" /></td>
+					<td><input type="text" class="ps-input" value="<?=($d1Mini->FreakaZoneDevice->Moisture->useMoistureAvg ? 'On' : 'Off') ?>" /></td>
 				</tr>
 				<tr>
 					<td>Min Alarm:</td>

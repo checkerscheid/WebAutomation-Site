@@ -52,6 +52,16 @@ p.page.load = function() {
 			$('.browsedTopics').removeClass('ps-loading').html(data);
 		});
 	});
+	$('#erg').on('click', '.ps-tree-parent', function() {
+		let id = $(this).attr('data-key');
+		if($('li.' + id).hasClass('open')) {
+			$('li.' + id).removeClass('open');
+			$('ul.' + id).addClass('ps-hidden');
+		} else {
+			$('li.' + id).addClass('open');
+			$('ul.' + id).removeClass('ps-hidden');
+		}
+	});
 //###################################################################################
 // Topics bearbeiten
 //###################################################################################

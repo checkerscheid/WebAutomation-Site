@@ -41,3 +41,5 @@ span.p-tree-parent { display:inline-block; }
 
 #dialog ul.names { margin-left:10px; list-style:disc inside }
 #dialog ul.names li { padding:2px 5px; }
+
+.browsedTopics span { line-height:20px; }

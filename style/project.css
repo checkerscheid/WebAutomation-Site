@@ -48,7 +48,8 @@
 .page span.left { width:70px; line-height:25px; white-space:nowrap; }
 .page span.sw { color:#00F; }
 
-.page .ps-button, .page .ps-input, .parampage .ps-button, .parampage .ps-input, .popup .ps-input, .popup.bedienung .ps-button { display:inline-block; min-width:100px; text-align:center; }
+.page .ps-button, .page .ps-input, .parampage .ps-button, .parampage .ps-input, .popup .ps-input, .popup.bedienung .ps-button {
+		display:inline-block; width:100px; min-width:100px; text-align:center; }
 
 .parampage { padding-top:30px; }
 .parampage .ps-container { width:500px; margin:0 auto 10px; }
