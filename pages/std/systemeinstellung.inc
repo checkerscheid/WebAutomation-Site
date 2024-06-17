@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.11.2023                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 607                                                     $ #
+//# Revision     : $Rev:: 626                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: systemeinstellung.inc 607 2024-05-05 13:40:32Z           $ #
+//# File-ID      : $Id:: systemeinstellung.inc 626 2024-06-17 15:18:36Z           $ #
 //#                                                                                 #
 //###################################################################################
 /**
