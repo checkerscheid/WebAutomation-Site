@@ -163,7 +163,7 @@ class d1mini {
 		echo "saved: 'Bewegung2' ";
 	}
 	private function setRelais() {
-		$id_mqtttopic = $this->insertTopic('Relais/Out');
+		$id_mqtttopic = $this->insertTopic('Relais/Output');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'Pumpe', 'Pumpe', '0:Aus;1:Ein;');
 		$this->mergeTrend($id_dp, 'Pumpe');
 
