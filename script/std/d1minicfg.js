@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 03.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 619                                                     $ #
+//# Revision     : $Rev:: 622                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.js 619 2024-05-26 02:22:52Z                    $ #
+//# File-ID      : $Id:: d1minicfg.js 622 2024-06-15 00:51:27Z                    $ #
 //#                                                                                 #
 //###################################################################################
 ?> d1minicfg */
@@ -64,7 +64,8 @@ p.page.load = function() {
 //###################################################################################
 	$('#erg').on('click', '[data-column="name"] .stored', function() {
 		var name = $(this).text();
-		$('[data-json="' + name + '"]').find('.showJson').toggleClass('closed');
+		// $('[data-json="' + name + '"]').find('.showJson').toggleClass('closed');
+		location.href = 'std.d1mini.' + name + '.htm';
 	});
 //###################################################################################
 	$('#d1minicfg').on('click', '.searchResult .d1MiniAdd', function() {
@@ -83,7 +84,7 @@ p.page.load = function() {
 						$.post('std.d1minicfg.saveSearchedDevice.req', myData, function(data) {
 							console.log(data);
 							if(data.erg == 'S_OK') {
-								p.page.alert(data.msg);
+								p.page.alert(data.msg, 10000);
 								$('#dialog').dialog('close');
 							} else {
 								p.page.alertred(data.msg, 10000);
@@ -113,7 +114,7 @@ p.page.load = function() {
 						$.post('std.d1minicfg.renewDevice.req', myData, function(data) {
 							console.log(data);
 							if(data.erg == 'S_OK') {
-								p.page.alert(data.msg);
+								p.page.alert(data.msg, 10000);
 								$('#dialog').dialog('close');
 							} else {
 								p.page.alertred(data.msg, 10000);

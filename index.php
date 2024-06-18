@@ -82,7 +82,8 @@ unset($_SESSION[SESSION_ID]['ActiveAlarms']);
 	<script type="text/javascript" src="library/jquery.flot.time.min.js"></script>
 	<script type="text/javascript" src="library/jquery.flot.selection.min.js"></script>
 	<script type="text/javascript" src="library/jquery.flot.crosshair.min.js"></script>
-	<script type="text/javascript" src="library/jquery.flot.pie.js"></script>
+	<script type="text/javascript" src="library/jquery.flot.fillbetween.min.js"></script>
+	<script type="text/javascript" src="library/jquery.flot.pie.min.js"></script>
 	<script type="text/javascript" src="library/date.js"></script>
 	<script type="text/javascript" src="library/moment.min.js"></script>
 	<script type="text/javascript" src="library/fullcalendar-<?=$calendarversion?>.min.js"></script>

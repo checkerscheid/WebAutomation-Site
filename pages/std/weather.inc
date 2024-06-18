@@ -22,6 +22,11 @@ namespace pages\std;
 		<div class="condition ps-container">
 			<div class="ps-loading"></div>
 		</div>
+		<div class="forecastlines ps-container">
+			<div class="forecastlinesplaceholder">
+				<div class="ps-loading"></div>
+			</div>
+		</div>
 		<div class="forecast ps-container ps-loading">
 			<div class="ps-loading"></div>
 		</div>

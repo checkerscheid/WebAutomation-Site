@@ -1,0 +1,457 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 15.06.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 626                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: mqttactive.req 626 2024-06-17 15:18:36Z                  $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\std;
+use Exception;
+use system\Helper\wpDatabase;
+use system\std, system\WebCom;
+
+require_once 'request/system/groups.psys';
+
+class mqttactive {
+	// Menueeintraege
+	const c_menunewelem = 'menunewelem';
+	const c_menueditelem = 'menueditelem';
+	// browse Topics
+	const c_showbrowseresult = 'showbrowseresult';
+	// topics bearbeiten (menutopics)
+	const c_gettopics = 'gettopics';
+	const c_popallgroup = 'popallgroup';
+	const c_saveallgroup = 'saveallgroup';
+	const c_popallactive = 'popallactive';
+	const c_saveallactive = 'saveallactive';
+	const c_popalldelete = 'popalldelete';
+	const c_savealldelete = 'savealldelete';
+	const c_poponetopic = 'poponetopic';
+	const c_updateonetopic = 'updateonetopic';
+	const c_deleteonetopic = 'deleteonetopic';
+}
+
+switch(std::gets('param1')) {
+//###################################################################################
+// Menueeintraege
+//###################################################################################
+	case mqttactive::c_menunewelem:
+?>
+		<h1>Durchsuche Broker nach Topics</h1>
+		<div>
+			<span class="ps-button setBrowseMqtt">set Browse Mqtt Mode</span>
+			<span class="ps-button unsetBrowseMqtt">unset Browse Mqtt Mode</span>
+			<span class="ps-button getBrowseMqtt">show Browse Mqtt Result</span>
+		</div>
+		<hr />
+		<div class="browsedTopics">
+		</div>
+<?
+		break;
+//###################################################################################
+	case mqttactive::c_menueditelem:
+?>
+		<h1>topic Details</h1>
+		<hr />
+		<ul id="topic">
+<?
+		$database = new wpDatabase();
+		$database->query('SELECT [id_mqttgroup], [name] FROM [mqttgroup] ORDER BY [name]');
+		while($erg = $database->fetch()) {
+			echo '<li class="ps-tree-parent mqttgroupfolder" data-mqttgroup="'.$erg['id_mqttgroup'].'">'.$erg['name'].'</li>';
+			echo '<li data-topics="'.$erg['id_mqttgroup'].'"></li>';
+		}
+		echo '<li class="ps-tree-parent mqttgroupfolder" data-mqttgroup="NULL">topics ohne Gruppe</li>';
+		echo '<li data-topics="NULL"></li>';
+?>
+		</ul>
+<?
+		break;
+//###################################################################################
+// topics bearbeiten (menutopics)
+//###################################################################################
+	case mqttactive::c_showbrowseresult:
+		$WebCom = new WebCom();
+		$jsonerg = \json_decode($WebCom->send('getBrowseMqtt'));
+		\sort($jsonerg);
+		$storedTopics = array();
+		$database = new wpDatabase();
+		$database->query('SELECT
+				[t].[id_mqtttopic], [t].[topic], [g].[name]
+				FROM [mqtttopic] [t]
+				LEFT JOIN [mqttgroup] [g] ON [g].[id_mqttgroup] = [t].[id_mqttgroup]');
+		while($erg = $database->fetch()) {
+			$storedTopics[$erg['topic']] = array(
+				'id' => $erg['id_mqtttopic'],
+				'group' => $erg['name']
+			);
+		}
+
+		//std::test_array($jsonerg);
+		//std::test_array($storedTopics);
+
+		$treeResult = array();
+		foreach($jsonerg as $topic) {
+			$t = explode('/', $topic);
+			$treeEntry = array();
+			if(count($t) == 1) {
+				$treeEntry[$t[0]] = $topic;
+			}
+			if(count($t) == 2) {
+				$treeEntry[$t[0]][$t[1]] = $topic;
+			}
+			if(count($t) == 3) {
+				$treeEntry[$t[0]][$t[1]][$t[2]] = $topic;
+			}
+			if(count($t) == 4) {
+				$treeEntry[$t[0]][$t[1]][$t[2]][$t[3]] = $topic;
+			}
+			if(count($t) == 5) {
+				$treeEntry[$t[0]][$t[1]][$t[2]][$t[3]][$t[4]] = $topic;
+			}
+			if(count($t) == 6) {
+				$treeEntry[$t[0]][$t[1]][$t[2]][$t[3]][$t[4]][$t[5]] = $topic;
+			}
+			if(count($t) == 7) {
+				$treeEntry[$t[0]][$t[1]][$t[2]][$t[3]][$t[4]][$t[5]][$t[6]] = $topic;
+			}
+			if(count($t) == 8) {
+				$treeEntry[$t[0]][$t[1]][$t[2]][$t[3]][$t[4]][$t[5]][$t[6]][$t[7]] = $topic;
+			}
+			if(count($t) == 9) {
+				$treeEntry[$t[0]][$t[1]][$t[2]][$t[3]][$t[4]][$t[5]][$t[6]][$t[7]][$t[8]] = $topic;
+			}
+			if(count($t) == 10) {
+				$treeEntry[$t[0]][$t[1]][$t[2]][$t[3]][$t[4]][$t[5]][$t[6]][$t[7]][$t[8]][$t[9]] = $topic;
+			}
+			$treeResult = array_merge_recursive($treeResult, $treeEntry);
+		}
+		echo '<ul>';
+		echo generateTreeView($treeResult, $storedTopics);
+		echo '</ul>';
+
+		// $returns = '<ul>';
+		// foreach($jsonerg as $topic) {
+		// 	if(\array_key_exists($topic, $storedTopics)) {
+		// 		$returns .= '<li><span class="ps-fontgreen">' . $topic . '</span>, stored in ' . $storedTopics[$topic]['group'] . '</li>';
+		// 	} else {
+		// 		$returns .= '<li><span class="ps-fontyellow">' . $topic . '</span></li>';
+		// 	}
+		// }
+		// echo $returns;
+		break;
+//###################################################################################
+// topics bearbeiten (menutopics)
+//###################################################################################
+	case mqttactive::c_gettopics:
+?>
+	<ul class="topicingroup" data-group="<?=std::posts('mqttgroup')?>">
+		<li><hr /></li>
+		<li>
+			<div class="table forall">
+				<div class="tr">
+					<div class="td"><span>Markierung:</span></div>
+					<div class="td">
+						<span class="ps-button markall">alle</span>
+						<span class="ps-button markno">keine</span>
+					</div>
+				</div>
+				<div class="tr">
+					<div class="td"><span>markierte:</span></div>
+					<div class="td">
+						<span class="ps-button allgroup" title="in Gruppe verschieben">Gruppe</span>
+						<span class="ps-button allaktiv" title="aktivieren / deaktivieren">Aktiv</span>
+						<span class="ps-button alldelete">l&ouml;schen</span>
+					</div>
+				</div>
+			</div>
+		</li>
+		<li><hr /></li>
+		<li>
+			<div class="table">
+				<div class="tr">
+					<div class="th">topic</div>
+					<div class="th">JSON</div>
+					<div class="th">Datenpunkt Name</div>
+					<!--div class="th">readable</div>
+					<div class="th">writeable</div-->
+					<div class="th">D1 Mini</div>
+					<div class="th">Shelly</div>
+					<div class="th"></div>
+					<div class="th"></div>
+				</div>
+<?
+		$database = new wpDatabase();
+		if(std::posts('mqttgroup') == 'NULL') {
+
+			$database->query('SELECT
+				[dp].[name], [t].[id_mqtttopic], [t].[topic], [t].[json], [t].[readable], [t].[writeable],
+				[t].[id_d1mini], [d].[name] AS [d1mini], [d].[description],
+				[t].[id_shelly], [s].[name] AS [shelly]
+				FROM [mqtttopic] [t]
+				LEFT JOIN [dp] ON [dp].[id_mqtttopic] = [t].[id_mqtttopic]
+				LEFT JOIN [d1mini] [d] ON [d].[id_d1mini] = [t].[id_d1mini]
+				LEFT JOIN [shelly] [s] ON [s].[id_shelly] = [t].[id_shelly]
+				WHERE [t].[id_mqttgroup] IS NULL ORDER BY [t].[topic]');
+		} else {
+			$database->query('SELECT
+				[dp].[name], [t].[id_mqtttopic], [t].[topic], [t].[json], [t].[readable], [t].[writeable],
+				[t].[id_d1mini], [d].[name] AS [d1mini], [d].[description],
+				[t].[id_shelly], [s].[name] AS [shelly]
+				FROM [mqtttopic] [t]
+				LEFT JOIN [dp] ON [dp].[id_mqtttopic] = [t].[id_mqtttopic]
+				LEFT JOIN [d1mini] [d] ON [d].[id_d1mini] = [t].[id_d1mini]
+				LEFT JOIN [shelly] [s] ON [s].[id_shelly] = [t].[id_shelly]
+				WHERE [t].[id_mqttgroup] = '.std::posts('mqttgroup').' ORDER BY [t].[topic]');
+		}
+		while($erg = $database->fetch()) {
+			echo '<div class="tr" data-idtopic="'.$erg['id_mqtttopic'].'">';
+			echo '<div class="td"><span class="ps-checkbox tr-topic">'.$erg['topic'].'</span></div>';
+			echo '<div class="td"><span>'.$erg['json'].'</span></div>';
+			echo '<div class="td"><span>'.$erg['name'].'</span></div>';
+			echo '<!--div class="td"><span>'.$erg['readable'].'</span></div>';
+			echo '<div class="td"><span>'.$erg['writeable'].'</span></div-->';
+			echo '<div class="td"><span>'.$erg['d1mini'].', '.$erg['description'].'</span></div>';
+			echo '<div class="td"><span>'.$erg['shelly'].'</span></div>';
+			echo '<div class="td"><span class="ps-button topicedit">bearbeiten</span></div>';
+			echo '<div class="td"><span class="ps-button topicdelete">l&ouml;schen</span></div>';
+			echo '</div>';
+		}
+?>
+			</div>
+		</li>
+	</ul>
+<?
+		break;
+//###################################################################################
+	case mqttactive::c_popallgroup:
+?>
+		<h3>ausgewälte topics:</h3>
+		<ul class="names">
+<? foreach(std::posts('names') as $name) { ?>
+			<li><?=$name?></li>
+<? } ?>
+		</ul>
+		<hr />
+		<div class="table">
+		<?getGroups();?>
+		</div>
+<?
+		break;
+//###################################################################################
+	case mqttactive::c_saveallgroup:
+		$where = '';
+		foreach($_POST['ids'] as $ids) {
+			$where .= '[id_mqtttopic] = '.$ids.' OR ';
+		}
+		$database = new wpDatabase();
+		$database->query("UPDATE [mqtttopic] SET
+				[id_mqttgroup] = ".std::posts('newgroup')."
+				WHERE ".substr($where, 0, -4));
+		echo '{"erg": "S_OK"}';
+		break;
+//###################################################################################
+	case mqttactive::c_popallactive:
+?>
+		<h3>ausgewälte topics:</h3>
+		<ul class="names">
+<? foreach(std::posts('names') as $name) { ?>
+			<li><?=$name?></li>
+<? } ?>
+		</ul>
+<?
+		break;
+//###################################################################################
+	case mqttactive::c_saveallactive:
+		$where = '';
+		$fortcp = '';
+		foreach(std::posts('ids') as $ids) {
+			$where .= '[id_topic] = '.$ids.' OR ';
+			$fortcp .= $ids.'%~%';
+		}
+		$database = new wpDatabase();
+		$database->query("UPDATE [topic] SET
+				[active] = ".(std::posts('newaktiv') == 'True' ? '1' : '0')."
+				WHERE ".substr($where, 0, -4));
+		$WebCom = new WebCom();
+		echo $WebCom->send(std::posts('newaktiv') == 'True' ? 'Activatetopic' : 'Deactivatetopic', substr($fortcp, 0, -3));
+		break;
+//###################################################################################
+	case mqttactive::c_popalldelete:
+?>
+		<h3>ausgewälte topics</h3>
+		<ul class="names">
+<? foreach(std::posts('names') as $name) { ?>
+			<li><?=$name?></li>
+<? } ?>
+		</ul>
+<?
+		break;
+//###################################################################################
+	case mqttactive::c_savealldelete:
+		$wpDatabase = new wpDatabase();
+		$fortcp = '';
+		$forsql = array();
+		foreach($_POST['ids'] as $ids) {
+			$fortcp .= $ids.'%~%';
+			$forsql[] = "[id_topic] = " . $ids;
+		}
+		$sql = "DELETE FROM [topic] WHERE " . implode(' OR ', $forsql);
+		$wpDatabase->query($sql);
+		$WebCom = new WebCom();
+		echo $WebCom->send('Deletetopic', substr($fortcp, 0, -3));
+		break;
+//###################################################################################
+	case mqttactive::c_poponetopic:
+		$database = new wpDatabase();
+		$database->query("SELECT [id_topicgroup], [name], [intervall], [max], [maxAge], [active]
+			FROM [topic] WHERE [id_topic] = ".std::posts('id'));
+		$erg = $database->fetch();
+?>
+<div class="table">
+	<div class="tr">
+		<div class="td">
+			<label for="c-description">Name</label>
+		</div>
+		<div class="td">
+			<input type="text" id="c-description" value="<?=$erg['name']?>" class="ps-input" />
+		</div>
+	</div>
+	<div class="tr">
+		<div class="td">
+			<label for="c-intervall">Intervall</label>
+		</div>
+		<div class="td">
+			<select id="c-intervall" class="ps-input">
+				<option value="0"<?=($erg['intervall'] == 0 ? ' selected="selected"' : '')?>>onChange</option>
+				<option value="10"<?=($erg['intervall'] == 10 ? ' selected="selected"' : '')?>>10 sec</option>
+				<option value="30"<?=($erg['intervall'] == 30 ? ' selected="selected"' : '')?>>30 sec</option>
+				<option value="60"<?=($erg['intervall'] == 60 ? ' selected="selected"' : '')?>>60 sec</option>
+				<option value="90"<?=($erg['intervall'] == 90 ? ' selected="selected"' : '')?>>90 sec</option>
+				<option value="120"<?=($erg['intervall'] == 120 ? ' selected="selected"' : '')?>>120 sec</option>
+			</select>
+		</div>
+	</div>
+<?
+	getGroups($erg['id_topicgroup']);
+?>
+	<div class="tr">
+		<div class="td">Max</div>
+		<div class="td"><input type="text" id="c-max" value="<?=$erg['max']?>" class="ps-input" /> Einträge</div>
+	</div>
+	<div class="tr">
+		<div class="td">Alter</div>
+		<div class="td"><input type="text" id="c-maxage" value="<?=$erg['maxAge']?>" class="ps-input" /> Tage</div>
+	</div>
+	<div class="tr">
+		<div class="td"></div>
+		<div class="td"><span id="c-active" class="ps-checkbox<?=(($erg['active'] == 1) ? ' checked' : '')?>">aktiv</span></div>
+	</div>
+</div>
+<?
+		break;
+//###################################################################################
+	case mqttactive::c_updateonetopic:
+		header(wpJSON_HEADER);
+		$returns = '{';
+		$database = new wpDatabase();
+		$database->query("UPDATE [topic] SET
+				[id_topicgroup] = ".std::posts('group').",
+				[name] = '".std::posts('description')."',
+				[intervall] = '".std::posts('intervall')."',
+				[max] = ".std::posts('max').",
+				[maxAge] = ".std::posts('maxage').",
+				[active] = ".(std::posts('active') == 'True' ? '1' : '0')."
+				WHERE [id_topic] = ".std::posts('id'));
+		$WebCom = new WebCom();
+		$erg = \json_decode($WebCom->send('Updatetopic', std::posts('id')));
+		if($erg->erg != 'S_OK') {
+			$returns .=
+				'"erg":"S_ERROR",' .
+				'"message":"<span class=\"neg\">topic konnte nicht gespeichert werden ('.std::posts('id').')</span>"';
+		} else {
+			$returns .=  '"erg":"S_OK"';
+		}
+		echo $returns . '}';
+		//std::test_array($encode->getArray());
+		break;
+//###################################################################################
+	case mqttactive::c_deleteonetopic:
+		$database = new wpDatabase();
+		$database->query('DELETE FROM [topic] WHERE [id_topic] = ' . std::posts('id'));
+		$WebCom = new WebCom();
+		echo $WebCom->send('Deletetopic', std::posts('id'));
+		break;
+//###################################################################################
+	default:
+		//\system\html::default();
+		break;
+}
+
+//###################################################################################
+// Hilfsfunktionen
+//###################################################################################
+function getGroups($defaultValue = 0) {
+	$groups = array('NULL' => 'keine Gruppe');
+	$database = new wpDatabase();
+	$database->query('SELECT [id_mqttgroup], [name] FROM [mqttgroup] ORDER BY [name]');
+	while($erg = $database->fetch()) $groups[$erg['id_mqttgroup']] = $erg['name'];
+	?>
+	<div class="tr">
+		<div class="td"><label for="c-group">neue MQTT Gruppe</label></div>
+		<div class="td">
+			<select id="c-group" class="ps-input">
+			<?=createDropDown($groups, $defaultValue)?>
+			</select>
+		</div>
+	</div>
+<?
+}
+
+//###################################################################################
+function createDropDown($array, $active = 0) {
+	$html = '';
+	foreach($array as $key => $value) {
+		$selected = $active == $key ? ' selected="selected"' : '';
+		$html .= '<option value="'.$key.'"'.$selected.'>'.$value.'</option>';
+	}
+	return $html;
+}
+
+$counter = 0;
+function generateTreeView($array, $storedTopics) {
+	global $counter;
+	$returns = '';
+	foreach($array as $key => $value) {
+		$counter++;
+		if(is_array($value)) {
+			$returns .= '<li class="ps-tree-parent key' . $counter . '" data-key="key' . $counter . '">';
+			$returns .= '<span>' . $key . ': </span>';
+			$returns .= '</li>';
+			$returns .= '<li>';
+			$returns .= '<ul class="ps-hidden subtopic key' . $counter . '">';
+			$returns .= generateTreeView($value, $storedTopics);
+			$returns .= '</ul>';
+			$returns .= '</li>';
+		} else {
+			$returns .= '<li>';
+			$returns .= '<span>' . $key . ': </span>';
+			if(\array_key_exists($value, $storedTopics)) {
+				$returns .= '<span class="ps-fontgreen">' . $value . '</span>, stored in ' . $storedTopics[$value]['group'] . '</li>';
+			} else {
+				$returns .= '<span class="ps-fontyellow">' . $value . '</span></li>';
+			}
+			$returns .= '</li>';
+		}
+	}
+	return $returns;
+}
