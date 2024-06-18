@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 620                                                     $ #
+//# Revision     : $Rev:: 626                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: system.psys 620 2024-05-29 01:27:42Z                     $ #
+//# File-ID      : $Id:: system.psys 626 2024-06-17 15:18:36Z                     $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $sdata */
@@ -1198,12 +1198,12 @@ class WebCom {
 	private $fehler = false;
 
 	public function __construct($timeout = 1) {
-		$this->socket = @socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+		$this->socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 		socket_set_option($this->socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => $timeout, 'usec' => 0));
 		if (!$this->socket) {
 			echo 'socket_create() fehlgeschlagen: Grund: '.socket_strerror(socket_last_error()).'<br />'."\n";
 		} else {
-			$result = @socket_connect($this->socket, wpInit::$CS_server, wpInit::$CS_port);
+			$result = socket_connect($this->socket, wpInit::$CS_server, wpInit::$CS_port);
 			if (!$result) {
 				echo 'socket_connect() fehlgeschlagen: Grund: ('.$result.') '.socket_strerror(socket_last_error($this->socket)).'<br />'."\n";
 			}
@@ -1225,8 +1225,8 @@ class WebCom {
 			if($param != '') $befehl .= '<'.$param.'>';
 		}
 		$returns = '';
-		@socket_write($this->socket, $befehl, strlen($befehl));
-		while ($out = @socket_read($this->socket, 1024)) {
+		socket_write($this->socket, $befehl, strlen($befehl));
+		while ($out = socket_read($this->socket, 1024)) {
 			$returns .= $out;
 		}
 		return $returns;

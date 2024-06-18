@@ -1,4 +1,4 @@
-<?
+/*<?
 //###################################################################################
 //#                                                                                 #
 //#                (C) FreakaZone GmbH                                              #
@@ -7,29 +7,24 @@
 //###################################################################################
 //#                                                                                 #
 //# Author       : Christian Scheid                                                 #
-//# Date         : 08.06.2021                                                       #
+//# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 626                                                     $ #
+//# Revision     : $Rev:: 623                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpa.psys 626 2024-06-17 15:18:36Z                        $ #
+//# File-ID      : $Id:: d1mini.js 623 2024-06-15 00:53:46Z                       $ #
 //#                                                                                 #
 //###################################################################################
-namespace system\Helper;
-
-class wpa {
-	public const GreyGreen = 'wpa-GreyGreen';
-	public const GreyYellow = 'wpa-GreyGreen';
-	public const GreyRed = 'wpa-GreyRed';
-	public const GreenRed = 'wpa-GreenRed';
-	public const GreenYellow = 'wpa-GreenYellow';
-	public const RedGreen = 'wpa-RedGreen';
-	public const BlueYellow = 'wpa-BlueYellow';
-	public const rssi = 'wpa-rssi';
-	public const indikator = 'wpa-indikator';
-	public const indikatorTemp = 'wpa-indikator indikator-temp';
-	public const indikatorHum = 'wpa-indikator indikator-hum';
-	public const indikatorPfl = 'wpa-indikator indikator-pfl';
-	public const formatdate = 'wpa-formatdate';
-	public const formattime = 'wpa-formattime';
-	public const formatdatetime = 'wpa-formatdatetime';
-}
+use system\std
+?> d1mini */
+//<? require_once('script/system/websockets.js') ?>
+p.page.load = function() {
+	$.get('std.d1mini.getD1MiniSettings.<?=std::gets("param1")?>.req');
+	$('.page').on('click', '.writeTopic', function() {
+		const topic = $(this).attr('data-topic');
+		const value = $(this).attr('data-write');
+		$.post('std.d1mini.writetopic.req', {topic:topic, value:value}, function(data) {
+			
+		});
+	});
+	ws.connect();
+};

@@ -1,0 +1,56 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 13.06.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 623                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: d1mini.req 623 2024-06-15 00:53:46Z                      $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\std;
+use system\std, system\WebCom;
+use system\Helper\wpDatabase;
+
+//require_once 'system/Helper/d1mini.psys';
+
+class d1mini {
+	const c_writetopic = 'writetopic';
+	public static function writetopic() {
+		$WebCom = new WebCom();
+		echo $WebCom->send('publishTopic', std::posts('topic') . '%~%' . std::posts('value'));
+	}
+	const c_getD1MiniSettings = 'getD1MiniSettings';
+	public static function getD1MiniSettings($name) {
+		header(wpJSON_HEADER);
+		$sql = "SELECT [id_d1mini], [ip] FROM [d1mini] WHERE [name] = '" . $name . "'";
+		$wpDatabase = new wpDatabase();
+		$wpDatabase->query($sql);
+		$erg = $wpDatabase->fetch();
+		$WebCom = new WebCom();
+		echo $WebCom->send('getD1MiniStatus', $erg['ip']);
+	}
+}
+
+switch(std::gets('param1')) {
+	//###################################################################################
+	case d1mini::c_writetopic:
+		d1mini::writetopic();
+		break;
+		//###################################################################################
+	case d1mini::c_getD1MiniSettings:
+		echo d1mini::getD1MiniSettings(std::gets('param2'));
+		break;
+		//###################################################################################
+	default:
+		//\system\html::default();
+		break;
+}
+
+?>

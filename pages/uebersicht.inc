@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 621                                                     $ #
+//# Revision     : $Rev:: 626                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 621 2024-06-15 00:47:41Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 626 2024-06-17 15:18:36Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -101,11 +101,11 @@ class uebersicht {
 					<td colspan="2">' . $name . ':</td>
 					<td colspan="2">
 						<span data-ws="' . $dp . '_Temp" class="ps-input">undefined</span>
-						<span data-ws="' . $dp . '_Temp" class="' . wpa::$indikatorTemp . '">' . wpHTML_EMPTY . '</span>
+						<span data-ws="' . $dp . '_Temp" class="' . wpa::indikatorTemp . '">' . wpHTML_EMPTY . '</span>
 					</td>
 					<td colspan="2">
 						<span data-ws="' . $dp . '_Hum" class="ps-input">undefined</span>
-						<span data-ws="' . $dp . '_Hum" class="' . wpa::$indikatorHum . '">' . wpHTML_EMPTY . '</span>
+						<span data-ws="' . $dp . '_Hum" class="' . wpa::indikatorHum . '">' . wpHTML_EMPTY . '</span>
 					</td>
 				</tr>';
 		}
@@ -117,14 +117,14 @@ class uebersicht {
 			$returns .= '
 				<tr>
 					<td>' . $name . ':</td>
-					<td><span data-ws="' . $dp . '" class="ps-input ' . wpa::$GreyYellow . '">undefined</span></td>
+					<td><span data-ws="' . $dp . '" class="ps-input ' . wpa::GreyYellow . '">undefined</span></td>
 				</tr>';
 		}
 		foreach(uebersicht::$SystemRelay as $dp => $name) {
 			$returns .= '
 				<tr>
 					<td>' . $name . ':</td>
-					<td><span data-ws="' . $dp . '" class="ps-input ' . wpa::$RedGreen . '">undefined</span></td>
+					<td><span data-ws="' . $dp . '" class="ps-input ' . wpa::RedGreen . '">undefined</span></td>
 				</tr>';
 		}
 		return $returns;
@@ -147,10 +147,10 @@ class uebersicht {
 			$returns .= '
 				<tr>
 					<td colspan="2">' . $name . ':</td>
-					<td colspan="2"><span data-ws="' . $dp . '_Rssi" class="' . wpa::$rssi . '">undefined</span></td>
+					<td colspan="2"><span data-ws="' . $dp . '_Rssi" class="' . wpa::rssi . '">undefined</span></td>
 					<td colspan="2">';
 			if(in_array($dp, uebersicht::$d1Minis)) {
-				$returns .= '<span data-ws="' . $dp . '_Online" class="ps-input ' . wpa::$GreenRed . '">-</span>';
+				$returns .= '<span data-ws="' . $dp . '_Online" class="ps-input ' . wpa::GreenRed . '">-</span>';
 			}
 			$returns .= '
 					</td>
@@ -236,15 +236,15 @@ class uebersicht {
 				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
 					<td colspan="3">Sonne:</td>
-					<td colspan="3"><span data-ws="Sonne" class="ps-input <?=wpa::$BlueYellow ?>">undefined</span></td>
+					<td colspan="3"><span data-ws="Sonne" class="ps-input <?=wpa::BlueYellow ?>">undefined</span></td>
 				</tr>
 				<tr>
 					<td colspan="3">Aufgang:</td>
-					<td colspan="3"><span data-ws="Sonnenaufgang" class="ps-input <?=wpa::$formattime ?>">undefined</span></td>
+					<td colspan="3"><span data-ws="Sonnenaufgang" class="ps-input <?=wpa::formattime ?>">undefined</span></td>
 				</tr>
 				<tr>
 					<td colspan="3">Untergang:</td>
-					<td colspan="3"><span data-ws="Sonnenuntergang" class="ps-input <?=wpa::$formattime ?>">undefined</span></td>
+					<td colspan="3"><span data-ws="Sonnenuntergang" class="ps-input <?=wpa::formattime ?>">undefined</span></td>
 				</tr>
 			</tbody>
 		</table>
@@ -275,17 +275,17 @@ class uebersicht {
 				<tr>
 					<td colspan="2">Büro:</td>
 					<td colspan="2"><span data-ws="BU_RU_LDR" class="ps-input">undefined</span></td>
-					<td colspan="2"><span data-ws="BU_RU_BM" class="ps-input <?=wpa::$GreyGreen ?>">undefined</span></td>
+					<td colspan="2"><span data-ws="BU_RU_BM" class="ps-input <?=wpa::GreyGreen ?>">undefined</span></td>
 				</tr>
 				<tr>
 					<td colspan="2">Küche:</td>
 					<td colspan="2"><span data-ws="KU_RU_LDR" class="ps-input">undefined</span></td>
-					<td colspan="2"><span data-ws="KU_RU_BM" class="ps-input <?=wpa::$GreyGreen ?>">undefined</span></td>
+					<td colspan="2"><span data-ws="KU_RU_BM" class="ps-input <?=wpa::GreyGreen ?>">undefined</span></td>
 				</tr>
 				<tr>
 					<td colspan="2">Bad:</td>
 					<td colspan="2"><span data-ws="BA_RU_LDR" class="ps-input">undefined</span></td>
-					<td colspan="2"><span data-ws="BA_RU_BM" class="ps-input <?=wpa::$GreyGreen ?>">undefined</span></td>
+					<td colspan="2"><span data-ws="BA_RU_BM" class="ps-input <?=wpa::GreyGreen ?>">undefined</span></td>
 				</tr>
 				<tr>
 					<td colspan="2">Schlafzimmer:</td>
@@ -298,56 +298,56 @@ class uebersicht {
 					<td colspan="3">Referenztemperatur</td>
 					<td colspan="3">
 						<span data-ws="WZ_PF_FE_Temp" class="ps-input">undefined</span>
-						<span data-ws="WZ_PF_FE_Temp" class="<?=wpa::$indikatorTemp?>"><?=wpHTML_EMPTY?></span>
+						<span data-ws="WZ_PF_FE_Temp" class="<?=wpa::indikatorTemp?>"><?=wpHTML_EMPTY?></span>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="3">Referenzfeuchte</td>
 					<td colspan="3">
 						<span data-ws="WZ_PF_FE_Hum" class="ps-input">undefined</span>
-						<span data-ws="WZ_PF_FE_Hum" class="<?=wpa::$indikatorHum?>"><?=wpHTML_EMPTY?></span>
+						<span data-ws="WZ_PF_FE_Hum" class="<?=wpa::indikatorHum?>"><?=wpHTML_EMPTY?></span>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="3">Pflanze auf'm Tisch</td>
 					<td colspan="3">
 						<span data-ws="BasisTest_Moisture" class="ps-input">undefined</span>
-						<span data-ws="BasisTest_Moisture" class="<?=wpa::$indikatorPfl?>"><?=wpHTML_EMPTY?></span>
+						<span data-ws="BasisTest_Moisture" class="<?=wpa::indikatorPfl?>"><?=wpHTML_EMPTY?></span>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="3">Pflanze zur Terrasse</td>
 					<td colspan="3">
 						<span data-ws="WZ_PF_TE_Moisture" class="ps-input">undefined</span>
-						<span data-ws="WZ_PF_TE_Moisture" class="<?=wpa::$indikatorPfl?>"><?=wpHTML_EMPTY?></span>
+						<span data-ws="WZ_PF_TE_Moisture" class="<?=wpa::indikatorPfl?>"><?=wpHTML_EMPTY?></span>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="3">Pflanze am Fenster in der Ecke</td>
 					<td colspan="3">
 						<span data-ws="WZ_PF_FE_Moisture" class="ps-input">undefined</span>
-						<span data-ws="WZ_PF_FE_Moisture" class="<?=wpa::$indikatorPfl?>"><?=wpHTML_EMPTY?></span>
+						<span data-ws="WZ_PF_FE_Moisture" class="<?=wpa::indikatorPfl?>"><?=wpHTML_EMPTY?></span>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="3">Pflanze am Fenster, links</td>
 					<td colspan="3">
 						<span data-ws="WZ_PF_FE_LI_Moisture" class="ps-input">undefined</span>
-						<span data-ws="WZ_PF_FE_LI_Moisture" class="<?=wpa::$indikatorPfl?>"><?=wpHTML_EMPTY?></span>
+						<span data-ws="WZ_PF_FE_LI_Moisture" class="<?=wpa::indikatorPfl?>"><?=wpHTML_EMPTY?></span>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="3">Pflanze am Fenster, 1. rechts</td>
 					<td colspan="3">
 						<span data-ws="WZ_PF_FE_RE1_Moisture" class="ps-input">undefined</span>
-						<span data-ws="WZ_PF_FE_RE1_Moisture" class="<?=wpa::$indikatorPfl?>"><?=wpHTML_EMPTY?></span>
+						<span data-ws="WZ_PF_FE_RE1_Moisture" class="<?=wpa::indikatorPfl?>"><?=wpHTML_EMPTY?></span>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="3">Pflanze am Fenster, 2. rechts</td>
 					<td colspan="3">
 						<span data-ws="WZ_PF_FE_RE2_Moisture" class="ps-input">undefined</span>
-						<span data-ws="WZ_PF_FE_RE2_Moisture" class="<?=wpa::$indikatorPfl?>"><?=wpHTML_EMPTY?></span>
+						<span data-ws="WZ_PF_FE_RE2_Moisture" class="<?=wpa::indikatorPfl?>"><?=wpHTML_EMPTY?></span>
 					</td>
 				</tr>
 				<tr><td colspan="6"><h2>Test</h2></td></tr>

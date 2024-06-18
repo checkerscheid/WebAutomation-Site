@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 04.03.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 621                                                     $ #
+//# Revision     : $Rev:: 622                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.req 621 2024-06-15 00:47:41Z                   $ #
+//# File-ID      : $Id:: d1minicfg.req 622 2024-06-15 00:51:27Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -43,10 +43,10 @@ class d1minicfg {
 		$html = '
 			<h1>D1 Mini Details</h1>
 			<div class="versionContainer">
-				<span>BasisEmpty: <span id="BasisEmptyVersion">' . self::$maxVersion . '</span></span>
+				<span id="BasisEmptyVersion">' . self::$maxVersion . '</span>
 			</div>
 			<hr />
-			<ul id="trend">';
+			<ul>';
 		$wpDatabase->query('SELECT [id_d1minigroup], [name] FROM [d1minigroup] ORDER BY [name]');
 		while($erg = $wpDatabase->fetch()) {
 			$html .= '
@@ -54,10 +54,10 @@ class d1minicfg {
 				<li data-d1minis="'.$erg['id_d1minigroup'].'"></li>';
 		}
 		$html .= '
+				<li class="ps-tree-parent d1minigroupfolder" data-d1minigroup="ALL">Alle D1 Minis</li>
+				<li data-d1minis="ALL"></li>
 				<li class="ps-tree-parent d1minigroupfolder" data-d1minigroup="NULL">D1 Minis ohne Gruppe</li>
 				<li data-d1minis="NULL"></li>
-				<li class="ps-tree-parent d1minigroupfolder" data-d1minigroup="All">Alle D1 Minis</li>
-				<li data-d1minis="All"></li>
 			</ul>';
 		echo $html;
 	}
@@ -173,7 +173,7 @@ class d1minicfg {
 			SELECT
 				[id_d1mini], [name], [description], [ip], [mac], [version], [active]
 			FROM [d1mini]";
-		if(std::posts('d1minigroup') != 'All') {
+		if(std::posts('d1minigroup') != 'ALL') {
 			$sql .= "
 			WHERE [id_d1minigroup] " . (std::posts('d1minigroup') == 'NULL' ? 'IS NULL' : ' = '.std::posts('d1minigroup'));
 		}
@@ -308,13 +308,13 @@ class d1minicfg {
 						</div>
 					</td>
 				</tr>
-				<tr class="D1MiniDeviceJson" data-json="' . $erg['name'] . '">
+				<!--tr class="D1MiniDeviceJson" data-json="' . $erg['name'] . '">
 					<td class="buttonbox"></td>
 					<td colspan="10" class="json">
 						<pre></pre>
 					</td>
 					<td class="buttonbox"></td>
-				</tr>';
+				</tr-->';
 		}
 		$html .= '
 			</tbody>
