@@ -84,7 +84,7 @@ p.page.load = function() {
 						$.post('std.d1minicfg.saveSearchedDevice.req', myData, function(data) {
 							console.log(data);
 							if(data.erg == 'S_OK') {
-								p.page.alert(data.msg);
+								p.page.alert(data.msg, 10000);
 								$('#dialog').dialog('close');
 							} else {
 								p.page.alertred(data.msg, 10000);
@@ -114,7 +114,7 @@ p.page.load = function() {
 						$.post('std.d1minicfg.renewDevice.req', myData, function(data) {
 							console.log(data);
 							if(data.erg == 'S_OK') {
-								p.page.alert(data.msg);
+								p.page.alert(data.msg, 10000);
 								$('#dialog').dialog('close');
 							} else {
 								p.page.alertred(data.msg, 10000);
