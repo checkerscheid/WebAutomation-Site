@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 08.06.2021                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 605                                                     $ #
+//# Revision     : $Rev:: 626                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: websockets.js 605 2024-05-03 13:06:51Z                   $ #
+//# File-ID      : $Id:: websockets.js 626 2024-06-17 15:18:36Z                   $ #
 //#                                                                                 #
 //###################################################################################
 use system\Helper\wpa;
@@ -83,7 +83,7 @@ var ws = {
 						var textTrue = $(this).attr('data-True');
 						var textFalse = $(this).attr('data-False');
 //###################################################################################
-						if($(this).hasClass('<?=wpa::$GreyGreen ?>')) {
+						if($(this).hasClass('<?=wpa::GreyGreen ?>')) {
 							if(that.value == 'False' || that.value == '0' || that.value == 'Off') {
 								$(this).removeClass('ps-green')
 									.html(typeof(textFalse) == 'undefined' ? that.valuestring : textFalse);
@@ -92,7 +92,7 @@ var ws = {
 									.html(typeof(textTrue) == 'undefined' ? that.valuestring : textTrue);
 							}
 //###################################################################################
-						} else if($(this).hasClass('<?=wpa::$GreyYellow ?>')) {
+						} else if($(this).hasClass('<?=wpa::GreyYellow ?>')) {
 							if(that.value == 'False' || that.value == '0' || that.value == 'Off') {
 								$(this).removeClass('ps-yellow')
 									.html(typeof(textFalse) == 'undefined' ? that.valuestring : textFalse);
@@ -101,7 +101,7 @@ var ws = {
 									.html(typeof(textTrue) == 'undefined' ? that.valuestring : textTrue);
 							}
 //###################################################################################
-						} else if($(this).hasClass('<?=wpa::$GreyRed ?>')) {
+						} else if($(this).hasClass('<?=wpa::GreyRed ?>')) {
 							if(that.value == 'False' || that.value == '0' || that.value == 'Off') {
 								$(this).removeClass('ps-red')
 									.html(typeof(textFalse) == 'undefined' ? that.valuestring : textFalse);
@@ -110,7 +110,16 @@ var ws = {
 									.html(typeof(textTrue) == 'undefined' ? that.valuestring : textTrue);
 							}
 //###################################################################################
-						} else if($(this).hasClass('<?=wpa::$GreenRed ?>')) {
+						} else if($(this).hasClass('<?=wpa::GreenYellow ?>')) {
+							if(that.value == 'False' || that.value == '0' || that.value == 'Off') {
+								$(this).removeClass('ps-yellow').addClass('ps-green')
+									.html(typeof(textFalse) == 'undefined' ? that.valuestring : textFalse);
+							} else {
+								$(this).removeClass('ps-green').addClass('ps-yellow')
+									.html(typeof(textTrue) == 'undefined' ? that.valuestring : textTrue);
+							}
+//###################################################################################
+						} else if($(this).hasClass('<?=wpa::GreenRed ?>')) {
 							if(that.value == 'False' || that.value == '0' || that.value == 'Off') {
 								$(this).removeClass('ps-red').addClass('ps-green')
 									.html(typeof(textFalse) == 'undefined' ? that.valuestring : textFalse);
@@ -119,7 +128,7 @@ var ws = {
 									.html(typeof(textTrue) == 'undefined' ? that.valuestring : textTrue);
 							}
 //###################################################################################
-						} else if($(this).hasClass('<?=wpa::$RedGreen ?>')) {
+						} else if($(this).hasClass('<?=wpa::RedGreen ?>')) {
 							if(that.value == 'False' || that.value == '0' || that.value == 'Off') {
 								$(this).removeClass('ps-green').addClass('ps-red')
 									.html(typeof(textFalse) == 'undefined' ? that.valuestring : textFalse);
@@ -128,7 +137,7 @@ var ws = {
 									.html(typeof(textTrue) == 'undefined' ? that.valuestring : textTrue);
 							}
 //###################################################################################
-						} else if($(this).hasClass('<?=wpa::$BlueYellow ?>')) {
+						} else if($(this).hasClass('<?=wpa::BlueYellow ?>')) {
 							if(that.value == 'False' || that.value == '0' || that.value == 'Off') {
 								$(this).removeClass('ps-yellow').addClass('ps-blue')
 									.html(typeof(textFalse) == 'undefined' ? that.valuestring : textFalse);
@@ -137,7 +146,7 @@ var ws = {
 									.html(typeof(textTrue) == 'undefined' ? that.valuestring : textTrue);
 							}
 //###################################################################################
-						} else if($(this).hasClass('<?=wpa::$rssi ?>')) {
+						} else if($(this).hasClass('<?=wpa::rssi ?>')) {
 							$(this).removeClass('rssi60 rssi70 rssi80 rssi90 rssi100 rssibat rssioff');
 							var rssi = -1 * that.value;
 							if(rssi == 0 || rssi == null) $(this).addClass('rssioff');
@@ -148,7 +157,7 @@ var ws = {
 							if(rssi > 100) $(this).addClass('rssi110');
 							$(this).text(that.valuestring);
 //###################################################################################
-						} else if($(this).hasClass('<?=wpa::$indikator ?>')) {
+						} else if($(this).hasClass('<?=wpa::indikator ?>')) {
 							let indiTemp = {"m": 21, "n": 23.5, "p": 25};
 							let indiHum = {"m": 37.5, "n": 45, "p": 50};
 							let indiPfl = {"m": 30, "n": 40, "p": 50};
@@ -169,11 +178,11 @@ var ws = {
 							if(n >= indi.n && n < indi.p) $(this).addClass('indi-p');
 							if(n >= indi.p) $(this).addClass('indi-pp');
 //###################################################################################
-						} else if($(this).hasClass('<?=wpa::$formatdate ?>')) {
+						} else if($(this).hasClass('<?=wpa::formatdate ?>')) {
 							$(this).text(p.time.print(that.value, true, false));
-						} else if($(this).hasClass('<?=wpa::$formattime ?>')) {
+						} else if($(this).hasClass('<?=wpa::formattime ?>')) {
 							$(this).text(p.time.print(that.value, false, true));
-						} else if($(this).hasClass('<?=wpa::$formatdatetime ?>')) {
+						} else if($(this).hasClass('<?=wpa::formatdatetime ?>')) {
 							$(this).text(p.time.print(that.value, true, true));
 						} else {
 							$(this).text(that.valuestring);

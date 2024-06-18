@@ -9,26 +9,27 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 08.06.2021                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 587                                                     $ #
+//# Revision     : $Rev:: 626                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpa.psys 587 2024-04-15 23:04:17Z                        $ #
+//# File-ID      : $Id:: wpa.psys 626 2024-06-17 15:18:36Z                        $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
 
 class wpa {
-	public static $GreyGreen = 'wpa-GreyGreen';
-	public static $GreyYellow = 'wpa-GreyGreen';
-	public static $GreyRed = 'wpa-GreyRed';
-	public static $GreenRed = 'wpa-GreenRed';
-	public static $RedGreen = 'wpa-RedGreen';
-	public static $BlueYellow = 'wpa-BlueYellow';
-	public static $rssi = 'wpa-rssi';
-	public static $indikator = 'wpa-indikator';
-	public static $indikatorTemp = 'wpa-indikator indikator-temp';
-	public static $indikatorHum = 'wpa-indikator indikator-hum';
-	public static $indikatorPfl = 'wpa-indikator indikator-pfl';
-	public static $formatdate = 'wpa-formatdate';
-	public static $formattime = 'wpa-formattime';
-	public static $formatdatetime = 'wpa-formatdatetime';
+	public const GreyGreen = 'wpa-GreyGreen';
+	public const GreyYellow = 'wpa-GreyGreen';
+	public const GreyRed = 'wpa-GreyRed';
+	public const GreenRed = 'wpa-GreenRed';
+	public const GreenYellow = 'wpa-GreenYellow';
+	public const RedGreen = 'wpa-RedGreen';
+	public const BlueYellow = 'wpa-BlueYellow';
+	public const rssi = 'wpa-rssi';
+	public const indikator = 'wpa-indikator';
+	public const indikatorTemp = 'wpa-indikator indikator-temp';
+	public const indikatorHum = 'wpa-indikator indikator-hum';
+	public const indikatorPfl = 'wpa-indikator indikator-pfl';
+	public const formatdate = 'wpa-formatdate';
+	public const formattime = 'wpa-formattime';
+	public const formatdatetime = 'wpa-formatdatetime';
 }
