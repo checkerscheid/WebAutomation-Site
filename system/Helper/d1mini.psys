@@ -27,6 +27,7 @@ class d1mini {
 	const LDR = 'LDR';
 	const Light = 'Light';
 	const BM = 'BM';
+	const BM2 = 'BM2';
 	const Rain = 'Rain';
 	const Distance = 'Distance';
 
@@ -150,6 +151,11 @@ class d1mini {
 		$id_mqtttopic = $this->insertTopic('BM');
 		$this->mergeDP($id_mqtttopic, 'BM', 'Bewegung', '1:Bewegung;0:Stille;');
 		echo "saved: 'Bewegung' ";
+	}
+	private function setBM2() {
+		$id_mqtttopic = $this->insertTopic('BM2');
+		$this->mergeDP($id_mqtttopic, 'BM2', 'Bewegung', '1:Bewegung;0:Stille;');
+		echo "saved: 'Bewegung2' ";
 	}
 	private function setRelais() {
 		$id_mqtttopic = $this->insertTopic('Relais/Out');
