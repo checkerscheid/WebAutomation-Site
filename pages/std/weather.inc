@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 10.01.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 552                                                     $ #
+//# Revision     : $Rev:: 621                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: weather.inc 552 2024-01-06 13:56:24Z                     $ #
+//# File-ID      : $Id:: weather.inc 621 2024-06-15 00:47:41Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace pages\std;
