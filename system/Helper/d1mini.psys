@@ -76,6 +76,9 @@ class d1mini {
 			if($this->status->FreakaZoneDevice->useModul->BM) {
 				$this->setBM();
 			}
+			if($this->status->FreakaZoneDevice->useModul->BM2) {
+				$this->setBM2();
+			}
 			if($this->status->FreakaZoneDevice->useModul->Relais ||
 					$this->status->FreakaZoneDevice->useModul->RelaisShield) {
 				$this->setRelais();
