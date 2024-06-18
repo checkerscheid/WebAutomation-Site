@@ -154,12 +154,14 @@ class d1mini {
 	}
 	private function setBM() {
 		$id_mqtttopic = $this->insertTopic('BM');
-		$this->mergeDP($id_mqtttopic, 'BM', 'Bewegung', '1:Bewegung;0:Stille;');
+		$id_dp = $this->mergeDP($id_mqtttopic, 'BM', 'Bewegung', '1:Bewegung;0:Stille;');
+		$this->mergeTrend($id_dp, 'Bewegung');
 		echo "saved: 'Bewegung' ";
 	}
 	private function setBM2() {
 		$id_mqtttopic = $this->insertTopic('BM2');
-		$this->mergeDP($id_mqtttopic, 'BM2', 'Bewegung', '1:Bewegung;0:Stille;');
+		$id_dp = $this->mergeDP($id_mqtttopic, 'BM2', 'Bewegung', '1:Bewegung;0:Stille;');
+		$this->mergeTrend($id_dp, 'Bewegung');
 		echo "saved: 'Bewegung2' ";
 	}
 	private function setRelais() {
