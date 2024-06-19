@@ -27,7 +27,7 @@ class d1mini {
 	const LDR = 'LDR';
 	const Light = 'Light';
 	const BM = 'BM';
-	const BM2 = 'BM2';
+	const FK = 'FK';
 	const Rain = 'Rain';
 	const Distance = 'Distance';
 
@@ -163,7 +163,7 @@ class d1mini {
 		$id_dp = $this->mergeDP($id_mqtttopic, 'FK', 'Fenster', '0:offen;1:geschlossen;');
 		$this->mergeAlarm($id_dp, 'FK', 'Fenster offen', alarmtype::Meldung, AlarmCondition::gleich, 0);
 		$this->mergeTrend($id_dp, 'Fenster');
-		echo "saved: 'Bewegung2' ";
+		echo "saved: 'Fensterkontakt' ";
 	}
 	private function setRelais() {
 		$id_mqtttopic = $this->insertTopic('Relais/Out');
