@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 26.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 622                                                     $ #
+//# Revision     : $Rev:: 627                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.psys 622 2024-06-15 00:51:27Z                     $ #
+//# File-ID      : $Id:: d1mini.psys 627 2024-06-19 18:58:29Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -27,7 +27,7 @@ class d1mini {
 	const LDR = 'LDR';
 	const Light = 'Light';
 	const BM = 'BM';
-	const BM2 = 'BM2';
+	const FK = 'FK';
 	const Rain = 'Rain';
 	const Distance = 'Distance';
 
@@ -77,8 +77,8 @@ class d1mini {
 			if($this->status->FreakaZoneDevice->useModul->BM) {
 				$this->setBM();
 			}
-			if($this->status->FreakaZoneDevice->useModul->BM2) {
-				$this->setBM2();
+			if($this->status->FreakaZoneDevice->useModul->FK) {
+				$this->setFK();
 			}
 			if($this->status->FreakaZoneDevice->useModul->Relais ||
 					$this->status->FreakaZoneDevice->useModul->RelaisShield) {
@@ -154,13 +154,16 @@ class d1mini {
 	}
 	private function setBM() {
 		$id_mqtttopic = $this->insertTopic('BM');
-		$this->mergeDP($id_mqtttopic, 'BM', 'Bewegung', '1:Bewegung;0:Stille;');
+		$id_dp = $this->mergeDP($id_mqtttopic, 'BM', 'Bewegung', '0:Stille;1:Bewegung;');
+		$this->mergeTrend($id_dp, 'Bewegung');
 		echo "saved: 'Bewegung' ";
 	}
-	private function setBM2() {
-		$id_mqtttopic = $this->insertTopic('BM2');
-		$this->mergeDP($id_mqtttopic, 'BM2', 'Bewegung', '1:Bewegung;0:Stille;');
-		echo "saved: 'Bewegung2' ";
+	private function setFK() {
+		$id_mqtttopic = $this->insertTopic('FK');
+		$id_dp = $this->mergeDP($id_mqtttopic, 'FK', 'Fenster', '0:offen;1:geschlossen;');
+		$this->mergeAlarm($id_dp, 'FK', 'Fenster offen', alarmtype::Meldung, AlarmCondition::gleich, 0);
+		$this->mergeTrend($id_dp, 'Fenster');
+		echo "saved: 'Fensterkontakt' ";
 	}
 	private function setRelais() {
 		$id_mqtttopic = $this->insertTopic('Relais/Output');
@@ -384,5 +387,13 @@ class AlarmType {
 	const Handbetrieb = 4;
 	const Nothandebene = 5;
 	const Warnung = 6;
+}
+class AlarmCondition {
+	const gleich = 1;
+	const ungleich = 2;
+	const groesser = 3;
+	const kleiner = 4;
+	const minmax = 5;
+	const zwischen = 6;
 }
 ?>

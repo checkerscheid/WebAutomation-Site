@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 04.03.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 622                                                     $ #
+//# Revision     : $Rev:: 627                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.req 622 2024-06-15 00:51:27Z                   $ #
+//# File-ID      : $Id:: d1minicfg.req 627 2024-06-19 18:58:29Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -75,7 +75,7 @@ class d1minicfg {
 		$compiledWith = array(
 			'DHT11', 'DHT22',
 			'wpLDR', 'wpLight',
-			'wpBM',
+			'wpBM', 'wpFK',
 			'wpRain', 'wpMoisture',
 			'wpDistance'
 		);
@@ -350,7 +350,7 @@ class d1minicfg {
 	const c_allGroup = 'allGroup';
 	public static function allGroup() {
 		$where = '';
-		foreach(std::posts('ids', array()) as $ids) {
+		foreach(std::posts('ids') as $ids) {
 			$where .= '[id_d1mini] = '.$ids.' OR ';
 		}
 		$database = new wpDatabase();
@@ -362,7 +362,7 @@ class d1minicfg {
 	const c_allActive = 'allActive';
 	public static function allActive() {
 		$where = '';
-		foreach(std::posts('ids', array()) as $ids) {
+		foreach(std::posts('ids') as $ids) {
 			$where .= '[id_d1mini] = '.$ids.' OR ';
 		}
 		$database = new wpDatabase();
@@ -374,7 +374,7 @@ class d1minicfg {
 	public static function allDelete() {
 		header(wpJSON_HEADER);
 		$fortcp = '';
-		foreach(std::posts('ids', array()) as $ids) {
+		foreach(std::posts('ids') as $ids) {
 			$fortcp .= $ids.'%~%';
 		}
 		$WebCom = new WebCom();
@@ -407,9 +407,9 @@ class d1minicfg {
 	private static function getSelect($val, $name) {
 		return "<option value='$val'>$name</option>";
 	}
-	private static function getD1MiniSettings($selectAll = 'All') {
+	private static function getD1MiniSettings($selectAll = 'ALL') {
 		$sql = "SELECT [id_d1mini], [ip] FROM [d1mini]";
-		if($selectAll != 'All') $sql .= " WHERE [id_d1minigroup] = " . $selectAll;
+		if($selectAll != 'ALL') $sql .= " WHERE [id_d1minigroup] = " . $selectAll;
 		$wpDatabase = new wpDatabase();
 		$wpDatabase->query($sql);
 		$returns = "{";
