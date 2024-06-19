@@ -75,7 +75,7 @@ class d1minicfg {
 		$compiledWith = array(
 			'DHT11', 'DHT22',
 			'wpLDR', 'wpLight',
-			'wpBM',
+			'wpBM', 'wpBM2',
 			'wpRain', 'wpMoisture',
 			'wpDistance'
 		);
@@ -407,9 +407,9 @@ class d1minicfg {
 	private static function getSelect($val, $name) {
 		return "<option value='$val'>$name</option>";
 	}
-	private static function getD1MiniSettings($selectAll = 'All') {
+	private static function getD1MiniSettings($selectAll = 'ALL') {
 		$sql = "SELECT [id_d1mini], [ip] FROM [d1mini]";
-		if($selectAll != 'All') $sql .= " WHERE [id_d1minigroup] = " . $selectAll;
+		if($selectAll != 'ALL') $sql .= " WHERE [id_d1minigroup] = " . $selectAll;
 		$wpDatabase = new wpDatabase();
 		$wpDatabase->query($sql);
 		$returns = "{";
