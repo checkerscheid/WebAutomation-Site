@@ -75,7 +75,7 @@ class d1minicfg {
 		$compiledWith = array(
 			'DHT11', 'DHT22',
 			'wpLDR', 'wpLight',
-			'wpBM', 'wpBM2',
+			'wpBM', 'wpFK',
 			'wpRain', 'wpMoisture',
 			'wpDistance'
 		);
@@ -350,7 +350,7 @@ class d1minicfg {
 	const c_allGroup = 'allGroup';
 	public static function allGroup() {
 		$where = '';
-		foreach(std::posts('ids', array()) as $ids) {
+		foreach(std::posts('ids') as $ids) {
 			$where .= '[id_d1mini] = '.$ids.' OR ';
 		}
 		$database = new wpDatabase();
@@ -362,7 +362,7 @@ class d1minicfg {
 	const c_allActive = 'allActive';
 	public static function allActive() {
 		$where = '';
-		foreach(std::posts('ids', array()) as $ids) {
+		foreach(std::posts('ids') as $ids) {
 			$where .= '[id_d1mini] = '.$ids.' OR ';
 		}
 		$database = new wpDatabase();
@@ -374,7 +374,7 @@ class d1minicfg {
 	public static function allDelete() {
 		header(wpJSON_HEADER);
 		$fortcp = '';
-		foreach(std::posts('ids', array()) as $ids) {
+		foreach(std::posts('ids') as $ids) {
 			$fortcp .= $ids.'%~%';
 		}
 		$WebCom = new WebCom();
