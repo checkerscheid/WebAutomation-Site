@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 04.03.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 627                                                     $ #
+//# Revision     : $Rev:: 628                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.req 627 2024-06-19 18:58:29Z                   $ #
+//# File-ID      : $Id:: d1minicfg.req 628 2024-06-19 19:08:13Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
