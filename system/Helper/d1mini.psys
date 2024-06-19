@@ -77,8 +77,8 @@ class d1mini {
 			if($this->status->FreakaZoneDevice->useModul->BM) {
 				$this->setBM();
 			}
-			if($this->status->FreakaZoneDevice->useModul->BM2) {
-				$this->setBM2();
+			if($this->status->FreakaZoneDevice->useModul->FK) {
+				$this->setFK();
 			}
 			if($this->status->FreakaZoneDevice->useModul->Relais ||
 					$this->status->FreakaZoneDevice->useModul->RelaisShield) {
@@ -154,14 +154,15 @@ class d1mini {
 	}
 	private function setBM() {
 		$id_mqtttopic = $this->insertTopic('BM');
-		$id_dp = $this->mergeDP($id_mqtttopic, 'BM', 'Bewegung', '1:Bewegung;0:Stille;');
+		$id_dp = $this->mergeDP($id_mqtttopic, 'BM', 'Bewegung', '0:Stille;1:Bewegung;');
 		$this->mergeTrend($id_dp, 'Bewegung');
 		echo "saved: 'Bewegung' ";
 	}
-	private function setBM2() {
-		$id_mqtttopic = $this->insertTopic('BM2');
-		$id_dp = $this->mergeDP($id_mqtttopic, 'BM2', 'Bewegung', '1:Bewegung;0:Stille;');
-		$this->mergeTrend($id_dp, 'Bewegung');
+	private function setFK() {
+		$id_mqtttopic = $this->insertTopic('FK');
+		$id_dp = $this->mergeDP($id_mqtttopic, 'FK', 'Fenster', '0:offen;1:geschlossen;');
+		$this->mergeAlarm($id_dp, 'FK', 'Fenster offen', alarmtype::Meldung, AlarmCondition::gleich, 0);
+		$this->mergeTrend($id_dp, 'Fenster');
 		echo "saved: 'Bewegung2' ";
 	}
 	private function setRelais() {
@@ -386,5 +387,13 @@ class AlarmType {
 	const Handbetrieb = 4;
 	const Nothandebene = 5;
 	const Warnung = 6;
+}
+class AlarmCondition {
+	const gleich = 1;
+	const ungleich = 2;
+	const groesser = 3;
+	const kleiner = 4;
+	const minmax = 5;
+	const zwischen = 6;
 }
 ?>
