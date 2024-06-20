@@ -1566,9 +1566,9 @@ var p = {
 			});
 		},
 		width: {
-			osk: '820px',
 			std: '350px',
-			middle : '550px'
+			middle : '550px',
+			osk: '820px'
 		}
 	},
 	osk: {

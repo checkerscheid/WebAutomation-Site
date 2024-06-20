@@ -89,7 +89,7 @@ class d1mini {
 			}
 			if($this->status->FreakaZoneDevice->useModul->Relais ||
 					$this->status->FreakaZoneDevice->useModul->RelaisShield) {
-				$this->setRelais();
+				$this->setRelais($this->status->FreakaZoneDevice->useModul->Moisture);
 			}
 			if($this->status->FreakaZoneDevice->useModul->Rain) {
 				$this->setRain();
@@ -172,7 +172,7 @@ class d1mini {
 		$this->mergeTrend($id_dp, 'Fenster', 0);
 		echo "saved: 'Fensterkontakt' ";
 	}
-	private function setRelais() {
+	private function setRelais($hasMoisture) {
 		$id_mqtttopic = $this->insertTopic('Relais/Output');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'Pumpe', 'Pumpe', '0:Aus;1:Ein;');
 		$this->mergeTrend($id_dp, 'Pumpe', 0);
@@ -193,6 +193,11 @@ class d1mini {
 		$id_dp_handError = $this->mergeDP($id_mqtttopicHandError, 'PumpeHandError', 'Pumpe Hand Error', '0:Automatik;1:Hand;', 'NULL', 0, 1);
 		$this->mergeAlarm($id_dp_handError, 'PumpeHandError', 'Pumpe Hand Error', AlarmType::Handbetrieb);
 
+		if($hasMoisture) {
+			$id_mqtttopicWaterEmpty = $this->insertTopic('ERROR/WaterEmpty');
+			$id_dp_WaterEmpty = $this->mergeDP($id_mqtttopicWaterEmpty, 'WaterEmpty', 'Wasser leer', '0:OK;1:leer;', 'NULL', 0, 1);
+			$this->mergeAlarm($id_dp_WaterEmpty, 'WaterEmpty', 'Wasser leer', AlarmType::Warnung, AlarmCondition::ungleich, 0);
+		}
 	}
 	private function setRain() {
 		$id_mqtttopic = $this->insertTopic('Rain');

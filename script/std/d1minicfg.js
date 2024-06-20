@@ -72,7 +72,7 @@ p.page.load = function() {
 		var myData = $('.searchResult').data('foundNew')[$(this).attr('data-key')]['Iam'];
 		$.get('std.d1minicfg.infoToSaveD1Mini.pop', function(data) {
 			$('#dialog').html(data).dialog({
-				title: 'D1 Mini speichern', modal: true, width: p.popup.width.middle,
+				title: 'D1 Mini speichern', modal: true, width: p.popup.width.osk,
 				buttons: [{
 					text:'OK',
 					click: function() {
@@ -105,9 +105,10 @@ p.page.load = function() {
 	});
 	$('#erg').on('click', '.D1MiniDevice .renewMqtt', function() {
 		var myData = { IP: $(this).attr('data-ip') };
+		var name = $(this).parents('tr.D1MiniDevice').attr('data-name');
 		$.get('std.d1minicfg.infoToSaveD1Mini.pop', function(data) {
 			$('#dialog').html(data).dialog({
-				title: 'D1 Mini MQTT und Trend erneuern', modal: true, width: p.popup.width.middle,
+				title: 'D1 Mini ' + name + ' MQTT und Trend erneuern', modal: true, width: p.popup.width.osk,
 				buttons: [{
 					text:'OK',
 					click: function() {
