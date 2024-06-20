@@ -33,6 +33,7 @@ class d1mini {
 
 	private $database, $webCom, $status;
 	private $idD1MiniGroup, $idMqttGroup, $idDBGroup, $idTrendGroup, $idAlarmGroup;
+	private $idAlarmGroups5, $idAlarmGroups4, $idAlarmGroups3, $idAlarmGroups2, $idAlarmGroups1;
 	private $id, $name, $description, $ip, $version, $mac;
 	private $canInserted;
 	public function __construct($ip) {
@@ -53,12 +54,18 @@ class d1mini {
 			echo \json_last_error_msg();
 		}
 	}
-	public function insertDevice($idD1MiniGroup, $idMqttroup, $idDBGroup, $idTrendGroup, $idAlarmGroup) {
+	public function insertDevice($idD1MiniGroup, $idMqttroup, $idDBGroup, $idTrendGroup,
+			$idAlarmGroups5, $idAlarmGroups4, $idAlarmGroups3, $idAlarmGroups2, $idAlarmGroups1) {
 		$this->idD1MiniGroup = $idD1MiniGroup;
 		$this->idMqttGroup = $idMqttroup;
 		$this->idDBGroup = $idDBGroup;
 		$this->idTrendGroup = $idTrendGroup;
-		$this->idAlarmGroup = $idAlarmGroup;
+		$this->idAlarmGroups5 = $idAlarmGroups5;
+		$this->idAlarmGroups4 = $idAlarmGroups4;
+		$this->idAlarmGroups3 = $idAlarmGroups3;
+		$this->idAlarmGroups2 = $idAlarmGroups2;
+		$this->idAlarmGroups1 = $idAlarmGroups1;
+		$this->idAlarmGroup = 1;
 		if($this->canInserted) {
 			$this->setDevice();
 			$this->setRSSI();
@@ -82,7 +89,7 @@ class d1mini {
 			}
 			if($this->status->FreakaZoneDevice->useModul->Relais ||
 					$this->status->FreakaZoneDevice->useModul->RelaisShield) {
-				$this->setRelais();
+				$this->setRelais($this->status->FreakaZoneDevice->useModul->Moisture);
 			}
 			if($this->status->FreakaZoneDevice->useModul->Rain) {
 				$this->setRain();
@@ -135,7 +142,7 @@ class d1mini {
 	private function setLDR() {
 		$id_mqtttopic = $this->insertTopic('LDR');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'LDR', 'LDR', 'lux', 0, 0, 1024);
-		$this->mergeTrend($id_dp, 'LDR');
+		$this->mergeTrend($id_dp, 'LDR', 30);
 		echo "saved: 'LDR' ";
 		$id_mqtttopic_err = $this->insertTopic('ERROR/LDR');
 		$id_dp_err = $this->mergeDP($id_mqtttopic_err, 'ERROR_LDR', 'LDR Error', '0:Ok;1:Error;');
@@ -145,7 +152,7 @@ class d1mini {
 	private function setLight() {
 		$id_mqtttopic = $this->insertTopic('Light');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'Light', 'Licht', 'lux', 0, 0, 1024);
-		$this->mergeTrend($id_dp, 'Licht');
+		$this->mergeTrend($id_dp, 'Licht', 30);
 		echo "saved: 'Licht' ";
 		$id_mqtttopic_err = $this->insertTopic('ERROR/Licht');
 		$id_dp_err = $this->mergeDP($id_mqtttopic_err, 'ERROR_Licht', 'Licht Error', '0:Ok;1:Error;');
@@ -155,20 +162,20 @@ class d1mini {
 	private function setBM() {
 		$id_mqtttopic = $this->insertTopic('BM');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'BM', 'Bewegung', '0:Stille;1:Bewegung;');
-		$this->mergeTrend($id_dp, 'Bewegung');
+		$this->mergeTrend($id_dp, 'Bewegung', 0);
 		echo "saved: 'Bewegung' ";
 	}
 	private function setFK() {
 		$id_mqtttopic = $this->insertTopic('FK');
-		$id_dp = $this->mergeDP($id_mqtttopic, 'FK', 'Fenster', '0:offen;1:geschlossen;');
-		$this->mergeAlarm($id_dp, 'FK', 'Fenster offen', alarmtype::Meldung, AlarmCondition::gleich, 0);
-		$this->mergeTrend($id_dp, 'Fenster');
+		$id_dp = $this->mergeDP($id_mqtttopic, 'FK', 'Fenster', '0:geschlossen;1:offen;');
+		$this->mergeAlarm($id_dp, 'FK', 'Fenster offen', alarmtype::Meldung, AlarmCondition::ungleich, 0);
+		$this->mergeTrend($id_dp, 'Fenster', 0);
 		echo "saved: 'Fensterkontakt' ";
 	}
-	private function setRelais() {
+	private function setRelais($hasMoisture) {
 		$id_mqtttopic = $this->insertTopic('Relais/Output');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'Pumpe', 'Pumpe', '0:Aus;1:Ein;');
-		$this->mergeTrend($id_dp, 'Pumpe');
+		$this->mergeTrend($id_dp, 'Pumpe', 0);
 
 		$id_mqtttopicHand = $this->insertTopic('Relais/Hand');
 		$this->mergeDP($id_mqtttopicHand, 'PumpeHand', 'Pumpe Hand', '0:Aus;1:Ein;', 'NULL', 0, 1);
@@ -186,6 +193,11 @@ class d1mini {
 		$id_dp_handError = $this->mergeDP($id_mqtttopicHandError, 'PumpeHandError', 'Pumpe Hand Error', '0:Automatik;1:Hand;', 'NULL', 0, 1);
 		$this->mergeAlarm($id_dp_handError, 'PumpeHandError', 'Pumpe Hand Error', AlarmType::Handbetrieb);
 
+		if($hasMoisture) {
+			$id_mqtttopicWaterEmpty = $this->insertTopic('ERROR/WaterEmpty');
+			$id_dp_WaterEmpty = $this->mergeDP($id_mqtttopicWaterEmpty, 'WaterEmpty', 'Wasser leer', '0:OK;1:leer;', 'NULL', 0, 1);
+			$this->mergeAlarm($id_dp_WaterEmpty, 'WaterEmpty', 'Wasser leer', AlarmType::Warnung, AlarmCondition::ungleich, 0);
+		}
 	}
 	private function setRain() {
 		$id_mqtttopic = $this->insertTopic('Rain');
@@ -200,7 +212,7 @@ class d1mini {
 	private function setVolume() {
 		$id_mqtttopic = $this->insertTopic('Volume');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'Vol', 'Füllstand', 'l', 0, 0, 10000);
-		$this->mergeTrend($id_dp, 'Füllstand', 120);
+		$this->mergeTrend($id_dp, 'Füllstand');
 		echo "saved: 'Füllstand' ";
 		$id_mqtttopic_err = $this->insertTopic('ERROR/Distance');
 		$id_dp_err = $this->mergeDP($id_mqtttopic_err, 'ERROR_Distance', 'Volume Error', '0:Ok;1:Error;');
@@ -317,7 +329,7 @@ MERGE INTO [dp] AS [TARGET]
 			$this->database->query($sql);
 			return $this->database->fetch()['ID'];
 	}
-	private function mergeTrend($id_dp, $apdesc, $intervall = 0, $active = 1) {
+	private function mergeTrend($id_dp, $apdesc, $intervall = 60, $active = 1) {
 		$sql = "
 MERGE INTO [trend] AS [TARGET]
 	USING (
@@ -352,17 +364,17 @@ MERGE INTO [alarm] AS [TARGET]
 	USING (
 		VALUES (
 			$id_dp, $this->idAlarmGroup, '$this->description $apdesc',
+			$this->idAlarmGroups5, $this->idAlarmGroups4, $this->idAlarmGroups3, $this->idAlarmGroups2, $this->idAlarmGroups1,
 			$alarmtype, $alarmcondition, $min
 		)
 	) AS [SOURCE] (
 		[id_dp], [id_alarmgroup], [text],
+		[id_alarmgroups5], [id_alarmgroups4], [id_alarmgroups3], [id_alarmgroups2], [id_alarmgroups1],
 		[id_alarmtype], [id_alarmcondition], [min]
 	) ON
 		[TARGET].[id_dp] = [SOURCE].[id_dp]
 	WHEN MATCHED THEN
 		UPDATE SET
-			[TARGET].[id_dp] = [SOURCE].[id_dp],
-			[TARGET].[id_alarmgroup] = [SOURCE].[id_alarmgroup],
 			[TARGET].[text] = [SOURCE].[text],
 			[TARGET].[id_alarmtype] = [SOURCE].[id_alarmtype],
 			[TARGET].[id_alarmcondition] = [SOURCE].[id_alarmcondition],
@@ -370,10 +382,12 @@ MERGE INTO [alarm] AS [TARGET]
 	WHEN NOT MATCHED THEN
 		INSERT (
 			[id_dp], [id_alarmgroup], [text],
+			[id_alarmgroups5], [id_alarmgroups4], [id_alarmgroups3], [id_alarmgroups2], [id_alarmgroups1],
 			[id_alarmtype], [id_alarmcondition], [min]
 		)
 		VALUES (
 			[SOURCE].[id_dp], [SOURCE].[id_alarmgroup], [SOURCE].[text],
+			[SOURCE].[id_alarmgroups5], [SOURCE].[id_alarmgroups4], [SOURCE].[id_alarmgroups3], [SOURCE].[id_alarmgroups2], [SOURCE].[id_alarmgroups1],
 			[SOURCE].[id_alarmtype], [SOURCE].[id_alarmcondition], [SOURCE].[min]
 		);";
 			$this->database->query($sql);

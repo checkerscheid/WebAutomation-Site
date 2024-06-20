@@ -570,7 +570,6 @@ function getAlarms($idgroup5, $idgroup4, $idgroup3, $idgroup2, $idgroup1, $idgro
 			echo '<span class="ps-button alltype" title="Alarmtyp ändern">Alarmtyp</span>';
 			echo '<span class="ps-button alllink" title="Link ändern">Link</span>';
 		}
-		echo '<span class="ps-button allgroup" title="in Gruppe verschieben">Gruppe</span>';
 		if($system->useAlarmGroup5()){
 			echo '<span class="ps-button allgroup5" title="'.$system->nameAlarmGroup5().' ändern">'.$system->nameAlarmGroup5().'</span>';
 		}
@@ -586,6 +585,7 @@ function getAlarms($idgroup5, $idgroup4, $idgroup3, $idgroup2, $idgroup1, $idgro
 		if($system->useAlarmGroup1()){
 			echo '<span class="ps-button allgroup1" title="'.$system->nameAlarmGroup1().' ändern">'.$system->nameAlarmGroup1().'</span>';
 		}
+		echo '<span class="ps-button allgroup" title="in Gruppe verschieben">Gruppe</span>';
 		if($idgroup0 != 'NULL') {
 			echo '<span class="ps-button allcondition" title="Bedingung ändern">Bedingung</span>';
 		}

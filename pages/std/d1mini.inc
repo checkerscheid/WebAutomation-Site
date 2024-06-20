@@ -164,7 +164,7 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 				<tr>
 					<td colspan="3">Handwert:</td>
 					<td colspan="3">
-						<span class="ps-input <?=wpa::$GreyGreen ?>" data-ws="<?=$erg['name'] ?>_PumpeHand">undefined</span>
+						<span class="ps-input <?=wpa::GreyGreen ?>" data-ws="<?=$erg['name'] ?>_PumpeHand">undefined</span>
 					</td>
 				</tr>
 				<tr>

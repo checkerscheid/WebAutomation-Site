@@ -157,7 +157,7 @@ class uebersicht {
 			$returns .= '
 				<tr>
 					<td colspan="2">' . $name . ':</td>
-					<td colspan="2"><span data-ws="' . $dp . '_Rssi" class="' . wpa::rssi . '">undefined</span></td>
+					<td colspan="2"><span data-ws="' . $dp . '_Rssi" class="' . wpa::rssi . '">-</span></td>
 					<td colspan="2">';
 			if(in_array($dp, uebersicht::$d1Minis)) {
 				$returns .= '<span data-ws="' . $dp . '_Online" class="ps-input ' . wpa::GreenRed . '">-</span>';
