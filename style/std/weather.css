@@ -22,7 +22,8 @@
 .weathercontainer .condition { width:420px; }
 .weathercontainer .forecast { width:950px; }
 .weathercontainer .forecastlines { width:950px; padding:10px; }
-.weathercontainer .forecastlinesplaceholder { height:350px; }
+#forecastlinesplaceholder { height:350px; }
+#forecastlinestooltip { position:absolute; background-image:linear-gradient(rgba(50,50,50,0.9) 25%, rgba(21,21,21,0.9) 100%); }
 
 .weathercontainer .condition .big { font-size:65px; font-weight:bold; padding-left:135px; padding-top:10px;
 	float:left; text-shadow:0 0 3px #FFF; }
@@ -41,15 +42,15 @@
 .weathercontainer .condition .yahoo { width:30px; height:18px; display:inline-block; margin-left:5px;
 	background:transparent url(images/layout/yahoo.png); }
 
-.weathercontainer .forecast div.days { float:left; width:100px; text-align:center; overflow:hidden; border:1px solid #555; padding:3px; margin:5px;
+.weathercontainer div.days { float:left; width:100px; text-align:center; overflow:hidden; border:1px solid #555; padding:3px; margin:5px;
 	border-radius:5px; box-shadow:0px 0px 12px #8c8c8c; }
-.weathercontainer .forecast div.daysempty { float:left; width:100px; padding:4px; margin:5px; }
-.weathercontainer .forecast img.wind { width:15px; height:15px; }
-.weathercontainer .forecast .high { font-size:10px; color:#FF6969; text-shadow:0 0 3px #000; }
-.weathercontainer .forecast .low { font-size:10px; color:#167BFF; text-shadow:0 0 3px #000; }
-.weathercontainer .forecast .ps-bold { font-size:16px; }
-.weathercontainer .forecast .clearboth { margin:10px; }
+.weathercontainer div.daysempty { float:left; width:100px; padding:4px; margin:5px; }
+.weathercontainer img.wind { width:15px; height:15px; }
+.weathercontainer .high { font-size:10px; color:#FF6969; text-shadow:0 0 3px #000; }
+.weathercontainer .low { font-size:10px; color:#167BFF; text-shadow:0 0 3px #000; }
+.weathercontainer .ps-bold { font-size:16px; }
+.weathercontainer .clearboth { margin:10px; }
 
 .black .weathercontainer .condition .big { text-shadow:0 0 3px #000; }
 .black .weathercontainer .condition .location { text-shadow:0 0 3px #000; }
-.black .weathercontainer .forecast div.days { border:1px solid #AAA; box-shadow:2px 2px 8px #000; }
+.black .weathercontainer div.days { border:1px solid #AAA; box-shadow:2px 2px 8px #000; }

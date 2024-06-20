@@ -23,10 +23,11 @@ namespace pages\std;
 			<div class="ps-loading"></div>
 		</div>
 		<div class="forecastlines ps-container">
-			<div class="forecastlinesplaceholder">
+			<div id="forecastlinesplaceholder">
 				<div class="ps-loading"></div>
 			</div>
 		</div>
+		<div id="forecastlinestooltip" class="ps-container"></div>
 		<div class="forecast ps-container ps-loading">
 			<div class="ps-loading"></div>
 		</div>
