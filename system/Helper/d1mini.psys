@@ -160,8 +160,8 @@ class d1mini {
 	}
 	private function setFK() {
 		$id_mqtttopic = $this->insertTopic('FK');
-		$id_dp = $this->mergeDP($id_mqtttopic, 'FK', 'Fenster', '0:offen;1:geschlossen;');
-		$this->mergeAlarm($id_dp, 'FK', 'Fenster offen', alarmtype::Meldung, AlarmCondition::gleich, 0);
+		$id_dp = $this->mergeDP($id_mqtttopic, 'FK', 'Fenster', '0:geschlossen;1:offen;');
+		$this->mergeAlarm($id_dp, 'FK', 'Fenster offen', alarmtype::Meldung, AlarmCondition::ungleich, 0);
 		$this->mergeTrend($id_dp, 'Fenster');
 		echo "saved: 'Fensterkontakt' ";
 	}

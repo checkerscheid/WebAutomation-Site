@@ -15,6 +15,7 @@
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
+use Exception;
 use system\Helper\wpDatabase;
 use system\std, system\WebCom;
 use system\Helper\d1mini;
@@ -303,7 +304,8 @@ class d1minicfg {
 					<td class="buttonbox">
 						<div class="buttonContainer">
 							<span class="ps-hover-noborder ps-image-button ps-send forceupdate" title="Force MQTT Update"></span>
-							<span class="ps-hover-noborder ps-image-button ps-import setupmode" title="Set FW Update Mode On"></span>
+							<!--span class="ps-hover-noborder ps-image-button ps-import setupmode" title="Set FW Update Mode On"></span-->
+							<span class="ps-hover-noborder ps-image-button ps-import setuphttp" data-ip="' . $erg['ip'] . '" title="Setup Http"></span>
 							<span class="ps-hover-noborder ps-image-button ps-refresh restartdevice" title="neu starten"></span>
 						</div>
 					</td>
@@ -346,6 +348,21 @@ class d1minicfg {
 	public static function setcmd($name, $cmd) {
 		$WebCom = new WebCom();
 		echo $WebCom->send('SetD1MiniCmd', "$name%~%$cmd");
+	}
+	const c_starthttpupdate = 'starthttpupdate';
+	public static function starthttpupdate($ip) {
+		$context = stream_context_create([
+			"http" => [
+				"method"=>"GET",
+				"timeout" => 1
+			]
+		]);
+		try {
+			file_get_contents('http://' . $ip . '/setCmd?cmd=UpdateHTTP', 0, $context);
+		} catch(Exception $e) {
+			// Fail silently
+		}
+		//echo file_get_contents('http://' . $ip . '/setCmd?cmd=UpdateHTTP');
 	}
 	const c_allGroup = 'allGroup';
 	public static function allGroup() {
@@ -494,6 +511,10 @@ switch(std::gets('param1')) {
 		//###################################################################################
 	case d1minicfg::c_setcmd:
 		d1minicfg::setcmd(std::posts('name'), std::posts('cmd'));
+		break;
+		//###################################################################################
+	case d1minicfg::c_starthttpupdate:
+		d1minicfg::starthttpupdate(std::posts('ip'));
 		break;
 		//###################################################################################
 	case d1minicfg::c_allGroup:

@@ -165,6 +165,10 @@ p.page.load = function() {
 			}
 		});
 	});
+	$('#erg').on('click', '.D1MiniDevice .setuphttp', function() {
+		var ip = $(this).attr('data-ip');
+		$.post('std.d1minicfg.starthttpupdate.req', {ip:ip});
+	});
 	$('#erg').on('click', '.D1MiniDevice .restartdevice', function() {
 		var name = $(this).parents('tr.D1MiniDevice').attr('data-name');
 		$.post('std.d1minicfg.setcmd.req', {name:name,cmd:'RestartDevice'});
