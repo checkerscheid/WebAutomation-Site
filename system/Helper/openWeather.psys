@@ -15,6 +15,7 @@
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
+use system\std;
 use system\wpInit;
 class openWeather {
 	private const urlprepend = 'http://api.openweathermap.org/data/2.5/';
@@ -71,7 +72,7 @@ class openWeather {
 				$aktdt = self::convertDate($akt->dt, false);
 			}
 			echo '
-				<div class="days">
+				<div class="days" id="dt' . $akt->dt . '">
 					<h4>'.self::getTime($akt->dt).'</h4>
 					<img alt="'.$akt->weather[0]->description.'" title="'.$akt->weather[0]->description.'" src="'.self::getIcon($akt->weather[0]->icon).'" /><br />
 					<span class="high">'.$akt->main->temp_max.' °C</span><br />
@@ -95,18 +96,26 @@ class openWeather {
 		$dataTempMin = "[";
 		$dataTempMax = "[";
 		$dataHumidity = "[";
+		$dataRain = "[";
 		for($i = 0; $i < $con->cnt; $i++) {
 			$akt = $con->list[$i];
+			//std::test_array($akt);
 			$dataTemp .= '[' . $akt->dt . ',' . $akt->main->temp . ']' . ($i < $con->cnt - 1 ? ',' : '');
 			$dataTempMin .= '[' . $akt->dt . ',' . $akt->main->temp_min . ']' . ($i < $con->cnt - 1 ? ',' : '');
 			$dataTempMax .= '[' . $akt->dt . ',' . $akt->main->temp_max . ']' . ($i < $con->cnt - 1 ? ',' : '');
 			$dataHumidity .= '[' . $akt->dt . ',' . $akt->main->humidity . ']' . ($i < $con->cnt - 1 ? ',' : '');
+			$rain = 0;
+			if($akt->weather[0]->main == 'Rain') {
+				$rain = $akt->rain->{'3h'};
+			}
+			$dataRain .= '[' . $akt->dt . ',' . $rain . ']' . ($i < $con->cnt - 1 ? ',' : '');
 		}
 		echo '{';
 		echo '"Temp":' . $dataTemp . '],';
 		echo '"TempMin":' . $dataTempMin . '],';
 		echo '"TempMax":' . $dataTempMax . '],';
-		echo '"Humidity":' . $dataHumidity . ']';
+		echo '"Humidity":' . $dataHumidity . '],';
+		echo '"Rain":' . $dataRain . ']';
 		echo '}';
 	}
 	private static function getIcon($icon) {
