@@ -15,7 +15,6 @@
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
-use system\std;
 use system\wpInit;
 class openWeather {
 	private const urlprepend = 'http://api.openweathermap.org/data/2.5/';
@@ -71,6 +70,10 @@ class openWeather {
 				}
 				$aktdt = self::convertDate($akt->dt, false);
 			}
+			$rain = 0;
+			if($akt->weather[0]->main == 'Rain') {
+				$rain = $akt->rain->{'3h'};
+			}
 			echo '
 				<div class="days" id="dt' . $akt->dt . '">
 					<h4>'.self::getTime($akt->dt).'</h4>
@@ -78,6 +81,7 @@ class openWeather {
 					<span class="high">'.$akt->main->temp_max.' °C</span><br />
 					<span class="ps-bold">'.$akt->main->temp.' °C</span><br />
 					<span class="low">'.$akt->main->temp_min.' °C</span><br />
+					<span>Regen: '.$rain.' l/min</span><br />
 					<span>Wolken: '.$akt->clouds->all.' %</span><br />
 					<span>Wind: '.$akt->wind->speed.' m / s<br />
 						<img alt="" class="wind" src="images/layout/wind.png" style="transform:rotate('.$akt->wind->deg.'deg);" title="Richtung: '.self::getwind($akt->wind->deg).'" />
@@ -99,7 +103,6 @@ class openWeather {
 		$dataRain = "[";
 		for($i = 0; $i < $con->cnt; $i++) {
 			$akt = $con->list[$i];
-			//std::test_array($akt);
 			$dataTemp .= '[' . $akt->dt . ',' . $akt->main->temp . ']' . ($i < $con->cnt - 1 ? ',' : '');
 			$dataTempMin .= '[' . $akt->dt . ',' . $akt->main->temp_min . ']' . ($i < $con->cnt - 1 ? ',' : '');
 			$dataTempMax .= '[' . $akt->dt . ',' . $akt->main->temp_max . ']' . ($i < $con->cnt - 1 ? ',' : '');

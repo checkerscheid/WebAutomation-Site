@@ -41,8 +41,8 @@ p.page.load = function() {
 			{ color: "#555", lineWidth: 1, xaxis: { from: marker5.ts, to: marker5.ts } }
 		];
 		var dataset = [
+			{ label: "Rain", data: data.Rain, bars: {show: true, fill: true, barWidth:5000, align: "center"}, color: "rgba(169,25,25,0.7)", yaxis: 3 },
 			{ label: "Humidity", data: data.Humidity, lines: { show: true }, color: "rgba(20,20,50,0.7)", yaxis: 2 },
-			{ label: "Rain", data: data.Rain, bars: {show: true, fill: true, barWidth: 1, align: "center"}, color: "rgba(169,25,25,0.7)", yaxis: 3 },
 			{ data: data.TempMin, lines: { show: true, lineWidth: 0.1, fill: 0.2 }, color: "rgba(50,50,255,0.7)", fillBetween: "Temp", yaxis: 1 },
 			{ data: data.TempMax, lines: { show: true, lineWidth: 0.1, fill: 0.2 }, color: "rgba(255,50,50,0.7)", fillBetween: "Temp", yaxis: 1 },
 			{ label: "Temperatur", id: "Temp", data:data.Temp, lines:{ show:true }, points: { show: true }, color: "rgb(210,210,210)", yaxis: 1 }
@@ -74,6 +74,11 @@ p.page.load = function() {
 			},
 			crosshair: {
 				"mode":"x"
+			},
+			legend: {
+				show:true,
+				backgroundColor: '#555',
+				backgroundOpacity: 0.8
 			}
 		});
 		
