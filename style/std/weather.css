@@ -20,10 +20,10 @@
 #wetter .ps-container { margin-left:auto; margin-right:auto; }
 
 .weathercontainer .condition { width:420px; }
-.weathercontainer .forecast { width:950px; }
-.weathercontainer .forecastlines { width:950px; padding:10px; }
+.weathercontainer .forecast { width:1110px; }
+.weathercontainer .forecastlines { padding:10px; }
 #forecastlinesplaceholder { height:350px; }
-#forecastlinestooltip { position:absolute; background-image:linear-gradient(rgba(50,50,50,0.9) 25%, rgba(21,21,21,0.9) 100%); }
+#forecastlinestooltip { position:absolute; }
 
 .weathercontainer .condition .big { font-size:65px; font-weight:bold; padding-left:135px; padding-top:10px;
 	float:left; text-shadow:0 0 3px #FFF; }
@@ -42,12 +42,17 @@
 .weathercontainer .condition .yahoo { width:30px; height:18px; display:inline-block; margin-left:5px;
 	background:transparent url(images/layout/yahoo.png); }
 
-.weathercontainer div.days { float:left; width:100px; text-align:center; overflow:hidden; border:1px solid #555; padding:3px; margin:5px;
+.weathercontainer div.dayscontainer { float:left; }
+.weathercontainer div.days { width:120px; text-align:center; overflow:hidden; border:1px solid #555; padding:3px; margin:5px;
+	background-image:linear-gradient(rgba(50,50,50,0.9) 25%, rgba(21,21,21,0.9) 100%);
 	border-radius:5px; box-shadow:0px 0px 12px #8c8c8c; }
-.weathercontainer div.daysempty { float:left; width:100px; padding:4px; margin:5px; }
+.weathercontainer div.daysempty { float:left; width:120px; padding:4px; margin:5px; }
 .weathercontainer img.wind { width:15px; height:15px; }
 .weathercontainer .high { font-size:10px; color:#FF6969; text-shadow:0 0 3px #000; }
 .weathercontainer .low { font-size:10px; color:#167BFF; text-shadow:0 0 3px #000; }
+.weathercontainer div.days table { margin:auto; }
+.weathercontainer div.days td.l { text-align:left; }
+.weathercontainer div.days td.r { text-align:right; }
 .weathercontainer .ps-bold { font-size:16px; }
 .weathercontainer .clearboth { margin:10px; }
 

@@ -75,19 +75,43 @@ class openWeather {
 				$rain = $akt->rain->{'3h'};
 			}
 			echo '
-				<div class="days" id="dt' . $akt->dt . '">
+			<div class="dayscontainer" id="dt' . $akt->dt . '">
+				<div class="days">
 					<h4>'.self::getTime($akt->dt).'</h4>
 					<img alt="'.$akt->weather[0]->description.'" title="'.$akt->weather[0]->description.'" src="'.self::getIcon($akt->weather[0]->icon).'" /><br />
 					<span class="high">'.$akt->main->temp_max.' °C</span><br />
 					<span class="ps-bold">'.$akt->main->temp.' °C</span><br />
 					<span class="low">'.$akt->main->temp_min.' °C</span><br />
-					<span>Regen: '.$rain.' l/min</span><br />
-					<span>Wolken: '.$akt->clouds->all.' %</span><br />
-					<span>Wind: '.$akt->wind->speed.' m / s<br />
-						<img alt="" class="wind" src="images/layout/wind.png" style="transform:rotate('.$akt->wind->deg.'deg);" title="Richtung: '.self::getwind($akt->wind->deg).'" />
-					</span><br />
-					<span>'.$akt->main->pressure.' mbar<br />'.$akt->main->humidity.' %rF</span>
-				</div>';
+					<table summary="">
+						<tbody>
+							<tr>
+								<td class="l"><span>Regen:</span></td>
+								<td class="r"><span>'.$rain.' l/min</span></td>
+							</tr>
+							<tr>
+								<td class="l"><span>Feuchte:</span></td>
+								<td class="r"><span>'.$akt->main->humidity.' %rF</span></td>
+							</tr>
+							<tr>
+								<td class="l"><span>Wolken:</span></td>
+								<td class="r"><span>'.$akt->clouds->all.' %</span></td>
+							</tr>
+							<tr>
+								<td class="l"><span>Wind:</span></td>
+								<td class="r"><span>'.$akt->wind->speed.' m / s</span></td>
+							</tr>
+							<tr>
+								<td colspan="2">
+<img alt="" class="wind" src="images/layout/wind.png" style="transform:rotate('.$akt->wind->deg.'deg);" title="Richtung: '.self::getwind($akt->wind->deg).'" />
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2"><span>'.$akt->main->pressure.' mbar</span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>';
 		}
 		echo '
 				<div class="clearboth"></div>';
@@ -101,12 +125,14 @@ class openWeather {
 		$dataTempMax = "[";
 		$dataHumidity = "[";
 		$dataRain = "[";
+		$dataCloud = "[";
 		for($i = 0; $i < $con->cnt; $i++) {
 			$akt = $con->list[$i];
 			$dataTemp .= '[' . $akt->dt . ',' . $akt->main->temp . ']' . ($i < $con->cnt - 1 ? ',' : '');
 			$dataTempMin .= '[' . $akt->dt . ',' . $akt->main->temp_min . ']' . ($i < $con->cnt - 1 ? ',' : '');
 			$dataTempMax .= '[' . $akt->dt . ',' . $akt->main->temp_max . ']' . ($i < $con->cnt - 1 ? ',' : '');
 			$dataHumidity .= '[' . $akt->dt . ',' . $akt->main->humidity . ']' . ($i < $con->cnt - 1 ? ',' : '');
+			$dataCloud .= '[' . $akt->dt . ',' . (100 - $akt->clouds->all) . ']' . ($i < $con->cnt - 1 ? ',' : '');
 			$rain = 0;
 			if($akt->weather[0]->main == 'Rain') {
 				$rain = $akt->rain->{'3h'};
@@ -118,7 +144,8 @@ class openWeather {
 		echo '"TempMin":' . $dataTempMin . '],';
 		echo '"TempMax":' . $dataTempMax . '],';
 		echo '"Humidity":' . $dataHumidity . '],';
-		echo '"Rain":' . $dataRain . ']';
+		echo '"Rain":' . $dataRain . '],';
+		echo '"Cloud":' . $dataCloud . ']';
 		echo '}';
 	}
 	private static function getIcon($icon) {
