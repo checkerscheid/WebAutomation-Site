@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 627                                                     $ #
+//# Revision     : $Rev:: 629                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 627 2024-06-19 18:58:29Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 629 2024-06-20 23:27:21Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -157,7 +157,7 @@ class uebersicht {
 			$returns .= '
 				<tr>
 					<td colspan="2">' . $name . ':</td>
-					<td colspan="2"><span data-ws="' . $dp . '_Rssi" class="' . wpa::rssi . '">undefined</span></td>
+					<td colspan="2"><span data-ws="' . $dp . '_Rssi" class="' . wpa::rssi . '">-</span></td>
 					<td colspan="2">';
 			if(in_array($dp, uebersicht::$d1Minis)) {
 				$returns .= '<span data-ws="' . $dp . '_Online" class="ps-input ' . wpa::GreenRed . '">-</span>';

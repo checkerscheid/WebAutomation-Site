@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 626                                                     $ #
+//# Revision     : $Rev:: 629                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.inc 626 2024-06-17 15:18:36Z                      $ #
+//# File-ID      : $Id:: d1mini.inc 629 2024-06-20 23:27:21Z                      $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
@@ -164,7 +164,7 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 				<tr>
 					<td colspan="3">Handwert:</td>
 					<td colspan="3">
-						<span class="ps-input <?=wpa::$GreyGreen ?>" data-ws="<?=$erg['name'] ?>_PumpeHand">undefined</span>
+						<span class="ps-input <?=wpa::GreyGreen ?>" data-ws="<?=$erg['name'] ?>_PumpeHand">undefined</span>
 					</td>
 				</tr>
 				<tr>

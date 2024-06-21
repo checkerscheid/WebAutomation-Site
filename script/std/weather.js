@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 621                                                     $ #
+//# Revision     : $Rev:: 629                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: weather.js 621 2024-06-15 00:47:41Z                      $ #
+//# File-ID      : $Id:: weather.js 629 2024-06-20 23:27:21Z                      $ #
 //#                                                                                 #
 //###################################################################################
 ?> wetter */
