@@ -27,7 +27,7 @@ namespace pages\std;
 				<div class="ps-loading"></div>
 			</div>
 		</div>
-		<div id="forecastlinestooltip" class="ps-container"></div>
+		<div id="forecastlinestooltip" class="ps-hidden"></div>
 		<div class="forecast ps-container ps-loading">
 			<div class="ps-loading"></div>
 		</div>
