@@ -15,7 +15,6 @@
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
-use Exception;
 use system\Helper\wpDatabase;
 use system\std, system\WebCom;
 
@@ -38,6 +37,7 @@ class mqttactive {
 	const c_poponetopic = 'poponetopic';
 	const c_updateonetopic = 'updateonetopic';
 	const c_deleteonetopic = 'deleteonetopic';
+	public static $counter = 0;
 }
 
 switch(std::gets('param1')) {
@@ -427,18 +427,16 @@ function createDropDown($array, $active = 0) {
 	return $html;
 }
 
-$counter = 0;
 function generateTreeView($array, $storedTopics) {
-	global $counter;
 	$returns = '';
 	foreach($array as $key => $value) {
-		$counter++;
+		mqttactive::$counter++;
 		if(is_array($value)) {
-			$returns .= '<li class="ps-tree-parent key' . $counter . '" data-key="key' . $counter . '">';
+			$returns .= '<li class="ps-tree-parent key' . mqttactive::$counter . '" data-key="key' . mqttactive::$counter . '">';
 			$returns .= '<span>' . $key . ': </span>';
 			$returns .= '</li>';
 			$returns .= '<li>';
-			$returns .= '<ul class="ps-hidden subtopic key' . $counter . '">';
+			$returns .= '<ul class="ps-hidden subtopic key' . mqttactive::$counter . '">';
 			$returns .= generateTreeView($value, $storedTopics);
 			$returns .= '</ul>';
 			$returns .= '</li>';

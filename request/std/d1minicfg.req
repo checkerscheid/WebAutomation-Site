@@ -172,16 +172,17 @@ class d1minicfg {
 		$wpDatabase->query('SELECT TOP 1 [version] FROM [D1Mini] ORDER BY [version] DESC');
 		$erg = $wpDatabase->fetch();
 		d1minicfg::$maxVersion = $erg['version'];
-		$sql = "
-			SELECT
-				[id_d1mini], [name], [description], [ip], [mac], [version], [active]
-			FROM [d1mini]";
-		if(std::posts('d1minigroup') != 'ALL') {
-			$sql .= "
-			WHERE [id_d1minigroup] " . (std::posts('d1minigroup') == 'NULL' ? 'IS NULL' : ' = '.std::posts('d1minigroup'));
+		$sql = 'SELECT ';
+		if(std::posts('d1minigroup') == 'ALL') {
+			$sql .= '[m].[id_d1mini], [m].[name], [g].[name] AS [group], [m].[description], [m].[ip], [m].[mac], [m].[version], [m].[active]
+				FROM [d1mini] [m]
+				INNER JOIN [d1minigroup] [g] ON [m].[id_d1minigroup] = [g].[id_d1minigroup]';
+		} else {
+			$sql .= '[id_d1mini], [name], [description], [ip], [mac], [version], [active]
+				FROM [d1mini]
+				WHERE [id_d1minigroup] ' . (std::posts('d1minigroup') == 'NULL' ? 'IS NULL' : '= '.std::posts('d1minigroup'));
 		}
-		$sql .= "
-			ORDER BY [name]";
+		$sql .= ' ORDER BY [name]';
 		$wpDatabase->query($sql);
 		$html = '
 <ul class="d1miniingroup" data-group="'.std::posts('d1minigroup').'">
@@ -212,7 +213,11 @@ class d1minicfg {
 				<tr>
 					<th></th>
 					<th>Name</th>
-					<th>Beschreibung</th>
+					<th>Beschreibung</th>';
+			if(std::posts('d1minigroup') == 'ALL') {
+				$html .= '<th>Gruppe</th>';
+			}
+			$html .= '
 					<th>IP</th>
 					<th>MAC</th>
 					<th>Version</th>
@@ -255,7 +260,14 @@ class d1minicfg {
 								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice" title="von D1 Mini übernehmen"></span>
 							</div>
 						</div>
-					</td>
+					</td>';
+			if(std::posts('d1minigroup') == 'ALL') {
+				$html .= '
+					<td data-column="group">
+						<span>' . $erg['group'] . '</span>
+					</td>';
+			}
+				$html .= '
 					<td data-column="ip">
 						<div class="tdButton">
 							<div>
