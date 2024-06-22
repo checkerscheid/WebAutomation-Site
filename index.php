@@ -225,7 +225,7 @@ if(security::checkGroup(security::entwickler)) {
 					<div id="wartungactive" class="ps-hidden" title="Wartung ist aktiv"></div>
 					<? } ?>
 					<? if(std::vars(wpInit::$showATinFooter) != '') { ?>
-					<span class="footertemp"><span class="ps-sm-hide">AT: </span><span data-value="<?=wpInit::$showATinFooter?>" class="atinfooter"><?=wpHTML_EMPTY?></span></span>
+					<span class="footertemp"><span class="ps-sm-hide">AT: </span><span data-ws="<?=wpInit::$showATinFooter?>" class="atinfooter"><?=wpHTML_EMPTY?></span></span>
 					<? } ?>
 					<span class="footerdatetime"><span class="ps-sm-hide">Datum: </span>01.01.1970<span class="ps-sm-hide">, Uhrzeit:</span> 00:00:00</span>
 
