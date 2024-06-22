@@ -137,6 +137,17 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 			</table>
 		</div>
 	<? } ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->FK) { ?>
+		<div class="ps-container">
+			<h3>FK</h3>
+			<table summary="">
+				<tr>
+					<td>FK:</td>
+					<td><span class="ps-input <?=wpa::GreyGreen ?>" data-ws="<?=$erg['name'] ?>_FK">undefined</span></td>
+				</tr>
+			</table>
+		</div>
+	<? } ?>
 	<? if($d1Mini->FreakaZoneDevice->useModul->Relais ||
 			$d1Mini->FreakaZoneDevice->useModul->RelaisShield) { ?>
 		<div class="ps-container">
