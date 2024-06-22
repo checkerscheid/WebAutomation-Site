@@ -15,7 +15,9 @@
 //#                                                                                 #
 //###################################################################################
 ?> wetter */
+//<? require_once('script/system/websockets.js') ?>
 
+ws.logEnabled = false;
 var plot = null;
 p.page.load = function() {
 	$.get('std.weather.weather.req', function(data) {
@@ -133,7 +135,8 @@ p.page.load = function() {
 		console.log('plothovercleanup');
 		$("#forecastlinestooltip").addClass('ps-hidden').hide();
 	});
-	p.getValues();
+	ws.connect();
+	//p.getValues();
 };
 
 var days = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];

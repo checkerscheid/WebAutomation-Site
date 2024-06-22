@@ -15,6 +15,7 @@
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
+use DateTime;
 use system\wpInit;
 class openWeather {
 	private const urlprepend = 'http://api.openweathermap.org/data/2.5/';
@@ -25,18 +26,39 @@ class openWeather {
 	private $forecastdata;
 	public function __construct() {
 		$this->urlappend = '?id=' . wpInit::$weathercode . '&APPID=' . wpInit::$weatherkey . '&units=metric&lang=de';
-		$this->weatherdata = file_get_contents(self::urlprepend . 'weather' . $this->urlappend);
-		if($this->debug) {
-			$this->forecastdata = file_get_contents('system\Helper\openweatherexample.json');
-		} else {
-			$this->forecastdata = file_get_contents(self::urlprepend . 'forecast' . $this->urlappend);
-		}
+		$this->weatherdata = $this->getData('weather');
+		$this->forecastdata = $this->getData('forecast');
 	}
 	public static function getInstance() {
 		if(!isset(self::$instance)) {
 			self::$instance = new self;
 		}
 		return self::$instance;
+	}
+	private function getData($what) {
+		$returns = '{}';
+		$filename = 'system\Helper\open' . $what . 'example.json';
+		if(!file_exists($filename)) {
+			//echo '/* ' . $what . ' file not exists, load from web */';
+			\file_put_contents($filename,
+				\file_get_contents(self::urlprepend . $what . $this->urlappend));
+		}
+		if($this->debug) {
+			///echo '/* Debug ' . $what . '-data */';
+			$returns = \file_get_contents($filename);
+		} else {
+			$now = new DateTime();
+			$oneHour = 60 * 60;
+			$filetime = \filemtime($filename) + $oneHour;
+			if($now->getTimestamp() > $filetime) {
+				echo '/* ' . $what . ' file is older than 1 hour (' . $now->getTimestamp() . ', ' . $filetime . '), load from web */';
+				\file_put_contents($filename,
+					\file_get_contents(self::urlprepend . $what . $this->urlappend));
+			}
+			//echo '/* load from ' . $what . '-file */';
+			$returns = \file_get_contents($filename);
+		}
+		return $returns;
 	}
 	public static function getWeather() {
 		$ow = openWeather::getInstance();
@@ -149,10 +171,12 @@ class openWeather {
 		echo '}';
 	}
 	private static function getIcon($icon) {
-		$output = $_SERVER['DOCUMENT_ROOT'].'/images/cache/'.$icon.'.png';
-		if(!file_exists($output)) {
-			$input = 'http://openweathermap.org/img/w/'.$icon.'.png';
-			file_put_contents($output, file_get_contents($input));
+		if($icon != '') {
+			$output = $_SERVER['DOCUMENT_ROOT'].'/images/cache/'.$icon.'.png';
+			if(!file_exists($output)) {
+				$input = 'http://openweathermap.org/img/w/'.$icon.'.png';
+				file_put_contents($output, file_get_contents($input));
+			}
 		}
 		return 'images/cache/'.$icon.'.png';
 	}
