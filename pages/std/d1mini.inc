@@ -209,7 +209,18 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 				</tr>
 				<tr>
 					<td colspan="3">waterEmpty:</td>
-					<td colspan="3"><input type="text" class="ps-input" value="<?=($d1Mini->FreakaZoneDevice->Relais->Moisture->waterEmpty ? 'On' : 'Off') ?>" /></td>
+					<td colspan="3"><span class="ps-input <?=wpa::GreenYellow ?>" data-ws="<?=$erg['name'] ?>_WaterEmpty">undefined</span></td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						set Water
+					</td>
+					<td colspan="2">
+						<span class="ps-button writeTopic" data-topic="<?=$erg['name'] ?>/settings/Relais/SetWaterEmpty" data-write="1">Empty</span>
+					</td>
+					<td colspan="2">
+						<span class="ps-button writeTopic" data-topic="<?=$erg['name'] ?>/settings/Relais/SetWaterEmpty" data-write="0">Full</span>
+					</td>
 				</tr>
 				<tr>
 					<td colspan="3">pumpActive:</td>
