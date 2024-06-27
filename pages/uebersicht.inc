@@ -126,15 +126,15 @@ class uebersicht {
 		foreach(uebersicht::$Licht as $dp => $name) {
 			$returns .= '
 				<tr>
-					<td>' . $name . ':</td>
-					<td><span data-ws="' . $dp . '" class="ps-input ' . wpa::GreyYellow . '">undefined</span></td>
+					<td colspan="3">' . $name . ':</td>
+					<td colspan="3"><span data-ws="' . $dp . '" class="ps-input ' . wpa::GreyYellow . '">undefined</span></td>
 				</tr>';
 		}
 		foreach(uebersicht::$SystemRelay as $dp => $name) {
 			$returns .= '
 				<tr>
-					<td>' . $name . ':</td>
-					<td><span data-ws="' . $dp . '" class="ps-input ' . wpa::RedGreen . '">undefined</span></td>
+					<td colspan="3">' . $name . ':</td>
+					<td colspan="3"><span data-ws="' . $dp . '" class="ps-input ' . wpa::RedGreen . '">undefined</span></td>
 				</tr>';
 		}
 		return $returns;
@@ -145,8 +145,8 @@ class uebersicht {
 		foreach($all as $dp => $name) {
 			$returns .= '
 				<tr>
-					<td>' . $name . ':</td>
-					<td><span data-ws="' . $dp . '_Power" class="ps-input">undefined</span></td>
+					<td colspan="3">' . $name . ':</td>
+					<td colspan="3"><span data-ws="' . $dp . '_Power" class="ps-input">undefined</span></td>
 				</tr>';
 		}
 		return $returns;
@@ -174,37 +174,48 @@ class uebersicht {
 	<div class="ps-container">
 		<table id="LichtEnergie">
 			<tbody>
-				<tr><td colspan="2"><h2>Licht / Relais</h2></td></tr>
-				<tr><td colspan="2"><hr /></td></tr>
+				<tr><td colspan="6"><h2>Licht / Relais</h2></td></tr>
+				<tr><td colspan="6"><hr /></td></tr>
 				<?=uebersicht::getLicht() ?>
-				<tr><td colspan="2"><h2>Energie</h2></td></tr>
-				<tr><td colspan="2"><hr /></td></tr>
+				<tr><td colspan="6"><h2>Energie</h2></td></tr>
+				<tr><td colspan="6"><hr /></td></tr>
 				<?=uebersicht::getPower() ?>
-				<tr><td colspan="2"><h2>Energiezähler</h2></td></tr>
-				<tr><td colspan="2"><hr /></td></tr>
+				<tr><td colspan="6"><h2>Energiezähler</h2></td></tr>
+				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
-					<td>Leistung:</td>
-					<td><span data-ws="SY_EZ_power" class="ps-input">undefined</span></td>
+					<td colspan="2"></td>
+					<td colspan="2">Hauptzähler</td>
+					<td colspan="2">Server</td>
 				</tr>
 				<tr>
-					<td>Blindleistung:</td>
-					<td><span data-ws="SY_EZ_reactive_power" class="ps-input">undefined</span></td>
+					<td colspan="2">Leistung:</td>
+					<td colspan="2"><span data-ws="SY_EZ_power" class="ps-input">undefined</span></td>
+					<td colspan="2"><span data-ws="SY_SRV_power" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
-					<td>cos &phi;:</td>
-					<td><span data-ws="SY_EZ_pf" class="ps-input">undefined</span></td>
+					<td colspan="2">Blindleistung:</td>
+					<td colspan="2"><span data-ws="SY_EZ_reactive_power" class="ps-input">undefined</span></td>
+					<td colspan="2"><span data-ws="SY_SRV_reactive_power" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
-					<td>Energie:</td>
-					<td><span data-ws="SY_EZ_energy" class="ps-input">undefined</span></td>
+					<td colspan="2">cos &phi;:</td>
+					<td colspan="2"><span data-ws="SY_EZ_pf" class="ps-input">undefined</span></td>
+					<td colspan="2"><span data-ws="SY_SRV_pf" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
-					<td>erzeugte Energie:</td>
-					<td><span data-ws="SY_EZ_returned_energy" class="ps-input">undefined</span></td>
+					<td colspan="2">Energie:</td>
+					<td colspan="2"><span data-ws="SY_EZ_energy" class="ps-input">undefined</span></td>
+					<td colspan="2"><span data-ws="SY_SRV_energy" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
-					<td>Spannung:</td>
-					<td><span data-ws="SY_EZ_voltage" class="ps-input">undefined</span></td>
+					<td colspan="2">erzeugte Energie:</td>
+					<td colspan="2"><span data-ws="SY_EZ_returned_energy" class="ps-input">undefined</span></td>
+					<td colspan="2"><span data-ws="SY_SRV_returned_energy" class="ps-input">undefined</span></td>
+				</tr>
+				<tr>
+					<td colspan="2">Spannung:</td>
+					<td colspan="2"><span data-ws="SY_EZ_voltage" class="ps-input">undefined</span></td>
+					<td colspan="2"><span data-ws="SY_SRV_voltage" class="ps-input">undefined</span></td>
 				</tr>
 			</tbody>
 		</table>

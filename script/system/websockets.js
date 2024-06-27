@@ -50,7 +50,8 @@ var ws = {
 			}
 		}, 1000);
 		$.each($('[data-ws]'), function() {
-			ws.registered.push($(this).attr('data-ws'));
+			if($(this).attr('data-ws') != null && $(this).attr('data-ws') != '')
+				ws.registered.push($(this).attr('data-ws'));
 		});
 		var cmd = {
 			'type': 'command',
@@ -208,6 +209,7 @@ var ws = {
 	send: function(msg) {
 		var message = JSON.stringify(msg);
 		ws.connection.send(message);
+		ws.log(msg);
 	},
 	log: function(msg) {
 		if(ws.logEnabled) console.log(msg);

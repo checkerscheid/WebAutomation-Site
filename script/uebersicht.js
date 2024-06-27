@@ -20,7 +20,7 @@
 var getdimmervalue = true;
 var configwithtimeout = [];
 
-ws.logEnabled = false;
+ws.logEnabled = true;
 
 const lautsprecher = '192.168.80.122';
 const kamin = '192.168.80.124';
