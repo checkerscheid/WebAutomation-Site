@@ -9,12 +9,13 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 04.03.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 622                                                     $ #
+//# Revision     : $Rev:: 631                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.req 622 2024-06-15 00:51:27Z                   $ #
+//# File-ID      : $Id:: d1minicfg.req 631 2024-06-29 12:29:38Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
+use Exception;
 use system\Helper\wpDatabase;
 use system\std, system\WebCom;
 use system\Helper\d1mini;
@@ -75,7 +76,7 @@ class d1minicfg {
 		$compiledWith = array(
 			'DHT11', 'DHT22',
 			'wpLDR', 'wpLight',
-			'wpBM',
+			'wpBM', 'wpFK',
 			'wpRain', 'wpMoisture',
 			'wpDistance'
 		);
@@ -144,7 +145,8 @@ class d1minicfg {
 		header(wpJSON_HEADER);
 		echo '{"msg":"';
 		$d1m = new d1mini(std::posts('IP'));
-		$newID = $d1m->insertDevice(std::posts('id_d1minigroup'), std::posts('id_mqttgroup'), std::posts('id_dpgroup'), std::posts('id_trendgroup'), std::posts('id_alarmgroup'));
+		$newID = $d1m->insertDevice(std::posts('id_d1minigroup'), std::posts('id_mqttgroup'), std::posts('id_dpgroup'), std::posts('id_trendgroup'),
+				std::posts('id_alarmgroups5'), std::posts('id_alarmgroups4'), std::posts('id_alarmgroups3'), std::posts('id_alarmgroups2'), std::posts('id_alarmgroups1'));
 		if($newID > 0) {
 			$WebCom = new WebCom();
 			echo '","erg":"';
@@ -157,7 +159,8 @@ class d1minicfg {
 		header(wpJSON_HEADER);
 		echo '{"msg":"';
 		$d1m = new d1mini(std::posts('IP'));
-		$newID = $d1m->insertDevice(std::posts('id_d1minigroup'), std::posts('id_mqttgroup'), std::posts('id_dpgroup'), std::posts('id_trendgroup'), std::posts('id_alarmgroup'));
+		$newID = $d1m->insertDevice(std::posts('id_d1minigroup'), std::posts('id_mqttgroup'), std::posts('id_dpgroup'), std::posts('id_trendgroup'),
+				std::posts('id_alarmgroups5'), std::posts('id_alarmgroups4'), std::posts('id_alarmgroups3'), std::posts('id_alarmgroups2'), std::posts('id_alarmgroups1'));
 		$WebCom = new WebCom();
 		echo '","erg":"';
 		echo $WebCom->send('AddD1Mini', $newID);
@@ -169,16 +172,17 @@ class d1minicfg {
 		$wpDatabase->query('SELECT TOP 1 [version] FROM [D1Mini] ORDER BY [version] DESC');
 		$erg = $wpDatabase->fetch();
 		d1minicfg::$maxVersion = $erg['version'];
-		$sql = "
-			SELECT
-				[id_d1mini], [name], [description], [ip], [mac], [version], [active]
-			FROM [d1mini]";
-		if(std::posts('d1minigroup') != 'ALL') {
-			$sql .= "
-			WHERE [id_d1minigroup] " . (std::posts('d1minigroup') == 'NULL' ? 'IS NULL' : ' = '.std::posts('d1minigroup'));
+		$sql = 'SELECT ';
+		if(std::posts('d1minigroup') == 'ALL') {
+			$sql .= '[m].[id_d1mini], [m].[name], [g].[name] AS [group], [m].[description], [m].[ip], [m].[mac], [m].[version], [m].[active]
+				FROM [d1mini] [m]
+				INNER JOIN [d1minigroup] [g] ON [m].[id_d1minigroup] = [g].[id_d1minigroup]';
+		} else {
+			$sql .= '[id_d1mini], [name], [description], [ip], [mac], [version], [active]
+				FROM [d1mini]
+				WHERE [id_d1minigroup] ' . (std::posts('d1minigroup') == 'NULL' ? 'IS NULL' : '= '.std::posts('d1minigroup'));
 		}
-		$sql .= "
-			ORDER BY [name]";
+		$sql .= ' ORDER BY [name]';
 		$wpDatabase->query($sql);
 		$html = '
 <ul class="d1miniingroup" data-group="'.std::posts('d1minigroup').'">
@@ -209,7 +213,11 @@ class d1minicfg {
 				<tr>
 					<th></th>
 					<th>Name</th>
-					<th>Beschreibung</th>
+					<th>Beschreibung</th>';
+			if(std::posts('d1minigroup') == 'ALL') {
+				$html .= '<th>Gruppe</th>';
+			}
+			$html .= '
 					<th>IP</th>
 					<th>MAC</th>
 					<th>Version</th>
@@ -252,7 +260,14 @@ class d1minicfg {
 								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice" title="von D1 Mini übernehmen"></span>
 							</div>
 						</div>
-					</td>
+					</td>';
+			if(std::posts('d1minigroup') == 'ALL') {
+				$html .= '
+					<td data-column="group">
+						<span>' . $erg['group'] . '</span>
+					</td>';
+			}
+				$html .= '
 					<td data-column="ip">
 						<div class="tdButton">
 							<div>
@@ -303,7 +318,8 @@ class d1minicfg {
 					<td class="buttonbox">
 						<div class="buttonContainer">
 							<span class="ps-hover-noborder ps-image-button ps-send forceupdate" title="Force MQTT Update"></span>
-							<span class="ps-hover-noborder ps-image-button ps-import setupmode" title="Set FW Update Mode On"></span>
+							<!--span class="ps-hover-noborder ps-image-button ps-import setupmode" title="Set FW Update Mode On"></span-->
+							<span class="ps-hover-noborder ps-image-button ps-import setuphttp" data-ip="' . $erg['ip'] . '" title="Setup Http"></span>
 							<span class="ps-hover-noborder ps-image-button ps-refresh restartdevice" title="neu starten"></span>
 						</div>
 					</td>
@@ -347,10 +363,25 @@ class d1minicfg {
 		$WebCom = new WebCom();
 		echo $WebCom->send('SetD1MiniCmd', "$name%~%$cmd");
 	}
+	const c_starthttpupdate = 'starthttpupdate';
+	public static function starthttpupdate($ip) {
+		$context = stream_context_create([
+			"http" => [
+				"method"=>"GET",
+				"timeout" => 1
+			]
+		]);
+		try {
+			file_get_contents('http://' . $ip . '/setCmd?cmd=UpdateHTTP', 0, $context);
+		} catch(Exception $e) {
+			// Fail silently
+		}
+		//echo file_get_contents('http://' . $ip . '/setCmd?cmd=UpdateHTTP');
+	}
 	const c_allGroup = 'allGroup';
 	public static function allGroup() {
 		$where = '';
-		foreach(std::posts('ids', array()) as $ids) {
+		foreach(std::posts('ids') as $ids) {
 			$where .= '[id_d1mini] = '.$ids.' OR ';
 		}
 		$database = new wpDatabase();
@@ -362,7 +393,7 @@ class d1minicfg {
 	const c_allActive = 'allActive';
 	public static function allActive() {
 		$where = '';
-		foreach(std::posts('ids', array()) as $ids) {
+		foreach(std::posts('ids') as $ids) {
 			$where .= '[id_d1mini] = '.$ids.' OR ';
 		}
 		$database = new wpDatabase();
@@ -374,7 +405,7 @@ class d1minicfg {
 	public static function allDelete() {
 		header(wpJSON_HEADER);
 		$fortcp = '';
-		foreach(std::posts('ids', array()) as $ids) {
+		foreach(std::posts('ids') as $ids) {
 			$fortcp .= $ids.'%~%';
 		}
 		$WebCom = new WebCom();
@@ -407,9 +438,9 @@ class d1minicfg {
 	private static function getSelect($val, $name) {
 		return "<option value='$val'>$name</option>";
 	}
-	private static function getD1MiniSettings($selectAll = 'All') {
+	private static function getD1MiniSettings($selectAll = 'ALL') {
 		$sql = "SELECT [id_d1mini], [ip] FROM [d1mini]";
-		if($selectAll != 'All') $sql .= " WHERE [id_d1minigroup] = " . $selectAll;
+		if($selectAll != 'ALL') $sql .= " WHERE [id_d1minigroup] = " . $selectAll;
 		$wpDatabase = new wpDatabase();
 		$wpDatabase->query($sql);
 		$returns = "{";
@@ -494,6 +525,10 @@ switch(std::gets('param1')) {
 		//###################################################################################
 	case d1minicfg::c_setcmd:
 		d1minicfg::setcmd(std::posts('name'), std::posts('cmd'));
+		break;
+		//###################################################################################
+	case d1minicfg::c_starthttpupdate:
+		d1minicfg::starthttpupdate(std::posts('ip'));
 		break;
 		//###################################################################################
 	case d1minicfg::c_allGroup:

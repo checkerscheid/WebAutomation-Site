@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 03.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 622                                                     $ #
+//# Revision     : $Rev:: 629                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.js 622 2024-06-15 00:51:27Z                    $ #
+//# File-ID      : $Id:: d1minicfg.js 629 2024-06-20 23:27:21Z                    $ #
 //#                                                                                 #
 //###################################################################################
 ?> d1minicfg */
@@ -72,7 +72,7 @@ p.page.load = function() {
 		var myData = $('.searchResult').data('foundNew')[$(this).attr('data-key')]['Iam'];
 		$.get('std.d1minicfg.infoToSaveD1Mini.pop', function(data) {
 			$('#dialog').html(data).dialog({
-				title: 'D1 Mini speichern', modal: true, width: p.popup.width.middle,
+				title: 'D1 Mini speichern', modal: true, width: p.popup.width.osk,
 				buttons: [{
 					text:'OK',
 					click: function() {
@@ -80,14 +80,19 @@ p.page.load = function() {
 						myData['id_mqttgroup'] = $('#dialog .id_mqttgroup').val();
 						myData['id_dpgroup'] = $('#dialog .id_dpgroup').val();
 						myData['id_trendgroup'] = $('#dialog .id_trendgroup').val();
-						myData['id_alarmgroup'] = $('#dialog .id_alarmgroup').val();
+
+						myData['id_alarmgroups5'] = $('#dialog .id_alarmgroups5').length ? $('#dialog .id_alarmgroups5').val() : 'NULL';
+						myData['id_alarmgroups4'] = $('#dialog .id_alarmgroups4').length ? $('#dialog .id_alarmgroups4').val() : 'NULL';
+						myData['id_alarmgroups3'] = $('#dialog .id_alarmgroups3').length ? $('#dialog .id_alarmgroups3').val() : 'NULL';
+						myData['id_alarmgroups2'] = $('#dialog .id_alarmgroups2').length ? $('#dialog .id_alarmgroups2').val() : 'NULL';
+						myData['id_alarmgroups1'] = $('#dialog .id_alarmgroups1').length ? $('#dialog .id_alarmgroups1').val() : 'NULL';
 						$.post('std.d1minicfg.saveSearchedDevice.req', myData, function(data) {
 							console.log(data);
 							if(data.erg == 'S_OK') {
-								p.page.alert(data.msg, 10000);
+								p.page.alert(data.msg, 5000);
 								$('#dialog').dialog('close');
 							} else {
-								p.page.alertred(data.msg, 10000);
+								p.page.alertred(data.msg, 5000);
 							}
 						}, 'json');
 					}
@@ -100,9 +105,10 @@ p.page.load = function() {
 	});
 	$('#erg').on('click', '.D1MiniDevice .renewMqtt', function() {
 		var myData = { IP: $(this).attr('data-ip') };
+		var name = $(this).parents('tr.D1MiniDevice').attr('data-name');
 		$.get('std.d1minicfg.infoToSaveD1Mini.pop', function(data) {
 			$('#dialog').html(data).dialog({
-				title: 'D1 Mini MQTT und Trend erneuern', modal: true, width: p.popup.width.middle,
+				title: 'D1 Mini ' + name + ' MQTT und Trend erneuern', modal: true, width: p.popup.width.osk,
 				buttons: [{
 					text:'OK',
 					click: function() {
@@ -110,14 +116,19 @@ p.page.load = function() {
 						myData['id_mqttgroup'] = $('#dialog .id_mqttgroup').val();
 						myData['id_dpgroup'] = $('#dialog .id_dpgroup').val();
 						myData['id_trendgroup'] = $('#dialog .id_trendgroup').val();
-						myData['id_alarmgroup'] = $('#dialog .id_alarmgroup').val();
+
+						myData['id_alarmgroups5'] = $('#dialog .id_alarmgroups5').length ? $('#dialog .id_alarmgroups5').val() : 'NULL';
+						myData['id_alarmgroups4'] = $('#dialog .id_alarmgroups4').length ? $('#dialog .id_alarmgroups4').val() : 'NULL';
+						myData['id_alarmgroups3'] = $('#dialog .id_alarmgroups3').length ? $('#dialog .id_alarmgroups3').val() : 'NULL';
+						myData['id_alarmgroups2'] = $('#dialog .id_alarmgroups2').length ? $('#dialog .id_alarmgroups2').val() : 'NULL';
+						myData['id_alarmgroups1'] = $('#dialog .id_alarmgroups1').length ? $('#dialog .id_alarmgroups1').val() : 'NULL';
 						$.post('std.d1minicfg.renewDevice.req', myData, function(data) {
 							console.log(data);
 							if(data.erg == 'S_OK') {
-								p.page.alert(data.msg, 10000);
+								p.page.alert(data.msg, 5000);
 								$('#dialog').dialog('close');
 							} else {
-								p.page.alertred(data.msg, 10000);
+								p.page.alertred(data.msg, 5000);
 							}
 						}, 'json');
 					}
@@ -164,6 +175,10 @@ p.page.load = function() {
 				D1MiniRenew(d1minigroup);
 			}
 		});
+	});
+	$('#erg').on('click', '.D1MiniDevice .setuphttp', function() {
+		var ip = $(this).attr('data-ip');
+		$.post('std.d1minicfg.starthttpupdate.req', {ip:ip});
 	});
 	$('#erg').on('click', '.D1MiniDevice .restartdevice', function() {
 		var name = $(this).parents('tr.D1MiniDevice').attr('data-name');

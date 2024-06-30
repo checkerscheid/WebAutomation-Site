@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 626                                                     $ #
+//# Revision     : $Rev:: 631                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 626 2024-06-17 15:18:36Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 631 2024-06-29 12:29:38Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -47,7 +47,6 @@ class uebersicht {
 		'KE'			=> 'Keller',
 		'GA_WE_Ost'		=> 'Wetterstation Ost',
 		'GA_WE_Sued'	=> 'Wetterstation Süd',
-		'GA2_WE_Gaube'	=> 'Wetterstation Gaube',
 		'BasisTest'		=> 'Breadboard',
 		'WG1_HTp'		=> 'Wintergarten',
 		'SZ1_HT'		=> 'Schlafzimmer',
@@ -58,12 +57,19 @@ class uebersicht {
 	private static $RSSI = array(
 		'WZ_HT3'		=> 'Wohnzimmer',
 		'WZ_PF_FE'		=> 'Pflanze am Fenster',
+		'WZ_PF_FE_RE1'	=> 'Pflanze am Fenster 1. rechts',
+		'WZ_PF_FE_RE2'	=> 'Pflanze am Fenster 2. rechts',
+		'WZ_PF_FE_LI'	=> 'Pflanze am Fenster links',
+		'WZ_PF_TE'		=> 'Pflanze zur Terrasse',
+		'BasisEmpty'	=> 'Test ohne Senosren',
+		'BasisTest'		=> 'Breadboard',
 		'SZ_RU'			=> 'Schlafzimmer',
 		'BU_RU'			=> 'Büro',
 		'KU_RU'			=> 'Küche',
 		'BA_RU'			=> 'Bad',
 		'BA_SP'			=> 'Bad Spiegelbeleuchtung',
-		'KZ_HTp'		=> 'Kinderzimmer',
+		'KZ_RU'			=> 'Kinderzimmer',
+		'KZ_HTp'		=> 'Kinderzimmer HTp',
 		'KZ_BE'			=> 'Kinderzimmer Bett',
 		'SY_TB'			=> 'Testboard',
 		'KE'			=> 'Keller',
@@ -73,24 +79,28 @@ class uebersicht {
 		'SY_WM'			=> 'Waschmaschine',
 		'GA_WE_Ost'		=> 'Wetterstation Ost',
 		'GA_WE_Sued'	=> 'Wetterstation Süd',
-		'GA2_WE_Gaube'	=> 'Wetterstation Gaube',
-		'BasisTest'		=> 'Breadboard',
 		'WG1_HTp'		=> 'EG Wintergarten',
 		'SZ1_HT'		=> 'EG Schlafzimmer',
 		'GA1_FS'		=> 'EG Gartenhaus',
+		'GA2_WE_Gaube'	=> 'Wetterstation Gaube',
 		'FL2_HT'		=> 'OG Flur'
 	);
 	private static $d1Minis = array(
 		'WZ_PF_FE',
-		'BA_RU',
+		'WZ_PF_FE_RE1',
+		'WZ_PF_FE_RE2',
+		'WZ_PF_FE_LI',
+		'WZ_PF_TE',
+		'BasisEmpty',
 		'BasisTest',
+		'SZ_RU',
 		'BU_RU',
+		'KU_RU',
+		'BA_RU',
+		'KZ_RU',
 		'GA_WE_Ost',
 		'GA_WE_Sued',
-		'GA_WE_West',
 		'GA1_FS',
-		'KU_RU',
-		'SZ_RU',
 		'GA2_WE_Gaube'
 	);
 	public static function getD1HT() {
@@ -116,15 +126,15 @@ class uebersicht {
 		foreach(uebersicht::$Licht as $dp => $name) {
 			$returns .= '
 				<tr>
-					<td>' . $name . ':</td>
-					<td><span data-ws="' . $dp . '" class="ps-input ' . wpa::GreyYellow . '">undefined</span></td>
+					<td colspan="3">' . $name . ':</td>
+					<td colspan="3"><span data-ws="' . $dp . '" class="ps-input ' . wpa::GreyYellow . '">undefined</span></td>
 				</tr>';
 		}
 		foreach(uebersicht::$SystemRelay as $dp => $name) {
 			$returns .= '
 				<tr>
-					<td>' . $name . ':</td>
-					<td><span data-ws="' . $dp . '" class="ps-input ' . wpa::RedGreen . '">undefined</span></td>
+					<td colspan="3">' . $name . ':</td>
+					<td colspan="3"><span data-ws="' . $dp . '" class="ps-input ' . wpa::RedGreen . '">undefined</span></td>
 				</tr>';
 		}
 		return $returns;
@@ -135,8 +145,8 @@ class uebersicht {
 		foreach($all as $dp => $name) {
 			$returns .= '
 				<tr>
-					<td>' . $name . ':</td>
-					<td><span data-ws="' . $dp . '_Power" class="ps-input">undefined</span></td>
+					<td colspan="3">' . $name . ':</td>
+					<td colspan="3"><span data-ws="' . $dp . '_Power" class="ps-input">undefined</span></td>
 				</tr>';
 		}
 		return $returns;
@@ -147,7 +157,7 @@ class uebersicht {
 			$returns .= '
 				<tr>
 					<td colspan="2">' . $name . ':</td>
-					<td colspan="2"><span data-ws="' . $dp . '_Rssi" class="' . wpa::rssi . '">undefined</span></td>
+					<td colspan="2"><span data-ws="' . $dp . '_Rssi" class="' . wpa::rssi . '">-</span></td>
 					<td colspan="2">';
 			if(in_array($dp, uebersicht::$d1Minis)) {
 				$returns .= '<span data-ws="' . $dp . '_Online" class="ps-input ' . wpa::GreenRed . '">-</span>';
@@ -164,37 +174,48 @@ class uebersicht {
 	<div class="ps-container">
 		<table id="LichtEnergie">
 			<tbody>
-				<tr><td colspan="2"><h2>Licht / Relais</h2></td></tr>
-				<tr><td colspan="2"><hr /></td></tr>
+				<tr><td colspan="6"><h2>Licht / Relais</h2></td></tr>
+				<tr><td colspan="6"><hr /></td></tr>
 				<?=uebersicht::getLicht() ?>
-				<tr><td colspan="2"><h2>Energie</h2></td></tr>
-				<tr><td colspan="2"><hr /></td></tr>
+				<tr><td colspan="6"><h2>Energie</h2></td></tr>
+				<tr><td colspan="6"><hr /></td></tr>
 				<?=uebersicht::getPower() ?>
-				<tr><td colspan="2"><h2>Energiezähler</h2></td></tr>
-				<tr><td colspan="2"><hr /></td></tr>
+				<tr><td colspan="6"><h2>Energiezähler</h2></td></tr>
+				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
-					<td>Leistung:</td>
-					<td><span data-ws="SY_EZ_power" class="ps-input">undefined</span></td>
+					<td colspan="2"></td>
+					<td colspan="2">Hauptzähler</td>
+					<td colspan="2">Server</td>
 				</tr>
 				<tr>
-					<td>Blindleistung:</td>
-					<td><span data-ws="SY_EZ_reactive_power" class="ps-input">undefined</span></td>
+					<td colspan="2">Leistung:</td>
+					<td colspan="2"><span data-ws="SY_EZ_power" class="ps-input">undefined</span></td>
+					<td colspan="2"><span data-ws="SY_SRV_power" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
-					<td>cos &phi;:</td>
-					<td><span data-ws="SY_EZ_pf" class="ps-input">undefined</span></td>
+					<td colspan="2">Blindleistung:</td>
+					<td colspan="2"><span data-ws="SY_EZ_reactive_power" class="ps-input">undefined</span></td>
+					<td colspan="2"><span data-ws="SY_SRV_reactive_power" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
-					<td>Energie:</td>
-					<td><span data-ws="SY_EZ_energy" class="ps-input">undefined</span></td>
+					<td colspan="2">cos &phi;:</td>
+					<td colspan="2"><span data-ws="SY_EZ_pf" class="ps-input">undefined</span></td>
+					<td colspan="2"><span data-ws="SY_SRV_pf" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
-					<td>erzeugte Energie:</td>
-					<td><span data-ws="SY_EZ_returned_energy" class="ps-input">undefined</span></td>
+					<td colspan="2">Energie:</td>
+					<td colspan="2"><span data-ws="SY_EZ_energy" class="ps-input">undefined</span></td>
+					<td colspan="2"><span data-ws="SY_SRV_energy" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
-					<td>Spannung:</td>
-					<td><span data-ws="SY_EZ_voltage" class="ps-input">undefined</span></td>
+					<td colspan="2">erzeugte Energie:</td>
+					<td colspan="2"><span data-ws="SY_EZ_returned_energy" class="ps-input">undefined</span></td>
+					<td colspan="2"><span data-ws="SY_SRV_returned_energy" class="ps-input">undefined</span></td>
+				</tr>
+				<tr>
+					<td colspan="2">Spannung:</td>
+					<td colspan="2"><span data-ws="SY_EZ_voltage" class="ps-input">undefined</span></td>
+					<td colspan="2"><span data-ws="SY_SRV_voltage" class="ps-input">undefined</span></td>
 				</tr>
 			</tbody>
 		</table>

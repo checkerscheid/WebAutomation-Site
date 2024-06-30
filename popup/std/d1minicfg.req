@@ -9,11 +9,12 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 04.03.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 610                                                     $ #
+//# Revision     : $Rev:: 629                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.req 610 2024-05-15 20:26:33Z                   $ #
+//# File-ID      : $Id:: d1minicfg.req 629 2024-06-20 23:27:21Z                   $ #
 //#                                                                                 #
 //###################################################################################
+/** @var stdAjax $system */
 namespace popup\std;
 use system\Helper\wpDatabase;
 use system\std;
@@ -42,6 +43,7 @@ switch(std::gets('param1')) {
 class d1minicfg {
 	const c_infoToSaveD1Mini = 'infoToSaveD1Mini';
 	public static function infoToSaveD1Mini() {
+		global $system;
 		$wpDatabase = new wpDatabase();
 		$html = '<table summary="">';
 		//$d1MiniGroup;
@@ -78,14 +80,61 @@ class d1minicfg {
 		$html .= '<tr><td>Trend Group:</td><td><select class="ps-input id_trendgroup">';
 		while($erg = $wpDatabase->fetch()) $html .= self::getSelect($erg['id_trendgroup'], $erg['name']);
 		$html .= '</select></td></tr>';
-		//$alarmGroup;
-		$wpDatabase->query("SELECT " .
-				"[id_alarmgroup], [name] " .
-				"FROM [alarmgroup] " .
-				"ORDER BY [name]");
-		$html .= '<tr><td>Alarm Group:</td><td><select class="ps-input id_alarmgroup">';
-		while($erg = $wpDatabase->fetch()) $html .= self::getSelect($erg['id_alarmgroup'], $erg['name']);
-		$html .= '</select></td></tr>';
+
+		$html .= '<tr><td colspan="2"><h3>Alarme</h3></td></tr>';
+		$html .= '<tr><td colspan="2"><hr /></td></tr>';
+
+		//$alarmGroups5;
+		if($system->useAlarmGroup5()) {
+			$wpDatabase->query("SELECT " .
+					"[id_alarmgroups5], [name] " .
+					"FROM [alarmgroups5] " .
+					"ORDER BY [name]");
+			$html .= '<tr><td>Alarm Group ' . $system->nameAlarmGroup5() . ':</td><td><select class="ps-input id_alarmgroups5">';
+			while($erg = $wpDatabase->fetch()) $html .= self::getSelect($erg['id_alarmgroups5'], $erg['name']);
+			$html .= '</select></td></tr>';
+		}
+		//$alarmGroups4;
+		if($system->useAlarmGroup4()) {
+			$wpDatabase->query("SELECT " .
+					"[id_alarmgroups4], [name] " .
+					"FROM [alarmgroups4] " .
+					"ORDER BY [name]");
+			$html .= '<tr><td>Alarm Group ' . $system->nameAlarmGroup4() . ':</td><td><select class="ps-input id_alarmgroups4">';
+			while($erg = $wpDatabase->fetch()) $html .= self::getSelect($erg['id_alarmgroups4'], $erg['name']);
+			$html .= '</select></td></tr>';
+		}
+		//$alarmGroups3;
+		if($system->usealarmgroup3()) {
+			$wpDatabase->query("SELECT " .
+					"[id_alarmgroups3], [name] " .
+					"FROM [alarmgroups3] " .
+					"ORDER BY [name]");
+			$html .= '<tr><td>Alarm Group ' . $system->nameAlarmGroup3() . ':</td><td><select class="ps-input id_alarmgroups3">';
+			while($erg = $wpDatabase->fetch()) $html .= self::getSelect($erg['id_alarmgroups3'], $erg['name']);
+			$html .= '</select></td></tr>';
+		}
+		//$alarmGroups2;
+		if($system->useAlarmGroup2()) {
+			$wpDatabase->query("SELECT " .
+					"[id_alarmgroups2], [name] " .
+					"FROM [alarmgroups2] " .
+					"ORDER BY [name]");
+			$html .= '<tr><td>Alarm Group ' . $system->nameAlarmGroup2() . ':</td><td><select class="ps-input id_alarmgroups2">';
+			while($erg = $wpDatabase->fetch()) $html .= self::getSelect($erg['id_alarmgroups2'], $erg['name']);
+			$html .= '</select></td></tr>';
+		}
+		//$alarmGroups1;
+		if($system->useAlarmGroup1()) {
+			$wpDatabase->query("SELECT " .
+					"[id_alarmgroups1], [name] " .
+					"FROM [alarmgroups1] " .
+					"ORDER BY [name]");
+			$html .= '<tr><td>Alarm Group ' . $system->nameAlarmGroup1() . ':</td><td><select class="ps-input id_alarmgroups1">';
+			while($erg = $wpDatabase->fetch()) $html .= self::getSelect($erg['id_alarmgroups1'], $erg['name']);
+			$html .= '</select></td></tr>';
+		}
+		// fixed Alarmgroup id = 1 (system)
 
 		echo $html . '</table>';
 	}

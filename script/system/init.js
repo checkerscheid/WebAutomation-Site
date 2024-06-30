@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 605                                                     $ #
+//# Revision     : $Rev:: 629                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: init.js 605 2024-05-03 13:06:51Z                         $ #
+//# File-ID      : $Id:: init.js 629 2024-06-20 23:27:21Z                         $ #
 //#                                                                                 #
 //###################################################################################
 use system\wpInit;
@@ -1566,9 +1566,9 @@ var p = {
 			});
 		},
 		width: {
-			osk: '820px',
 			std: '350px',
-			middle : '550px'
+			middle : '550px',
+			osk: '820px'
 		}
 	},
 	osk: {

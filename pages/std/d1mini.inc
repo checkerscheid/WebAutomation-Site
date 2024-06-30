@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 626                                                     $ #
+//# Revision     : $Rev:: 631                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.inc 626 2024-06-17 15:18:36Z                      $ #
+//# File-ID      : $Id:: d1mini.inc 631 2024-06-29 12:29:38Z                      $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
@@ -137,6 +137,17 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 			</table>
 		</div>
 	<? } ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->FK) { ?>
+		<div class="ps-container">
+			<h3>FK</h3>
+			<table summary="">
+				<tr>
+					<td>FK:</td>
+					<td><span class="ps-input <?=wpa::GreyGreen ?>" data-ws="<?=$erg['name'] ?>_FK">undefined</span></td>
+				</tr>
+			</table>
+		</div>
+	<? } ?>
 	<? if($d1Mini->FreakaZoneDevice->useModul->Relais ||
 			$d1Mini->FreakaZoneDevice->useModul->RelaisShield) { ?>
 		<div class="ps-container">
@@ -164,7 +175,7 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 				<tr>
 					<td colspan="3">Handwert:</td>
 					<td colspan="3">
-						<span class="ps-input <?=wpa::$GreyGreen ?>" data-ws="<?=$erg['name'] ?>_PumpeHand">undefined</span>
+						<span class="ps-input <?=wpa::GreyGreen ?>" data-ws="<?=$erg['name'] ?>_PumpeHand">undefined</span>
 					</td>
 				</tr>
 				<tr>
@@ -198,7 +209,18 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 				</tr>
 				<tr>
 					<td colspan="3">waterEmpty:</td>
-					<td colspan="3"><input type="text" class="ps-input" value="<?=($d1Mini->FreakaZoneDevice->Relais->Moisture->waterEmpty ? 'On' : 'Off') ?>" /></td>
+					<td colspan="3"><span class="ps-input <?=wpa::GreenYellow ?>" data-ws="<?=$erg['name'] ?>_WaterEmpty">undefined</span></td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						set Water
+					</td>
+					<td colspan="2">
+						<span class="ps-button writeTopic" data-topic="<?=$erg['name'] ?>/settings/Relais/SetWaterEmpty" data-write="1">Empty</span>
+					</td>
+					<td colspan="2">
+						<span class="ps-button writeTopic" data-topic="<?=$erg['name'] ?>/settings/Relais/SetWaterEmpty" data-write="0">Full</span>
+					</td>
 				</tr>
 				<tr>
 					<td colspan="3">pumpActive:</td>

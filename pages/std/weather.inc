@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 10.01.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 552                                                     $ #
+//# Revision     : $Rev:: 631                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: weather.inc 552 2024-01-06 13:56:24Z                     $ #
+//# File-ID      : $Id:: weather.inc 631 2024-06-29 12:29:38Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace pages\std;
@@ -23,10 +23,11 @@ namespace pages\std;
 			<div class="ps-loading"></div>
 		</div>
 		<div class="forecastlines ps-container">
-			<div class="forecastlinesplaceholder">
+			<div id="forecastlinesplaceholder">
 				<div class="ps-loading"></div>
 			</div>
 		</div>
+		<div id="forecastlinestooltip" class="ps-hidden"></div>
 		<div class="forecast ps-container ps-loading">
 			<div class="ps-loading"></div>
 		</div>
