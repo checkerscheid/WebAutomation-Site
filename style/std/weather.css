@@ -19,6 +19,7 @@
 #wetter h1 { text-align:center; margin-bottom:0px; }
 #wetter .ps-container { margin-left:auto; margin-right:auto; }
 
+
 .weathercontainer .condition { width:420px; }
 .weathercontainer .forecast { width:1110px; }
 .weathercontainer .forecastlines { padding:10px; }

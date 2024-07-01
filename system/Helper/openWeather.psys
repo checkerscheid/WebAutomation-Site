@@ -252,4 +252,3 @@ class openWeather {
 		7 => 'Sonntag'
 	);
 }
-
