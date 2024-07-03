@@ -135,9 +135,9 @@ class d1mini {
 		$this->mergeTrend($id_dp_hum, 'Feuchte');
 		echo "saved: 'Feuchte' ";
 		$id_mqtttopic_err = $this->insertTopic('ERROR/HT');
-		$id_dp_err = $this->mergeDP($id_mqtttopic_err, 'ERROR_HT', 'HT Error', '0:Ok;1:Error;');
-		$this->mergeAlarm($id_dp_err, 'ERROR_HT', 'HT Error');
-		echo "saved: 'HT Error' ";
+		$id_dp_err = $this->mergeDP($id_mqtttopic_err, 'ERROR_HT', 'HT Sensor Error', '0:Ok;1:Error;');
+		$this->mergeAlarm($id_dp_err, 'ERROR_HT', 'HT Sensor Error');
+		echo "saved: 'HT Sensor Error' ";
 	}
 	private function setLDR() {
 		$id_mqtttopic = $this->insertTopic('LDR');
@@ -145,9 +145,9 @@ class d1mini {
 		$this->mergeTrend($id_dp, 'LDR', 30);
 		echo "saved: 'LDR' ";
 		$id_mqtttopic_err = $this->insertTopic('ERROR/LDR');
-		$id_dp_err = $this->mergeDP($id_mqtttopic_err, 'ERROR_LDR', 'LDR Error', '0:Ok;1:Error;');
-		$this->mergeAlarm($id_dp_err, 'ERROR_LDR', 'LDR Error');
-		echo "saved: 'LDR Error' ";
+		$id_dp_err = $this->mergeDP($id_mqtttopic_err, 'ERROR_LDR', 'LDR Sensor Error', '0:Ok;1:Error;');
+		$this->mergeAlarm($id_dp_err, 'ERROR_LDR', 'LDR Sensor Error');
+		echo "saved: 'LDR Sensor Error' ";
 	}
 	private function setLight() {
 		$id_mqtttopic = $this->insertTopic('Light');
@@ -155,9 +155,9 @@ class d1mini {
 		$this->mergeTrend($id_dp, 'Licht', 30);
 		echo "saved: 'Licht' ";
 		$id_mqtttopic_err = $this->insertTopic('ERROR/Licht');
-		$id_dp_err = $this->mergeDP($id_mqtttopic_err, 'ERROR_Licht', 'Licht Error', '0:Ok;1:Error;');
-		$this->mergeAlarm($id_dp_err, 'ERROR_Licht', 'Licht Error');
-		echo "saved: 'Licht Error' ";
+		$id_dp_err = $this->mergeDP($id_mqtttopic_err, 'ERROR_Licht', 'Licht Sensor Error', '0:Ok;1:Error;');
+		$this->mergeAlarm($id_dp_err, 'ERROR_Licht', 'Licht Sensor Error');
+		echo "saved: 'Licht Sensor Error' ";
 	}
 	private function setBM() {
 		$id_mqtttopic = $this->insertTopic('BM');
@@ -196,7 +196,7 @@ class d1mini {
 		if($hasMoisture) {
 			$id_mqtttopicWaterEmpty = $this->insertTopic('ERROR/WaterEmpty');
 			$id_dp_WaterEmpty = $this->mergeDP($id_mqtttopicWaterEmpty, 'WaterEmpty', 'Wasser leer', '0:OK;1:leer;', 'NULL', 0, 1);
-			$this->mergeAlarm($id_dp_WaterEmpty, 'WaterEmpty', 'Wasser leer', AlarmType::Warnung, AlarmCondition::ungleich, 0);
+			$this->mergeAlarm($id_dp_WaterEmpty, 'WaterEmpty', 'Wasser leer', AlarmType::Warnung);
 		}
 	}
 	private function setRain() {
@@ -205,9 +205,9 @@ class d1mini {
 		$this->mergeTrend($id_dp, 'Regen');
 		echo "saved: 'Regen' ";
 		$id_mqtttopic_err = $this->insertTopic('ERROR/Rain');
-		$id_dp_err = $this->mergeDP($id_mqtttopic_err, 'ERROR_Rain', 'Regen Error', '0:Ok;1:Error;');
-		$this->mergeAlarm($id_dp_err, 'ERROR_Rain', 'Regen Error');
-		echo "saved: 'Regen Error' ";
+		$id_dp_err = $this->mergeDP($id_mqtttopic_err, 'ERROR_Rain', 'Regen Sensor Error', '0:Ok;1:Error;');
+		$this->mergeAlarm($id_dp_err, 'ERROR_Rain', 'Regen Sensor Error');
+		echo "saved: 'Regen Sensor Error' ";
 	}
 	private function setVolume() {
 		$id_mqtttopic = $this->insertTopic('Volume');
@@ -215,9 +215,9 @@ class d1mini {
 		$this->mergeTrend($id_dp, 'Füllstand');
 		echo "saved: 'Füllstand' ";
 		$id_mqtttopic_err = $this->insertTopic('ERROR/Distance');
-		$id_dp_err = $this->mergeDP($id_mqtttopic_err, 'ERROR_Distance', 'Volume Error', '0:Ok;1:Error;');
-		$this->mergeAlarm($id_dp_err, 'ERROR_Distance', 'Volume Error');
-		echo "saved: 'Volume Error' ";
+		$id_dp_err = $this->mergeDP($id_mqtttopic_err, 'ERROR_Distance', 'Volume Sensor Error', '0:Ok;1:Error;');
+		$this->mergeAlarm($id_dp_err, 'ERROR_Distance', 'Volume Sensor Error');
+		echo "saved: 'Volume Sensor Error' ";
 	}
 	private function setMoisture() {
 		$id_mqtttopic = $this->insertTopic('Moisture');
@@ -225,12 +225,12 @@ class d1mini {
 		$this->mergeTrend($id_dp, 'Moisture');
 		echo "saved: 'Moisture' ";
 		$id_mqtttopic_errmin = $this->insertTopic('ERROR/MoistureMin');
-		$id_dp_errmin = $this->mergeDP($id_mqtttopic_errmin, 'ERROR_MoistureMin', 'Blume zu trocken', '0:Ok;1:zu trocken;');
-		$this->mergeAlarm($id_dp_errmin, 'ERROR_MoistureMin', 'Blume zu trocken');
+		$id_dp_errmin = $this->mergeDP($id_mqtttopic_errmin, 'ERROR_MoistureMin', 'Pflanze zu trocken', '0:Ok;1:zu trocken;');
+		$this->mergeAlarm($id_dp_errmin, 'ERROR_MoistureMin', 'Pflanze zu trocken', alarmtype::Warnung);
 		$id_mqtttopic_err = $this->insertTopic('ERROR/Moisture');
-		$id_dp_err = $this->mergeDP($id_mqtttopic_err, 'ERROR_Moisture', 'Blume Error', '0:Ok;1:Error;');
-		$this->mergeAlarm($id_dp_err, 'ERROR_Moisture', 'Blume Error');
-		echo "saved: 'Blume Error' ";
+		$id_dp_err = $this->mergeDP($id_mqtttopic_err, 'ERROR_Moisture', 'Moisture Sensor Error', '0:Ok;1:Error;');
+		$this->mergeAlarm($id_dp_err, 'ERROR_Moisture', 'Moisture Sensor Error');
+		echo "saved: 'Moisture Sensor Error' ";
 	}
 	private function mergeDivice($active = 1) {
 		$sql = "

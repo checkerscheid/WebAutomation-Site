@@ -55,11 +55,11 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 				</tr>
 				<tr>
 					<td>Temperature Correction:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->DHT->TemperatureCorrection ?>" /></td>
+					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->DHT->TemperatureCorrection ?> K" /></td>
 				</tr>
 				<tr>
 					<td>Humidity Correction:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->DHT->HumidityCorrection ?>" /></td>
+					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->DHT->HumidityCorrection ?> %rF" /></td>
 				</tr>
 			</table>
 		</div>
@@ -83,7 +83,7 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 				</tr>
 				<tr>
 					<td>Correction:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->LDR->LDRCorrection ?>" /></td>
+					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->LDR->LDRCorrection ?> lux" /></td>
 				</tr>
 			</table>
 		</div>
@@ -107,7 +107,7 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 				</tr>
 				<tr>
 					<td>Correction:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Light->LightCorrection ?>" /></td>
+					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Light->LightCorrection ?> lux" /></td>
 				</tr>
 			</table>
 		</div>
@@ -127,7 +127,7 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 				</tr>
 				<tr>
 					<td>Threshold:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->BM->LDR->Threshold ?>" /></td>
+					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->BM->LDR->Threshold ?> lux" /></td>
 				</tr>
 				<tr>
 					<td>Light To Turn On:</td>
@@ -224,11 +224,11 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 				</tr>
 				<tr>
 					<td colspan="3">pumpActive:</td>
-					<td colspan="3"><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Relais->Moisture->pumpActive ?>" /></td>
+					<td colspan="3"><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Relais->Moisture->pumpActive ?> sec" /></td>
 				</tr>
 				<tr>
 					<td colspan="3">pumpPause:</td>
-					<td colspan="3"><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Relais->Moisture->pumpPause ?>" /></td>
+					<td colspan="3"><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Relais->Moisture->pumpPause ?> min" /></td>
 				</tr>
 	<? } ?>
 			</table>
@@ -253,7 +253,7 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 				</tr>
 				<tr>
 					<td>Correction:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Rain->RainCorrection ?>" /></td>
+					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Rain->RainCorrection ?> l/min" /></td>
 				</tr>
 			</table>
 		</div>
@@ -277,7 +277,7 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 				</tr>
 				<tr>
 					<td>Min Alarm:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Moisture->MoistureMin ?>" /></td>
+					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Moisture->MoistureMin ?> %" /></td>
 				</tr>
 				<tr>
 					<td>Dry:</td>
@@ -305,15 +305,15 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 				</tr>
 				<tr>
 					<td>Correction:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Distance->distanceCorrection ?>" /></td>
+					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Distance->distanceCorrection ?> l" /></td>
 				</tr>
 				<tr>
 					<td>max Volume:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Distance->maxVolume ?>" /></td>
+					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Distance->maxVolume ?> l" /></td>
 				</tr>
 				<tr>
 					<td>height:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Distance->height ?>" /></td>
+					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Distance->height ?> cm" /></td>
 				</tr>
 			</table>
 		</div>
