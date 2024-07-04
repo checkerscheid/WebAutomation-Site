@@ -9,14 +9,19 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 11.12.2019                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 505                                                     $ #
-//# Author       : $Author:: checker                                              $ #
-//# File-ID      : $Id:: dbinfo.js 505 2021-05-07 21:55:45Z checker               $ #
+//# Revision     : $Rev:: 636                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: dbinfo.js 636 2024-07-04 14:28:56Z                       $ #
 //#                                                                                 #
 //###################################################################################
 ?> dbinfo */
 
 p.page.load = function() {
+	$('#dbinfo').on('click', '.startHistoryCleaner', function() {
+		$.get('std.dbinfo.historycleaner.req', function(data) {
+			
+		});
+	});
 //###################################################################################
 	$('#tabledbinfo').dataTable({
 		oLanguage: {

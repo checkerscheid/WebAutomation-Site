@@ -10,9 +10,9 @@ header('Content-Type: text/html; charset=utf-8');
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 631                                                     $ #
+//# Revision     : $Rev:: 636                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: index.php 631 2024-06-29 12:29:38Z                       $ #
+//# File-ID      : $Id:: index.php 636 2024-07-04 14:28:56Z                       $ #
 //#                                                                                 #
 //###################################################################################
 /** @var array $points */
@@ -115,8 +115,8 @@ unset($_SESSION[SESSION_ID]['ActiveAlarms']);
 	$ip = std::arrays($_SERVER, 'REMOTE_ADDR');
 	$hostname = (wpInit::$useDns) ? gethostbyaddr($ip) : $ip;
 	$database->query('
-		INSERT INTO [chromeuser] ([id_user], [ip], [host], [page], [version], [datetime]) VALUES
-		(' . security::getIdFromUser() . ', \'' . $ip . '\', \'' . $hostname. '\', \'' . $system->getFullSrc() . '\', \'\', \'' . wpConvert::getDateTime() . '\')
+		INSERT INTO [visitors] ([id_user], [ip], [host], [page], [datetime]) VALUES
+		(' . security::getIdFromUser() . ', \'' . $ip . '\', \'' . $hostname. '\', \'' . $system->getFullSrc() . '\', \'' . wpConvert::getDateTime() . '\')
 	');
 ?>
 						<?=html::getSystemMenu($system->getSrc())?>

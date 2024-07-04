@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 21.07.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 631                                                     $ #
+//# Revision     : $Rev:: 635                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: openWeather.psys 631 2024-06-29 12:29:38Z                $ #
+//# File-ID      : $Id:: openWeather.psys 635 2024-07-04 00:03:17Z                $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
