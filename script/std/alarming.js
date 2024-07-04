@@ -6,12 +6,12 @@
 //#                                                                                 #
 //###################################################################################
 //#                                                                                 #
-//# Author       : Matthias Kotulla                                                 #
+//# Author       : Christian Scheid                                                 #
 //# Date         : 29.02.2016                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 505                                                     $ #
-//# Author       : $Author:: checker                                              $ #
-//# File-ID      : $Id:: alarming.js 505 2021-05-07 21:55:45Z checker             $ #
+//# Revision     : $Rev:: 638                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: alarming.js 638 2024-07-04 14:41:27Z                     $ #
 //#                                                                                 #
 //###################################################################################
 ?> alarming */

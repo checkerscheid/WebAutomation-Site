@@ -9,18 +9,18 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 28.03.2017                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 550                                                     $ #
+//# Revision     : $Rev:: 636                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: chromehistorics.inc 550 2023-12-25 03:02:54Z             $ #
+//# File-ID      : $Id:: visitors.inc 636 2024-07-04 14:28:56Z                    $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
 namespace pages\std;
 use system\Helper\security;
-$database->query("SELECT TOP 1 [name] FROM [webpages] WHERE [src] = 'chromehistorics'");
+$database->query("SELECT TOP 1 [name] FROM [webpages] WHERE [src] = 'visitors'");
 $headline = $database->fetch();
 ?>
-<div id="chromehistorics">
+<div id="visitors">
 	<h1><?=$headline['name']?></h1>
 	<div id="Filter">
 		<h2>Filter</h2>

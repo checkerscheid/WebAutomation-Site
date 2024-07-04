@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 11.12.2019                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 550                                                     $ #
+//# Revision     : $Rev:: 636                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: dbinfo.inc 550 2023-12-25 03:02:54Z                      $ #
+//# File-ID      : $Id:: dbinfo.inc 636 2024-07-04 14:28:56Z                      $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
@@ -61,4 +61,7 @@ while($erg = $database->fetch()) {
 
 		</tbody>
 	</table>
+	<div>
+		<span class="ps-button startHistoryCleaner">Start HistoryCleaner</span>
+	</div>
 </div>

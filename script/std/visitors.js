@@ -9,14 +9,14 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 550                                                     $ #
+//# Revision     : $Rev:: 636                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: chromehistorics.js 550 2023-12-25 03:02:54Z              $ #
+//# File-ID      : $Id:: visitors.js 636 2024-07-04 14:28:56Z                     $ #
 //#                                                                                 #
 //###################################################################################
 use system\Helper\wpDatabase;
 $database = new wpDatabase();
-$database->query('SELECT MIN([datetime]) AS [min] FROM [chromeuser]');
+$database->query('SELECT MIN([datetime]) AS [min] FROM [visitors]');
 $erg = $database->fetch();
 if($erg['min'] == null) {
 	$minoption = new DateTime();
@@ -65,9 +65,9 @@ p.page.load = function() {
 		$('#erg').addClass('ps-loading');
 		getActivityTable();
 	});
-	$('#chromehistorics').on('click', '.form-dsgvo-go', function() {
+	$('#visitors').on('click', '.form-dsgvo-go', function() {
 		var dsgvo = $('.form-dsgvo').val();
-		$.post('std.chromehistorics.delete.req', {dsgvo:dsgvo}, function(data) {
+		$.post('std.visitors.delete.req', {dsgvo:dsgvo}, function(data) {
 			if(data == 'S_OK') {
 				$('#erg').addClass('ps-loading');
 				getActivityTable();
@@ -82,7 +82,7 @@ p.page.load = function() {
 function getActivityTable() {
 	var from = $.datepicker.formatDate('yy-mm-dd', $('.dt-from').datepicker('getDate'));
 	var to = $.datepicker.formatDate('yy-mm-dd', $('.dt-to').datepicker('getDate'));
-	$.post('std.chromehistorics.getactivitytable.req', {from:from,to:to}, function(data) {
+	$.post('std.visitors.getactivitytable.req', {from:from,to:to}, function(data) {
 		$('#erg').html(data);
 		$('#erg').removeClass('ps-loading');
 		$('#historictable').dataTable({
