@@ -185,6 +185,24 @@ p.page.load = function() {
 		$.post('std.d1minicfg.setcmd.req', {name:name,cmd:'RestartDevice'});
 	});
 //###################################################################################
+	$('#erg').on('click', '.allHttpUpdate', function() {
+		var tr = $(this).parents('ul.d1miniingroup:first');
+		$(tr).find('[data-id]').each(function() {
+			if($(this).find('.ps-checkbox').hasClass('checked')) {
+				var ip = $(this).find('[data-column="ip"] .stored').text();
+				$.post('std.d1minicfg.starthttpupdate.req', {ip:ip});
+			}
+		});
+	});
+	$('#erg').on('click', '.allForceMqttUpdate', function() {
+		var tr = $(this).parents('ul.d1miniingroup:first');
+		$(tr).find('[data-id]').each(function() {
+			if($(this).find('.ps-checkbox').hasClass('checked')) {
+				var name = $(this).find('[data-column="name"] .stored').text();
+				$.post('std.d1minicfg.setcmd.req', {name:name,cmd:'ForceMqttUpdate'});
+			}
+		});
+	});
 	$('#erg').on('click', '.allgroup', function() {
 		var tr = $(this).parents('ul.d1miniingroup:first');
 		var ids = [];

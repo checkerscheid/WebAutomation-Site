@@ -137,12 +137,12 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 			</table>
 		</div>
 	<? } ?>
-	<? if($d1Mini->FreakaZoneDevice->useModul->FK) { ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->Window) { ?>
 		<div class="ps-container">
-			<h3>FK</h3>
+			<h3>Fenster</h3>
 			<table summary="">
 				<tr>
-					<td>FK:</td>
+					<td>Fensterkontakt:</td>
 					<td><span class="ps-input <?=wpa::GreyGreen ?>" data-ws="<?=$erg['name'] ?>_FK">undefined</span></td>
 				</tr>
 			</table>

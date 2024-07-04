@@ -199,6 +199,8 @@ class d1minicfg {
 			<div class="tr">
 				<div class="td"><span>markierte:</span></div>
 				<div class="td">
+					<span class="ps-button allHttpUpdate" title="HTTP Update">HTTP Update</span>
+					<span class="ps-button allForceMqttUpdate" title="Force MQTT Update">Force MQTT Update</span>
 					<span class="ps-button allgroup" title="in Gruppe verschieben">Gruppe</span>
 					<span class="ps-button allaktiv" title="aktivieren / deaktivieren">Aktiv</span>
 					<span class="ps-button alldelete">l&ouml;schen</span>
