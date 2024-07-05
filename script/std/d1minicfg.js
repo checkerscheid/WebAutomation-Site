@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 03.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 629                                                     $ #
+//# Revision     : $Rev:: 639                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.js 629 2024-06-20 23:27:21Z                    $ #
+//# File-ID      : $Id:: d1minicfg.js 639 2024-07-05 02:15:34Z                    $ #
 //#                                                                                 #
 //###################################################################################
 ?> d1minicfg */
@@ -19,13 +19,17 @@
 // p.log.level = p.log.type.info;
 
 //<? require_once 'script/system/groups.js'; ?>
+//<? require_once('script/system/websockets.js') ?>
 
 groups.tablename = 'd1minigroup';
 groups.member = 'd1mini';
 groups.target = 'd1minicfg';
+ws.logEnabled = true;
+var CountFound = 0;
 
 p.page.load = function() {
 	groups.init();
+	ws.connect();
 //###################################################################################
 // Allgemein
 //###################################################################################
@@ -34,7 +38,11 @@ p.page.load = function() {
 		p.page.change('#erg', 'std.d1minicfg.menu' + menuitemclicked + '.req', {table:groups.tablename}, function() {
 			if(menuitemclicked == 'searchd1mini') {
 				D1MiniSearch();
-				D1MiniRegistered();
+				var cmd = {
+					'command': 'startD1MiniSearch'
+				};
+				ws.send(cmd);
+				//D1MiniRegistered();
 			}
 		});
 	});
@@ -49,7 +57,15 @@ p.page.load = function() {
 			var d1minigroup = $(this).attr('data-d1minigroup');
 			$.post('std.d1minicfg.getd1minis.req', {d1minigroup:d1minigroup}, function(data) {
 				$('[data-d1minis=' + d1minigroup + ']').html(data);
-				D1MiniRenew(d1minigroup);
+				$('.D1MiniDeviceList tr').each(function() {
+					var ip = $(this).find('[data-column="ip"] .stored').text();
+					var question = {
+						'command': 'getD1MiniJson',
+						'data': ip
+					};
+					ws.send(question);
+				});
+				//D1MiniRenew(d1minigroup);
 			});
 		}
 	});
@@ -185,6 +201,24 @@ p.page.load = function() {
 		$.post('std.d1minicfg.setcmd.req', {name:name,cmd:'RestartDevice'});
 	});
 //###################################################################################
+	$('#erg').on('click', '.allHttpUpdate', function() {
+		var tr = $(this).parents('ul.d1miniingroup:first');
+		$(tr).find('[data-id]').each(function() {
+			if($(this).find('.ps-checkbox').hasClass('checked')) {
+				var ip = $(this).find('[data-column="ip"] .stored').text();
+				$.post('std.d1minicfg.starthttpupdate.req', {ip:ip});
+			}
+		});
+	});
+	$('#erg').on('click', '.allForceMqttUpdate', function() {
+		var tr = $(this).parents('ul.d1miniingroup:first');
+		$(tr).find('[data-id]').each(function() {
+			if($(this).find('.ps-checkbox').hasClass('checked')) {
+				var name = $(this).find('[data-column="name"] .stored').text();
+				$.post('std.d1minicfg.setcmd.req', {name:name,cmd:'ForceMqttUpdate'});
+			}
+		});
+	});
 	$('#erg').on('click', '.allgroup', function() {
 		var tr = $(this).parents('ul.d1miniingroup:first');
 		var ids = [];
@@ -387,42 +421,47 @@ function setTextIfNotStored(name, column, givenValue) {
 		$(td).find(`.${column}`).html(givenValue).removeClass('ps-hidden');
 	}
 }
+function setD1MiniInfo(data) {
+	console.log(data);
+	var values = data.FreakaZoneDevice;
+	var name = values.DeviceName;
+	var mac = values.MAC.toLowerCase().replaceAll(':', '');
+	setTextIfNotStored(name, 'name', values.DeviceName);
+	setTextIfNotStored(name, 'description', values.DeviceDescription);
+	setTextIfNotStored(name, 'ip', values.Ip);
+	setTextIfNotStored(name, 'mac', mac);
+	setTextIfNotStored(name, 'version', values.Version);
+	//setTextIfNotStored(key, 'ssid', value.Ssid);
+	var updateMode = values.UpdateMode ? '<span class="ps-fontyellow">aktiv</span>' : '<span class="ps-fontgreen">deaktiviert</span>';
+	setTextIfNotStored(name, 'updatemode', updateMode);
+	setTextIfNotStored(name, 'compiledWith', values.compiledWith);
+	var td = $(`tr[data-json=${name}] td.json`);
+	$(td).html('<div class="showJsonContainer">' +
+		'<div>' +
+			'<pre class="showJson closed">' + JSON.stringify(values, null, '\t') + '</pre>' +
+		'</div>' +
+	'</div>');
+}
 function D1MiniSearch() {
-	$('.searchResult').addClass('ps-loading').removeClass('ps-container');
-	$('.searchResult .foundNew').text('searching...');
-	$('.searchResult .erg').text('');
-	$.get('std.d1minicfg.startFreakaZoneSearch.req', function(data) {
-		$('.searchResult').removeClass('ps-loading').addClass('ps-container');
-		let foundNew = 0;
-		let htmlNew = `
+	console.log('D1MiniSearch');
+	$('.searchResultLoading').addClass('ps-loading').text('searching...');
+	CountFound = 0;
+	let htmlNew = `
 <table>
 	<thead>
 		<tr>
 			<th>Name</th>
 			<th>IP</th>
 			<th>MAC</th>
-			<th>wpFreakaZone</th>
 			<th>Version</th>
-			<th></th>
+			<th>speichern</th>
 		</tr>
 	</thead>
-	<tbody>`;
-		for (const [key, value] of Object.entries(data)) {
-			foundNew++;
-			//mac correction
-			data[key]['Iam']['MAC'] = data[key]['Iam']['MAC'].toLowerCase().replaceAll(':', '');
-			htmlNew += getHtmlNewD1Mini(key, value.Iam);
-		}
-		htmlNew += `
+	<tbody class="FoundNewD1MiniDevices">
 	</tbody>
 </table>`;
-		$('.searchResult .foundNew').text(`Neue Devices gefunden: ${foundNew}`);
-		if(foundNew > 0) {
-			$('.searchResult').data('foundNew', data);
-			$('.searchResult .erg').html(htmlNew);
-		}
-		//$('.searchResult pre').text(JSON.stringify(data, null, 4));
-	}, 'json');
+	$('.searchResult .foundNew').html(`Neue Devices gefunden: ${CountFound}`);
+	$('.searchResult .erg').html(htmlNew);
 }
 function D1MiniRegistered() {
 	$.get('std.d1minicfg.getregisteredd1minis.req');
@@ -437,4 +476,23 @@ function getHtmlNewD1Mini(name, newObj) {
 	<td class="buttonbox"><span class="ps-button d1MiniAdd" data-key="${name}">Add</span></td>
 </tr>`;
 	return returns;
+}
+function getHtmlNewD1MiniRow(exists, iam) {
+	console.log('getHtmlNewD1MiniRow');
+	let mac = iam.MAC.toLowerCase().replaceAll(':', '');
+	let save = exists ? '<span class="ps-fontgreen">vorhanden</span>' : `<span class="ps-button d1MiniAdd" data-key="${iam.FreakaZoneClient}">Add</span>`;
+	let returns = `
+<tr>
+	<td>${iam.FreakaZoneClient}</td>
+	<td>${iam.IP}</td>
+	<td>${mac}</td>
+	<td>${iam.Version}</td>
+	<td class="buttonbox">${save}</td>
+</tr>`;
+	$('.FoundNewD1MiniDevices').append(returns);
+	$('.searchResult .foundNew').html(`Neue Devices gefunden: ${++CountFound}`);
+}
+function SearchD1MiniFinished() {
+	console.log('SearchD1MiniFinished');
+	$('.searchResultLoading').removeClass('ps-loading').text('');
 }

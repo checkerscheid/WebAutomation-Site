@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 04.03.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 631                                                     $ #
+//# Revision     : $Rev:: 639                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.req 631 2024-06-29 12:29:38Z                   $ #
+//# File-ID      : $Id:: d1minicfg.req 639 2024-07-05 02:15:34Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -29,7 +29,8 @@ class d1minicfg {
 	const c_menusearchd1mini = 'menusearchd1mini';
 	public static function menusearchd1mini() {
 		echo '
-			<div class="searchResult">
+			<div class="searchResult ps-container">
+				<div class="searchResultLoading"></div>
 				<h3 class="foundNew"></h3>
 				<div class="erg"></div>
 				<pre class="wpDebugResult"></pre>
@@ -228,7 +229,7 @@ class d1minicfg {
 					<th></th>
 				</tr>
 			</thead>
-			<tbody>';
+			<tbody class="D1MiniDeviceList">';
 		while($erg = $wpDatabase->fetch()) {
 			$update = 'ps-fontyellow';
 			if(d1minicfg::$maxVersion == $erg['version'] ) {
