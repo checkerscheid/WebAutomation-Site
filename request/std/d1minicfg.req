@@ -29,7 +29,8 @@ class d1minicfg {
 	const c_menusearchd1mini = 'menusearchd1mini';
 	public static function menusearchd1mini() {
 		echo '
-			<div class="searchResult">
+			<div class="searchResult ps-container">
+				<div class="searchResultLoading"></div>
 				<h3 class="foundNew"></h3>
 				<div class="erg"></div>
 				<pre class="wpDebugResult"></pre>
@@ -228,7 +229,7 @@ class d1minicfg {
 					<th></th>
 				</tr>
 			</thead>
-			<tbody>';
+			<tbody class="D1MiniDeviceList">';
 		while($erg = $wpDatabase->fetch()) {
 			$update = 'ps-fontyellow';
 			if(d1minicfg::$maxVersion == $erg['version'] ) {
