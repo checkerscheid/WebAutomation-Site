@@ -250,7 +250,7 @@ div.ps-center { width:100%; overflow-x:hidden; }
 div.ps-center-container { clear:left; float:left; left:50%; position:relative; }
 div.ps-center-element { float:left; right:50%; position:relative; }
 
-div.ps-flex-container { display:flex; flex-wrap:wrap; justify-content:space-around; align-items:stretch; }
+div.ps-flex-container { display:flex; flex-wrap:wrap; justify-content:center; align-items:stretch; }
 .ps-flex-item { flex-grow:1; }
 .ps-flex-item * { margin:auto; }
 .ps-loading { min-height:50px;
