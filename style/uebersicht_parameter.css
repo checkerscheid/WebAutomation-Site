@@ -1,0 +1,26 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 14.01.2014                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 650                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: uebersicht_parameter.css 650 2024-07-06 18:29:57Z        $ #
+//#                                                                                 #
+//###################################################################################
+?> uebersicht_parameter */
+
+/* #uebersicht_parameter {background:transparent url(images/uebersicht.jpg) center top no-repeat; width:1000px; height:387px; position:relative; margin:auto; padding-top:20px; } */
+#uebersicht_parameter h1 { text-align:center; }
+#uebersicht_parameter table { margin:auto; }
+#uebersicht_parameter div { padding:10px; }
+#uebersicht_parameter .ps-input { display:inline-block; width:100px; text-align:center; }
+#uebersicht_parameter [data-togglewrite] { cursor:pointer; }
+#uebersicht_parameter .ps-container { margin:10px; padding:10px; float:left; }
+
