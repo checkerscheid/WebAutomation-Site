@@ -9,20 +9,20 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 08.06.2021                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 639                                                     $ #
+//# Revision     : $Rev:: 646                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: websockets.js 639 2024-07-05 02:15:34Z                   $ #
+//# File-ID      : $Id:: websockets.js 646 2024-07-06 18:12:08Z                   $ #
 //#                                                                                 #
 //###################################################################################
 use system\Helper\wpa;
 require_once 'system/Helper/wpa.psys';
-$url = ($_SERVER['HTTP_HOST'] == 'ltchecker.freakazone.com') ? 'ltchecker.freakazone.com' : 'automation.freakazone.com:81';
+//$url = ($_SERVER['HTTP_HOST'] == 'ltchecker.freakazone.com') ? 'ltchecker.freakazone.com' : 'automation.freakazone.com:81';
 ?> websockets */
 
 var ws = {
 	logEnabled: false,
 	connection: null,
-	connectionstring: 'ws://<?=$url?>/Remote',
+	connectionstring: 'wss://automation.freakazone.com/Remote',
 	registered: [],
 	toalive: null,
 	alive: 0,

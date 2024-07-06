@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 505                                                     $ #
-//# Author       : $Author:: checker                                              $ #
-//# File-ID      : $Id:: uebersicht_parameter.js 505 2021-05-07 21:55:45Z checker $ #
+//# Revision     : $Rev:: 647                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: overview_parameter.js 647 2024-07-06 18:17:49Z           $ #
 //#                                                                                 #
 //###################################################################################
 ?> uebersicht_parameter */

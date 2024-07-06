@@ -1,0 +1,28 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 13.04.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 646                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: mudda.css 646 2024-07-06 18:12:08Z                       $ #
+//#                                                                                 #
+//###################################################################################
+?> mudda */
+
+#mudda table { margin:auto; }
+#ergTemp, #ergHum { display:block; width:100%; height:300px; }
+
+#mudda td:has(.icon-indikator) { position:relative; }
+#mudda .icon-indikator { display:inline-block; position:absolute; right:2px; top:4px; height:19px; width:26px;
+	background:transparent url(images/visuelemente/indikator.png) left top no-repeat; }
+#mudda .indi-pp { background-position:-0px -0px; }
+#mudda .indi-p { background-position:-0px -19px; }
+#mudda .indi-0 { background-position:-0px -38px; }
+#mudda .indi-m { background-position:-0px -57px; }
