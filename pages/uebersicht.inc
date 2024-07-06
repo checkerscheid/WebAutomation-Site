@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 631                                                     $ #
+//# Revision     : $Rev:: 640                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 631 2024-06-29 12:29:38Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 640 2024-07-06 15:18:02Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -369,6 +369,13 @@ class uebersicht {
 					<td colspan="3">
 						<span data-ws="WZ_PF_FE_RE2_Moisture" class="ps-input">undefined</span>
 						<span data-ws="WZ_PF_FE_RE2_Moisture" class="<?=wpa::indikatorPfl?>"><?=wpHTML_EMPTY?></span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">Melonie</td>
+					<td colspan="3">
+						<span data-ws="Melonie_Moisture" class="ps-input">undefined</span>
+						<span data-ws="Melonie_Moisture" class="<?=wpa::indikatorPfl?>"><?=wpHTML_EMPTY?></span>
 					</td>
 				</tr>
 				<tr><td colspan="6"><h2>Test</h2></td></tr>

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 03.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 639                                                     $ #
+//# Revision     : $Rev:: 640                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.js 639 2024-07-05 02:15:34Z                    $ #
+//# File-ID      : $Id:: d1minicfg.js 640 2024-07-06 15:18:02Z                    $ #
 //#                                                                                 #
 //###################################################################################
 ?> d1minicfg */
@@ -85,7 +85,8 @@ p.page.load = function() {
 	});
 //###################################################################################
 	$('#d1minicfg').on('click', '.searchResult .d1MiniAdd', function() {
-		var myData = $('.searchResult').data('foundNew')[$(this).attr('data-key')]['Iam'];
+		var myData = $(this).data();
+		console.log(myData);
 		$.get('std.d1minicfg.infoToSaveD1Mini.pop', function(data) {
 			$('#dialog').html(data).dialog({
 				title: 'D1 Mini speichern', modal: true, width: p.popup.width.osk,
@@ -479,17 +480,17 @@ function getHtmlNewD1Mini(name, newObj) {
 }
 function getHtmlNewD1MiniRow(exists, iam) {
 	console.log('getHtmlNewD1MiniRow');
-	let mac = iam.MAC.toLowerCase().replaceAll(':', '');
+	iam.MAC = iam.MAC.toLowerCase().replaceAll(':', '');
 	let save = exists ? '<span class="ps-fontgreen">vorhanden</span>' : `<span class="ps-button d1MiniAdd" data-key="${iam.FreakaZoneClient}">Add</span>`;
 	let returns = `
 <tr>
 	<td>${iam.FreakaZoneClient}</td>
 	<td>${iam.IP}</td>
-	<td>${mac}</td>
+	<td>${iam.MAC}</td>
 	<td>${iam.Version}</td>
 	<td class="buttonbox">${save}</td>
 </tr>`;
-	$('.FoundNewD1MiniDevices').append(returns);
+	$('.FoundNewD1MiniDevices').append(returns).find(`[data-key="${iam.FreakaZoneClient}"]`).data(iam);
 	$('.searchResult .foundNew').html(`Neue Devices gefunden: ${++CountFound}`);
 }
 function SearchD1MiniFinished() {
