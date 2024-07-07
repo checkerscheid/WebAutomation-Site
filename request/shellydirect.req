@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 550                                                     $ #
+//# Revision     : $Rev:: 659                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: shellydirect.req 550 2023-12-25 03:02:54Z                $ #
+//# File-ID      : $Id:: shellydirect.req 659 2024-07-07 22:16:15Z                $ #
 //#                                                                                 #
 //###################################################################################
 namespace request;
@@ -20,15 +20,16 @@ require_once 'system/helper/shelly.psys';
 use system\helper\shelly as ShellyDevice;
 use system\helper\wpDatabase;
 use system\std;
-$name = $_SESSION[SESSION_ID]['POINTS'][std::posts('bm')]->name;
-$onoff = $_SESSION[SESSION_ID]['POINTS'][std::posts('bm')]->value == 'True' ? 'off' : 'on';
+$name = $_SESSION[SESSION_ID]['POINTS'][std::posts('bm')]->Name;
+$onoff = $_SESSION[SESSION_ID]['POINTS'][std::posts('bm')]->Value == 'True' ? 'off' : 'on';
 $light = '';
 
 $database = new wpDatabase();
 $database->query("SELECT [s].[ip], [s].[type]
 	FROM [shelly] [s]
-	INNER JOIN [opcdatapoint] [d] ON [s].[id_onoff] = [d].[id_opcdatapoint]
-	WHERE [d].[name] = '".$name."'");
+	LEFT JOIN [rest] [r] ON [s].[id_shelly] = [r].[id_shelly]
+	INNER JOIN [dp] ON [r].[id_onoff] = [dp].[id_dp]
+	WHERE [dp].[name] = '".$name."'");
 $erg = $database->fetch();
 if(ShellyDevice::isLight($erg['type'])) $light = 'light';
 if(ShellyDevice::isRelay($erg['type'])) $light = 'relay';

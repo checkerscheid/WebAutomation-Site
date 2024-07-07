@@ -10,9 +10,9 @@ header('Content-Type: text/html; charset=utf-8');
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 636                                                     $ #
+//# Revision     : $Rev:: 653                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: index.php 636 2024-07-04 14:28:56Z                       $ #
+//# File-ID      : $Id:: index.php 653 2024-07-07 10:14:46Z                       $ #
 //#                                                                                 #
 //###################################################################################
 /** @var array $points */
@@ -63,7 +63,7 @@ unset($_SESSION[SESSION_ID]['ActiveAlarms']);
 <!DOCTYPE html>
 <html id="html"<?=($sdata->Whitemode ? '' : ' class="black"')?>>
 <head>
-	<title>Checker WebAutomation [<?=$system->getFullSrc()?>]</title>
+	<title>WebAutomation [<?=$system->getFullSrc()?>]</title>
 	<meta charset="utf-8" />
 	<meta name="author" content="Christian Scheid" />
 	<!--meta name="viewport" content="width=800" /-->

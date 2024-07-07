@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 629                                                     $ #
+//# Revision     : $Rev:: 654                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: init.js 629 2024-06-20 23:27:21Z                         $ #
+//# File-ID      : $Id:: init.js 654 2024-07-07 11:37:39Z                         $ #
 //#                                                                                 #
 //###################################################################################
 use system\wpInit;
@@ -170,11 +170,12 @@ var p = {
 	},
 	getValues: function(additional) {
 		$.get('std.request.activedp.req', function(data) {
+			wpResult = data.wpResult;
 			if(typeof(additional) == 'function') additional();
 			for(var elem in wpResult) {
 				p.automation.stdClass(elem);
 			}
-		}, 'script').always(function() {
+		}, 'json').always(function() {
 			window.setTimeout(function() { p.getValues(additional); }, p.automation.pointrate);
 		});
 	},

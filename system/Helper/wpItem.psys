@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2018                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 582                                                     $ #
+//# Revision     : $Rev:: 656                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpItem.psys 582 2024-04-10 06:45:45Z                     $ #
+//# File-ID      : $Id:: wpItem.psys 656 2024-07-07 20:04:50Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -20,31 +20,47 @@ namespace system\Helper;
  */
 class wpItem {
 	/**  */
-	public $id;
+	public $Id;
 	/**  */
-	public $pagename;
+	public $Pagename;
 	/**  */
-	public $name;
+	public $Name;
 	/**  */
-	public $opcname;
+	public $Unit;
 	/**  */
-	public $opcgroup;
+	public $NKS;
 	/**  */
-	public $unit;
+	public $Min;
 	/**  */
-	public $value;
+	public $Max;
 	/**  */
-	public $lastupdate;
+	public $Value;
+	/**  */
+	public $ValueString;
+	/**  */
+	public $Group;
+	/**  */
+	public $NS;
+	/**  */
+	public $UsergroupWrite;
+	/**  */
+	public $LastUpdate;
 	/**
 	 * Konstruktor
 	 */
-	public function __construct($id, $pagename, $name, $opcname, $opcgroup, $unit) {
-		$this->id = $id;
-		$this->pagename = $pagename;
-		$this->name = $name;
-		$this->opcname = $opcname;
-		$this->opcgroup = $opcgroup;
-		$this->unit = $unit;
+	public function __construct($id, $pagename, $name, $unit, $nks, $min, $max,
+			$group, $namespace, $usergroupWrite) {
+		$this->Id = $id;
+		$this->Pagename = $pagename;
+		$this->Name = $name;
+		$this->Unit = $unit;
+		$this->NKS = $nks;
+		$this->Min = $min;
+		$this->Max =$max;
+
+		$this->Group = $group;
+		$this->NS = $namespace;
+		$this->UsergroupWrite = $usergroupWrite;
 	}
 }
 ?>

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 646                                                     $ #
+//# Revision     : $Rev:: 656                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: mudda.inc 646 2024-07-06 18:12:08Z                       $ #
+//# File-ID      : $Id:: mudda.inc 656 2024-07-07 20:04:50Z                       $ #
 //#                                                                                 #
 //###################################################################################
 namespace pages;
@@ -111,7 +111,7 @@ namespace pages;
 		</table>
 		<div>
 			<hr />
-			<a href="std.weather.htm" class="ps-button">Wettervorhersage</a>
+			<a href="std.weather.htm" class="ps-button forecast">Wettervorhersage</a>
 		</div>
 	</div>
 	<div class="ps-container">

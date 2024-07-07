@@ -9,15 +9,17 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 650                                                     $ #
+//# Revision     : $Rev:: 656                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.js 650 2024-07-06 18:29:57Z                   $ #
+//# File-ID      : $Id:: uebersicht.js 656 2024-07-07 20:04:50Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> uebersicht */
+//<? require_once('system/websockets.js') ?>
 
-<? require_once('system/websockets.js') ?>
-ws.logEnabled = true;
+//p.log.level = p.log.type.info;
+
+ws.logEnabled = false;
 var getdimmervalue = true;
 var configwithtimeout = [];
 

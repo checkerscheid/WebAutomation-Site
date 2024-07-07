@@ -9,14 +9,14 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 29.11.2023                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 648                                                     $ #
+//# Revision     : $Rev:: 660                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: overview_parameter.req 648 2024-07-06 18:26:23Z          $ #
+//# File-ID      : $Id:: overview_parameter.req 660 2024-07-07 22:34:47Z          $ #
 //#                                                                                 #
 //###################################################################################
 namespace request;
 use system\std;
-class uebersicht_parameter {
+class overview_parameter {
 	const c_set_wz = 'set_wz';
 	const c_unset_wz = 'unset_wz';
 	const c_set_wb = 'set_wb';
@@ -30,7 +30,7 @@ class uebersicht_parameter {
 // http://192.168.80.180/settings/relay/0/?index=0&schedule_rules=0000ass-0123456-on,0000bsr-0123456-off
 switch(std::gets('param1')) {
 	//###################################################################################
-	case uebersicht_parameter::c_set_wz:
+	case overview_parameter::c_set_wz:
 		header('Content-Type: application/json');
 		$http = '{"shelly_schedule":[';
 		// Fenster
@@ -40,7 +40,7 @@ switch(std::gets('param1')) {
 		echo $http . ']}';
 		break;
 	//###################################################################################
-	case uebersicht_parameter::c_unset_wz:
+	case overview_parameter::c_unset_wz:
 		header('Content-Type: application/json');
 		$http = '{"shelly_schedule":[';
 		// Fenster
@@ -50,7 +50,7 @@ switch(std::gets('param1')) {
 		echo $http . ']}';
 		break;
 	//###################################################################################
-	case uebersicht_parameter::c_set_wb:
+	case overview_parameter::c_set_wb:
 		header('Content-Type: application/json');
 		$http = '{"shelly_schedule":[';
 		// Weihnachtsbaum
@@ -58,7 +58,7 @@ switch(std::gets('param1')) {
 		echo $http . ']}';
 		break;
 	//###################################################################################
-	case uebersicht_parameter::c_unset_wb:
+	case overview_parameter::c_unset_wb:
 		header('Content-Type: application/json');
 		$http = '{"shelly_schedule":[';
 		// Weihnachtsbaum
@@ -66,7 +66,7 @@ switch(std::gets('param1')) {
 		echo $http . ']}';
 		break;
 	//###################################################################################
-	case uebersicht_parameter::c_pia_wn:
+	case overview_parameter::c_pia_wn:
 		header('Content-Type: application/json');
 		$http = '{"shelly_schedule":[';
 		// Pia
@@ -78,7 +78,7 @@ switch(std::gets('param1')) {
 		echo $http . ']}';
 		break;
 	//###################################################################################
-	case uebersicht_parameter::c_pia_we:
+	case overview_parameter::c_pia_we:
 		header('Content-Type: application/json');
 		$http = '{"shelly_schedule":[';
 		// Weihnachtsbaum
@@ -88,7 +88,7 @@ switch(std::gets('param1')) {
 		echo $http . ']}';
 		break;
 	//###################################################################################
-	case uebersicht_parameter::c_pia_wnwe:
+	case overview_parameter::c_pia_wnwe:
 		header('Content-Type: application/json');
 		$http = '{"shelly_schedule":[';
 		// Weihnachtsbaum

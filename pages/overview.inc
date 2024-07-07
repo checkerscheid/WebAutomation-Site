@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 651                                                     $ #
+//# Revision     : $Rev:: 660                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: overview.inc 651 2024-07-06 23:51:07Z                  $ #
+//# File-ID      : $Id:: overview.inc 660 2024-07-07 22:34:47Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -141,7 +141,7 @@ class overview {
 	}
 	public static function getPower() {
 		$returns = '';
-		$all = uebersicht::$Licht + uebersicht::$SystemRelay;
+		$all = overview::$Licht + overview::$SystemRelay;
 		foreach($all as $dp => $name) {
 			$returns .= '
 				<tr>
@@ -153,13 +153,13 @@ class overview {
 	}
 	public static function getRSSI() {
 		$returns = '';
-		foreach(uebersicht::$RSSI as $dp => $name) {
+		foreach(overview::$RSSI as $dp => $name) {
 			$returns .= '
 				<tr>
 					<td colspan="2">' . $name . ':</td>
 					<td colspan="2"><span data-ws="' . $dp . '_Rssi" class="' . wpa::rssi . '">-</span></td>
 					<td colspan="2">';
-			if(in_array($dp, uebersicht::$d1Minis)) {
+			if(in_array($dp, overview::$d1Minis)) {
 				$returns .= '<span data-ws="' . $dp . '_Online" class="ps-input ' . wpa::GreenRed . '">-</span>';
 			}
 			$returns .= '
@@ -176,10 +176,10 @@ class overview {
 			<tbody>
 				<tr><td colspan="6"><h2>Licht / Relais</h2></td></tr>
 				<tr><td colspan="6"><hr /></td></tr>
-				<?=uebersicht::getLicht() ?>
+				<?=overview::getLicht() ?>
 				<tr><td colspan="6"><h2>Energie</h2></td></tr>
 				<tr><td colspan="6"><hr /></td></tr>
-				<?=uebersicht::getPower() ?>
+				<?=overview::getPower() ?>
 				<tr><td colspan="6"><h2>Energiezähler</h2></td></tr>
 				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
@@ -225,7 +225,7 @@ class overview {
 			<tbody>
 				<tr><td colspan="6"><h2>Sensoren</h2></td></tr>
 				<tr><td colspan="6"><hr /></td></tr>
-				<?=uebersicht::getD1HT() ?>
+				<?=overview::getD1HT() ?>
 				<tr><td colspan="6"><h2>Wetterstation</h2></td></tr>
 				<tr>
 					<td colspan="2"></td>
@@ -408,7 +408,7 @@ class overview {
 			<tbody>
 				<tr><td colspan="6"><h2>Signalstärke</h2></td></tr>
 				<tr><td colspan="6"><hr /></td></tr>
-				<?=uebersicht::getRSSI() ?>
+				<?=overview::getRSSI() ?>
 			</tbody>
 		</table>
 	</div>
