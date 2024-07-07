@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 650                                                     $ #
+//# Revision     : $Rev:: 651                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 650 2024-07-06 18:29:57Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 651 2024-07-06 23:51:07Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -135,7 +135,8 @@ class uebersicht {
 		$database = new wpDatabase();
 		$database->query("SELECT [s].[ip], [s].[autooff], [s].[un], [s].[pw]
 			FROM [shelly] [s]
-			INNER JOIN [opcdatapoint] [d] ON [s].[id_onoff] = [d].[id_opcdatapoint]
+			LEFT JOIN [rest] [r] ON [s].[id_shelly] = [r].[id_shelly]
+			INNER JOIN [opcdatapoint] [d] ON [r].[id_onoff] = [d].[id_opcdatapoint]
 			WHERE [d].[name] = '".$points['LI_BM_'.$kurz]."'");
 		$erg = $database->fetch();
 
@@ -163,7 +164,8 @@ class uebersicht {
 		$database = new wpDatabase();
 		$database->query("SELECT [s].[ip], [s].[autooff], [s].[un], [s].[pw]
 			FROM [shelly] [s]
-			INNER JOIN [opcdatapoint] [d] ON [s].[id_onoff] = [d].[id_opcdatapoint]
+			LEFT JOIN [rest] [r] ON [s].[id_shelly] = [r].[id_shelly]
+			INNER JOIN [opcdatapoint] [d] ON [r].[id_onoff] = [d].[id_opcdatapoint]
 			WHERE [d].[name] = '".$points['LI_BM_'.$kurz]."'");
 		$erg = $database->fetch();
 

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 640                                                     $ #
+//# Revision     : $Rev:: 651                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 640 2024-07-06 15:18:02Z                  $ #
+//# File-ID      : $Id:: overview.inc 651 2024-07-06 23:51:07Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -24,7 +24,7 @@ $points = array(
 	'num2'		=> 'storage_numeric_reg02',
 	'random'	=> 'numeric_random_int32'
 );
-class uebersicht {
+class overview {
 	private static $Licht = array(
 		'BA_SP'			=> 'Bad Spiegelbeleuchtung',
 		'KZ_BE'			=> 'Kinderzimmer Bett',
@@ -105,7 +105,7 @@ class uebersicht {
 	);
 	public static function getD1HT() {
 		$returns = '';
-		foreach(uebersicht::$HT as $dp => $name) {
+		foreach(overview::$HT as $dp => $name) {
 			$returns .= '
 				<tr>
 					<td colspan="2">' . $name . ':</td>
@@ -123,14 +123,14 @@ class uebersicht {
 	}
 	public static function getLicht() {
 		$returns = '';
-		foreach(uebersicht::$Licht as $dp => $name) {
+		foreach(overview::$Licht as $dp => $name) {
 			$returns .= '
 				<tr>
 					<td colspan="3">' . $name . ':</td>
 					<td colspan="3"><span data-ws="' . $dp . '" class="ps-input ' . wpa::GreyYellow . '">undefined</span></td>
 				</tr>';
 		}
-		foreach(uebersicht::$SystemRelay as $dp => $name) {
+		foreach(overview::$SystemRelay as $dp => $name) {
 			$returns .= '
 				<tr>
 					<td colspan="3">' . $name . ':</td>

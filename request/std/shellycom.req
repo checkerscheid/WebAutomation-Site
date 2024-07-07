@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 16.12.2019                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 572                                                     $ #
+//# Revision     : $Rev:: 651                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: shellycom.req 572 2024-03-20 06:52:42Z                   $ #
+//# File-ID      : $Id:: shellycom.req 651 2024-07-06 23:51:07Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -37,9 +37,9 @@ class shellycom {
 	const c_get_update_signal_2 = 'get-update-signal-2';
 	const c_get_onoff = 'get-onoff';
 	const c_get_temp = 'get-temp';
-	const c_get_feuchte = 'get-feuchte';
-	const c_get_lux = 'get-lux';
-	const c_get_bat = 'get-bat';
+	const c_get_hum = 'get-hum';
+	const c_get_window = 'get-window';
+	const c_get_ldr = 'get-ldr';
 
 	const c_set_settings = 'set-settings';
 	const c_set_settings_relay_0 = 'set-settings-relay-0';
@@ -297,16 +297,16 @@ switch(std::gets('param1')) {
 		chooseDP('temp');
 		break;
 		//###################################################################################
-	case shellycom::c_get_feuchte:
-		chooseDP('feuchte');
+	case shellycom::c_get_hum:
+		chooseDP('hum');
 		break;
 		//###################################################################################
-	case shellycom::c_get_lux:
-		chooseDP('lux');
+	case shellycom::c_get_ldr:
+		chooseDP('ldr');
 		break;
 		//###################################################################################
-	case shellycom::c_get_bat:
-		chooseDP('bat');
+	case shellycom::c_get_window:
+		chooseDP('window');
 		break;
 	//###################################################################################
 	case shellycom::c_do_scan:
@@ -445,7 +445,27 @@ switch(std::gets('param1')) {
 	//###################################################################################
 	case shellycom::c_set_datapoint:
 		$database = new wpDatabase();
-		$database->query('UPDATE [shelly] SET [id_'.std::posts('action').'] = '.std::posts('id').' WHERE [id_shelly] = '.std::posts('shelly'));
+		$sql = "
+MERGE INTO [rest] AS [TARGET]
+	USING (
+		VALUES (
+			" . std::posts('shelly') . ", " . std::posts('id') . "
+		)
+	) AS [SOURCE] (
+		[id_shelly], [id_".std::posts('action')."]
+	) ON
+		[TARGET].[id_shelly] = [SOURCE].[id_shelly]
+	WHEN MATCHED THEN
+		UPDATE SET
+			[TARGET].[id_".std::posts('action')."] = [SOURCE].[id_".std::posts('action')."]
+	WHEN NOT MATCHED THEN
+		INSERT (
+			[id_shelly], [id_".std::posts('action')."]
+		)
+		VALUES (
+			[SOURCE].[id_shelly], [SOURCE].[id_".std::posts('action')."]
+		);";
+		$database->query($sql);
 		echo 'S_OK';
 		break;
 	//###################################################################################
@@ -660,19 +680,19 @@ function getRssi($in) {
 function chooseDP($action) {
 	echo '<ul class="ps-tree-top" data-action="'.$action.'" data-shelly="'.std::posts('ShellyID').'">';
 	$dbs = new wpDatabase();
-	$dbs->query('SELECT [id_opcserver], [name] FROM [opcserver] ORDER BY [name]');
+	$dbs->query('SELECT [id_dpnamespace], [name] FROM [dpnamespace] ORDER BY [name]');
 	while($server = $dbs->fetch()) {
-		echo '<li data-server="'.$server['id_opcserver'].'"><span class="ps-tree-parent">'.$server['name'].'</span></li>';
-		echo '<li class="ps-hidden" data-groups="'.$server['id_opcserver'].'"><ul>';
+		echo '<li data-namespace="'.$server['id_dpnamespace'].'"><span class="ps-tree-parent">'.$server['name'].'</span></li>';
+		echo '<li class="ps-hidden" data-groups="'.$server['id_dpnamespace'].'"><ul>';
 		$dbg = new wpDatabase();
-		$dbg->query('SELECT [id_opcgroup], [name] FROM [opcgroup] WHERE [id_opcserver] = '.$server['id_opcserver'].' ORDER BY [name]');
+		$dbg->query('SELECT [id_dpgroup], [name] FROM [dpgroup] WHERE [id_dpnamespace] = '.$server['id_dpnamespace'].' ORDER BY [name]');
 		while($group = $dbg->fetch()) {
-			echo '<li data-group="'.$group['id_opcgroup'].'"><span class="ps-tree-parent">'.$group['name'].'</span></li>';
-			echo '<li class="ps-hidden" data-items="'.$group['id_opcgroup'].'"><ul>';
+			echo '<li data-group="'.$group['id_dpgroup'].'"><span class="ps-tree-parent">'.$group['name'].'</span></li>';
+			echo '<li class="ps-hidden" data-items="'.$group['id_dpgroup'].'"><ul>';
 			$dbd = new wpDatabase();
-			$dbd->query('SELECT [id_opcdatapoint], [name], [opcname] FROM [opcdatapoint] WHERE [id_opcgroup] = '.$group['id_opcgroup'].' ORDER BY [name]');
+			$dbd->query('SELECT [id_dp], [name] FROM [dp] WHERE [id_dpgroup] = '.$group['id_dpgroup'].' ORDER BY [name]');
 			while($point = $dbd->fetch()) {
-				echo '<li><span title="'.$point['id_opcdatapoint'].' - '.$point['opcname'].'" class="datapointchooseable" data-id="'.$point['id_opcdatapoint'].'">'.$point['name'].'</span></li>';
+				echo '<li><span title="'.$point['id_dp'].'" class="datapointchooseable" data-id="'.$point['id_dp'].'">'.$point['name'].'</span></li>';
 			}
 			echo '</ul></li>';
 		}

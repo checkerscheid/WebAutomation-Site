@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 16.12.2019                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 572                                                     $ #
+//# Revision     : $Rev:: 651                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: shellycfg.js 572 2024-03-20 06:52:42Z                    $ #
+//# File-ID      : $Id:: shellycfg.js 651 2024-07-06 23:51:07Z                    $ #
 //#                                                                                 #
 //###################################################################################
 ?> scenecfg */
@@ -62,15 +62,15 @@ p.page.load = function() {
 	//###################################################################################
 	// Tree View
 	//###################################################################################
-	$('#dialog').on('click', '[data-server] .ps-tree-parent', function() {
+	$('#dialog').on('click', '[data-namespace] .ps-tree-parent', function() {
 		if($(this).hasClass('open')) {
 			$('[data-groups]').addClass('ps-hidden');
-			$('[data-server] .ps-tree-parent').removeClass('open');
+			$('[data-namespace] .ps-tree-parent').removeClass('open');
 		} else {
 			$('[data-groups]').addClass('ps-hidden');
-			$('[data-server] .ps-tree-parent').removeClass('open');
+			$('[data-namespace] .ps-tree-parent').removeClass('open');
 			$(this).addClass('open');
-			var server = $(this).parents('[data-server]:first').attr('data-server');
+			var server = $(this).parents('[data-namespace]:first').attr('data-namespace');
 			$('[data-groups=' + server + ']').removeClass('ps-hidden');
 		}
 	});
@@ -338,15 +338,20 @@ p.page.load = function() {
 		$(this).parents('td').find('.description').addClass('toUpdate');
 		shelly.edit.temp($(this).parents('td'), id);
 	});
-	$('#erg').on('click', '#shellyedit .sh-editfeuchte', function() {
+	$('#erg').on('click', '#shellyedit .sh-edithum', function() {
 		var id = $(this).parents('tr').attr('data-id');
 		$(this).parents('td').find('.description').addClass('toUpdate');
-		shelly.edit.feuchte($(this).parents('td'), id);
+		shelly.edit.hum($(this).parents('td'), id);
 	});
-	$('#erg').on('click', '#shellyedit .sh-editlux', function() {
+	$('#erg').on('click', '#shellyedit .sh-editwindow', function() {
 		var id = $(this).parents('tr').attr('data-id');
 		$(this).parents('td').find('.description').addClass('toUpdate');
-		shelly.edit.lux($(this).parents('td'), id);
+		shelly.edit.window($(this).parents('td'), id);
+	});
+	$('#erg').on('click', '#shellyedit .sh-editldr', function() {
+		var id = $(this).parents('tr').attr('data-id');
+		$(this).parents('td').find('.description').addClass('toUpdate');
+		shelly.edit.ldr($(this).parents('td'), id);
 	});
 	$('#dialog').on('click', '.datapointchooseable', function() {
 		var shelly = $('#dialog .ps-tree-top').attr('data-shelly');
@@ -614,8 +619,8 @@ var shelly = {
 				});
 			});
 		},
-		feuchte: function(td, id) {
-			$.post('std.shellycom.get-feuchte.req', { ShellyID: id }, function(data) {
+		hum: function(td, id) {
+			$.post('std.shellycom.get-hum.req', { ShellyID: id }, function(data) {
 				$('#dialog').html(data).dialog({
 					title: 'Shelly ' + id, modal: true, width: 1000, maxHeight: 600, buttons: [{
 						text:'Löschen',
@@ -635,8 +640,8 @@ var shelly = {
 				});
 			});
 		},
-		lux: function(td, id) {
-			$.post('std.shellycom.get-lux.req', { ShellyID: id }, function(data) {
+		window: function(td, id) {
+			$.post('std.shellycom.get-window.req', { ShellyID: id }, function(data) {
 				$('#dialog').html(data).dialog({
 					title: 'Shelly ' + id, modal: true, width: 1000, maxHeight: 600, buttons: [{
 						text:'Löschen',
@@ -656,8 +661,8 @@ var shelly = {
 				});
 			});
 		},
-		bat: function(td, id) {
-			$.post('std.shellycom.get-bat.req', { ShellyID: id }, function(data) {
+		ldr: function(td, id) {
+			$.post('std.shellycom.get-ldr.req', { ShellyID: id }, function(data) {
 				$('#dialog').html(data).dialog({
 					title: 'Shelly ' + id, modal: true, width: 1000, maxHeight: 600, buttons: [{
 						text:'Löschen',
