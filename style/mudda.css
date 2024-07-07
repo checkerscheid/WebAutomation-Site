@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 646                                                     $ #
+//# Revision     : $Rev:: 656                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: mudda.css 646 2024-07-06 18:12:08Z                       $ #
+//# File-ID      : $Id:: mudda.css 656 2024-07-07 20:04:50Z                       $ #
 //#                                                                                 #
 //###################################################################################
 ?> mudda */
@@ -26,3 +26,5 @@
 #mudda .indi-p { background-position:-0px -19px; }
 #mudda .indi-0 { background-position:-0px -38px; }
 #mudda .indi-m { background-position:-0px -57px; }
+
+#mudda .forecast { min-width: 100px; width: auto; }

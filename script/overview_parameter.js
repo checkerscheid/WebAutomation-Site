@@ -9,16 +9,16 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 14.01.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 542                                                     $ #
-//# Author       : $Author:: checker                                              $ #
-//# File-ID      : $Id:: uebersicht_parameter.js 542 2023-12-14 04:13:23Z checker $ #
+//# Revision     : $Rev:: 657                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: overview_parameter.js 657 2024-07-07 21:24:59Z           $ #
 //#                                                                                 #
 //###################################################################################
 ?> uebersicht_parameter */
 
 //p.log.level = p.log.type.info;
 
-<? require_once('system/websockets.js') ?>
+//<? require_once('system/websockets.js') ?>
 
 p.page.load = function() {
 	$('#uebersicht_parameter').on('click', '.pa-EinAus.ps-parambool', function() {

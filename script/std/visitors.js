@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 636                                                     $ #
+//# Revision     : $Rev:: 657                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: visitors.js 636 2024-07-04 14:28:56Z                     $ #
+//# File-ID      : $Id:: visitors.js 657 2024-07-07 21:24:59Z                     $ #
 //#                                                                                 #
 //###################################################################################
 use system\Helper\wpDatabase;
@@ -33,7 +33,7 @@ if($minoption instanceof DateTime) {
 
 ?> emailcfg */
 
-var minoption = new Date(<?=$minoption?>);
+var minoption = new Date('<?=$minoption?>');
 var TheTable;
 var isover = false;
 

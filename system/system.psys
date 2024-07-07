@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 626                                                     $ #
+//# Revision     : $Rev:: 658                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: system.psys 626 2024-06-17 15:18:36Z                     $ #
+//# File-ID      : $Id:: system.psys 658 2024-07-07 22:13:04Z                     $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $sdata */
@@ -911,32 +911,27 @@ class getScript {
 	 */
 	public static function getActivePoints() {
 		$WebCom = new WebCom();
-		$answer = new TCPencode($WebCom->send('ActiveDP', self::getParams()));
-		$TheArray = $answer->getArray();
-		$js = '{"wpResult":{';
-		if(std::sessions('POINTS') != '') {
-			foreach($_SESSION[SESSION_ID]['POINTS'] as $pagename => $object) {
-				$unit = $_SESSION[SESSION_ID]['POINTS'][$pagename]->unit;
-				$pointvalue = @$TheArray['Datenpunkte'][$_SESSION[SESSION_ID]['POINTS'][$pagename]->id];
-				if(self::facet($unit, std::arrays($pointvalue, 'Value')) == 'S_OK') {
-					if(is_numeric(str_replace(',', '.', $pointvalue['Value']))) {
-						$ValueString = @number_format(str_replace(',', '.', $pointvalue['Value']), $_SESSION[SESSION_ID]['POINTS'][$pagename]->nks, ',', '').($unit == '' ? '' : ' '.$unit);
-					} else {
-						$ValueString = $pointvalue['Value'].($unit == '' ? '' : ' '.$unit);
-					}
-				} else {
-					$ValueString = self::facet($unit, $pointvalue['Value']);
+		$answer = $WebCom->send('ActiveDP', self::getParams());
+		$response = \json_decode($answer, true);
+		if(\json_last_error() == JSON_ERROR_NONE) {
+			$js = '{"wpResult":{';
+			if(std::sessions('POINTS') != '') {
+				foreach($_SESSION[SESSION_ID]['POINTS'] as $pagename => $point) {
+					$pointvalue = $response['Datenpunkte'][$point->Id];
+					$js .= '"' . $pagename . '":{' .
+						'"Value":"' . std::arrays($pointvalue, 'Value') . '",'.
+						'"ValueString":"' . std::arrays($pointvalue, 'ValueString') . '",' .
+						'"LastUpdate":"' . std::arrays($pointvalue, 'LastChange') . '"},';
+					$_SESSION[SESSION_ID]['POINTS'][$pagename]->Value = std::arrays($pointvalue, 'Value');
+					$_SESSION[SESSION_ID]['POINTS'][$pagename]->ValueString = std::arrays($pointvalue, 'ValueString');
+					$_SESSION[SESSION_ID]['POINTS'][$pagename]->LastUpdate = std::arrays($pointvalue, 'LastChange');
 				}
-				$js .= '"' . $pagename . '":{'.
-					'"Value":"'.std::arrays($pointvalue, 'Value').'",'.
-					'"ValueString":"'.$ValueString.'"},';
-				$_SESSION[SESSION_ID]['POINTS'][$pagename]->value = std::arrays($pointvalue, 'Value');
-				$_SESSION[SESSION_ID]['POINTS'][$pagename]->lastupdate = wpConvert::getDateTime();
-				$object; // never used
+				$js = (substr($js, -1) == ',') ? substr($js, 0, -1) : $js;
 			}
-			$js = (substr($js, -1) == ',') ? substr($js, 0, -1) : $js;
+			echo $js.'}}';
+		} else {
+			echo \json_last_error_msg();
 		}
-		echo $js.'}}';
 	}
 	/**
 	 * generiert die Daten der aktiven Alarme
@@ -1046,30 +1041,6 @@ class getScript {
 		echo $js.'}';
 	}
 	/**
-	 * Überprüft ob die Eingabe ein facet ist.
-	 */
-	static function facet($unit, $value) {
-		$unit = is_null($unit) ? '' : $unit;
-		$m = null;
-		if(preg_match('/^True:(.*);False:(.*);$/', $unit, $m) > 0) {
-			$returns = ($value == 'True') ? $m[1] : $m[2];
-			return $returns;
-		} else if(preg_match('/(-?(\d){1,}:(.*);){1,}/', $unit, $m) > 0 ) {
-			$unit = substr($unit, 0, -1);
-			$arr = explode(';', $unit);
-			foreach ($arr as $state) {
-				$erg[trim(strstr($state, ':', true))] = str_replace(':', '', strstr($state, ':'));
-			}
-			if(isset($erg[$value])) {
-				return $erg[$value];
-			} else {
-				return $value;
-			}
-		} else {
-			return 'S_OK';
-		}
-	}
-	/**
 	 *
 	 */
 	public static function getActiveSystem() {
@@ -1092,7 +1063,7 @@ class getScript {
 		$param = '';
 		if(std::arrays($_SESSION[SESSION_ID], 'POINTS') != '' && count($_SESSION[SESSION_ID]['POINTS']) > 0) {
 			foreach($_SESSION[SESSION_ID]['POINTS'] as $object) {
-				$param .= $object->id.'%~%';
+				$param .= $object->Id.'%~%';
 			}
 		}
 		if(strlen($param) > 3) {
@@ -1127,25 +1098,32 @@ class RegisterSignals {
 		$result = array();
 		if($wherename != '') {
 			$database = new wpDatabase();
-			$database->query('SELECT [dp].[id_opcdatapoint], [dp].[name], [dp].[opcname],
-				[grp].[name] AS [opcgroup]
-				FROM [opcdatapoint] [dp]
-				INNER JOIN [opcgroup] [grp] ON [dp].[id_opcgroup] = [grp].[id_opcgroup]
-				INNER JOIN [opcserver] [srv] ON [grp].[id_opcserver] = [srv].[id_opcserver]
+			$database->query('SELECT [dp].[id_dp], [dp].[name], [dp].[unit], [dp].[nks], [dp].[min], [dp].[max],
+				[grp].[name] AS [group], [srv].[name] AS [ns],
+				ISNULL([dp].[usergroupwrite], ISNULL([grp].[usergroupwrite], ISNULL([srv].[usergroupwrite], 100))) AS [usergroupwrite]
+				FROM [dp]
+				INNER JOIN [dpgroup] [grp] ON [dp].[id_dpgroup] = [grp].[id_dpgroup]
+				INNER JOIN [dpnamespace] [srv] ON [grp].[id_dpnamespace] = [srv].[id_dpnamespace]
 				WHERE '.substr($wherename, 0, -3));
 			while($erg = $database->fetch()) {
 				$result[$erg['name']] = array(
-					'id_opcdatapoint' => $erg['id_opcdatapoint'],
-					'opcname' => $erg['opcname'],
-					'opcgroup' => $erg['opcgroup']
+					'id_dp' => $erg['id_dp'],
+					'unit' => $erg['unit'],
+					'nks' => $erg['nks'],
+					'min' => $erg['min'],
+					'max' => $erg['max'],
+					'group' => $erg['group'],
+					'ns' => $erg['ns'],
+					'usergroupwrite' => $erg['usergroupwrite']
 				);
 			}
 			foreach($DPs as $pagename => $name) {
 				if(isset($result[$name])) {
 					$_SESSION[SESSION_ID]['POINTS'][$pagename] =
-					new wpItem($result[$name]['id_opcdatapoint'], $pagename, $name,
-						$result[$name]['opcname'], $result[$name]['opcgroup'], '');
-					$_SESSION[SESSION_ID]['REGPOINTS'][$pagename] = '<a href="std.activedp.' . $result[$name]['id_opcdatapoint'] . '.htm">' . $name . '</a>';
+					new wpItem($result[$name]['id_dp'], $pagename, $name,
+						$result[$name]['unit'], $result[$name]['nks'], $result[$name]['min'], $result[$name]['max'],
+						$result[$name]['group'], $result[$name]['ns'], $result[$name]['usergroupwrite']);
+					$_SESSION[SESSION_ID]['REGPOINTS'][$pagename] = '<a href="std.activedp.' . $result[$name]['id_dp'] . '.htm">' . $name . '</a>';
 				} else {
 					$_SESSION[SESSION_ID]['ERRORPOINTS'][$pagename] = $name;
 				}

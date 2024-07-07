@@ -9,15 +9,16 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 650                                                     $ #
+//# Revision     : $Rev:: 658                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 650 2024-07-06 18:29:57Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 658 2024-07-07 22:13:04Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
 namespace pages;
 use system\helper\security;
 use system\helper\wpdatabase;
+use system\std;
 
 $useWS = true;
 $useWeihnachten = false;
@@ -84,7 +85,8 @@ $points = array(
 
 	'LI_GA_TR_Rest'		=> '_GA_LI_TR_Rest',
 
-	'Wartung'			=> '_Wartung'
+	'Wartung'			=> '_Wartung',
+	'RandomNumeric'		=> 'RandomNumeric'
 );
 if(!$useWS) {
 	$points['Erdgeschoss_Power']			= 'Erdgeschoss_Power';
@@ -123,6 +125,7 @@ $points['KA_FB_AutoWert']	= '_KA_FB_AutoWert';
 $points['KZ_VT_MAX']		= '_KZ_VT_MAX';
 
 class uebersicht {
+	private const debug = false;
 	public static function taster($name, $kurz) {
 		$return = '<tr>';
 		$return .= '<td>'.$name.':</td>';
@@ -133,12 +136,14 @@ class uebersicht {
 	public static function tasterShelly($name, $kurz) {
 		GLOBAL $points;
 		$database = new wpDatabase();
-		$database->query("SELECT [s].[ip], [s].[autooff], [s].[un], [s].[pw]
+		$sql = "SELECT [s].[ip], [s].[autooff], [s].[un], [s].[pw]
 			FROM [shelly] [s]
-			INNER JOIN [opcdatapoint] [d] ON [s].[id_onoff] = [d].[id_opcdatapoint]
-			WHERE [d].[name] = '".$points['LI_BM_'.$kurz]."'");
+			LEFT JOIN [rest] [r] ON [s].[id_shelly] = [r].[id_shelly]
+			INNER JOIN [dp] ON [r].[id_onoff] = [dp].[id_dp]
+			WHERE [dp].[name] = '".$points['LI_BM_'.$kurz]."'";
+		if(self::debug) std::test_array($sql);
+		$database->query($sql);
 		$erg = $database->fetch();
-
 		$return = '
 			<tr' . ($erg['autooff'] > 0 ? ' class="ps-hastimer"' : '') . '>
 				<td class="description">';
@@ -161,12 +166,14 @@ class uebersicht {
 	public static function tasterShellyDimmer($name, $kurz) {
 		GLOBAL $points;
 		$database = new wpDatabase();
-		$database->query("SELECT [s].[ip], [s].[autooff], [s].[un], [s].[pw]
+		$sql = "SELECT [s].[ip], [s].[autooff], [s].[un], [s].[pw]
 			FROM [shelly] [s]
-			INNER JOIN [opcdatapoint] [d] ON [s].[id_onoff] = [d].[id_opcdatapoint]
-			WHERE [d].[name] = '".$points['LI_BM_'.$kurz]."'");
+			LEFT JOIN [rest] [r] ON [s].[id_shelly] = [r].[id_shelly]
+			INNER JOIN [dp] ON [r].[id_onoff] = [dp].[id_dp]
+			WHERE [dp].[name] = '".$points['LI_BM_'.$kurz]."'";
+		if(self::debug) std::test_array($sql);
+		$database->query($sql);
 		$erg = $database->fetch();
-
 		$return = '
 			<tr' . ($erg['autooff'] > 0 ? ' class="ps-hastimer"' : '') . '>
 				<td class="description">';

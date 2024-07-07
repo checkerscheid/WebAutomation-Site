@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 626                                                     $ #
+//# Revision     : $Rev:: 658                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: request.req 626 2024-06-17 15:18:36Z                     $ #
+//# File-ID      : $Id:: request.req 658 2024-07-07 22:13:04Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -48,6 +48,7 @@ class request {
 switch(std::gets('param1')) {
 //###################################################################################
 	case request::c_activedp:
+		header(wpJSON_HEADER);
 		getScript::getActivePoints();
 		break;
 //###################################################################################

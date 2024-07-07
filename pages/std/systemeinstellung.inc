@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.11.2023                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 626                                                     $ #
+//# Revision     : $Rev:: 655                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: systemeinstellung.inc 626 2024-06-17 15:18:36Z           $ #
+//# File-ID      : $Id:: systemeinstellung.inc 655 2024-07-07 12:40:42Z           $ #
 //#                                                                                 #
 //###################################################################################
 /**
@@ -147,7 +147,8 @@ $wpDebug = array(
 <?
 $database->query("SELECT [s].[name], [dp].[name] AS [dp]
 FROM [shelly] [s]
-INNER JOIN [opcdatapoint] [dp] ON [s].[id_onoff] = [dp].[id_opcdatapoint]
+LEFT JOIN [rest] [r] ON [s].[id_shelly] = [r].[id_shelly]
+INNER JOIN [dp] ON [r].[id_onoff] = [dp].[id_dp]
 WHERE " . shelly::relaySqlWhere('s') . " OR " . shelly::lightSqlWhere('s') . " ORDER BY [s].[name]");
 while($erg = $database->fetch()) {
 	$points[$erg['dp']] = $erg['dp'];
