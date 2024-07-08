@@ -10,9 +10,9 @@ header('Content-Type: text/html; charset=utf-8');
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 653                                                     $ #
+//# Revision     : $Rev:: 663                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: index.php 653 2024-07-07 10:14:46Z                       $ #
+//# File-ID      : $Id:: index.php 663 2024-07-08 00:20:45Z                       $ #
 //#                                                                                 #
 //###################################################################################
 /** @var array $points */
@@ -225,7 +225,7 @@ if(security::checkGroup(security::entwickler)) {
 					<div id="wartungactive" class="ps-hidden" title="Wartung ist aktiv"></div>
 					<? } ?>
 					<? if(std::vars(wpInit::$showATinFooter) != '') { ?>
-					<span class="footertemp"><span class="ps-sm-hide">AT: </span><span data-ws="<?=wpInit::$showATinFooter?>" class="atinfooter"><?=wpHTML_EMPTY?></span></span>
+					<span class="footertemp"><span class="ps-sm-hide">AT: </span><span data-ws="<?=wpInit::$showATinFooter?>" data-value="AT" class="atinfooter"><?=wpHTML_EMPTY?></span></span>
 					<? } ?>
 					<span class="footerdatetime"><span class="ps-sm-hide">Datum: </span>01.01.1970<span class="ps-sm-hide">, Uhrzeit:</span> 00:00:00</span>
 

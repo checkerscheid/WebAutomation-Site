@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 582                                                     $ #
+//# Revision     : $Rev:: 662                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: useralarmcfg.req 582 2024-04-10 06:45:45Z                $ #
+//# File-ID      : $Id:: useralarmcfg.req 662 2024-07-08 00:20:22Z                $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $userfilter */
@@ -21,6 +21,9 @@ use system\Helper\wpDatabase;
 use system\Helper\security;
 use system\Helper\cfg;
 use system\WebCom;
+
+require_once 'system/Helper/cfg.psys';
+
 class useralarmcfg {
 	const c_formfiltertype = 'formfiltertype';
 	const c_savefiltertype = 'savefiltertype';

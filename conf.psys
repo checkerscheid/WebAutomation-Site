@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 631                                                     $ #
+//# Revision     : $Rev:: 663                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: conf.psys 631 2024-06-29 12:29:38Z                       $ #
+//# File-ID      : $Id:: conf.psys 663 2024-07-08 00:20:45Z                       $ #
 //#                                                                                 #
 //###################################################################################
 use system\wpInit;
@@ -31,8 +31,8 @@ wpInit::$systemmenuorder['webvisucs']['Sonstiges'] = array('weather', 'betriebss
 wpInit::$systemmenuorder['system']['Systeminformationen'] = array('sys_codesys');
 wpInit::$systemmenuorder['system']['Entwicklung'] = array('websockets');
 wpInit::$noStdPageInSystem = array('betriebsstunden', 'websockets', 'kamera');
-wpInit::$stdpoints = array('AT' => 'GA_WE_Nord_Temp');
-wpInit::$showATinFooter = 'GA_WE_Nord_Temp';
+wpInit::$stdpoints = array('AT' => '_GA_RT');
+wpInit::$showATinFooter = '_GA_RT';
 wpInit::$weathercode = '2804554';
 wpInit::$weatherkey = '08bbfef5eea9504adfb37366f9d970fb';
 
