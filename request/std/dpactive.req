@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 582                                                     $ #
+//# Revision     : $Rev:: 664                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: dpactive.req 582 2024-04-10 06:45:45Z                    $ #
+//# File-ID      : $Id:: dpactive.req 664 2024-07-08 01:00:27Z                    $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -179,7 +179,7 @@ SELECT
 	ISNULL([dp].[usergroupwrite], -1) AS [fromdp],
 	ISNULL([grp].[usergroupwrite], -1) AS [fromgrp],
 	ISNULL([ns].[usergroupwrite], -1) AS [fromns],
-	[dp].[id_opcdatapoint], [dp].[id_mqtttopic], [dp].[active]
+	[dp].[id_opcdatapoint], [o].[name] AS [opcname], [dp].[id_mqtttopic], [m].[topic], [dp].[active]
 FROM [dp]
 INNER JOIN [dpgroup] [grp] ON [dp].[id_dpgroup] = [grp].[id_dpgroup]
 INNER JOIN [dpnamespace] [ns] ON [grp].[id_dpnamespace] = [ns].[id_dpnamespace]
@@ -187,6 +187,8 @@ LEFT JOIN [alarm] [a] ON [a].[id_dp] = [dp].[id_dp]
 LEFT JOIN [trend] [t] ON [t].[id_dp] = [dp].[id_dp]
 LEFT JOIN [calendar] [c] ON [c].[id_dp] = [dp].[id_dp]
 LEFT JOIN [router] [r] ON [r].[id_dp] = [dp].[id_dp]
+LEFT JOIN [mqtttopic] [m] ON [dp].[id_mqtttopic] = [m].[id_mqtttopic]
+LEFT JOIN [opcdatapoint] [o] ON [dp].[id_opcdatapoint] = [o].[id_opcdatapoint]
 WHERE [dp].[id_dpgroup] = ".std::posts('iddpgroup')."
 ORDER BY [dp].[name]";
 		$database->query($sql);
@@ -281,8 +283,8 @@ ORDER BY [dp].[name]";
 				<span class="ps-image-status route' . ($erg['id_router'] == '-' ? '-ia' : '" title="' . $erg['id_router']) . '">' . wpHTML_EMPTY . '</span>
 			</td>
 			<td>
-				<span class="' . ($erg['id_opcdatapoint'] != '-' ? 'ps-green" title="' . $erg['id_opcdatapoint'] . '"' : 'ps-grey"') . '">OPC</span>
-				<span class="' . ($erg['id_mqtttopic'] != '-' ? 'ps-green" title="' . $erg['id_mqtttopic'] . '"' : 'ps-grey"') . '">MQTT</span>
+				<span class="' . ($erg['id_opcdatapoint'] != '-' ? 'ps-green" title="' . $erg['id_opcdatapoint'] . ' - ' . $erg['opcname'] . '"' : 'ps-grey"') . '">OPC</span>
+				<span class="' . ($erg['id_mqtttopic'] != '-' ? 'ps-green" title="' . $erg['id_mqtttopic'] . ' - ' . $erg['topic'] . '"' : 'ps-grey"') . '">MQTT</span>
 			</td>
 			<td>
 				<span>' . $erg['active'] . '</span>
