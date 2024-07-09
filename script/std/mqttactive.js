@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 15.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 626                                                     $ #
+//# Revision     : $Rev:: 665                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: mqttactive.js 626 2024-06-17 15:18:36Z                   $ #
+//# File-ID      : $Id:: mqttactive.js 665 2024-07-09 22:56:49Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> mqttactive */
@@ -256,7 +256,7 @@ p.page.load = function() {
 //###################################################################################
 	$('#erg').on('click', '.topicdelete', function() {
 		var tr = $(this).parents('div.tr:first');
-		var id = $(tr).attr('data-id');
+		var id = $(tr).attr('data-idtopic');
 		$.post('std.mqttactive.deleteonetopic.req', {id:id}, function(data) {
 			if(data.erg == 'S_OK') $(tr).hide();
 			else p.page.alert('<span class="neg">' + data.message + '</span>');

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 15.05.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 651                                                     $ #
+//# Revision     : $Rev:: 665                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: shellycfg.req 651 2024-07-06 23:51:07Z                   $ #
+//# File-ID      : $Id:: shellycfg.req 665 2024-07-09 22:56:49Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -342,14 +342,14 @@ switch(std::gets('param1')) {
 								</td>
 								<td class="tar">
 									<div class="shelly-flex">
-										<span class="description" title="'.$erg['idwindow'].'">'.$erg['window'].'</span>
-										<span class="ps-image-button ps-edit sh-editwindow" title="DP Window">&nbsp;</span>
+										<span class="description" title="'.$erg['idldr'].'">'.$erg['ldr'].'</span>
+										<span class="ps-image-button ps-edit sh-editldr" title="DP LDR">&nbsp;</span>
 									</div>
 								</td>
 								<td class="tar">
 									<div class="shelly-flex">
-										<span class="description" title="'.$erg['idldr'].'">'.$erg['ldr'].'</span>
-										<span class="ps-image-button ps-edit sh-editldr" title="DP LDR">&nbsp;</span>
+										<span class="description" title="'.$erg['idwindow'].'">'.$erg['window'].'</span>
+										<span class="ps-image-button ps-edit sh-editwindow" title="DP Window">&nbsp;</span>
 									</div>
 								</td>
 							</tr>';

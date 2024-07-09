@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 03.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 640                                                     $ #
+//# Revision     : $Rev:: 665                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.js 640 2024-07-06 15:18:02Z                    $ #
+//# File-ID      : $Id:: d1minicfg.js 665 2024-07-09 22:56:49Z                    $ #
 //#                                                                                 #
 //###################################################################################
 ?> d1minicfg */
@@ -217,6 +217,15 @@ p.page.load = function() {
 			if($(this).find('.ps-checkbox').hasClass('checked')) {
 				var name = $(this).find('[data-column="name"] .stored').text();
 				$.post('std.d1minicfg.setcmd.req', {name:name,cmd:'ForceMqttUpdate'});
+			}
+		});
+	});
+	$('#erg').on('click', '.allRestart', function() {
+		var tr = $(this).parents('ul.d1miniingroup:first');
+		$(tr).find('[data-id]').each(function() {
+			if($(this).find('.ps-checkbox').hasClass('checked')) {
+				var ip = $(this).find('[data-column="ip"] .stored').text();
+				$.post('std.d1minicfg.restartdevice.req', {ip:ip});
 			}
 		});
 	});
@@ -429,7 +438,7 @@ function setD1MiniInfo(data) {
 	var mac = values.MAC.toLowerCase().replaceAll(':', '');
 	setTextIfNotStored(name, 'name', values.DeviceName);
 	setTextIfNotStored(name, 'description', values.DeviceDescription);
-	setTextIfNotStored(name, 'ip', values.Ip);
+	setTextIfNotStored(name, 'ip', values.IP);
 	setTextIfNotStored(name, 'mac', mac);
 	setTextIfNotStored(name, 'version', values.Version);
 	//setTextIfNotStored(key, 'ssid', value.Ssid);

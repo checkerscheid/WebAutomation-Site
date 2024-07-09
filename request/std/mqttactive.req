@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 15.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 631                                                     $ #
+//# Revision     : $Rev:: 665                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: mqttactive.req 631 2024-06-29 12:29:38Z                  $ #
+//# File-ID      : $Id:: mqttactive.req 665 2024-07-09 22:56:49Z                  $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -387,7 +387,7 @@ switch(std::gets('param1')) {
 //###################################################################################
 	case mqttactive::c_deleteonetopic:
 		$database = new wpDatabase();
-		$database->query('DELETE FROM [topic] WHERE [id_topic] = ' . std::posts('id'));
+		$database->query('DELETE FROM [mqtttopic] WHERE [id_mqtttopic] = ' . std::posts('id'));
 		$WebCom = new WebCom();
 		echo $WebCom->send('Deletetopic', std::posts('id'));
 		break;

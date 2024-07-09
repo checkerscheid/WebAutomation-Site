@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 30.06.2021                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 572                                                     $ #
+//# Revision     : $Rev:: 665                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: betriebsstunden.inc 572 2024-03-20 06:52:42Z             $ #
+//# File-ID      : $Id:: betriebsstunden.inc 665 2024-07-09 22:56:49Z             $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -53,16 +53,8 @@ $points = array();
 ?>
 <div id="betriebsstunden">
 	<h1><? \system\html::getPageHeadline();?></h1>
-	<div class="center">
-		<table summary="">
-			<thead>
-				<tr>
-					<th>Licht</th>
-					<th>Betriebsstunden</th>
-					<th>Rücksetzen</th>
-				</tr>
-			</thead>
-			<tbody>
+	<div class="ps-flex-container">
+
 <?
 	foreach($lichter as $dp => $name) {
 		$points += array(
@@ -70,17 +62,13 @@ $points = array();
 			$dp.'_Ruecksetzen'		=> $dp.'_Ruecksetzen',
 		);
 ?>
-				<tr>
-					<td><span class="description"><?=$name?></span></td>
-					<td class="ps-tacenter">
-						<span data-value="<?=$dp?>_Sekunden"></span>
-					</td>
-					<td><span class="ps-button" data-point="<?=$dp?>_Ruecksetzen" data-write="1">Rücksetzen</span></td>
-				</tr>
+		<div class="ps-container">
+			<span class="description"><?=$name?></span><br />
+			<span data-value="<?=$dp?>_Sekunden"></span>
+			<span class="ps-button" data-point="<?=$dp?>_Ruecksetzen" data-write="1">Rücksetzen</span>
+		</div>
 <?
 	}
 ?>
-			</tbody>
-		</table>
 	</div>
 </div>

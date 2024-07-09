@@ -9,15 +9,16 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 16.12.2019                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 651                                                     $ #
+//# Revision     : $Rev:: 665                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: shellycom.req 651 2024-07-06 23:51:07Z                   $ #
+//# File-ID      : $Id:: shellycom.req 665 2024-07-09 22:56:49Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
 require_once 'system/helper/shelly.psys';
 use system\helper\shelly as ShellyDevice;
 use system\helper\wpDatabase;
+use system\WebCom;
 use system\std;
 $default_socket_timeout = ini_get('default_socket_timeout');
 ini_set('default_socket_timeout', 1);
@@ -53,6 +54,7 @@ class shellycom {
 	const c_do_scan_row = 'do-scan-row';
 	const c_do_reboot = 'do-reboot';
 	const c_do_update = 'do-update';
+	const c_do_renewshellystate = 'renewshellystate';
 }
 
 // require:
@@ -467,6 +469,12 @@ MERGE INTO [rest] AS [TARGET]
 		);";
 		$database->query($sql);
 		echo 'S_OK';
+		break;
+	//###################################################################################
+	case shellycom::c_do_renewshellystate:
+		header(wpJSON_HEADER);
+		$WebCom = new WebCom();
+		echo $WebCom->send('GetShellyStatus');
 		break;
 	//###################################################################################
 	default:

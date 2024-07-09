@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 30.06.2021                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 582                                                     $ #
+//# Revision     : $Rev:: 665                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: betriebsstunden.js 582 2024-04-10 06:45:45Z              $ #
+//# File-ID      : $Id:: betriebsstunden.js 665 2024-07-09 22:56:49Z              $ #
 //#                                                                                 #
 //###################################################################################
 ?> betriebsstunden */
@@ -20,8 +20,10 @@ p.page.load = function() {
 };
 function getValues() {
 	$.get('std.request.activedp.req', function(data) {
+		let wpResult = data.wpResult;
 		for(var elem in wpResult) {
 			var TheValue = wpResult[elem].Value;
+			console.log(TheValue);
 			$('[data-value=' + elem + ']').each(function() {
 				if(TheValue == '') {
 					$(this).html('<?=wpHTML_EMPTY?>');
@@ -30,7 +32,7 @@ function getValues() {
 				}
 			});
 		}
-	}, 'script').always(function() {
+	}, 'json').always(function() {
 		window.setTimeout(function() { getValues(); }, p.automation.pointrate);
 	});
 }

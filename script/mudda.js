@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 656                                                     $ #
+//# Revision     : $Rev:: 665                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: mudda.js 656 2024-07-07 20:04:50Z                        $ #
+//# File-ID      : $Id:: mudda.js 665 2024-07-09 22:56:49Z                        $ #
 //#                                                                                 #
 //###################################################################################
 ?> mudda */
@@ -35,14 +35,15 @@ function getTrendDataMudda() {
 		only1axes: 'True'
 	};
 	$.post('std.trend.req', objTemp, function(data) {
+		data.plotdata.forEach((element) => element.label = element.label.replace(/=.*/, ""));
 		plotdataTemp = data.plotdata;
+		data.plotoptions.legend = {
+			show:true,
+			backgroundColor: '#555',
+			backgroundOpacity: 0.8
+		};
 		plotoptionsTemp = data.plotoptions;
-		plotoptionsTemp.legend = {container:$('.trendlegendTemp')};
 		printPlotDataTemp();
-		$('.trendlegendTemp .legendLabel').each(function() {
-			$(this).text($(this).text().replace(/=.*/, ""));
-			//$(this).text($(this).text());
-		});
 	}, 'json');
 	var objHum = {
 		time: 'last24Hours',
@@ -52,14 +53,15 @@ function getTrendDataMudda() {
 		only1axes: 'True'
 	};
 	$.post('std.trend.req', objHum, function(data) {
+		data.plotdata.forEach((element) => element.label = element.label.replace(/=.*/, ""));
 		plotdataHum = data.plotdata;
+		data.plotoptions.legend = {
+			show:true,
+			backgroundColor: '#555',
+			backgroundOpacity: 0.8
+		};
 		plotoptionsHum = data.plotoptions;
-		plotoptionsHum.legend = {container:$('.trendlegendHum')};
 		printPlotDataHum();
-		$('.trendlegendHum .legendLabel').each(function() {
-			$(this).text($(this).text().replace(/=.*/, ""));
-			//$(this).text($(this).text());
-		});
 	}, 'json');
 }
 var plotTemp = null;

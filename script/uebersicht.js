@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 656                                                     $ #
+//# Revision     : $Rev:: 665                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.js 656 2024-07-07 20:04:50Z                   $ #
+//# File-ID      : $Id:: uebersicht.js 665 2024-07-09 22:56:49Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> uebersicht */
@@ -19,7 +19,7 @@
 
 //p.log.level = p.log.type.info;
 
-ws.logEnabled = false;
+ws.logEnabled = true;
 var getdimmervalue = true;
 var configwithtimeout = [];
 
@@ -75,6 +75,11 @@ p.page.load = function() {
 		$.post('std.shellycom.set-relay.req', {ShellyIP:wn_kamin, turn:'false'});
 		$.post('std.shellycom.set-relay.req', {ShellyIP:wn_baum, turn:'false'});
 		$.post('std.shellycom.set-relay.req', {ShellyIP:wn_fenster, turn:'false'});
+	});
+	$('#uebersicht').on('click', '.RenwShellyState', function() {
+		$.get('std.shellycom.renewshellystate.req', function(data) {
+			if(data.erg != 'S_OK') p.page.alert(data.msg, 3000);
+		}, 'json');
 	});
 	$('#uebersicht').on('click', '.ps-input.ps-operable.zp', function() {
 		var dpType = 'VT_BOOL';

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 658                                                     $ #
+//# Revision     : $Rev:: 665                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: system.psys 658 2024-07-07 22:13:04Z                     $ #
+//# File-ID      : $Id:: system.psys 665 2024-07-09 22:56:49Z                     $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $sdata */
@@ -1026,15 +1026,15 @@ class getScript {
 		$TheArray = $answer->getArray();
 		$js = 'wpResult={';
 		foreach($_SESSION[SESSION_ID]['POINTS'] as $pagename => $object) {
-			$pointvalue = @$TheArray['Datenpunkte'][$_SESSION[SESSION_ID]['POINTS'][$pagename]->id];
+			$pointvalue = $TheArray['Datenpunkte'][$_SESSION[SESSION_ID]['POINTS'][$pagename]->Id];
 			$js .= $pagename.':{'.
 				'Value:\''.std::arrays($pointvalue, 'Value').'\','.
 				'TimeStamp:\''.std::arrays($pointvalue, 'TimeStamp').'\','.
 				'Quality:\''.std::arrays($pointvalue, 'Quality').'\','.
 				'QualityString:\''.std::arrays($pointvalue, 'QualityString').'\','.
 				'Type:\''.std::arrays($pointvalue, 'Type').'\'},';
-			$_SESSION[SESSION_ID]['POINTS'][$pagename]->value = std::arrays($pointvalue, 'Value');
-			$_SESSION[SESSION_ID]['POINTS'][$pagename]->lastupdate = wpConvert::getDateTime();
+			$_SESSION[SESSION_ID]['POINTS'][$pagename]->Value = std::arrays($pointvalue, 'Value');
+			$_SESSION[SESSION_ID]['POINTS'][$pagename]->Lastupdate = wpConvert::getDateTime();
 			$object; // never used
 		}
 		$js = (substr($js, -1) == ',') ? substr($js, 0, -1) : $js;
