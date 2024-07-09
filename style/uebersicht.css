@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 650                                                     $ #
+//# Revision     : $Rev:: 665                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.css 650 2024-07-06 18:29:57Z                  $ #
+//# File-ID      : $Id:: uebersicht.css 665 2024-07-09 22:56:49Z                  $ #
 //#                                                                                 #
 //###################################################################################
 ?> uebersicht */
@@ -21,6 +21,7 @@
 #uebersicht .wartungmeldung { display:block; padding:4px; margin:5px; color:#FFBF00; border:1px solid #CCC; }
 #uebersicht .ps-container { margin:10px; padding:10px; float:left; }
 #uebersicht .ps-container .ps-input, #uebersicht .ps-container .ps-button { display:inline-block; width:100px; text-align:center; }
+#uebersicht .ps-container .RenwShellyState { min-width:100px; width:auto; }
 #uebersicht .ps-container hr { margin:5px auto; }
 #uebersicht .ps-button { padding:8px 6px; }
 #uebersicht .ps-button.pa-scene { padding:8px 25px; }
@@ -77,3 +78,4 @@
 #uebersicht .indi-p { background-position:-0px -19px; }
 #uebersicht .indi-0 { background-position:-0px -38px; }
 #uebersicht .indi-m { background-position:-0px -57px; }
+

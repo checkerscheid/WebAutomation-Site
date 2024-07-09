@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 04.03.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 640                                                     $ #
+//# Revision     : $Rev:: 665                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.req 640 2024-07-06 15:18:02Z                   $ #
+//# File-ID      : $Id:: d1minicfg.req 665 2024-07-09 22:56:49Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -202,6 +202,7 @@ class d1minicfg {
 				<div class="td">
 					<span class="ps-button allHttpUpdate" title="HTTP Update">HTTP Update</span>
 					<span class="ps-button allForceMqttUpdate" title="Force MQTT Update">Force MQTT Update</span>
+					<span class="ps-button allRestart" title="Restart Device">Restart Device</span>
 					<span class="ps-button allgroup" title="in Gruppe verschieben">Gruppe</span>
 					<span class="ps-button allaktiv" title="aktivieren / deaktivieren">Aktiv</span>
 					<span class="ps-button alldelete">l&ouml;schen</span>
@@ -381,6 +382,21 @@ class d1minicfg {
 		}
 		//echo file_get_contents('http://' . $ip . '/setCmd?cmd=UpdateHTTP');
 	}
+	const c_restartdevice = 'restartdevice';
+	public static function restartdevice($ip) {
+		$context = stream_context_create([
+			"http" => [
+				"method"=>"GET",
+				"timeout" => 1
+			]
+		]);
+		try {
+			file_get_contents('http://' . $ip . '/setCmd?cmd=RestartDevice', 0, $context);
+		} catch(Exception $e) {
+			// Fail silently
+		}
+		//echo file_get_contents('http://' . $ip . '/setCmd?cmd=RestartDevice');
+	}
 	const c_allGroup = 'allGroup';
 	public static function allGroup() {
 		$where = '';
@@ -532,6 +548,10 @@ switch(std::gets('param1')) {
 		//###################################################################################
 	case d1minicfg::c_starthttpupdate:
 		d1minicfg::starthttpupdate(std::posts('ip'));
+		break;
+		//###################################################################################
+	case d1minicfg::c_restartdevice:
+		d1minicfg::restartdevice(std::posts('ip'));
 		break;
 		//###################################################################################
 	case d1minicfg::c_allGroup:

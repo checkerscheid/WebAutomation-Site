@@ -9,16 +9,18 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 658                                                     $ #
+//# Revision     : $Rev:: 665                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 658 2024-07-07 22:13:04Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 665 2024-07-09 22:56:49Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
 namespace pages;
-use system\helper\security;
-use system\helper\wpdatabase;
+use system\Helper\security;
+use system\Helper\wpdatabase;
 use system\std;
+use system\Helper\wpa;
+require_once 'system/Helper/wpa.psys';
 
 $useWS = true;
 $useWeihnachten = false;
@@ -294,6 +296,9 @@ class uebersicht {
 					<?=uebersicht::tasterShelly('Steckdose oben', 'AN_SD1')?>
 					<?=uebersicht::tasterShelly('Steckdose unten', 'AN_SD2')?>
 					<? */ ?>
+					<tr>
+						<td colspan="2"><span class="ps-button RenwShellyState">RenwShellyState</span></td>
+					</tr>
 				</tbody>
 			</table>
 		</div>
@@ -331,8 +336,8 @@ foreach($zimmer as $kurz => $name) {
 						<td><span class="ps-input ps-operable zp" <?=($useWS ? 'data-ws' : 'data-value') . '="' . ($useWS ? '_' : '') . $kurz . '_RT_SW"'?> data-bm="<?=$kurz?>_ZP_RM" data-zp="<?=$kurz?>_ZP" title="bm: ZP aktiv">-</span></td>
 						<td>
 <?	if($kurz != 'KZ') { ?>
-						<span id="<?=$kurz?>_FB" class="ps-input pa-EinAus bedienbar" <?='data-' . ($useWS ? 'ws' : 'value') . '="' . ($useWS ? '_DO_' : '') . $kurz . '_FB"'?> data-popup="<?=$name?>">-</span><span class="hand pa-hide" data-value="<?=$kurz?>_FB_Hand"></span>
-						<?=($kurz == 'WZ') ? '<br /><span id="KA_FB" class="ps-input pa-EinAus bedienbar" data-' . ($useWS ? 'ws' : 'value') . '="' . ($useWS ? '_DO_' : '') . 'KA_FB" data-popup="Kaminzimmer" title="Kaminzimmer">-</span><span class="hand pa-hide" data-value="KA_FB_Hand"></span>' : '' ?>
+						<span id="<?=$kurz?>_FB" class="ps-input pa-EinAus <?=wpa::GreyGreen?> bedienbar" <?='data-' . ($useWS ? 'ws' : 'value') . '="' . ($useWS ? '_DO_' : '') . $kurz . '_FB"'?> data-popup="<?=$name?>">-</span><span class="hand pa-hide" data-value="<?=$kurz?>_FB_Hand"></span>
+						<?=($kurz == 'WZ') ? '<br /><span id="KA_FB" class="ps-input pa-EinAus ' . wpa::GreyGreen . ' bedienbar" data-' . ($useWS ? 'ws' : 'value') . '="' . ($useWS ? '_DO_' : '') . 'KA_FB" data-popup="Kaminzimmer" title="Kaminzimmer">-</span><span class="hand pa-hide" data-value="KA_FB_Hand"></span>' : '' ?>
 <? } else {?>
 						<span id="KZ_VT_MAX" class="ps-input ps-param" <?='data-' . ($useWS ? 'ws' : 'value') . '="' . ($useWS ? '_' : '') . 'KZ_VT_MAX"'?> data-popup="Ventilstellung Maximalwert">-</span>
 <? } ?>

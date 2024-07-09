@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 656                                                     $ #
+//# Revision     : $Rev:: 665                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: mudda.inc 656 2024-07-07 20:04:50Z                       $ #
+//# File-ID      : $Id:: mudda.inc 665 2024-07-09 22:56:49Z                       $ #
 //#                                                                                 #
 //###################################################################################
 namespace pages;
@@ -118,10 +118,8 @@ namespace pages;
 		<h2>Temperaturen</h2>
 		<div id="ergTemp"></div>
 	</div>
-	<div class="trendlegendTemp"></div>
 	<div class="ps-container">
 		<h2>Feuchte</h2>
 		<div id="ergHum"></div>
 	</div>
-	<div class="trendlegendHum"></div>
 </div>
