@@ -1,4 +1,4 @@
-/*<?
+<?
 //###################################################################################
 //#                                                                                 #
 //#                (C) FreakaZone GmbH                                              #
@@ -7,14 +7,40 @@
 //###################################################################################
 //#                                                                                 #
 //# Author       : Christian Scheid                                                 #
-//# Date         : 13.06.2024                                                       #
+//# Date         : 10.07.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 666                                                     $ #
+//# Revision     : $Rev:: 667                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.css 666 2024-07-10 19:43:40Z                      $ #
+//# File-ID      : $Id:: writebool.req 667 2024-07-10 19:44:28Z                   $ #
 //#                                                                                 #
 //###################################################################################
-?> d1mini */
-#d1mini h2, #d1mini p { text-align: center; }
-#d1mini table { margin:auto; }
-#d1mini .buttonContainer { text-align:center; }
+/** @var Type $m */
+namespace popup\std;
+use system\std;
+
+?>
+
+<div class="popup">
+	<h3><?=std::posts('topic')?></h3>
+	<table summary="">
+		<tr>
+			<td>
+				<span>Sollwert:</span>
+			</td>
+			<td>
+<?
+if(preg_match_all('/(True|False):([^;]+)/', std::posts('unit'), $m) > 0) {
+	for($i = 0; $i < count($m[0]); $i++) {
+		echo '<span class="ps-button writeTopic" data-topic="' . std::posts('topic') . '" data-write="' . $m[1][$i] . '">' . $m[2][$i] . '</span>';
+	}
+} else if(preg_match_all('/(0|1):([^;]+)/', std::posts('unit'), $m) > 0) {
+	for($i = 0; $i < count($m[0]); $i++) {
+		echo '<span class="ps-button writeTopic" data-topic="' . std::posts('topic') . '" data-write="' . $m[1][$i] . '">' . $m[2][$i] . '</span>';
+	}
+}
+?>
+			</td>
+		</tr>
+
+	</table>
+</div>

@@ -9,12 +9,13 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 623                                                     $ #
+//# Revision     : $Rev:: 666                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.req 623 2024-06-15 00:53:46Z                      $ #
+//# File-ID      : $Id:: d1mini.req 666 2024-07-10 19:43:40Z                      $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
+use Exception;
 use system\std, system\WebCom;
 use system\Helper\wpDatabase;
 
@@ -36,6 +37,21 @@ class d1mini {
 		$WebCom = new WebCom();
 		echo $WebCom->send('getD1MiniStatus', $erg['ip']);
 	}
+	const c_setcmd = 'setcmd';
+	public static function setcmd($ip, $cmd) {
+		$context = stream_context_create([
+			"http" => [
+				"method"=>"GET",
+				"timeout" => 1
+			]
+		]);
+		try {
+			file_get_contents('http://' . $ip . '/setCmd?cmd=' . $cmd, 0, $context);
+		} catch(Exception $e) {
+			// Fail silently
+		}
+		//echo file_get_contents('http://' . $ip . '/setCmd?cmd=RestartDevice');
+	}
 }
 
 switch(std::gets('param1')) {
@@ -46,6 +62,10 @@ switch(std::gets('param1')) {
 		//###################################################################################
 	case d1mini::c_getD1MiniSettings:
 		echo d1mini::getD1MiniSettings(std::gets('param2'));
+		break;
+		//###################################################################################
+	case d1mini::c_setcmd:
+		d1mini::setcmd(std::posts('ip'), std::posts('cmd'));
 		break;
 		//###################################################################################
 	default:

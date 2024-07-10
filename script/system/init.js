@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 654                                                     $ #
+//# Revision     : $Rev:: 666                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: init.js 654 2024-07-07 11:37:39Z                         $ #
+//# File-ID      : $Id:: init.js 666 2024-07-10 19:43:40Z                         $ #
 //#                                                                                 #
 //###################################################################################
 use system\wpInit;
@@ -33,6 +33,16 @@ var p = {
 		},
 		alertred:function(meldung, zeit, callback) {
 			meldung = '<span class="neg">' + meldung + '</span>';
+			if(typeof(zeit) == 'undefined' || isNaN(zeit)) zeit = 3000;
+			p.page.alert(meldung, zeit, callback);
+		},
+		alertWarning: function(meldung, zeit, callback) {
+			meldung = '<span class="ps-fontyellow">' + meldung + '</span>';
+			if(typeof(zeit) == 'undefined' || isNaN(zeit)) zeit = 3000;
+			p.page.alert(meldung, zeit, callback);
+		},
+		alertError: function(meldung, zeit, callback) {
+			meldung = '<span class="ps-fontred">' + meldung + '</span>';
 			if(typeof(zeit) == 'undefined' || isNaN(zeit)) zeit = 3000;
 			p.page.alert(meldung, zeit, callback);
 		},

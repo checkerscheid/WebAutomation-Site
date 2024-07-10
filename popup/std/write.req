@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 08.02.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 578                                                     $ #
+//# Revision     : $Rev:: 666                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: write.req 578 2024-03-22 21:53:46Z                       $ #
+//# File-ID      : $Id:: write.req 666 2024-07-10 19:43:40Z                       $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $m */
@@ -21,7 +21,7 @@ use system\std;
 ?>
 
 <div class="popup">
-	<h1><?=std::posts('headline')?></h1>
+	<h3><?=std::posts('headline')?></h3>
 	<table summary="">
 		<tr>
 			<td>
@@ -30,7 +30,7 @@ use system\std;
 			<td>
 <?
 if(preg_match_all('/(\d+):([^;]+)/', std::posts('unit'), $m) > 0) {
-	echo '<select class="newDpVal">';
+	echo '<select class=" ps-input newDpVal">';
 	for($i = 0; $i < count($m[0]); $i++) {
 		echo '<option value="' . $m[1][$i] . '">' . $m[2][$i] . '</option>';
 	}
