@@ -9,12 +9,14 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 657                                                     $ #
+//# Revision     : $Rev:: 670                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: visitors.js 657 2024-07-07 21:24:59Z                     $ #
+//# File-ID      : $Id:: visitors.js 670 2024-07-10 22:51:56Z                     $ #
 //#                                                                                 #
 //###################################################################################
 use system\Helper\wpDatabase;
+use system\Helper\wpDateTime;
+require_once 'system/Helper/wpDatetime.psys';
 $database = new wpDatabase();
 $database->query('SELECT MIN([datetime]) AS [min] FROM [visitors]');
 $erg = $database->fetch();
@@ -25,10 +27,10 @@ if($erg['min'] == null) {
 }
 
 if($minoption instanceof DateTime) {
-	$minoption = $minoption->format("Y,n-1,j");
+	$minoption = $minoption->format(wpDateTime::forDB);
 } else {
 	$dt = new DateTime();
-	$minoption = $dt->format("Y,n-1,j");
+	$minoption = $dt->format(wpDateTime::forDB);
 }
 
 ?> emailcfg */

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 609                                                     $ #
+//# Revision     : $Rev:: 670                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: alarmhistorics.req 609 2024-05-15 14:54:17Z              $ #
+//# File-ID      : $Id:: alarmhistorics.req 670 2024-07-10 22:51:56Z              $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -973,7 +973,7 @@ function getTable($where, $arrayGroup, $arrayGroup1, $arrayGroup2, $arrayGroup3,
 	}
 	$scriptstart = microtime(true);
 
-	$sql = 'SELECT [dp].[name] AS [dpname], [a].[name], ISNULL([ah].[text], [a].[text]) AS [text], [at].[name] AS [type], [ag5].[name] AS [group5], [ag4].[name] AS [group4], [ag3].[name] AS [group3], [ag2].[name] AS [group2], [ag1].[name] AS [group1], [ag].[name] AS [group], [ah].[come], [ah].[gone], [ah].[quit], [ah].[quitfrom], [ah].[quittext]
+	$sql = 'SELECT [dp].[name] AS [dpname], ISNULL([ah].[text], [a].[text]) AS [text], [at].[name] AS [type], [ag5].[name] AS [group5], [ag4].[name] AS [group4], [ag3].[name] AS [group3], [ag2].[name] AS [group2], [ag1].[name] AS [group1], [ag].[name] AS [group], [ah].[come], [ah].[gone], [ah].[quit], [ah].[quitfrom], [ah].[quittext]
 			FROM [alarmhistoric] [ah]
 			INNER JOIN [alarm] [a] ON [ah].[id_alarm] = [a].[id_alarm]
 			INNER JOIN [alarmtype] [at] ON [a].[id_alarmtype] = [at].[id_alarmtype]
