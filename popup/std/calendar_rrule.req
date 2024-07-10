@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 27.11.2017                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 570                                                     $ #
+//# Revision     : $Rev:: 668                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: calendar_rrule.req 570 2024-03-13 18:22:21Z              $ #
+//# File-ID      : $Id:: calendar_rrule.req 668 2024-07-10 22:06:10Z              $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $m */
@@ -101,12 +101,12 @@ if ($isScene == false) {
 	$database->query($sql);
 	while ($erg = $database->fetch()) {
 		if(is_null($erg['unit'])) $erg['unit'] = '';
-		$unit = $erg['unit'];
+		//$unit = $erg['unit'];
 	}
 }
 
-$startVal = '';
-$endVal = '';
+//$startVal = '';
+//$endVal = '';
 if ($update == true) {
 	if ($isScene == false) {
 		$sql = ("SELECT
@@ -125,8 +125,8 @@ if ($update == true) {
 			$intervall = $erg['intervall'];
 			$until = $erg['until'];
 			$count = $erg['count'];
-			$startVal = $erg['vstart'];
-			$endVal = $erg['vend'];
+			//$startVal = $erg['vstart'];
+			//$endVal = $erg['vend'];
 			$bydayString = $erg['byday'];
 		}
 	} else {

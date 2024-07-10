@@ -9,12 +9,14 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 561                                                     $ #
+//# Revision     : $Rev:: 668                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: alarmhistorics.js 561 2024-01-16 02:06:50Z               $ #
+//# File-ID      : $Id:: alarmhistorics.js 668 2024-07-10 22:06:10Z               $ #
 //#                                                                                 #
 //###################################################################################
 use system\Helper\wpDatabase;
+use system\Helper\wpDateTime;
+require_once 'system/Helper/wpDatetime.psys';
 $database = new wpDatabase();
 $database->query('SELECT MIN([come]) AS [min] FROM [alarmhistoric]');
 $erg = $database->fetch();
@@ -25,15 +27,15 @@ if($erg['min'] == null) {
 }
 
 if($minoption instanceof DateTime) {
-	$minoption = $minoption->format("Y,n-1,j");
+	$minoption = $minoption->format(wpDateTime::forDB);
 } else {
 	$dt = new DateTime();
-	$minoption = $dt->format("Y,n-1,j");
+	$minoption = $dt->format(wpDateTime::forDB);
 }
 
 ?> alarmhistorics */
 
-var minoption = new Date(<?=$minoption?>);
+var minoption = new Date('<?=$minoption?>');
 var groupname1 = '<?=$system->nameAlarmGroup1()?>';
 var groupname2 = '<?=$system->nameAlarmGroup2()?>';
 var groupname3 = '<?=$system->nameAlarmGroup3()?>';

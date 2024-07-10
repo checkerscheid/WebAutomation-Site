@@ -9,12 +9,14 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 550                                                     $ #
+//# Revision     : $Rev:: 668                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: emailhistorics.js 550 2023-12-25 03:02:54Z               $ #
+//# File-ID      : $Id:: emailhistorics.js 668 2024-07-10 22:06:10Z               $ #
 //#                                                                                 #
 //###################################################################################
 use system\Helper\wpDatabase;
+use system\Helper\wpDateTime;
+require_once 'system/Helper/wpDatetime.psys';
 $database = new wpDatabase();
 $database->query('SELECT MIN([send]) AS [min] FROM [emailhistoric]');
 $erg = $database->fetch();
@@ -25,15 +27,15 @@ if($erg['min'] == null) {
 }
 
 if($minoption instanceof DateTime) {
-	$minoption = $minoption->format("Y,n-1,j");
+	$minoption = $minoption->format(wpDateTime::forDB);
 } else {
 	$dt = new DateTime();
-	$minoption = $dt->format("Y,n-1,j");
+	$minoption = $dt->format(wpDateTime::forDB);
 }
 
 ?> emailhistorics */
 
-var minoption = new Date(<?=$minoption?>);
+var minoption = new Date('<?=$minoption?>');
 var TheTable;
 var isover = false;
 
