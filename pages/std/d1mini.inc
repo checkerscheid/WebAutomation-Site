@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 640                                                     $ #
+//# Revision     : $Rev:: 666                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.inc 640 2024-07-06 15:18:02Z                      $ #
+//# File-ID      : $Id:: d1mini.inc 666 2024-07-10 19:43:40Z                      $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
@@ -34,6 +34,11 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 	<h1><?=$headline['name']?> <?=$erg['name'] ?></h1>
 	<h2><?=$erg['description'] ?></h2>
 	<p>(<?=$erg['ip'] ?>, <?=$erg['mac'] ?>)</p>
+	<div class="buttonContainer">
+		<span class="ps-button SetCmd" data-ip="<?=$erg['ip'] ?>" data-cmd="ForceMqttUpdate" title="Force MQTT Update">Force MQTT Update</span>
+		<span class="ps-button SetCmd" data-ip="<?=$erg['ip'] ?>" data-cmd="UpdateHTTP" title="Setup Http">Setup Http</span>
+		<span class="ps-button SetCmd" data-ip="<?=$erg['ip'] ?>" data-cmd="RestartDevice" title="neu starten">neu starten</span>
+	</div>
 	<div class="ps-flex-container page">
 	<? if($d1Mini->FreakaZoneDevice->useModul->DHT11 ||
 			$d1Mini->FreakaZoneDevice->useModul->DHT22) { ?>
@@ -51,15 +56,33 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 				<tr><td colspan="2"><hr /></td></tr>
 				<tr>
 					<td>Max Cycle:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->DHT->MaxCycleDHT ?>" /></td>
+					<td>
+						<span class="ps-input ps-param"
+							data-topic="<?=$erg['name'] ?>/settings/DHT/maxCycle"
+							data-unit="sec">
+							<?=$d1Mini->FreakaZoneDevice->DHT->MaxCycleDHT ?> sec
+						</span>
+					</td>
 				</tr>
 				<tr>
 					<td>Temperature Correction:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->DHT->TemperatureCorrection ?> K" /></td>
+					<td>
+						<span class="ps-input ps-param"
+							data-topic="<?=$erg['name'] ?>/settings/DHT/Correction/Temperature"
+							data-unit="K">
+							<?=$d1Mini->FreakaZoneDevice->DHT->TemperatureCorrection ?> K
+						</span>
+					</td>
 				</tr>
 				<tr>
 					<td>Humidity Correction:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->DHT->HumidityCorrection ?> %rF" /></td>
+					<td>
+						<span class="ps-input ps-param"
+							data-topic="<?=$erg['name'] ?>/settings/DHT/Correction/Humidity"
+							data-unit="%rF">
+							<?=$d1Mini->FreakaZoneDevice->DHT->HumidityCorrection ?> %rF
+						</span>
+					</td>
 				</tr>
 			</table>
 		</div>
@@ -75,15 +98,33 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 				<tr><td colspan="2"><hr /></td></tr>
 				<tr>
 					<td>Max Cycle:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->LDR->MaxCycleLDR ?>" /></td>
+					<td>
+						<span class="ps-input ps-param"
+							data-topic="<?=$erg['name'] ?>/settings/LDR/maxCycle"
+							data-unit="sec">
+							<?=$d1Mini->FreakaZoneDevice->LDR->MaxCycleLDR ?> sec
+						</span>
+					</td>
 				</tr>
 				<tr>
 					<td>use Avg:</td>
-					<td><input type="text" class="ps-input" value="<?=($d1Mini->FreakaZoneDevice->LDR->useLDRAvg ? 'On' : 'Off') ?>" /></td>
+					<td>
+						<span class="ps-input ps-parambool"
+							data-topic="<?=$erg['name'] ?>/settings/LDR/useAvg"
+							data-unit="0:Off;1:On;">
+							<?=($d1Mini->FreakaZoneDevice->LDR->useLDRAvg ? 'On' : 'Off') ?>
+						</span>
+					</td>
 				</tr>
 				<tr>
 					<td>Correction:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->LDR->LDRCorrection ?> lux" /></td>
+					<td>
+						<span class="ps-input ps-param"
+							data-topic="<?=$erg['name'] ?>/settings/LDR/Correction"
+							data-unit="lux">
+							<?=$d1Mini->FreakaZoneDevice->LDR->LDRCorrection ?> lux
+						</span>
+					</td>
 				</tr>
 			</table>
 		</div>
@@ -99,15 +140,33 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 				<tr><td colspan="2"><hr /></td></tr>
 				<tr>
 					<td>Max Cycle:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Light->MaxCycleLight ?>" /></td>
+					<td>
+						<span class="ps-input ps-param"
+							data-topic="<?=$erg['name'] ?>/settings/Light/maxCycle"
+							data-unit="sec">
+							<?=$d1Mini->FreakaZoneDevice->Light->MaxCycleLight ?> sec
+						</span>
+					</td>
 				</tr>
 				<tr>
 					<td>use Avg:</td>
-					<td><input type="text" class="ps-input" value="<?=($d1Mini->FreakaZoneDevice->Light->useLightAvg ? 'On' : 'Off') ?>" /></td>
+					<td>
+						<span class="ps-input ps-parambool"
+							data-topic="<?=$erg['name'] ?>/settings/Light/useAvg"
+							data-unit="0:Off;1:On;">
+							<?=($d1Mini->FreakaZoneDevice->Light->useLightAvg ? 'On' : 'Off') ?>
+						</span>
+					</td>
 				</tr>
 				<tr>
 					<td>Correction:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Light->LightCorrection ?> lux" /></td>
+					<td>
+						<span class="ps-input ps-param"
+							data-topic="<?=$erg['name'] ?>/settings/Light/Correction"
+							data-unit="lux">
+							<?=$d1Mini->FreakaZoneDevice->Light->LightCorrection ?> lux
+						</span>
+					</td>
 				</tr>
 			</table>
 		</div>
@@ -127,11 +186,22 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 				</tr>
 				<tr>
 					<td>Threshold:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->BM->LDR->Threshold ?> lux" /></td>
+					<td>
+						<span class="ps-input ps-param"
+							data-topic="<?=$erg['name'] ?>/settings/BM/Threshold"
+							data-unit="lux">
+							<?=$d1Mini->FreakaZoneDevice->BM->LDR->Threshold ?> lux
+						</span>
+					</td>
 				</tr>
 				<tr>
 					<td>Light To Turn On:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->BM->LDR->LightToTurnOn ?>" /></td>
+					<td>
+						<span class="ps-input ps-param"
+							data-topic="<?=$erg['name'] ?>/settings/BM/LightToTurnOn">
+							<?=$d1Mini->FreakaZoneDevice->BM->LDR->LightToTurnOn ?>
+						</span>
+					</td>
 				</tr>
 		<? } ?>
 			</table>
@@ -224,11 +294,21 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 				</tr>
 				<tr>
 					<td colspan="3">pumpActive:</td>
-					<td colspan="3"><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Relais->Moisture->pumpActive ?> sec" /></td>
+					<td colspan="3">
+						<span class="ps-input ps-param"
+							data-topic="<?=$erg['name'] ?>/settings/Relais/PumpActive"
+							data-unit="sec">
+							<?=$d1Mini->FreakaZoneDevice->Relais->Moisture->pumpActive ?> sec</span>
+					</td>
 				</tr>
 				<tr>
 					<td colspan="3">pumpPause:</td>
-					<td colspan="3"><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Relais->Moisture->pumpPause ?> min" /></td>
+					<td colspan="3">
+						<span class="ps-input ps-param"
+							data-topic="<?=$erg['name'] ?>/settings/Relais/PumpPause"
+							data-unit="min">
+							<?=$d1Mini->FreakaZoneDevice->Relais->Moisture->pumpPause ?> min</span>
+					</td>
 				</tr>
 	<? } ?>
 			</table>
@@ -245,15 +325,30 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 				<tr><td colspan="2"><hr /></td></tr>
 				<tr>
 					<td>Max Cycle:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Rain->MaxCycleRain ?>" /></td>
+					<td>
+						<span class="ps-input ps-param"
+							data-topic="<?=$erg['name'] ?>/settings/Rain/maxCycle"
+							data-unit="sec">
+							<?=$d1Mini->FreakaZoneDevice->Rain->MaxCycleRain ?> sec</span>
+					</td>
 				</tr>
 				<tr>
 					<td>use Avg:</td>
-					<td><input type="text" class="ps-input" value="<?=($d1Mini->FreakaZoneDevice->Rain->useRainAvg ? 'On' : 'Off') ?>" /></td>
+					<td>
+						<span class="ps-input ps-parambool"
+							data-topic="<?=$erg['name'] ?>/settings/Rain/useAvg"
+							data-unit="0:Off;1:On;">
+							<?=($d1Mini->FreakaZoneDevice->Rain->useRainAvg ? 'On' : 'Off') ?></span>
+					</td>
 				</tr>
 				<tr>
 					<td>Correction:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Rain->RainCorrection ?> l/min" /></td>
+					<td>
+						<span class="ps-input ps-param"
+							data-topic="<?=$erg['name'] ?>/settings/Rain/Correction"
+							data-unit="lux">
+							<?=$d1Mini->FreakaZoneDevice->Rain->RainCorrection ?> lux</span>
+					</td>
 				</tr>
 			</table>
 		</div>
@@ -269,23 +364,49 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 				<tr><td colspan="2"><hr /></td></tr>
 				<tr>
 					<td>Max Cycle:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Moisture->MaxCycleMoisture ?>" /></td>
+					<td>
+						<span class="ps-input ps-param"
+							data-topic="<?=$erg['name'] ?>/settings/Moisture/maxCycle">
+							<?=$d1Mini->FreakaZoneDevice->Moisture->MaxCycleMoisture ?> sec
+						</span>
+					</td>
 				</tr>
 				<tr>
 					<td>use Avg:</td>
-					<td><input type="text" class="ps-input" value="<?=($d1Mini->FreakaZoneDevice->Moisture->useMoistureAvg ? 'On' : 'Off') ?>" /></td>
+					<td>
+						<span class="ps-input ps-parambool"
+							data-unit="0:Off;1:On;"
+							data-topic="<?=$erg['name'] ?>/settings/Moisture/useAvg">
+							<?=($d1Mini->FreakaZoneDevice->Moisture->useMoistureAvg ? 'On' : 'Off') ?>
+						</span>
+					</td>
 				</tr>
 				<tr>
 					<td>Min Alarm:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Moisture->MoistureMin ?> %" /></td>
+					<td>
+						<span class="ps-input ps-param"
+							data-unit="%"
+							data-topic="<?=$erg['name'] ?>/settings/Moisture/Min">
+							<?=$d1Mini->FreakaZoneDevice->Moisture->MoistureMin ?> %
+						</span>
+					</td>
 				</tr>
 				<tr>
 					<td>Dry:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Moisture->MoistureDry ?>" /></td>
+					<td>
+						<span class="ps-input ps-param"
+							data-topic="<?=$erg['name'] ?>/settings/Moisture/Dry">
+							<?=$d1Mini->FreakaZoneDevice->Moisture->MoistureDry ?>
+						</span>
+					</td>
 				</tr>
 				<tr>
 					<td>Wet:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Moisture->MoistureWet ?>" /></td>
+					<td>
+						<span class="ps-input ps-param"
+							data-topic="<?=$erg['name'] ?>/settings/Moisture/Wet">
+							<?=$d1Mini->FreakaZoneDevice->Moisture->MoistureWet ?></span>
+					</td>
 				</tr>
 			</table>
 		</div>
@@ -301,19 +422,43 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 				<tr><td colspan="2"><hr /></td></tr>
 				<tr>
 					<td>Max Cycle:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Distance->MaxCycleDistance ?>" /></td>
+					<td>
+						<span class="ps-input ps-param"
+							data-unit="sec"
+							data-topic="<?=$erg['name'] ?>/settings/Distance/maxCycle">
+							<?=$d1Mini->FreakaZoneDevice->Distance->MaxCycleDistance ?> sec
+						</span>
+					</td>
 				</tr>
 				<tr>
 					<td>Correction:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Distance->distanceCorrection ?> l" /></td>
+					<td>
+						<span class="ps-input ps-param"
+							data-unit="l"
+							data-topic="<?=$erg['name'] ?>/settings/Distance/correction">
+							<?=$d1Mini->FreakaZoneDevice->Distance->distanceCorrection ?> l
+						</span>
+					</td>
 				</tr>
 				<tr>
 					<td>max Volume:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Distance->maxVolume ?> l" /></td>
+					<td>
+						<span class="ps-input ps-param"
+							data-unit="l"
+							data-topic="<?=$erg['name'] ?>/settings/Distance/maxVolume">
+							<?=$d1Mini->FreakaZoneDevice->Distance->maxVolume ?> l
+						</span>
+					</td>
 				</tr>
 				<tr>
 					<td>height:</td>
-					<td><input type="text" class="ps-input" value="<?=$d1Mini->FreakaZoneDevice->Distance->height ?> cm" /></td>
+					<td>
+						<span class="ps-input ps-param"
+							data-unit="cm"
+							data-topic="<?=$erg['name'] ?>/settings/Distance/Height">
+							<?=$d1Mini->FreakaZoneDevice->Distance->height ?> cm
+						</span>
+					</td>
 				</tr>
 			</table>
 		</div>
