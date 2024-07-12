@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 08.06.2021                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 646                                                     $ #
+//# Revision     : $Rev:: 676                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: websockets.js 646 2024-07-06 18:12:08Z                   $ #
+//# File-ID      : $Id:: websockets.js 676 2024-07-12 14:19:18Z                   $ #
 //#                                                                                 #
 //###################################################################################
 use system\Helper\wpa;
@@ -171,19 +171,23 @@ var ws = {
 	//###################################################################################
 							} else if($(this).hasClass('<?=wpa::indikator ?>')) {
 								let indiTemp = {"m": 21, "n": 23.5, "p": 25};
+								let indiTempOut = {"m": 15, "n": 23.5, "p": 25};
 								let indiHum = {"m": 37.5, "n": 45, "p": 50};
-								let indiPfl = {"m": 30, "n": 40, "p": 50};
+								let indiPfl = {"m": 35, "n": 45, "p": 55};
 								$(this).removeClass('indi-m indi-0 indi-p indi-pp');
 								let indi;
 								let n = Number(that.value.replace(',', '.'));
 								if($(this).hasClass('indikator-temp')) {
 									indi = indiTemp;
 								}
+								if($(this).hasClass('indikator-tempout')) {
+									indi = indiTempOut;
+								}
 								if($(this).hasClass('indikator-hum')) {
 									indi = indiHum;
 								}
 								if($(this).hasClass('indikator-pfl')) {
-									indi = indiHum;
+									indi = indiPfl;
 								}
 								if(n < indi.m) $(this).addClass('indi-m');
 								if(n >= indi.m && n < indi.n) $(this).addClass('indi-0');

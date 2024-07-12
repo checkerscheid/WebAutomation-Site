@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 673                                                     $ #
+//# Revision     : $Rev:: 674                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.css 673 2024-07-12 13:22:12Z                  $ #
+//# File-ID      : $Id:: uebersicht.css 674 2024-07-12 14:10:44Z                  $ #
 //#                                                                                 #
 //###################################################################################
 ?> uebersicht */
@@ -70,12 +70,4 @@
 .page .ps-zimmer-info span.hand { position:absolute; left:95px; }
 .page .ps-zimmer-info .ps-input { margin:0 5px; }
 .page .ps-zimmer-info { width:auto; }
-
-#uebersicht td:has(.icon-indikator) { position:relative; }
-#uebersicht .icon-indikator { display:inline-block; position:absolute; right:2px; top:4px; height:19px; width:26px;
-	background:transparent url(images/visuelemente/indikator.png) left top no-repeat; }
-#uebersicht .indi-pp { background-position:-0px -0px; }
-#uebersicht .indi-p { background-position:-0px -19px; }
-#uebersicht .indi-0 { background-position:-0px -38px; }
-#uebersicht .indi-m { background-position:-0px -57px; }
 
