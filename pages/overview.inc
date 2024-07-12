@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 660                                                     $ #
+//# Revision     : $Rev:: 672                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: overview.inc 660 2024-07-07 22:34:47Z                  $ #
+//# File-ID      : $Id:: overview.inc 672 2024-07-12 13:20:57Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -86,6 +86,14 @@ class overview {
 		'FL2_HT'		=> 'OG Flur'
 	);
 	private static $d1Minis = array(
+		'BA_SP',
+		'KZ_BE',
+		'SY_TB',
+		'KE',
+		'GA_BT',
+		'SY_SS',
+		'SY_WW',
+		'SY_WM',
 		'WZ_PF_FE',
 		'WZ_PF_FE_RE1',
 		'WZ_PF_FE_RE2',

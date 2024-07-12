@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 29.02.2016                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 638                                                     $ #
+//# Revision     : $Rev:: 672                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: alarming.req 638 2024-07-04 14:41:27Z                    $ #
+//# File-ID      : $Id:: alarming.req 672 2024-07-12 13:20:57Z                    $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $system */
@@ -373,7 +373,7 @@ function getInnerGroups($actualgroup, $idgroup5, $idgroup4, $idgroup3, $idgroup2
 	}
 
 	if($actualgroup != 1){
-		$sql2 .= $sqlWhere . ' AND [id_alarmgroups'.($actualgroup-1).'] IS NULL AND [id_alarmgroup] IS NOT NULL ORDER BY [name]';
+		$sql2 .= $sqlWhere . ' AND [id_alarmgroups'.($actualgroup-1).'] IS NULL AND [id_alarmgroup] IS NOT NULL ORDER BY [text]';
 
 		$database->query($sql2);
 		if($erg = $database->fetch()) {

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 15.05.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 568                                                     $ #
+//# Revision     : $Rev:: 673                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: trendcfg.inc 568 2024-01-24 07:36:18Z                    $ #
+//# File-ID      : $Id:: trendcfg.inc 673 2024-07-12 13:22:12Z                    $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */

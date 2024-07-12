@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 26.01.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 549                                                     $ #
+//# Revision     : $Rev:: 672                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: zimmer.psys 549 2023-12-24 10:00:17Z                     $ #
+//# File-ID      : $Id:: zimmer.psys 672 2024-07-12 13:20:57Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace pages\system;
@@ -66,12 +66,12 @@ class zimmer {
 	}
 	public function addLicht($kurz = 'LI', $name = 'Licht') {
 		$this->a_licht[$kurz] = '
-			<span id="'.$kurz.'" class="ps-button pa-Meldung dragthis" data-value="'.$kurz.'_DO" data-bm="'.$kurz.'_DO" data-sm="'.$kurz.'_SM" data-write="True" data-point="'.$kurz.'" data-true="'.$name.'" data-false="'.$name.'">'.$name.'</span>
+			<span id="'.$kurz.'" class="ps-button pa-Meldung dragthis" data-value="'.$kurz.'_DO" data-bm="'.$kurz.'_DO" data-write="True" data-point="'.$kurz.'" data-true="'.$name.'" data-false="'.$name.'">'.$name.'</span>
 		';
 	}
 	public function addShelly($kurz = 'LI', $name = 'Licht') {
 		$this->a_licht[$kurz] = '
-			<span id="'.$kurz.'" class="ps-button pa-Meldung ShellyDirect dragthis" data-value="'.$kurz.'_BM" data-bm="'.$kurz.'_BM" data-sm="'.$kurz.'_SM" data-true="'.$name.'" data-false="'.$name.'">'.$name.'</span>
+			<span id="'.$kurz.'" class="ps-button pa-Meldung ShellyDirect dragthis" data-value="'.$kurz.'_BM" data-bm="'.$kurz.'_BM" data-true="'.$name.'" data-false="'.$name.'">'.$name.'</span>
 		';
 	}
 	private function make_temperature() {

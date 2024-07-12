@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 665                                                     $ #
+//# Revision     : $Rev:: 673                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 665 2024-07-09 22:56:49Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 673 2024-07-12 13:22:12Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */

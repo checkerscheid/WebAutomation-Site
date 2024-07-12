@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 582                                                     $ #
+//# Revision     : $Rev:: 673                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: opcactive.req 582 2024-04-10 06:45:45Z                    $ #
+//# File-ID      : $Id:: opcactive.req 673 2024-07-12 13:22:12Z                    $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;

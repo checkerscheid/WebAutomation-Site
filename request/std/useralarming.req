@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 30.03.2016                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 638                                                     $ #
+//# Revision     : $Rev:: 672                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: useralarming.req 638 2024-07-04 14:41:27Z                $ #
+//# File-ID      : $Id:: useralarming.req 672 2024-07-12 13:20:57Z                $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $system */
@@ -53,45 +53,25 @@ switch(std::gets('param1')) {
 		echo '
 					</div>';
 		//! TODO Alarm delay anzeigen
-		if($system->useAlarmingmodule()){
-			$database->query('SELECT DISTINCT
-					[d].[opcname], [d].[name], [t].[name] AS [type], [a].[id_alarm] AS [id], [a].[text],
-					[g1].[name] AS [groups1], [g2].[name] AS [groups2], [g3].[name] AS [groups3],
-					[g4].[name] AS [groups4], [g5].[name] AS [groups5]
-					FROM [email] [e]
-					INNER JOIN [escalationgroupmember] [egm] ON [egm].[id_email] = [e].[id_email]
-					INNER JOIN [escalationgroup] [eg] ON [eg].[id_escalationgroup] = [egm].[id_escalationgroup]
-					INNER JOIN [alarmtoescalation] [ae] ON [ae].[id_escalationgroup] = [eg].[id_escalationgroup]
-					INNER JOIN [alarm] [a] ON [a].[id_alarm] = [ae].[id_alarm]
-					INNER JOIN [opcdatapoint] [d] ON [d].[id_opcdatapoint] = [a].[id_opcdatapoint]
-					INNER JOIN [alarmtype] [t] ON [t].[id_alarmtype] = [a].[id_alarmtype]
-					LEFT OUTER JOIN [alarmgroups1] AS [g1] ON [g1].[id_alarmgroups1] = [a].[id_alarmgroups1]
-					LEFT OUTER JOIN [alarmgroups2] AS [g2] ON [g2].[id_alarmgroups2] = [a].[id_alarmgroups2]
-					LEFT OUTER JOIN [alarmgroups3] AS [g3] ON [g3].[id_alarmgroups3] = [a].[id_alarmgroups3]
-					LEFT OUTER JOIN [alarmgroups4] AS [g4] ON [g4].[id_alarmgroups4] = [a].[id_alarmgroups4]
-					LEFT OUTER JOIN [alarmgroups5] AS [g5] ON [g5].[id_alarmgroups5] = [a].[id_alarmgroups5]
-					WHERE [e].[id_email] = '.$contact.' AND [a].[id_alarmgroup] = '.std::posts('group').' ORDER BY [d].[opcname]');
-		} else {
-			$database->query('SELECT DISTINCT
-					[ae].[id_alarmtoemail] AS [id],
-					[d].[opcname], [d].[name], [t].[name] AS [type], [a].[id_alarm], [a].[text],
-					[g1].[name] AS [groups1], [g2].[name] AS [groups2], [g3].[name] AS [groups3],
-					[g4].[name] AS [groups4], [g5].[name] AS [groups5]
-					FROM [email] [e]
-					INNER JOIN [alarmtoemail] [ae] ON [ae].[id_email] = [e].[id_email]
-					INNER JOIN [alarm] [a] ON [a].[id_alarm] = [ae].[id_alarm]
-					INNER JOIN [opcdatapoint] [d] ON [d].[id_opcdatapoint] = [a].[id_opcdatapoint]
-					INNER JOIN [alarmtype] [t] ON [t].[id_alarmtype] = [a].[id_alarmtype]
-					LEFT OUTER JOIN [alarmgroups1] AS [g1] ON [g1].[id_alarmgroups1] = [a].[id_alarmgroups1]
-					LEFT OUTER JOIN [alarmgroups2] AS [g2] ON [g2].[id_alarmgroups2] = [a].[id_alarmgroups2]
-					LEFT OUTER JOIN [alarmgroups3] AS [g3] ON [g3].[id_alarmgroups3] = [a].[id_alarmgroups3]
-					LEFT OUTER JOIN [alarmgroups4] AS [g4] ON [g4].[id_alarmgroups4] = [a].[id_alarmgroups4]
-					LEFT OUTER JOIN [alarmgroups5] AS [g5] ON [g5].[id_alarmgroups5] = [a].[id_alarmgroups5]
-					WHERE [e].[id_email] = '.$contact.' AND [a].[id_alarmgroup] = '.std::posts('group').' ORDER BY [a].[text]');
-		}
+		$database->query('SELECT DISTINCT
+				[ae].[id_alarmtoemail] AS [id],
+				[dp].[name], [t].[name] AS [type], [a].[id_alarm], [a].[text],
+				[g1].[name] AS [groups1], [g2].[name] AS [groups2], [g3].[name] AS [groups3],
+				[g4].[name] AS [groups4], [g5].[name] AS [groups5]
+				FROM [email] [e]
+				INNER JOIN [alarmtoemail] [ae] ON [ae].[id_email] = [e].[id_email]
+				INNER JOIN [alarm] [a] ON [a].[id_alarm] = [ae].[id_alarm]
+				INNER JOIN [dp] ON [dp].[id_dp] = [a].[id_dp]
+				INNER JOIN [alarmtype] [t] ON [t].[id_alarmtype] = [a].[id_alarmtype]
+				LEFT OUTER JOIN [alarmgroups1] AS [g1] ON [g1].[id_alarmgroups1] = [a].[id_alarmgroups1]
+				LEFT OUTER JOIN [alarmgroups2] AS [g2] ON [g2].[id_alarmgroups2] = [a].[id_alarmgroups2]
+				LEFT OUTER JOIN [alarmgroups3] AS [g3] ON [g3].[id_alarmgroups3] = [a].[id_alarmgroups3]
+				LEFT OUTER JOIN [alarmgroups4] AS [g4] ON [g4].[id_alarmgroups4] = [a].[id_alarmgroups4]
+				LEFT OUTER JOIN [alarmgroups5] AS [g5] ON [g5].[id_alarmgroups5] = [a].[id_alarmgroups5]
+				WHERE [e].[id_email] = '.$contact.' AND [a].[id_alarmgroup] = '.std::posts('group').' ORDER BY [a].[text]');
 		while($erg = $database->fetch()) {
-			echo '<div class="tr" data-name="'.$erg['opcname'].'" data-id="'.$erg['id'].'">';
-			echo '<div class="td"><span title="'.$erg['opcname'].'">'.$erg['text'].'</span></div>';
+			echo '<div class="tr" data-name="'.$erg['name'].'" data-id="'.$erg['id'].'">';
+			echo '<div class="td"><span title="'.$erg['name'].'">'.$erg['text'].'</span></div>';
 			//echo '<div class="td"><span>'.$erg['name'].'</span></div>';
 			echo '<div class="td"><span class="tr-alarmtyp">'.$erg['type'].'</span></div>';
 			if($system->useAlarmGroup5())
