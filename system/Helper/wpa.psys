@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 08.06.2021                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 626                                                     $ #
+//# Revision     : $Rev:: 676                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpa.psys 626 2024-06-17 15:18:36Z                        $ #
+//# File-ID      : $Id:: wpa.psys 676 2024-07-12 14:19:18Z                        $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -27,6 +27,7 @@ class wpa {
 	public const rssi = 'wpa-rssi';
 	public const indikator = 'wpa-indikator';
 	public const indikatorTemp = 'wpa-indikator indikator-temp';
+	public const indikatorTempOut = 'wpa-indikator indikator-tempout';
 	public const indikatorHum = 'wpa-indikator indikator-hum';
 	public const indikatorPfl = 'wpa-indikator indikator-pfl';
 	public const formatdate = 'wpa-formatdate';

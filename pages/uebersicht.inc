@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 673                                                     $ #
+//# Revision     : $Rev:: 674                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 673 2024-07-12 13:22:12Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 674 2024-07-12 14:10:44Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -22,7 +22,6 @@ use system\std;
 use system\Helper\wpa;
 require_once 'system/Helper/wpa.psys';
 
-$useWS = true;
 $useWeihnachten = false;
 $showEnergy = false;
 $showWindow = false;
@@ -90,20 +89,8 @@ $points = array(
 	'Wartung'			=> '_Wartung',
 	'RandomNumeric'		=> 'RandomNumeric'
 );
-if(!$useWS) {
-	$points['Erdgeschoss_Power']			= 'Erdgeschoss_Power';
-	$points['Erdgeschoss_ReactivePower']	= 'Erdgeschoss_ReactivePower';
-	$points['Erdgeschoss_pf']				= 'Erdgeschoss_pf';
-	$points['Erdgeschoss_Energy']			= 'Erdgeschoss_Energy';
-	$points['Erdgeschoss_returnedEnergy']	= 'Erdgeschoss_returnedEnergy';
-	$points['Erdgeschoss_Voltage']			= 'Erdgeschoss_Voltage';
-}
 //std::test_array($iplist);
 foreach($zimmer as $kurz => $name) {
-	if(!$useWS) {
-		$points[$kurz . '_RT']			= '_' . $kurz . '_RT';
-		$points[$kurz . '_RT_SW']		= '_' . $kurz . '_RT_SW';
-	}
 	if($kurz != 'KZ') {
 		$points[$kurz . '_SM']			= '_' . $kurz . '_SM_HZG_Aus';
 		$points[$kurz . '_FB']			= '_DO_' . $kurz . '_FB';
@@ -302,7 +289,7 @@ class uebersicht {
 				</tbody>
 			</table>
 		</div>
-		<div class="ps-container ps-flex-item ps-zimmer-info">
+		<div class="ps-container ps-flex-item">
 			<h2>Heizung</h2>
 			<table>
 				<tbody>
@@ -328,34 +315,37 @@ foreach($zimmer as $kurz => $name) {
 					<tr>
 						<td>
 <?	if($kurz != 'KZ') { ?>
-							<span class="ps-input" <?=($useWS ? 'data-ws' : 'data-value') . '="' . ($useWS ? '_' : '') . $kurz . '_RT"'?> data-sm="<?=$kurz?>_SM">-</span>
+							<span class="ps-input" data-ws="_<?=$kurz?>_RT" data-sm="<?=$kurz?>_SM">-</span>
 <? } else { ?>
-							<span class="ps-input" <?=($useWS ? 'data-ws' : 'data-value') . '="' . ($useWS ? '_' : '') . $kurz . '_RT"'?>>-</span>
+							<span class="ps-input" data-ws="_<?=$kurz?>_RT">-</span>
 <? } ?>
 						</td>
-						<td><span class="ps-input ps-operable zp" <?=($useWS ? 'data-ws' : 'data-value') . '="' . ($useWS ? '_' : '') . $kurz . '_RT_SW"'?> data-bm="<?=$kurz?>_ZP_RM" data-zp="<?=$kurz?>_ZP" title="bm: ZP aktiv">-</span></td>
+						<td><span class="ps-input ps-operable zp" data-ws="_<?=$kurz?>_RT_SW" data-bm="<?=$kurz?>_ZP_RM" data-zp="<?=$kurz?>_ZP" title="bm: ZP aktiv">-</span></td>
 						<td>
 <?	if($kurz != 'KZ') { ?>
-						<span id="<?=$kurz?>_FB" class="ps-input pa-EinAus <?=wpa::GreyGreen?> bedienbar" <?='data-' . ($useWS ? 'ws' : 'value') . '="' . ($useWS ? '_DO_' : '') . $kurz . '_FB"'?> data-popup="<?=$name?>">-</span><span class="hand pa-hide" data-value="<?=$kurz?>_FB_Hand"></span>
-						<?=($kurz == 'WZ') ? '<br /><span id="KA_FB" class="ps-input pa-EinAus ' . wpa::GreyGreen . ' bedienbar" data-' . ($useWS ? 'ws' : 'value') . '="' . ($useWS ? '_DO_' : '') . 'KA_FB" data-popup="Kaminzimmer" title="Kaminzimmer">-</span><span class="hand pa-hide" data-value="KA_FB_Hand"></span>' : '' ?>
+						<span id="<?=$kurz?>_FB" class="ps-input pa-EinAus <?=wpa::GreyGreen?> bedienbar" data-ws="_DO_<?=$kurz?>_FB" data-popup="<?=$name?>">-</span>
+						<span class="hand pa-hide" data-value="<?=$kurz?>_FB_Hand"></span>
+						<?=($kurz == 'WZ') ? '<br /><span id="KA_FB" class="ps-input pa-EinAus ' . wpa::GreyGreen . ' bedienbar" data-ws="_DO_KA_FB" data-popup="Kaminzimmer" title="Kaminzimmer">-</span>
+							<span class="hand pa-hide" data-value="KA_FB_Hand"></span>' : '' ?>
 <? } else {?>
-						<span id="KZ_VT_MAX" class="ps-input ps-param" <?='data-' . ($useWS ? 'ws' : 'value') . '="' . ($useWS ? '_' : '') . 'KZ_VT_MAX"'?> data-popup="Ventilstellung Maximalwert">-</span>
+						<span id="KZ_VT_MAX" class="ps-input ps-param" data-ws="_KZ_VT_MAX" data-popup="Ventilstellung Maximalwert">-</span>
 <? } ?>
 						</td>
 						<td>
 <? if($kurz == 'KU' || $kurz == 'BA' || $kurz == 'KZ') { ?>
-						<span id="<?=$kurz?>_VT" class="ps-input pa-Analog bedienbar" data-value="<?=$kurz?>_VT" data-popup="<?=$name?>">-</span><span class="hand pa-hide" data-value="<?=$kurz?>_VT_Hand"></span>
+						<span id="<?=$kurz?>_VT" class="ps-input pa-Analog bedienbar" data-value="<?=$kurz?>_VT" data-popup="<?=$name?>">-</span>
+						<span class="hand pa-hide" data-value="<?=$kurz?>_VT_Hand"></span>
 <? } ?>
 						</td>
 					</tr>
 					<tr>
 						<td>
 							<span class="ps-input" data-ws="_<?=$kurz?>_RT_<?=$SH ?>" title="UG <?=$name?> Temperatur">-</span>
-							<span class="icon-indikator indikator-temp" data-wsindi="_<?=$kurz?>_RT_<?=$SH ?>"><?=wpHTML_EMPTY ?></span>
+							<span class="<?=wpa::indikatorTemp?>" data-ws="_<?=$kurz?>_RT_<?=$SH ?>"><?=wpHTML_EMPTY ?></span>
 						</td>
 						<td>
 							<span class="ps-input" data-ws="_<?=$kurz?>_RF_<?=$SH ?>" title="UG <?=$name?> Feuchte">-</span>
-							<span class="icon-indikator indikator-hum" data-wsindi="_<?=$kurz?>_RF_<?=$SH ?>"><?=wpHTML_EMPTY ?></span>
+							<span class="<?=wpa::indikatorHum?>" data-ws="_<?=$kurz?>_RF_<?=$SH ?>"><?=wpHTML_EMPTY ?></span>
 						</td>
 					</tr>
 <? } ?>
@@ -372,65 +362,65 @@ foreach($zimmer as $kurz => $name) {
 					<tr>
 						<td>
 							<span class="ps-input" data-ws="_KE_RT_SH" title="Keller Temperatur">-</span>
-							<span class="icon-indikator indikator-temp" data-wsindi="_KE_RT_SH"><?=wpHTML_EMPTY ?></span>
+							<span class="<?=wpa::indikatorTemp?>" data-ws="_KE_RT_SH"><?=wpHTML_EMPTY ?></span>
 						</td>
 						<td>
 							<span class="ps-input" data-ws="_KE_RF_SH" title="Keller Feuchte">-</span>
-							<span class="icon-indikator indikator-hum" data-wsindi="_KE_RF_SH"><?=wpHTML_EMPTY ?></span>
+							<span class="<?=wpa::indikatorHum?>" data-ws="_KE_RF_SH"><?=wpHTML_EMPTY ?></span>
 						</td>
 						<td>
 							<span class="ps-input" data-ws="_WG1_RT_SH" title="EG Wintergarten Temperatur">-</span>
-							<span class="icon-indikator indikator-temp" data-wsindi="_WG1_RT_SH"><?=wpHTML_EMPTY ?></span>
+							<span class="<?=wpa::indikatorTemp?>" data-ws="_WG1_RT_SH"><?=wpHTML_EMPTY ?></span>
 						</td>
 						<td>
 							<span class="ps-input" data-ws="_WG1_RF_SH" title="EG Wintergarten Feuchte">-</span>
-							<span class="icon-indikator indikator-hum" data-wsindi="_WG1_RF_SH"><?=wpHTML_EMPTY ?></span>
+							<span class="<?=wpa::indikatorHum?>" data-ws="_WG1_RF_SH"><?=wpHTML_EMPTY ?></span>
 						</td>
 					</tr>
 					<tr>
 						<td>
 							<span class="ps-input" data-ws="_GA_Ost_RT_D1" title="Wetterstation Ost Temperatur">-</span>
-							<span class="icon-indikator indikator-temp" data-wsindi="_GA_Ost_RT_D1"><?=wpHTML_EMPTY ?></span>
+							<span class="<?=wpa::indikatorTemp?>" data-ws="_GA_Ost_RT_D1"><?=wpHTML_EMPTY ?></span>
 						</td>
 						<td>
 							<span class="ps-input" data-ws="_GA_Ost_RF_D1" title="Wetterstation Ost Feuchte">-</span>
-							<span class="icon-indikator indikator-hum" data-wsindi="_GA_Ost_RF_D1"><?=wpHTML_EMPTY ?></span>
+							<span class="<?=wpa::indikatorHum?>" data-ws="_GA_Ost_RF_D1"><?=wpHTML_EMPTY ?></span>
 						</td>
 						<td>
 							<span class="ps-input" data-ws="_SZ1_RT_SH" title="EG Schlafzimmer Temperatur">-</span>
-							<span class="icon-indikator indikator-temp" data-wsindi="_SZ1_RT_SH"><?=wpHTML_EMPTY ?></span>
+							<span class="<?=wpa::indikatorTemp?>" data-ws="_SZ1_RT_SH"><?=wpHTML_EMPTY ?></span>
 						</td>
 						<td>
 							<span class="ps-input" data-ws="_SZ1_RF_SH" title="EG Schlafzimmer Feuchte">-</span>
-							<span class="icon-indikator indikator-hum" data-wsindi="_SZ1_RF_SH"><?=wpHTML_EMPTY ?></span>
+							<span class="<?=wpa::indikatorHum?>" data-ws="_SZ1_RF_SH"><?=wpHTML_EMPTY ?></span>
 						</td>
 					</tr>
 					<tr>
 						<td>
 							<span class="ps-input" data-ws="_GA_Sued_RT_D1" title="Wetterstation Süd Temperatur">-</span>
-							<span class="icon-indikator indikator-temp" data-wsindi="_GA_Sued_RT_D1"><?=wpHTML_EMPTY ?></span>
+							<span class="<?=wpa::indikatorTemp?>" data-ws="_GA_Sued_RT_D1"><?=wpHTML_EMPTY ?></span>
 						</td>
 						<td>
 							<span class="ps-input" data-ws="_GA_Sued_RF_D1" title="Wetterstation Süd Feuchte">-</span>
-							<span class="icon-indikator indikator-hum" data-wsindi="_GA_Sued_RF_D1"><?=wpHTML_EMPTY ?></span>
+							<span class="<?=wpa::indikatorHum?>" data-ws="_GA_Sued_RF_D1"><?=wpHTML_EMPTY ?></span>
 						</td>
 						<td>
 							<span class="ps-input" data-ws="_FL2_RT_SH" title="OG Flur Temperatur">-</span>
-							<span class="icon-indikator indikator-temp" data-wsindi="_FL2_RT_SH"><?=wpHTML_EMPTY ?></span>
+							<span class="<?=wpa::indikatorTemp?>" data-ws="_FL2_RT_SH"><?=wpHTML_EMPTY ?></span>
 						</td>
 						<td>
 							<span class="ps-input" data-ws="_FL2_RF_SH" title="OG Flur Feuchte">-</span>
-							<span class="icon-indikator indikator-hum" data-wsindi="_FL2_RF_SH"><?=wpHTML_EMPTY ?></span>
+							<span class="<?=wpa::indikatorHum?>" data-ws="_FL2_RF_SH"><?=wpHTML_EMPTY ?></span>
 						</td>
 					</tr>
 					<tr>
 						<td>
 							<span class="ps-input" data-ws="_GA_RT_D1" title="Gartenhaus Temperatur">-</span>
-							<span class="icon-indikator indikator-temp" data-wsindi="_GA_RT_D1"><?=wpHTML_EMPTY ?></span>
+							<span class="<?=wpa::indikatorTemp?>" data-ws="_GA_RT_D1"><?=wpHTML_EMPTY ?></span>
 						</td>
 						<td>
 							<span class="ps-input" data-ws="_GA_RF_D1" title="Gartenhaus Feuchte">-</span>
-							<span class="icon-indikator indikator-hum" data-wsindi="_GA_RF_D1"><?=wpHTML_EMPTY ?></span>
+							<span class="<?=wpa::indikatorHum?>" data-ws="_GA_RF_D1"><?=wpHTML_EMPTY ?></span>
 						</td>
 						<td colspan="2">
 						</td>
@@ -496,27 +486,27 @@ foreach($zimmer as $kurz => $name) {
 					<tr><td colspan="2"><hr /></td></tr>
 					<tr>
 						<td>Leistung:</td>
-						<td><span <?='data-' . ($useWS ? 'ws' : 'value') . '="Erdgeschoss_Power"'?> class="ps-input">undefined</span></td>
+						<td><span data-ws="Erdgeschoss_Power" class="ps-input">undefined</span></td>
 					</tr>
 					<tr>
 						<td>Blindleistung:</td>
-						<td><span <?='data-' . ($useWS ? 'ws' : 'value') . '="Erdgeschoss_ReactivePower"'?> class="ps-input">undefined</span></td>
+						<td><span data-ws="Erdgeschoss_ReactivePower" class="ps-input">undefined</span></td>
 					</tr>
 					<tr>
 						<td>cos &phi;:</td>
-						<td><span <?='data-' . ($useWS ? 'ws' : 'value') . '="Erdgeschoss_pf"'?> class="ps-input">undefined</span></td>
+						<td><span data-ws="Erdgeschoss_pf" class="ps-input">undefined</span></td>
 					</tr>
 					<tr>
 						<td>Energie:</td>
-						<td><span <?='data-' . ($useWS ? 'ws' : 'value') . '="Erdgeschoss_Energy"'?> class="ps-input">undefined</span></td>
+						<td><span data-ws="Erdgeschoss_Energy" class="ps-input">undefined</span></td>
 					</tr>
 					<tr>
 						<td>erzeugte Energie:</td>
-						<td><span <?='data-' . ($useWS ? 'ws' : 'value') . '="Erdgeschoss_returnedEnergy"'?> class="ps-input">undefined</span></td>
+						<td><span data-ws="Erdgeschoss_returnedEnergy" class="ps-input">undefined</span></td>
 					</tr>
 					<tr>
 						<td>Spannung:</td>
-						<td><span <?='data-' . ($useWS ? 'ws' : 'value') . '="Erdgeschoss_Voltage"'?> class="ps-input">undefined</span></td>
+						<td><span data-ws="Erdgeschoss_Voltage" class="ps-input">undefined</span></td>
 					</tr>
 				</tbody>
 			</table>
