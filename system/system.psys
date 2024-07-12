@@ -808,7 +808,7 @@ class html extends htmlBase {
 	}
 	public static function cleanOutput($input, $isJS = false) {
 		$cleanoutput = $input;
-		if(!wpInit::$PDebug) {
+		if(!wpInit::$wpDebug) {
 			if($isJS) {
 				$cleanoutput = preg_replace('/[^:]\/\/.*$/m', '', $input);
 			}

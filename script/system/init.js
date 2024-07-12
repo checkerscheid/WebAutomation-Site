@@ -1735,7 +1735,7 @@ var p = {
 		return k.substring(0, k.indexOf('.') + n+1).replace('.', ',');
 	}
 };
-// <? if(wpInit::$PDebug) { ?> Default Werte initialisieren (Debug)
+// <? if(wpInit::$wpDebug) { ?> Default Werte initialisieren (Debug)
 p.log.level = p.log.type.debug;
 // <? } else { ?> Default Werte initialisieren
 p.log.level = p.log.type.warn;

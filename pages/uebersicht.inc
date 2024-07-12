@@ -297,7 +297,7 @@ class uebersicht {
 					<?=uebersicht::tasterShelly('Steckdose unten', 'AN_SD2')?>
 					<? */ ?>
 					<tr>
-						<td colspan="2"><span class="ps-button RenwShellyState">RenwShellyState</span></td>
+						<td colspan="2"><span class="ps-button RenewShellyState">RenwShellyState</span></td>
 					</tr>
 				</tbody>
 			</table>

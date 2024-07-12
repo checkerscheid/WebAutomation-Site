@@ -34,7 +34,7 @@ $headline = $database->fetch();
 		<div id="erg">
 		</div>
 	</div>
-<? if(security::checkGroup(security::entwickler) && wpInit::$PDebug) { ?>
+<? if(security::checkGroup(security::entwickler) && wpInit::$wpDebug) { ?>
 	<div>
 		<hr />
 		<div id="TrendInfo">

@@ -30,7 +30,7 @@ if(std::arrays($_SESSION[SESSION_ID]['POINTS'], $id)) {
 	if(security::checkGroup(security::entwickler)) {
 		$minmax .= '<input type="text" class="ps-input minvalue" value="';
 	}
-	$minmax .= wpDatabase::sqlDebug($_SESSION[SESSION_ID]['POINTS'][$id]->min).' '.$_SESSION[SESSION_ID]['POINTS'][$id]->unit;
+	$minmax .= wpDatabase::sqlCorrection($_SESSION[SESSION_ID]['POINTS'][$id]->min).' '.$_SESSION[SESSION_ID]['POINTS'][$id]->unit;
 	if(security::checkGroup(security::entwickler)) {
 		$minmax .= '" />';
 	}

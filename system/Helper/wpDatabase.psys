@@ -39,7 +39,7 @@ class wpDatabase {
 		$connectionOptions = array('Database' => wpInit::$db['database'], 'CharacterSet' => 'UTF-8');
 		$this->connect = sqlsrv_connect(wpInit::$db['server'], $connectionOptions)
 		or die(ERROR_DATABASE_SERVER_OFFLINE.
-				((wpInit::$PDebug)?'<br />'.std::test_array(sqlsrv_errors()):''));
+				((wpInit::$wpDebug)?'<br />'.std::test_array(sqlsrv_errors()):''));
 	}
 	/**
 	 * Destruktor
@@ -59,7 +59,7 @@ class wpDatabase {
 			$error = std::arrays($sqlerror, '0');
 			if(std::arrays($error, 'code') != '3604') {
 				die(ERROR_QUERY_NOT_VALID .
-						((wpInit::$PDebugSQL) ?
+						((wpInit::$wpDebugSQL) ?
 								'<br />' . $query . '<br />' . std::test_array(sqlsrv_errors()) :
 								'<br /><br />' . std::arrays($error, 'message')));
 			}
@@ -138,7 +138,7 @@ class wpDatabase {
 	public static function getString($string) {
 		return trim(preg_replace('/[^a-zA-Z0-9_ \-\.,äöüÄÖÜß]/', '_', $string));
 	}
-	public static function sqlDebug($item) {
+	public static function sqlCorrection($item) {
 		if($item === '.00') return '0.00';
 		if($item == '') return '-';
 		return $item;

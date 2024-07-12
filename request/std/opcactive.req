@@ -86,7 +86,7 @@ switch(std::gets('param1')) {
 		echo '</div>';
 		while($erg = $database->fetch()) {
 			$erg = array_map(function($item) {
-				return wpDatabase::sqlDebug($item);
+				return wpDatabase::sqlCorrection($item);
 			}, $erg);
 
 			$points[$erg['name']] = $erg['name'];

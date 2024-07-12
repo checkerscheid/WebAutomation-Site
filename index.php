@@ -163,7 +163,7 @@ if(security::checkGroup(security::entwickler)) {
 		echo '<hr />';
 		echo '<div><span class="ps-red">Automatischer Alarmlink Insert eingeschaltet!</span></div>';
 	}
-	if(wpInit::$PDebug) {
+	if(wpInit::$wpDebug) {
 		echo '<hr />';
 		echo '<div><span class="ps-red">Debug Mode eingeschaltet!</span></div>';
 		std::test_array($_SESSION[SESSION_ID]);

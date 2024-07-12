@@ -76,7 +76,7 @@ p.page.load = function() {
 		$.post('std.shellycom.set-relay.req', {ShellyIP:wn_baum, turn:'false'});
 		$.post('std.shellycom.set-relay.req', {ShellyIP:wn_fenster, turn:'false'});
 	});
-	$('#uebersicht').on('click', '.RenwShellyState', function() {
+	$('#uebersicht').on('click', '.RenewShellyState', function() {
 		$.get('std.shellycom.renewshellystate.req', function(data) {
 			if(data.erg != 'S_OK') p.page.alert(data.msg, 3000);
 		}, 'json');

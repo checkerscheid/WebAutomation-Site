@@ -214,7 +214,7 @@ ORDER BY [dp].[name]";
 	<tbody>';
 		while($erg = $database->fetch()) {
 			$erg = array_map(function($item) {
-				return wpDatabase::sqlDebug($item);
+				return wpDatabase::sqlCorrection($item);
 			}, $erg);
 			echo '
 		<tr data-id="' . $erg['id_dp'] . '">

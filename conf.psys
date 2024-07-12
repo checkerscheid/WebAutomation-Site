@@ -15,7 +15,7 @@
 //#                                                                                 #
 //###################################################################################
 use system\wpInit;
-wpInit::$PDebug = false;
+wpInit::$wpDebug = false;
 wpInit::$OneLine = false;
 wpInit::$db['server'] = '.';
 wpInit::$db['database'] = 'WebAutomation';
