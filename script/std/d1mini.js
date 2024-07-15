@@ -9,16 +9,16 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 666                                                     $ #
+//# Revision     : $Rev:: 677                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.js 666 2024-07-10 19:43:40Z                       $ #
+//# File-ID      : $Id:: d1mini.js 677 2024-07-15 13:51:59Z                       $ #
 //#                                                                                 #
 //###################################################################################
 use system\std
 ?> d1mini */
 //<? require_once('script/system/websockets.js') ?>
 p.page.load = function() {
-	$.get('std.d1mini.getD1MiniSettings.<?=std::gets("param1")?>.req');
+	// ?? warum war das? $.get('std.d1mini.getD1MiniSettings.<?=std::gets("param1")?>.req');
 
 	$('.buttonContainer').on('click', '.SetCmd', function() {
 		var ip = $(this).attr('data-ip');
@@ -41,6 +41,24 @@ p.page.load = function() {
 			$('[data-topic="' + topic + '"]').text(text);
 			$('#dialog').dialog('close');
 		});
+	});
+	$('.topic-slider').slider({
+		min: 0,
+		max: 100,
+		start: function() {
+			$(this).addClass('WriteOnly');
+			$(this).find('a').append('<span class="toleft"></span>');
+		},
+		slide: function(event, ui) {
+			var TheValue = ui.value;
+			var TheSpan = $(this).find('span.toleft');
+			$(TheSpan).text(TheValue);
+		},
+		stop: function(event, ui) {
+			const topic = $(this).attr('data-topic');
+			$.post('std.d1mini.writetopic.req', {topic:topic, value:ui.value});
+			$(this).removeClass('WriteOnly').find('a').text('');
+		}
 	});
 	$('.page').on('click', '.ps-param', function() {
 		const that = $(this)

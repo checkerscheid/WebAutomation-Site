@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 03.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 665                                                     $ #
+//# Revision     : $Rev:: 677                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.js 665 2024-07-09 22:56:49Z                    $ #
+//# File-ID      : $Id:: d1minicfg.js 677 2024-07-15 13:51:59Z                    $ #
 //#                                                                                 #
 //###################################################################################
 ?> d1minicfg */
@@ -26,7 +26,10 @@ groups.member = 'd1mini';
 groups.target = 'd1minicfg';
 ws.logEnabled = true;
 var CountFound = 0;
-
+var compiledWithExclude = [
+	'EEPROM', 'WiFi', 'MQTT', 'Search', 'Rest',
+	'Finder', 'Modules', 'OnlineToggler', 'Update', 'WebServer'
+];
 p.page.load = function() {
 	groups.init();
 	ws.connect();
@@ -444,7 +447,15 @@ function setD1MiniInfo(data) {
 	//setTextIfNotStored(key, 'ssid', value.Ssid);
 	var updateMode = values.UpdateMode ? '<span class="ps-fontyellow">aktiv</span>' : '<span class="ps-fontgreen">deaktiviert</span>';
 	setTextIfNotStored(name, 'updatemode', updateMode);
-	setTextIfNotStored(name, 'compiledWith', values.compiledWith);
+	var compiledWith = '';
+	for (const [key, value] of Object.entries(values.useModul)) {
+		if(value) {
+			if(!compiledWithExclude.includes(key)) {
+				compiledWith += key + ', ';
+			}
+		}
+	}
+	setTextIfNotStored(name, 'compiledWith', (compiledWith.length > 2 ? compiledWith.slice(0, -2) : compiledWith));
 	var td = $(`tr[data-json=${name}] td.json`);
 	$(td).html('<div class="showJsonContainer">' +
 		'<div>' +

@@ -9,14 +9,15 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 10.02.2020                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 550                                                     $ #
+//# Revision     : $Rev:: 677                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: movethis.req 550 2023-12-25 03:02:54Z                    $ #
+//# File-ID      : $Id:: movethis.req 677 2024-07-15 13:51:59Z                    $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
 use system\Helper\wpDateTime;
 use system\std;
+require_once 'system/Helper/wpDateTime.psys';
 class movethis {
 	const c_saveposition = 'saveposition';
 }
@@ -26,6 +27,7 @@ switch(std::gets('param1')) {
 	case movethis::c_saveposition:
 		$top = intval(std::posts('top'));
 		$left = intval(std::posts('left'));
+		$in = std::posts('in');
 		$id = std::posts('id');
 		$file = std::posts('file');
 		if($top != '' && $left != '' && $id != '' && $file != '') {
@@ -37,9 +39,9 @@ switch(std::gets('param1')) {
 				$action = '';
 				foreach($lines as $line) {
 					$m = array();
-					preg_match('/^#' . $id . ' \{ top:-?[\d\.]+px; left:-?[\d\.]+px; \}/', $line, $m);
+					preg_match('/^#' . $id . ' \{ top:-?[\d\.]+' . $in . '; left:-?[\d\.]+' . $in . '; \}/', $line, $m);
 					if(count($m) > 0) {
-						$newfile .= '#' . $id . ' { top:' . $top . 'px; left:' . $left . 'px; }' . $append . "\r\n";
+						$newfile .= '#' . $id . ' { top:' . $top . $in . '; left:' . $left . $in . '; }' . $append . "\r\n";
 						$foundentrie = true;
 						$action = ', update';
 					} else {
@@ -48,11 +50,11 @@ switch(std::gets('param1')) {
 				}
 				if(!$foundentrie) {
 					$append = ' /* new: ' . $_SESSION[SESSION_ID]['USER'] . ' ' . date(wpDateTime::forDB) . ' */';
-					$newfile .= '#' . $id . ' { top:' . $top . 'px; left:' . $left . 'px; }' . $append . "\r\n";
+					$newfile .= '#' . $id . ' { top:' . $top . $in . '; left:' . $left . $in . '; }' . $append . "\r\n";
 					$action = ', insert';
 				}
 				file_put_contents($_SERVER['DOCUMENT_ROOT'] . '/style/' . $file . '.css', $newfile);
-				echo 'saved' . $action . ': #' . $id . ' { top:' . $top . 'px; left:' . $left . 'px; }';
+				echo 'saved' . $action . ': #' . $id . ' { top:' . $top . $in . '; left:' . $left . $in . '; }';
 			} else {
 				echo 'Datei "' . $_SERVER['DOCUMENT_ROOT'] . '/style/' . $file . '.css" ist nicht vorhanden!';
 			}

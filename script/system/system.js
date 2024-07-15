@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 628                                                     $ #
+//# Revision     : $Rev:: 677                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: system.js 628 2024-06-19 19:08:13Z                       $ #
+//# File-ID      : $Id:: system.js 677 2024-07-15 13:51:59Z                       $ #
 //#                                                                                 #
 //###################################################################################
 use system\wpInit;
@@ -363,6 +363,15 @@ $(document).ready(function() {
 			containment: '.pagecontent',
 			disabled: true,
 			stop: function(event, ui) {
+				var pos = {
+					width: $('.page').width(),
+					height: $('.page').height(),
+					topInp: Math.round(ui.position.top * 100 / $('.page').height()),
+					leftInp: Math.round(ui.position.left * 100 / $('.page').width()),
+					topPx: Math.round(ui.position.top),
+					leftPx: Math.round(ui.position.left)
+				}
+				console.log(pos);
 				var id = $(this).attr('id');
 				var file = '';
 				var path = window.location.pathname.substr(1).split('.');
@@ -375,7 +384,18 @@ $(document).ready(function() {
 				} else {
 					file = path[path.length - 2];
 				}
-				$.post('std.movethis.saveposition.req', {file:file, id:id, top:Math.round(ui.position.top), left:Math.round(ui.position.left)}, function(data) {
+				var top = pos.topPx;
+				var left = pos.leftPx;
+				if(dragqueen.savePositionIn == '%') {
+					top = pos.topInp;
+					left = pos.leftInp;
+				}
+				$.post('std.movethis.saveposition.req', {
+					file: file, id: id,
+					top: top,
+					left: left,
+					in: dragqueen.savePositionIn
+				}, function(data) {
 					p.page.alert(data, 5000);
 				})
 			}

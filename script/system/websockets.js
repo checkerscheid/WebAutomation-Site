@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 08.06.2021                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 676                                                     $ #
+//# Revision     : $Rev:: 677                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: websockets.js 676 2024-07-12 14:19:18Z                   $ #
+//# File-ID      : $Id:: websockets.js 677 2024-07-15 13:51:59Z                   $ #
 //#                                                                                 #
 //###################################################################################
 use system\Helper\wpa;
@@ -200,6 +200,10 @@ var ws = {
 								$(this).text(p.time.print(that.value, false, true));
 							} else if($(this).hasClass('<?=wpa::formatdatetime ?>')) {
 								$(this).text(p.time.print(that.value, true, true));
+							} else if($(this).hasClass('topic-slider')) {
+								if(!$(this).hasClass('WriteOnly')) {
+									$(this).slider('option', 'value', parseInt(that.value));
+								}
 							} else {
 								$(this).text(that.valuestring);
 							}
