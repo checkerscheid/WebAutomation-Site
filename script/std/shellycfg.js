@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 16.12.2019                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 651                                                     $ #
+//# Revision     : $Rev:: 677                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: shellycfg.js 651 2024-07-06 23:51:07Z                    $ #
+//# File-ID      : $Id:: shellycfg.js 677 2024-07-15 13:51:59Z                    $ #
 //#                                                                                 #
 //###################################################################################
 ?> scenecfg */
@@ -510,17 +510,17 @@ var shelly = {
 						var ip = $(this).find('.sh-ip').text();
 						var shType = $(this).find('.sh-type').text();
 						if(shType == 'SHSW-PM' || shType == 'SHDM-1' || shType == 'SHDM-2' || shType == 'SHPLG-S' || shType == 'SHRGBW2' || shType == 'SHEM') {
-							$.post('std.shellycom.get-update-signal.req', {ShellyIP:ip}, function() {
-								$('[data-id="' + id + '"] .ps-update div').html(getUpdate());
-								$('[data-id="' + id + '"] .ps-signal div').html(getSignal());
-								$('[data-id="' + id + '"] .ps-names div').html(getNames());
-							}, 'script');
+							$.post('std.shellycom.get-update-signal.req', {ShellyIP:ip}, function(data) {
+								$('[data-id="' + id + '"] .ps-update div').html(data.update);
+								$('[data-id="' + id + '"] .ps-signal div').html(data.signal);
+								$('[data-id="' + id + '"] .ps-names div').html(data.names);
+							}, 'json');
 						} else if(shType == 'Plus1PM' || shType == 'Mini1PMG3') {
-							$.post('std.shellycom.get-update-signal-2.req', {ShellyIP:ip}, function() {
-								$('[data-id="' + id + '"] .ps-update div').html(getUpdate());
-								$('[data-id="' + id + '"] .ps-signal div').html(getSignal());
-								$('[data-id="' + id + '"] .ps-names div').html(getNames());
-							}, 'script');
+							$.post('std.shellycom.get-update-signal-2.req', {ShellyIP:ip}, function(data) {
+								$('[data-id="' + id + '"] .ps-update div').html(data.update);
+								$('[data-id="' + id + '"] .ps-signal div').html(data.signal);
+								$('[data-id="' + id + '"] .ps-names div').html(data.names);
+							}, 'json');
 						} else {
 							$('[data-id="' + id + '"] .ps-signal div').html('<span class="sh-rssi rssibat">Batterie</span>');
 						}

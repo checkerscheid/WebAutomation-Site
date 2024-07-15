@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 666                                                     $ #
+//# Revision     : $Rev:: 677                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.inc 666 2024-07-10 19:43:40Z                      $ #
+//# File-ID      : $Id:: d1mini.inc 677 2024-07-15 13:51:59Z                      $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
@@ -214,6 +214,63 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 				<tr>
 					<td>Fensterkontakt:</td>
 					<td><span class="ps-input <?=wpa::GreyGreen ?>" data-ws="<?=$erg['name'] ?>_FK">undefined</span></td>
+				</tr>
+			</table>
+		</div>
+	<? } ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->AnalogOut) { ?>
+		<div class="ps-container">
+			<h3>AnalogOut</h3>
+			<table summary="">
+				<tr>
+					<td colspan="3">Analog Output:</td>
+					<td colspan="3">
+						<span class="ps-input" data-ws="<?=$erg['name'] ?>_AnalogOut">undefined</span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">Modus:</td>
+					<td colspan="3">
+						<span class="ps-input <?=wpa::GreenYellow ?>" data-ws="<?=$erg['name'] ?>_AnalogOutHandError">undefined</span>
+					</td>
+				</tr>
+				<tr><td colspan="6"><hr /></td></tr>
+				<tr>
+					<td colspan="3">Automatikwert:</td>
+					<td colspan="3">
+						<span class="ps-input" data-ws="<?=$erg['name'] ?>_AnalogOutAuto">undefined</span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">Handwert:</td>
+					<td colspan="3">
+						<span class="ps-input" data-ws="<?=$erg['name'] ?>_AnalogOutHand">undefined</span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="6"><h3>Bedienung</h3></td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						Hand / Auto
+					</td>
+					<td colspan="2">
+						<span class="ps-button writeTopic" data-topic="<?=$erg['name'] ?>/settings/AnalogOut/SetHand" data-write="0">Automatik</span>
+					</td>
+					<td colspan="2">
+						<span class="ps-button writeTopic" data-topic="<?=$erg['name'] ?>/settings/AnalogOut/SetHand" data-write="1">Hand</span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						Handwert
+					</td>
+					<td colspan="4"></td>
+				</tr>
+				<tr>
+					<td colspan="6">
+						<div class="topic-slider" data-ws="<?=$erg['name'] ?>_AnalogOutHand" data-topic="<?=$erg['name'] ?>/settings/AnalogOut/SetHandValue"></div>
+					</td>
 				</tr>
 			</table>
 		</div>

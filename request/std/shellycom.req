@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 16.12.2019                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 665                                                     $ #
+//# Revision     : $Rev:: 677                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: shellycom.req 665 2024-07-09 22:56:49Z                   $ #
+//# File-ID      : $Id:: shellycom.req 677 2024-07-15 13:51:59Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -246,6 +246,7 @@ switch(std::gets('param1')) {
 		break;
 		//###################################################################################
 	case shellycom::c_get_update_signal:
+		header(wpJSON_HEADER);
 		$rssi = 'Offline'; $updateC = ' ps-red'; $updateT = 'kein Update möglich'; $name = ''; $nameout = '';
 		$status = json_decode(@file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/status'));
 		if($status !== null) {
@@ -260,18 +261,25 @@ switch(std::gets('param1')) {
 			if(ShellyDevice::isRelay($settings->device->type)) $nameout = ', Relay: ' . $settings->relays[0]->name;
 			if(ShellyDevice::isLight($settings->device->type)) $nameout = ', Light: ' . $settings->lights[0]->name;
 		}
+		$json = '{' .
+				'"signal":"<span class=\"sh-rssi ' . getRssi($rssi) . '\">' . $rssi . '</span>",' .
+				'"update":"<span class=\"sh-update ' . $updateC . '\">' . $updateT . '</span>",' .
+				'"names":"<span class=\"sh-names\">Name: ' . $name.$nameout.'</span>"' .
+			'}';
+		echo $json;
 
-		echo 'function getSignal() { return ';
-		echo '\'<span class="sh-rssi ' . getRssi($rssi) . '">' . $rssi . '</span>\'; }';
+// 		echo 'function getSignal() { return ';
+// 		echo '\'<span class="sh-rssi ' . getRssi($rssi) . '">' . $rssi . '</span>\'; }';
 
-		echo 'function getUpdate() { return ';
-		echo '\'<span class="sh-update ' . $updateC . '">' . $updateT . '</span>\'; }';
+// 		echo 'function getUpdate() { return ';
+// 		echo '\'<span class="sh-update ' . $updateC . '">' . $updateT . '</span>\'; }';
 
-		echo 'function getNames() { return ';
-		echo '\'<span class="sh-names">Name: ' . $name.$nameout.'</span>\'; }';
+// 		echo 'function getNames() { return ';
+// 		echo '\'<span class="sh-names">Name: ' . $name.$nameout.'</span>\'; }';
 		break;
 		//###################################################################################
 	case shellycom::c_get_update_signal_2:
+		header(wpJSON_HEADER);
 		$status = json_decode(file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/rpc/WiFi.GetStatus'));
 		$rssi = $status->rssi;
 		$status = json_decode(file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/rpc/Sys.GetStatus'));
@@ -280,15 +288,21 @@ switch(std::gets('param1')) {
 		$name = $settings->device->name;
 		$switch = json_decode(file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/rpc/Switch.GetConfig?id=0'));
 		$nameout = ', Relay: ' . $switch->name;
+		$json = '{' .
+				'"signal":"<span class=\"sh-rssi ' . getRssi($rssi) . '\">' . $rssi . ' dBm</span>",' .
+				'"update":"<span class=\"sh-update ' . ($update == 'true' ? ' ps-green' : '') . '\">' . ($update == 'true' ? 'Update steht an' : 'kein Update vorhanden') . '</span>",' .
+				'"names":"<span class=\"sh-names\">Name: ' . $name.$nameout.'</span>"' .
+			'}';
+		echo $json;
 
-		echo 'function getSignal() { return ';
-		echo '\'<span class="sh-rssi ' . getRssi($rssi) . '">' . $rssi . ' dBm</span>\'; }';
+// 		echo 'function getSignal() { return ';
+// 		echo '\'<span class="sh-rssi ' . getRssi($rssi) . '">' . $rssi . ' dBm</span>\'; }';
 
-		echo 'function getUpdate() { return ';
-		echo '\'<span class="sh-update ' . ($update == 'true' ? ' ps-green' : '') . '">' . ($update == 'true' ? 'Update steht an' : 'kein Update vorhanden') . '</span>\'; }';
+// 		echo 'function getUpdate() { return ';
+// 		echo '\'<span class="sh-update ' . ($update == 'true' ? ' ps-green' : '') . '">' . ($update == 'true' ? 'Update steht an' : 'kein Update vorhanden') . '</span>\'; }';
 
-		echo 'function getNames() { return ';
-		echo '\'<span class="sh-names">Name: ' . $name.$nameout.'</span>\'; }';
+// 		echo 'function getNames() { return ';
+// 		echo '\'<span class="sh-names">Name: ' . $name.$nameout.'</span>\'; }';
 		break;
 		//###################################################################################
 	case shellycom::c_get_onoff:

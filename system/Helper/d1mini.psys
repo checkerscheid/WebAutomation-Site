@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 26.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 640                                                     $ #
+//# Revision     : $Rev:: 677                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.psys 640 2024-07-06 15:18:02Z                     $ #
+//# File-ID      : $Id:: d1mini.psys 677 2024-07-15 13:51:59Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -71,6 +71,7 @@ class d1mini {
 			$this->setRSSI();
 			$this->setOnline();
 			$this->setRest();
+			$this->setNewUpdate();
 			if($this->status->FreakaZoneDevice->useModul->DHT11 ||
 					$this->status->FreakaZoneDevice->useModul->DHT22) {
 				$this->setDHT();
@@ -86,6 +87,9 @@ class d1mini {
 			}
 			if($this->status->FreakaZoneDevice->useModul->Window) {
 				$this->setWindow();
+			}
+			if($this->status->FreakaZoneDevice->useModul->AnalogOut) {
+				$this->setAnalogOut();
 			}
 			if($this->status->FreakaZoneDevice->useModul->Relais ||
 					$this->status->FreakaZoneDevice->useModul->RelaisShield) {
@@ -124,6 +128,12 @@ class d1mini {
 		$id_dp = $this->mergeDP($id_mqtttopic, 'ERROR_Rest', 'Rest Error', '0:Ok;1:Error;');
 		$this->mergeAlarm($id_dp, 'ERROR_Rest', 'Rest Error', 3);
 		echo "saved: 'Rest Error' ";
+	}
+	private function setNewUpdate() {
+		$id_mqtttopic = $this->insertTopic('ERROR/NewVersion');
+		$id_dp = $this->mergeDP($id_mqtttopic, 'NewVersion', 'Version', '0:aktuell;1:Neue Version;');
+		$this->mergeAlarm($id_dp, 'NewVersion', 'Version', alarmtype::Meldung, AlarmCondition::gleich, 1);
+		echo "saved: 'NewVersion' ";
 	}
 	private function setDHT() {
 		$id_mqtttopic_temp = $this->insertTopic('Temperature');
@@ -171,6 +181,27 @@ class d1mini {
 		$this->mergeAlarm($id_dp, 'Window', 'Fenster offen', alarmtype::Meldung, AlarmCondition::ungleich, 0);
 		$this->mergeTrend($id_dp, 'Fenster', 0);
 		echo "saved: 'Fensterkontakt' ";
+	}
+	private function setAnalogOut() {
+		$id_mqtttopic = $this->insertTopic('AnalogOut/Output');
+		$id_dp = $this->mergeDP($id_mqtttopic, 'AnalogOut', 'AnalogOut', '%', 0);
+		$this->mergeTrend($id_dp, 'AnalogOut', 0);
+
+		$id_mqtttopicHand = $this->insertTopic('AnalogOut/Hand');
+		$this->mergeDP($id_mqtttopicHand, 'AnalogOutHand', 'AnalogOut Hand', '%', 0);
+
+		$id_mqtttopicAuto = $this->insertTopic('AnalogOut/Auto');
+		$this->mergeDP($id_mqtttopicAuto, 'AnalogOutAuto', 'AnalogOut Auto', '%', 0);
+
+		$id_mqtttopicSetHand = $this->insertTopic('settings/AnalogOut/SetHand');
+		$this->mergeDP($id_mqtttopicSetHand, 'AnalogOutSetHand', 'AnalogOut Hand', '0:Automatik;1:Hand;', 'NULL', 0, 1);
+
+		$id_mqtttopicHandValue = $this->insertTopic('settings/AnalogOut/SetHandValue');
+		$this->mergeDP($id_mqtttopicHandValue, 'AnalogOutSetHandValue', 'AnalogOut Hand Value', '%', 0);
+
+		$id_mqtttopicHandError = $this->insertTopic('ERROR/AnalogOutHand');
+		$id_dp_handError = $this->mergeDP($id_mqtttopicHandError, 'AnalogOutHandError', 'AnalogOut Hand Error', '0:Automatik;1:Hand;', 'NULL', 0, 1);
+		$this->mergeAlarm($id_dp_handError, 'AnalogOutHandError', 'AnalogOut Hand Error', AlarmType::Handbetrieb);
 	}
 	private function setRelais($hasMoisture) {
 		$id_mqtttopic = $this->insertTopic('Relais/Output');

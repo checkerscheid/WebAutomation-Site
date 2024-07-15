@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 21.07.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 635                                                     $ #
+//# Revision     : $Rev:: 677                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: openWeather.psys 635 2024-07-04 00:03:17Z                $ #
+//# File-ID      : $Id:: openWeather.psys 677 2024-07-15 13:51:59Z                $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -51,7 +51,7 @@ class openWeather {
 			$oneHour = 60 * 60;
 			$filetime = \filemtime($filename) + $oneHour;
 			if($now->getTimestamp() > $filetime) {
-				echo '/* ' . $what . ' file is older than 1 hour (' . $now->getTimestamp() . ', ' . $filetime . '), load from web */';
+				//echo '/* ' . $what . ' file is older than 1 hour (' . $now->getTimestamp() . ', ' . $filetime . '), load from web */';
 				\file_put_contents($filename,
 					\file_get_contents(self::urlprepend . $what . $this->urlappend));
 			}
@@ -86,7 +86,7 @@ class openWeather {
 		for($i = 0; $i < $con->cnt; $i++) {
 			$akt = $con->list[$i];
 			if(self::convertDate($akt->dt, false) != $aktdt) {
-				echo '<div class="clearboth"><h4>'.self::convertDate($akt->dt, false).'</h4></div>';
+				//echo '<div class="clearboth"><h4>'.self::convertDate($akt->dt, false).'</h4></div>';
 				if(self::getTime($akt->dt) != '01:00' && self::getTime($akt->dt) != '02:00') {
 					echo self::getEmptyForecast($akt->dt);
 				}

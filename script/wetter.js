@@ -7,15 +7,17 @@
 //###################################################################################
 //#                                                                                 #
 //# Author       : Christian Scheid                                                 #
-//# Date         : 13.06.2024                                                       #
+//# Date         : 12.07.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 677                                                     $ #
+//# Revision     : $Rev:: 678                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.css 677 2024-07-15 13:51:59Z                      $ #
+//# File-ID      : $Id:: wetter.js 678 2024-07-15 13:58:59Z                       $ #
 //#                                                                                 #
 //###################################################################################
-?> d1mini */
-#d1mini h2, #d1mini p { text-align: center; }
-#d1mini table { margin:auto; }
-#d1mini .buttonContainer { text-align:center; }
-#d1mini .topic-slider { margin:10px 0; }
+?> wetter */
+//<? require_once('system/websockets.js') ?>
+
+p.page.load = function() {
+	//p.getValues();
+	ws.connect();
+};

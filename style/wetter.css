@@ -7,15 +7,23 @@
 //###################################################################################
 //#                                                                                 #
 //# Author       : Christian Scheid                                                 #
-//# Date         : 13.06.2024                                                       #
+//# Date         : 12.07.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 677                                                     $ #
+//# Revision     : $Rev:: 678                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.css 677 2024-07-15 13:51:59Z                      $ #
+//# File-ID      : $Id:: wetter.css 678 2024-07-15 13:58:59Z                      $ #
 //#                                                                                 #
 //###################################################################################
-?> d1mini */
-#d1mini h2, #d1mini p { text-align: center; }
-#d1mini table { margin:auto; }
-#d1mini .buttonContainer { text-align:center; }
-#d1mini .topic-slider { margin:10px 0; }
+?> wetter */
+.pagecontent { background:transparent url(images/haus.png) center top no-repeat; }
+div.center { position:relative; margin:auto; margin-top:15px; width:835px; }
+div.center * { position:absolute; }
+
+#wetter .dragthis * { position:static; }
+.ps-input { min-width:100px; text-align:center;}
+
+#WE_Gartenhaus { top:85px; left:120px; } /* checker 2024-07-12T21:02:50 */
+#WE_Gaube { top:160px; left:580px; } /* checker 2024-07-12T21:02:52 */
+#WE_Sued { top:300px; left:135px; } /* checker 2024-07-12T21:03:00 */
+#WE_Ost { top:320px; left:565px; } /* checker 2024-07-12T21:02:55 */
+#WE_Nord { top:35px; left:540px; } /* checker 2024-07-12T21:02:00 */

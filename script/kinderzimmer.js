@@ -9,14 +9,16 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 14.01.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 505                                                     $ #
+//# Revision     : $Rev:: 677                                                     $ #
 //# Author       : $Author:: checker                                              $ #
-//# File-ID      : $Id:: kinderzimmer.js 505 2021-05-07 21:55:45Z checker         $ #
+//# File-ID      : $Id:: kinderzimmer.js 677 2024-07-15 13:51:59Z checker         $ #
 //#                                                                                 #
 //###################################################################################
 ?> kinderzimmer */
 
 //p.log.level = p.log.type.info;
+
+dragqueen.savePositionIn = '%';
 
 p.page.load = function() {
 	$('#kinderzimmer').on('click', '.Ventil.bedienbar', function() {

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 673                                                     $ #
+//# Revision     : $Rev:: 677                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: init.js 673 2024-07-12 13:22:12Z                         $ #
+//# File-ID      : $Id:: init.js 677 2024-07-15 13:51:59Z                         $ #
 //#                                                                                 #
 //###################################################################################
 use system\wpInit;
@@ -1749,6 +1749,7 @@ var project = {
 
 var dragqueen = {
 	active: false,
+	savePositionIn: 'px',
 	latestPosition: null,
 	legendTimeout : 75,
 	updateLegendTimeout: null,

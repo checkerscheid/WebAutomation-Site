@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 676                                                     $ #
+//# Revision     : $Rev:: 677                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: mudda.inc 676 2024-07-12 14:19:18Z                       $ #
+//# File-ID      : $Id:: mudda.inc 677 2024-07-15 13:51:59Z                       $ #
 //#                                                                                 #
 //###################################################################################
 namespace pages;
@@ -114,6 +114,7 @@ require_once 'system/Helper/wpa.psys';
 		<div>
 			<hr />
 			<a href="std.weather.htm" class="ps-button forecast">Wettervorhersage</a>
+			<a href="wetter.htm" class="ps-button"> Wetter</a>
 		</div>
 	</div>
 	<div class="ps-container">
