@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 27.11.2017                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 668                                                     $ #
+//# Revision     : $Rev:: 679                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: calendar_rrule.req 668 2024-07-10 22:06:10Z              $ #
+//# File-ID      : $Id:: calendar_rrule.req 679 2024-07-15 14:18:35Z              $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $m */
