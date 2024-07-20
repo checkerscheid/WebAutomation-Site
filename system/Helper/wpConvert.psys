@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 05.12.2018                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 620                                                     $ #
+//# Revision     : $Rev:: 680                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpConvert.psys 620 2024-05-29 01:27:42Z                  $ #
+//# File-ID      : $Id:: wpConvert.psys 680 2024-07-20 00:28:36Z                  $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -122,6 +122,7 @@ class wpConvert {
 	 * @return mixed
 	 */
 	public static function cleanName($input, $allowBlank = true) {
+		if($input == '') return '';
 		$umlaute = array('/ä/', '/ö/', '/ü/', '/Ä/', '/Ö/', '/Ü/', '/ß/');
 		$ersetzung = array('ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss');
 		$clean = preg_replace($umlaute, $ersetzung, trim($input));

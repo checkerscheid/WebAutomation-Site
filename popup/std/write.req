@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 08.02.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 666                                                     $ #
+//# Revision     : $Rev:: 680                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: write.req 666 2024-07-10 19:43:40Z                       $ #
+//# File-ID      : $Id:: write.req 680 2024-07-20 00:28:36Z                       $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $m */
@@ -30,7 +30,7 @@ use system\std;
 			<td>
 <?
 if(preg_match_all('/(\d+):([^;]+)/', std::posts('unit'), $m) > 0) {
-	echo '<select class=" ps-input newDpVal">';
+	echo '<select class="ps-input newDpVal">';
 	for($i = 0; $i < count($m[0]); $i++) {
 		echo '<option value="' . $m[1][$i] . '">' . $m[2][$i] . '</option>';
 	}
@@ -40,7 +40,7 @@ if(preg_match_all('/(\d+):([^;]+)/', std::posts('unit'), $m) > 0) {
 		echo '<span class="ps-button" data-write="' . $m[1][$i] . '">' . $m[2][$i] . '</span>';
 	}
 } else {
-	echo '<input type="text" class="ps-input newDpVal" />';
+	echo '<input type="text" class="ps-input newDpVal" value="' . std::posts('value') . '" />';
 }
 ?>
 			</td>

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 578                                                     $ #
+//# Revision     : $Rev:: 680                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: dpactive.css 578 2024-03-22 21:53:46Z                    $ #
+//# File-ID      : $Id:: dpactive.css 680 2024-07-20 00:28:36Z                    $ #
 //#                                                                                 #
 //###################################################################################
 ?> dpactive */
@@ -22,5 +22,10 @@
 #dpactive .buttonContainer { float:right; }
 #dpactive .buttonContainer .ps-image-button { display:inline-block; }
 #dpactive ul { margin-left:20px; }
-#dpactive .dpgroups td { padding:2px 5px; border:1px solid #CCC; }
-#dpactive .dpgroups td span { line-height:27px; }
+#dpactive .dpgroups div.td, #dpactive .dpgroups div.th { padding:2px; }
+#dpactive .dpgroups div.td div.tdBorder { padding:2px 5px; white-space:nowrap; line-height:36px; height:36px;
+	border:1px solid #CCC; border-radius:2px;
+	display:flex; flex-wrap:nowrap; justify-content:space-between; }
+#dpactive .dpgroups div.td div.tdBorder .ps-image-status { height:34px; }
+#dpactive .dpgroups div.td div.tdBorder.noBorder { border:none; height:auto; }
+#dpactive .dpgroups div.td { height:27px; line-height:27px; }
