@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 674                                                     $ #
+//# Revision     : $Rev:: 681                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 674 2024-07-12 14:10:44Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 681 2024-07-21 14:27:14Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -361,66 +361,66 @@ foreach($zimmer as $kurz => $name) {
 					</tr>
 					<tr>
 						<td>
-							<span class="ps-input" data-ws="_KE_RT_SH" title="Keller Temperatur">-</span>
-							<span class="<?=wpa::indikatorTemp?>" data-ws="_KE_RT_SH"><?=wpHTML_EMPTY ?></span>
+							<span class="ps-input" data-ws="KE_Temp" title="Keller Temperatur">-</span>
+							<span class="<?=wpa::indikatorTemp?>" data-ws="KE_Temp"><?=wpHTML_EMPTY ?></span>
 						</td>
 						<td>
-							<span class="ps-input" data-ws="_KE_RF_SH" title="Keller Feuchte">-</span>
-							<span class="<?=wpa::indikatorHum?>" data-ws="_KE_RF_SH"><?=wpHTML_EMPTY ?></span>
+							<span class="ps-input" data-ws="KE_Hum" title="Keller Feuchte">-</span>
+							<span class="<?=wpa::indikatorHum?>" data-ws="KE_Hum"><?=wpHTML_EMPTY ?></span>
 						</td>
 						<td>
-							<span class="ps-input" data-ws="_WG1_RT_SH" title="EG Wintergarten Temperatur">-</span>
-							<span class="<?=wpa::indikatorTemp?>" data-ws="_WG1_RT_SH"><?=wpHTML_EMPTY ?></span>
+							<span class="ps-input" data-ws="WG1_HTp_Temp" title="EG Wintergarten Temperatur">-</span>
+							<span class="<?=wpa::indikatorTemp?>" data-ws="WG1_HTp_Temp"><?=wpHTML_EMPTY ?></span>
 						</td>
 						<td>
-							<span class="ps-input" data-ws="_WG1_RF_SH" title="EG Wintergarten Feuchte">-</span>
-							<span class="<?=wpa::indikatorHum?>" data-ws="_WG1_RF_SH"><?=wpHTML_EMPTY ?></span>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<span class="ps-input" data-ws="_GA_Ost_RT_D1" title="Wetterstation Ost Temperatur">-</span>
-							<span class="<?=wpa::indikatorTemp?>" data-ws="_GA_Ost_RT_D1"><?=wpHTML_EMPTY ?></span>
-						</td>
-						<td>
-							<span class="ps-input" data-ws="_GA_Ost_RF_D1" title="Wetterstation Ost Feuchte">-</span>
-							<span class="<?=wpa::indikatorHum?>" data-ws="_GA_Ost_RF_D1"><?=wpHTML_EMPTY ?></span>
-						</td>
-						<td>
-							<span class="ps-input" data-ws="_SZ1_RT_SH" title="EG Schlafzimmer Temperatur">-</span>
-							<span class="<?=wpa::indikatorTemp?>" data-ws="_SZ1_RT_SH"><?=wpHTML_EMPTY ?></span>
-						</td>
-						<td>
-							<span class="ps-input" data-ws="_SZ1_RF_SH" title="EG Schlafzimmer Feuchte">-</span>
-							<span class="<?=wpa::indikatorHum?>" data-ws="_SZ1_RF_SH"><?=wpHTML_EMPTY ?></span>
+							<span class="ps-input" data-ws="WG1_HTp_Hum" title="EG Wintergarten Feuchte">-</span>
+							<span class="<?=wpa::indikatorHum?>" data-ws="WG1_HTp_Hum"><?=wpHTML_EMPTY ?></span>
 						</td>
 					</tr>
 					<tr>
 						<td>
-							<span class="ps-input" data-ws="_GA_Sued_RT_D1" title="Wetterstation Süd Temperatur">-</span>
-							<span class="<?=wpa::indikatorTemp?>" data-ws="_GA_Sued_RT_D1"><?=wpHTML_EMPTY ?></span>
+							<span class="ps-input" data-ws="GA_WE_Ost_Temp" title="Wetterstation Ost Temperatur">-</span>
+							<span class="<?=wpa::indikatorTemp?>" data-ws="GA_WE_Ost_Temp"><?=wpHTML_EMPTY ?></span>
 						</td>
 						<td>
-							<span class="ps-input" data-ws="_GA_Sued_RF_D1" title="Wetterstation Süd Feuchte">-</span>
-							<span class="<?=wpa::indikatorHum?>" data-ws="_GA_Sued_RF_D1"><?=wpHTML_EMPTY ?></span>
+							<span class="ps-input" data-ws="GA_WE_Ost_Hum" title="Wetterstation Ost Feuchte">-</span>
+							<span class="<?=wpa::indikatorHum?>" data-ws="GA_WE_Ost_Hum"><?=wpHTML_EMPTY ?></span>
 						</td>
 						<td>
-							<span class="ps-input" data-ws="_FL2_RT_SH" title="OG Flur Temperatur">-</span>
-							<span class="<?=wpa::indikatorTemp?>" data-ws="_FL2_RT_SH"><?=wpHTML_EMPTY ?></span>
+							<span class="ps-input" data-ws="SZ1_HT_Temp" title="EG Schlafzimmer Temperatur">-</span>
+							<span class="<?=wpa::indikatorTemp?>" data-ws="SZ1_HT_Temp"><?=wpHTML_EMPTY ?></span>
 						</td>
 						<td>
-							<span class="ps-input" data-ws="_FL2_RF_SH" title="OG Flur Feuchte">-</span>
-							<span class="<?=wpa::indikatorHum?>" data-ws="_FL2_RF_SH"><?=wpHTML_EMPTY ?></span>
+							<span class="ps-input" data-ws="SZ1_HT_Hum" title="EG Schlafzimmer Feuchte">-</span>
+							<span class="<?=wpa::indikatorHum?>" data-ws="SZ1_HT_Hum"><?=wpHTML_EMPTY ?></span>
 						</td>
 					</tr>
 					<tr>
 						<td>
-							<span class="ps-input" data-ws="_GA_RT_D1" title="Gartenhaus Temperatur">-</span>
-							<span class="<?=wpa::indikatorTemp?>" data-ws="_GA_RT_D1"><?=wpHTML_EMPTY ?></span>
+							<span class="ps-input" data-ws="GA_WE_Sued_Temp" title="Wetterstation Süd Temperatur">-</span>
+							<span class="<?=wpa::indikatorTemp?>" data-ws="GA_WE_Sued_Temp"><?=wpHTML_EMPTY ?></span>
 						</td>
 						<td>
-							<span class="ps-input" data-ws="_GA_RF_D1" title="Gartenhaus Feuchte">-</span>
-							<span class="<?=wpa::indikatorHum?>" data-ws="_GA_RF_D1"><?=wpHTML_EMPTY ?></span>
+							<span class="ps-input" data-ws="GA_WE_Sued_Hum" title="Wetterstation Süd Feuchte">-</span>
+							<span class="<?=wpa::indikatorHum?>" data-ws="GA_WE_Sued_Hum"><?=wpHTML_EMPTY ?></span>
+						</td>
+						<td>
+							<span class="ps-input" data-ws="FL2_HT_Temp" title="OG Flur Temperatur">-</span>
+							<span class="<?=wpa::indikatorTemp?>" data-ws="FL2_HT_Temp"><?=wpHTML_EMPTY ?></span>
+						</td>
+						<td>
+							<span class="ps-input" data-ws="FL2_HT_Hum" title="OG Flur Feuchte">-</span>
+							<span class="<?=wpa::indikatorHum?>" data-ws="FL2_HT_Hum"><?=wpHTML_EMPTY ?></span>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<span class="ps-input" data-ws="GA1_FS_Temp" title="Gartenhaus Temperatur">-</span>
+							<span class="<?=wpa::indikatorTemp?>" data-ws="GA1_FS_Temp"><?=wpHTML_EMPTY ?></span>
+						</td>
+						<td>
+							<span class="ps-input" data-ws="GA1_FS_Hum" title="Gartenhaus Feuchte">-</span>
+							<span class="<?=wpa::indikatorHum?>" data-ws="GA1_FS_Hum"><?=wpHTML_EMPTY ?></span>
 						</td>
 						<td colspan="2">
 						</td>

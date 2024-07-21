@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 677                                                     $ #
+//# Revision     : $Rev:: 681                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: mudda.inc 677 2024-07-15 13:51:59Z                       $ #
+//# File-ID      : $Id:: mudda.inc 681 2024-07-21 14:27:14Z                       $ #
 //#                                                                                 #
 //###################################################################################
 namespace pages;
@@ -72,15 +72,15 @@ require_once 'system/Helper/wpa.psys';
 				<tr>
 					<td><span>Gartenhaus:</span></td>
 					<td>
-						<span class="ps-input" data-ws="_GA_RT_D1" title="Gartenhaus Temperatur">-</span>
-						<span class="<?=wpa::indikatorTempOut?>" data-ws="_GA_RT_D1"><?=wpHTML_EMPTY ?></span>
+						<span class="ps-input" data-ws="GA1_FS_Temp" title="Gartenhaus Temperatur">-</span>
+						<span class="<?=wpa::indikatorTempOut?>" data-ws="GA1_FS_Temp"><?=wpHTML_EMPTY ?></span>
 					</td>
 					<td>
-						<span class="ps-input" data-ws="_GA_RF_D1" title="Gartenhaus Feuchte">-</span>
-						<span class="<?=wpa::indikatorHum?>" data-ws="_GA_RF_D1"><?=wpHTML_EMPTY ?></span>
+						<span class="ps-input" data-ws="GA1_FS_Hum" title="Gartenhaus Feuchte">-</span>
+						<span class="<?=wpa::indikatorHum?>" data-ws="GA1_FS_Hum"><?=wpHTML_EMPTY ?></span>
 					</td>
 					<td>
-						<span class="ps-input" data-ws="_GA_FS_D1" title="Gartenhaus Füllstand">-</span>
+						<span class="ps-input" data-ws="GA1_FS_Vol" title="Gartenhaus Füllstand">-</span>
 					</td>
 				</tr>
 				<tr>
@@ -90,11 +90,11 @@ require_once 'system/Helper/wpa.psys';
 						<span class="<?=wpa::indikatorTempOut?>" data-ws="_GA_RT"><?=wpHTML_EMPTY ?></span>
 					</td>
 					<td>
-						<span class="ps-input" data-ws="_GA_Sued_RF_D1" title="Wetter Süd Feuchte">-</span>
-						<span class="<?=wpa::indikatorHum?>" data-ws="_GA_Sued_RF_D1"><?=wpHTML_EMPTY ?></span>
+						<span class="ps-input" data-ws="GA_WE_Sued_Hum" title="Wetter Süd Feuchte">-</span>
+						<span class="<?=wpa::indikatorHum?>" data-ws="GA_WE_Sued_Hum"><?=wpHTML_EMPTY ?></span>
 					</td>
 					<td>
-						<span class="ps-input" data-ws="_GA_Ost_RR_D1" title="Wetter Ost Regen">-</span>
+						<span class="ps-input" data-ws="GA_WE_Ost_Rain" title="Wetter Ost Regen">-</span>
 					</td>
 				</tr>
 				<tr>
@@ -102,11 +102,11 @@ require_once 'system/Helper/wpa.psys';
 					<td>
 					</td>
 					<td>
-						<span class="ps-input" data-ws="_GA_Gaube_RF_D1" title="Wetter Süd Feuchte">-</span>
-						<span class="<?=wpa::indikatorHum?>" data-ws="_GA_Gaube_RF_D1"><?=wpHTML_EMPTY ?></span>
+						<span class="ps-input" data-ws="GA2_WE_Gaube_Hum" title="Wetter Gaube Feuchte">-</span>
+						<span class="<?=wpa::indikatorHum?>" data-ws="GA2_WE_Gaube_Hum"><?=wpHTML_EMPTY ?></span>
 					</td>
 					<td>
-						<span class="ps-input" data-ws="_GA_Gaube_RR_D1" title="Wetter Gaube Regen">-</span>
+						<span class="ps-input" data-ws="GA2_WE_Gaube_Rain" title="Wetter Gaube Regen">-</span>
 					</td>
 				</tr>
 			</tbody>
