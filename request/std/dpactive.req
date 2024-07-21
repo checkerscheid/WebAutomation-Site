@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 673                                                     $ #
+//# Revision     : $Rev:: 680                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: dpactive.req 673 2024-07-12 13:22:12Z                    $ #
+//# File-ID      : $Id:: dpactive.req 680 2024-07-20 00:28:36Z                    $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -52,26 +52,6 @@ class dpactive {
 		} else {
 			echo '{"erg": "S_ERROR", "message": "Der Name darf nicht leer sein"}';
 		}
-	}
-
-	//###################################################################################
-	const c_renamedpnamespacepopup = 'renamedpnamespacepopup';
-	public static function renamedpnamespacepopup() {
-		$iddpnamespace = std::posts('iddpnamespace');
-		$database = self::getDatabase();
-		$database->query('SELECT [name], [description] FROM [dpnamespace] WHERE [id_dpnamespace] = ' . $iddpnamespace);
-		$erg = $database->fetch();
-		echo '
-<table data-dpnamespace="' . $iddpnamespace . '">
-	<tr>
-		<td><label for="UpdateDpNamespaceName">Name:</label></td>
-		<td><input type="text" class="ps-input" id="UpdateDpNamespaceName" value="' . $erg['name'] . '" /></td>
-	</tr>
-	<tr>
-		<td><label for="UpdateDpNamespaceDescription">Beschreibung:</label></td>
-		<td><input type="text" class="ps-input" id="UpdateDpNamespaceDescription" value="' . $erg['description'] . '" /></td>
-	</tr>
-</table>';
 	}
 
 	//###################################################################################
@@ -162,9 +142,24 @@ GROUP BY [g].[id_dpgroup], [g].[name]");
 	}
 
 	//###################################################################################
-	const c_newdpgroup = 'newdpgroup';
-	public static function newdpgroup() {
-
+	const c_dpgroupadd = 'dpgroupadd';
+	public static function dpgroupadd() {
+		header(wpJSON_HEADER);
+		$name = wpConvert::cleanName(std::posts('name'), false);
+		$desc = wpConvert::cleanName(std::posts('desc'));
+		if($desc == '') $desc = wpConvert::cleanName(std::posts('name'));
+		if($name != '' && std::posts('namespaceId') != '') {
+			$sql = "INSERT INTO [dpgroup] " .
+				"([id_dpnamespace], [name], [description]) VALUES " .
+				"(" . std::posts('namespaceId') . ", " .
+				"'" . $name . "', " .
+				"'" . $desc . "')";
+			$database = new wpDatabase();
+			$database->query($sql);
+			echo '{"erg": "S_OK"}';
+		} else {
+			echo '{"erg": "S_ERROR", "message": "Der Name darf nicht leer sein"}';
+		}
 	}
 
 	//###################################################################################
@@ -192,114 +187,222 @@ LEFT JOIN [opcdatapoint] [o] ON [dp].[id_opcdatapoint] = [o].[id_opcdatapoint]
 WHERE [dp].[id_dpgroup] = ".std::posts('iddpgroup')."
 ORDER BY [dp].[name]";
 		$database->query($sql);
-		echo '
-<table>
-	<thead>
-		<tr>
-			<th>Name</th>
-			<th>Wert</th>
-			<th>Beschreibung</th>
-			<th>Rohwert</th>
-			<th>letzte Änderung</th>
-			<th>Einheit</th>
-			<th>NKS</th>
-			<th>Faktor</th>
-			<th>min</th>
-			<th>max</th>
-			<th>Plug Ins</th>
-			<th>Treiber</th>
-			<th>aktiv</th>
-		</tr>
-	</thead>
-	<tbody>';
+?>
+<ul class="uldpgroup">
+	<li><hr /></li>
+	<li>
+		<div class="table forall">
+			<div class="tr">
+				<div class="td"><span>Markierung:</span></div>
+				<div class="td">
+					<span class="ps-button markall">alle</span>
+					<span class="ps-button markno">keine</span>
+				</div>
+			</div>
+			<div class="tr">
+				<div class="td"><span>markierte:</span></div>
+				<div class="td">
+					<span class="ps-button allgroup" title="in Gruppe verschieben">Gruppe</span>
+					<span class="ps-button allunit" title="Einheit">Einheit</span>
+					<span class="ps-button allnks" title="Nachkommastelle">NKS</span>
+					<span class="ps-button allmin" title="Minimalwert beim schreiben">Min</span>
+					<span class="ps-button allmax" title="Maximalwert beim schreiben">Max</span>
+					<span class="ps-button allfactor" title="Faktor">Faktor</span>
+					<span class="ps-button allactive" title="de- /aktivieren">aktivieren</span>
+					<span class="ps-button alldelete">l&ouml;schen</span>
+				</div>
+			</div>
+		</div>
+	</li>
+	<li><hr /></li>
+	<li>
+		<div class="table">
+			<div class="tr">
+				<div class="th"></div>
+				<div class="th">Name</div>
+				<div class="th">Wert</div>
+				<div class="th">Beschreibung</div>
+				<div class="th">Rohwert</div>
+				<div class="th">letzte Änderung</div>
+				<div class="th">Einheit</div>
+				<div class="th">NKS</div>
+				<div class="th">min</div>
+				<div class="th">max</div>
+				<div class="th">Faktor</div>
+				<div class="th">Plug Ins</div>
+				<div class="th">Treiber</div>
+				<div class="th">aktiv</div>
+			</div>
+<?
 		while($erg = $database->fetch()) {
 			$erg = array_map(function($item) {
 				return wpDatabase::sqlCorrection($item);
 			}, $erg);
 			echo '
-		<tr data-id="' . $erg['id_dp'] . '">
-			<td title="' . $erg['id_dp'] . '">
-				<span class="ps-checkbox">' . $erg['name'] . '</span>
-				<div class="buttonContainer">
-					<span class="ps-hover-noborder ps-image-button ps-edit">' . wpHTML_EMPTY . '</span>
+			<div class="tr dpingroup" data-id="' . $erg['id_dp'] . '">
+				<div class="td" title="' . $erg['id_dp'] . '">
+					<div class="tdBorder noBorder checkboxContainer">
+						<span class="ps-checkbox">' . wpHTML_EMPTY . '</span>
+					</div>
 				</div>
-			</td>
-			<td>
-				<span data-ws="' . $erg['name'] . '" title="' . $erg['usergroupwrite'] . ' - ' . $_SESSION[SESSION_ID]['LEVEL'] . '">-</span>
-				<div class="buttonContainer">';
-			if($erg['usergroupwrite'] <= $_SESSION[SESSION_ID]['LEVEL']) {
-				echo '
-					<span class="ps-hover-noborder ps-image-button ps-write">' . wpHTML_EMPTY . '</span>';
-			}
-			echo '
+				<div class="td">
+					<div class="tdBorder">
+						<span class="dpName">' . $erg['name'] . '</span>
+						<div class="buttonContainer">
+							<span class="ps-hover-noborder ps-image-button ps-edit">' . wpHTML_EMPTY . '</span>
+						</div>
+					</div>
 				</div>
-			</td>
-			<td>
-				<span class="wpDescriptionValue">' . $erg['description'] . '</span>
-				<div class="buttonContainer">
-					<span class="ps-hover-noborder ps-image-button ps-edit wpDescription">' . wpHTML_EMPTY . '</span>
+				<div class="td">
+					<div class="tdBorder">
+						<span data-ws="' . $erg['name'] . '" title="' . $erg['usergroupwrite'] . ' - ' . $_SESSION[SESSION_ID]['LEVEL'] . '">-</span>
+						<div class="buttonContainer">';
+						if($erg['usergroupwrite'] <= $_SESSION[SESSION_ID]['LEVEL']) {
+							echo '
+							<span class="ps-hover-noborder ps-image-button ps-write">' . wpHTML_EMPTY . '</span>';
+						}
+						echo '
+						</div>
+					</div>
 				</div>
-			</td>
-			<td>
-				<span data-wsroh="' . $erg['name'] . '">-</span>
-			</td>
-			<td>
-				<span data-wslastchange="' . $erg['name'] . '">-</span>
-			</td>
-			<td>
-				<span class="dpunit">' . $erg['unit'] . '</span>
-				<div class="buttonContainer">
-					<span class="ps-hover-noborder ps-image-button ps-edit">' . wpHTML_EMPTY . '</span>
+				<div class="td">
+					<div class="tdBorder">
+						<span class="wpDescriptionValue">' . $erg['description'] . '</span>
+						<div class="buttonContainer">
+							<span class="ps-hover-noborder ps-image-button ps-edit wpDescription">' . wpHTML_EMPTY . '</span>
+						</div>
+					</div>
 				</div>
-			</td>
-			<td>
-				<span>' . $erg['nks'] . '</span>
-				<div class="buttonContainer">
-					<span class="ps-hover-noborder ps-image-button ps-edit">' . wpHTML_EMPTY . '</span>
+				<div class="td">
+					<div class="tdBorder">
+						<span data-wsroh="' . $erg['name'] . '">-</span>
+					</div>
 				</div>
-			</td>
-			<td>
-				<span>' . $erg['factor'] . '</span>
-				<div class="buttonContainer">
-					<span class="ps-hover-noborder ps-image-button ps-edit">' . wpHTML_EMPTY . '</span>
+				<div class="td">
+					<div class="tdBorder">
+						<span data-wslastchange="' . $erg['name'] . '">-</span>
+					</div>
 				</div>
-			</td>
-			<td>
-				<span>' . $erg['min'] . '</span>
-				<div class="buttonContainer">
-					<span class="ps-hover-noborder ps-image-button ps-edit">' . wpHTML_EMPTY . '</span>
+				<div class="td">
+					<div class="tdBorder">
+						<span class="dpunit">' . $erg['unit'] . '</span>
+						<div class="buttonContainer">
+							<span class="ps-hover-noborder ps-image-button ps-edit">' . wpHTML_EMPTY . '</span>
+						</div>
+					</div>
 				</div>
-			</td>
-			<td>
-				<span>' . $erg['max'] . '</span>
-				<div class="buttonContainer">
-					<span class="ps-hover-noborder ps-image-button ps-edit">' . wpHTML_EMPTY . '</span>
+				<div class="td">
+					<div class="tdBorder">
+						<span>' . $erg['nks'] . '</span>
+						<div class="buttonContainer">
+							<span class="ps-hover-noborder ps-image-button ps-edit">' . wpHTML_EMPTY . '</span>
+						</div>
+					</div>
 				</div>
-			</td>
-			<td>
-				<span class="ps-image-status alarm' . ($erg['id_alarm'] == '-' ? '-ia' : '" title="' . $erg['id_alarm']) . '">' . wpHTML_EMPTY . '</span>
-				<span class="ps-image-status trend' . ($erg['id_trend'] == '-' ? '-ia' : '" title="' . $erg['id_trend']) . '">' . wpHTML_EMPTY . '</span>
-				<span class="ps-image-status calendar' . ($erg['id_calendar'] == '-' ? '-ia' : '" title="' . $erg['id_calendar']) . '">' . wpHTML_EMPTY . '</span>
-				<span class="ps-image-status route' . ($erg['id_router'] == '-' ? '-ia' : '" title="' . $erg['id_router']) . '">' . wpHTML_EMPTY . '</span>
-			</td>
-			<td>
-				<span class="' . ($erg['id_opcdatapoint'] != '-' ? 'ps-green" title="' . $erg['id_opcdatapoint'] . ' - ' . $erg['opcname'] . '"' : 'ps-grey"') . '">OPC</span>
-				<span class="' . ($erg['id_mqtttopic'] != '-' ? 'ps-green" title="' . $erg['id_mqtttopic'] . ' - ' . $erg['topic'] . '"' : 'ps-grey"') . '">MQTT</span>
-			</td>
-			<td>
-				<span>' . $erg['active'] . '</span>
-				<div class="buttonContainer">
-					<span class="ps-hover-noborder ps-image-button ps-edit">' . wpHTML_EMPTY . '</span>
+				<div class="td">
+					<div class="tdBorder">
+						<span>' . $erg['min'] . '</span>
+						<div class="buttonContainer">
+							<span class="ps-hover-noborder ps-image-button ps-edit">' . wpHTML_EMPTY . '</span>
+						</div>
+					</div>
 				</div>
-			</td>
-		</tr>';
+				<div class="td">
+					<div class="tdBorder">
+						<span>' . $erg['max'] . '</span>
+						<div class="buttonContainer">
+							<span class="ps-hover-noborder ps-image-button ps-edit">' . wpHTML_EMPTY . '</span>
+						</div>
+					</div>
+				</div>
+				<div class="td">
+					<div class="tdBorder">
+						<span>' . $erg['factor'] . '</span>
+						<div class="buttonContainer">
+							<span class="ps-hover-noborder ps-image-button ps-edit">' . wpHTML_EMPTY . '</span>
+						</div>
+					</div>
+				</div>
+				<div class="td">
+					<div class="tdBorder">
+						<span class="ps-image-status alarm' . ($erg['id_alarm'] == '-' ? '-ia' : '" title="' . $erg['id_alarm']) . '">' . wpHTML_EMPTY . '</span>
+						<span class="ps-image-status trend' . ($erg['id_trend'] == '-' ? '-ia' : '" title="' . $erg['id_trend']) . '">' . wpHTML_EMPTY . '</span>
+						<span class="ps-image-status calendar' . ($erg['id_calendar'] == '-' ? '-ia' : '" title="' . $erg['id_calendar']) . '">' . wpHTML_EMPTY . '</span>
+						<span class="ps-image-status route' . ($erg['id_router'] == '-' ? '-ia' : '" title="' . $erg['id_router']) . '">' . wpHTML_EMPTY . '</span>
+					</div>
+				</div>
+				<div class="td">
+					<div class="tdBorder">
+						<span class="' . ($erg['id_opcdatapoint'] != '-' ? 'ps-fontgreen" title="' . $erg['id_opcdatapoint'] . ' - ' . $erg['opcname'] . '"' : 'ps-grey"') . '>OPC</span>
+						<span class="' . ($erg['id_mqtttopic'] != '-' ? 'ps-fontgreen" title="' . $erg['id_mqtttopic'] . ' - ' . $erg['topic'] . '"' : 'ps-grey"') . '>MQTT</span>
+					</div>
+				</div>
+				<div class="td">
+					<div class="tdBorder">
+						<span>' . $erg['active'] . '</span>
+						<div class="buttonContainer">
+							<span class="ps-hover-noborder ps-image-button ps-edit">' . wpHTML_EMPTY . '</span>
+						</div>
+					</div>
+				</div>
+			</div>';
 			//std::test_array($erg);
 		}
-		echo '
-	</tbody>
-</table>';
+?>
+		</div>
+	</li>
+</ul>
+<?
+	}
+//###################################################################################
+	const c_popallgroup = 'popallgroup';
+	public static function popallgroup() {
+?>
+		<h3>ausgewälte Datapoints:</h3>
+		<ul class="names">
+<? foreach(std::posts('names') as $name) { ?>
+			<li><?=$name?></li>
+<? } ?>
+		</ul>
+		<hr />
+		<div class="table">
+<?
+		$database = new wpDatabase();
+		$database->query("SELECT " .
+		"[dpgroup].[id_dpgroup], CONCAT([dpnamespace].[name], ' / ', [dpgroup].[name]) AS [dpgroupname] " .
+		"FROM [dpgroup] " .
+		"INNER JOIN [dpnamespace] ON [dpgroup].[id_dpnamespace] = [dpnamespace].[id_dpnamespace] " .
+		"ORDER BY [dpnamespace].[name], [dpgroup].[name]");
+?>
+			<div class="tr">
+				<div class="td"><label for="c-group">neue Trendgruppe</label></div>
+				<div class="td">
+					<select id="c-group" class="ps-input">
+<?
+		while($erg = $database->fetch()) {
+			echo '<option value="' . $erg['id_dpgroup'] . '">' . $erg['dpgroupname'] . '</option>';
+		}
+?>
+					</select>
+				</div>
+			</div>
+		</div>
+<?
 	}
 
+//###################################################################################
+	const c_saveallgroup = 'saveallgroup';
+	public static function saveallgroup() {
+		$where = '';
+		foreach($_POST['ids'] as $ids) {
+			$where .= '[id_dp] = '.$ids.' OR ';
+		}
+		$database = new wpDatabase();
+		$database->query("UPDATE [dp] SET
+				[id_dpgroup] = ".std::posts('newgroup')."
+				WHERE ".substr($where, 0, -4));
+		echo '{"erg": "S_OK"}';
+	}
 	//###################################################################################
 	const c_writedp = 'writedp';
 	public static function writedp() {
@@ -330,9 +433,6 @@ switch(std::gets('param1')) {
 	case dpactive::c_newdpnamespace:
 		dpactive::newdpnamespace();
 		break;
-	case dpactive::c_renamedpnamespacepopup:
-		dpactive::renamedpnamespacepopup();
-		break;
 	case dpactive::c_renamedpnamespace:
 		dpactive::renamedpnamespace();
 		break;
@@ -342,11 +442,17 @@ switch(std::gets('param1')) {
 	case dpactive::c_getdpgroups:
 		dpactive::getdpgroups();
 		break;
-	case dpactive::c_newdpgroup:
-		dpactive::newdpgroup();
+	case dpactive::c_dpgroupadd:
+		dpactive::dpgroupadd();
 		break;
 	case dpactive::c_getdp:
 		dpactive::getdp();
+		break;
+	case dpactive::c_popallgroup:
+		dpactive::popallgroup();
+		break;
+	case dpactive::c_saveallgroup:
+		dpactive::saveallgroup();
 		break;
 	case dpactive::c_writedp:
 		dpactive::writedp();

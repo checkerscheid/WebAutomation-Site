@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 673                                                     $ #
+//# Revision     : $Rev:: 680                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.js 673 2024-07-12 13:22:12Z                   $ #
+//# File-ID      : $Id:: uebersicht.js 680 2024-07-20 00:28:36Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> uebersicht */
@@ -54,17 +54,56 @@ p.page.load = function() {
 		p.automation.write(write, 'True');
 	});
 	$('#uebersicht').on('click', '.wz-gemuetlich', function() {
-		$.post('std.shellycom.set-dimmer.req', {ShellyIP:lautsprecher, turn:'true', brightness:35}); // Lautsprecher
-		$.post('std.shellycom.set-dimmer.req', {ShellyIP:kamin, turn:'true', brightness:20}); // Kamin
+		const promiseLautsprecher = new Promise((resolve) => {
+			$.post('std.shellycom.set-dimmer.req', {ShellyIP:lautsprecher, turn:'true', brightness:35},
+				function(data) {
+					resolve('Lautsprecher ist ' + (data.ison ? 'an' : 'aus') + ', (' + data.brightness + ' %)');
+				},
+			'json'); // Lautsprecher
+		});
+		const promiseKamin = new Promise((resolve) =>{
+			$.post('std.shellycom.set-dimmer.req', {ShellyIP:kamin, turn:'true', brightness:20},
+				function(data) {
+					resolve('Kamin ist ' + (data.ison ? 'an' : 'aus') + ', (' + data.brightness + ' %)')
+				},
+			'json'); // Kamin
+		});
 		//$.post('std.shellycom.set-relay.req', {ShellyIP:herz, turn:'true'}); // Herz
-		$.post('std.shellycom.set-dimmer.req', {ShellyIP:buero, turn:'true', brightness:20}); // Büro
-		$.post('std.shellycom.set-rgbw.req', {ShellyIP:feuer, turn:'true', gain:20, red:255, green:75, blue:0});
+		const promiseBuero = new Promise((resolve) =>{
+			$.post('std.shellycom.set-dimmer.req', {ShellyIP:buero, turn:'true', brightness:20},
+				function(data) {
+					resolve('Büro ist ' + (data.ison ? 'an' : 'aus') + ', (' + data.brightness + ' %)')
+				},
+			'json'); // Büro
+		});
+		const promiseFeuer = new Promise((resolve) =>{
+			$.post('std.shellycom.set-rgbw.req', {ShellyIP:feuer, turn:'true', gain:20, red:255, green:75, blue:0},
+				function(data) {
+					resolve('Feuer ist ' + (data.ison ? 'an' : 'aus') + ', (' + data.gain + ' %)')
+				},
+			'json'); //Feuer
+		});
+		Promise.all([promiseLautsprecher, promiseKamin, promiseBuero, promiseFeuer]).then((responses) => {
+			var msg = 'Wohnzimmer gemütlich:<br />';
+			for(const response of responses) {
+				msg += response + '<br />';
+			}
+			p.page.alert(msg);
+		});
 	});
 	$('#uebersicht').on('click', '.wz-feuer-aus', function() {
-		$.post('std.shellycom.set-rgbw.req', {ShellyIP:feuer, turn:'false'});
+		$.post('std.shellycom.set-rgbw.req', {ShellyIP:feuer, turn:'false'},
+			function(data) {
+				p.page.alert('Leuchte ist ' + (data.ison ? 'an' : 'aus'));
+			},
+		'json');
 	});
 	$('#uebersicht').on('click', '.wz-feuer', function() {
-		$.post('std.shellycom.set-rgbw.req', {ShellyIP:feuer, turn:'true', gain:20, red:255, green:75, blue:0});
+		$.post('std.shellycom.set-rgbw.req', {ShellyIP:feuer, turn:'true', gain:20, red:255, green:75, blue:0},
+			function(data) {
+				p.page.alert('Leuchte ist ' + (data.ison ? 'an' : 'aus'));
+			},
+		'json');
 	});
 	$('#uebersicht').on('click', '.wz-wn-an', function() {
 		$.post('std.shellycom.set-relay.req', {ShellyIP:wn_kamin, turn:'true'});

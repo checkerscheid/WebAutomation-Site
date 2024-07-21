@@ -9,17 +9,17 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 677                                                     $ #
+//# Revision     : $Rev:: 680                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.js 677 2024-07-15 13:51:59Z                       $ #
+//# File-ID      : $Id:: d1mini.js 680 2024-07-20 00:28:36Z                       $ #
 //#                                                                                 #
 //###################################################################################
 use system\std
 ?> d1mini */
 //<? require_once('script/system/websockets.js') ?>
+ws.logEnabled = true;
 p.page.load = function() {
 	// ?? warum war das? $.get('std.d1mini.getD1MiniSettings.<?=std::gets("param1")?>.req');
-
 	$('.buttonContainer').on('click', '.SetCmd', function() {
 		var ip = $(this).attr('data-ip');
 		var cmd = $(this).attr('data-cmd');
@@ -64,7 +64,8 @@ p.page.load = function() {
 		const that = $(this)
 		const topic = $(this).attr('data-topic');
 		const unit = $(this).attr('data-unit');
-		$.post('std.write.pop', {headline:topic, unit:unit}, function(data) {
+		const value = $(this).text().replace(' ' + unit, '').trim();
+		$.post('std.write.pop', {headline:topic, unit:unit, value:value}, function(data) {
 			$('#dialog').html(data).dialog({
 				title: 'Topic setzen',
 				width: p.popup.width.std,

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 08.06.2021                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 677                                                     $ #
+//# Revision     : $Rev:: 680                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: websockets.js 677 2024-07-15 13:51:59Z                   $ #
+//# File-ID      : $Id:: websockets.js 680 2024-07-20 00:28:36Z                   $ #
 //#                                                                                 #
 //###################################################################################
 use system\Helper\wpa;
@@ -211,7 +211,7 @@ var ws = {
 					}
 					if($('[data-wsroh=' + that.name + ']').length) {
 						$.each($('[data-wsroh=' + that.name + ']'), function() {
-							$(this).text(that.value);
+							$(this).text(that.value == '' ? '-' : that.value);
 						});
 					}
 					if($('[data-wslastchange=' + that.name + ']').length) {

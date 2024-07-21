@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 578                                                     $ #
+//# Revision     : $Rev:: 680                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: dpactive.js 578 2024-03-22 21:53:46Z                     $ #
+//# File-ID      : $Id:: dpactive.js 680 2024-07-20 00:28:36Z                     $ #
 //#                                                                                 #
 //###################################################################################
 use request\std;
@@ -75,7 +75,7 @@ p.page.load = function() {
 	$('#dpactive').on('click', '.dpnamespacecontainer .ps-refresh', function() {
 		var namespaceContainer = $(this).parents('li');
 		var namespaceId = $(namespaceContainer).attr('data-dpnamespace');
-		$.post('std.dpactive.renamedpnamespacepopup.req', {iddpnamespace:namespaceId}, function(data) {
+		$.post('std.dpactive.renamedpnamespace.pop', {iddpnamespace:namespaceId}, function(data) {
 			$('#dialog').html(data).dialog({
 				title: 'Datenpunktnamespace umbenennen', modal: true, width: p.popup.width.middle,
 				buttons: [{
@@ -97,6 +97,31 @@ p.page.load = function() {
 								default:
 									$('#dialog').dialog('close');
 							}
+						}, 'json');
+					}
+				}]
+			});
+		});
+	});
+
+	// new Group in Namespace
+	$('#dpactive').on('click', '.dpnamespacecontainer .ps-add', function() {
+		var namespaceId = $(this).parents('li').attr('data-dpnamespace');
+		var headline = $(this).parents('li').find('.dpnamespace .boldfont').text();
+		$.post('std.dpactive.dpgroupadd.pop', {headline:headline}, function(data) {
+			$('#dialog').html(data).dialog({
+				title: 'Neue Gruppe im Namespace anlegen', modal: true, width: p.popup.width.middle,
+				buttons: [{
+					text: 'speichern',
+					click: function() {
+						var obj = {
+							namespaceId:namespaceId,
+							name:$.trim($('#NewGroupInNamespaceName').val()),
+							desc:$.trim($('#NewGroupInNamespaceNameDesc').val())
+						};
+						$.post('std.dpactive.dpgroupadd.req', obj, function(data) {
+							if(data.erg == 'S_OK') $('#dialog').dialog('close');
+							if(data.erg == 'S_ERROR') p.page.alertred(data.message);
 						}, 'json');
 					}
 				}]
@@ -155,6 +180,54 @@ p.page.load = function() {
 			$(this).addClass('open');
 		}
 	});
+	
+//###################################################################################
+	// Markierungen
+	$('#dpactive').on('click', '.markall', function() {
+		$('.noBorder .ps-checkbox:not(.ps-disabled)').addClass('checked');
+	});
+	$('#dpactive').on('click', '.markno', function() {
+		$('.noBorder .ps-checkbox:not(.ps-disabled)').removeClass('checked');
+	});
+//###################################################################################
+	$('#dpactive').on('click', '.allgroup', function() {
+		var tr = $(this).parents('ul.uldpgroup:first').find('div.dpingroup');
+		var ids = [];
+		var names = [];
+		$(tr).each(function() {
+			if($(this).find('.ps-checkbox').hasClass('checked')) {
+				ids.push($(this).attr('data-id'));
+				names.push($(this).find('.dpName').text());
+			}
+		});
+		if(ids.length > 0) {
+			$.post('std.dpactive.popallgroup.req', {names:names}, function(data) {
+				$('#dialog').html(data).dialog({
+					title: 'Datapoints Gruppe wechseln', modal: true, width: p.popup.width.middle,
+					buttons: [{
+						text:'OK',
+						click: function() {
+							var newgroup = $('#c-group').val();
+							$.post('std.dpactive.saveallgroup.req', {ids:ids, newgroup:newgroup}, function(data) {
+								if(data.erg == 'S_OK') {
+									p.page.alert('<span class="pos">gespeichert</span>');
+									$('#dialog').dialog('close');
+								} else {
+									p.page.alert('<span class="neg">Konnte nicht gespeichert werden.</span>', 3000);
+								}
+							}, 'json');
+						}
+					},{
+						text: 'Abbruch',
+						click: function() { $('#dialog').dialog('close'); }
+					}]
+				});
+			});
+		} else {
+			p.page.alert('Keine Datapoints ausgewählt');
+		}
+	});
+//###################################################################################
 	$('#dpactive').on('click', '.ps-write', function() {
 		var dpId = $(this).parents('tr').attr('data-id');
 		var unit = $(this).parents('tr').find('.dpunit').text();

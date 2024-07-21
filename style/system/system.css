@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 677                                                     $ #
+//# Revision     : $Rev:: 680                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: system.css 677 2024-07-15 13:51:59Z                      $ #
+//# File-ID      : $Id:: system.css 680 2024-07-20 00:28:36Z                      $ #
 //#                                                                                 #
 //###################################################################################
 use system\wpInit
@@ -387,6 +387,7 @@ span.ps-checkbox, label.ps-checkbox { display:inline-block; }
 .ps-image-button { display:block; width:27px; height:27px; line-height:27px; padding:0 2px; margin:0 3px; cursor:pointer; border:1px solid transparent; }
 .ps-image-button:hover { border-color:#CCC; }
 .ps-image-button:active { box-shadow:inset 0px 0px 3px #CCC; }
+.ps-image-button.ps-add { background:transparent url(images/layout/ic_menu_add.png) center center no-repeat; }
 .ps-image-button.ps-edit { background:transparent url(images/layout/ic_menu_edit.png) center center no-repeat; }
 .ps-image-button.ps-delete { background:transparent url(images/layout/ic_menu_delete.png) center center no-repeat; }
 .ps-image-button.ps-refresh { background:transparent url(images/layout/ic_menu_refresh.png) center center no-repeat; }

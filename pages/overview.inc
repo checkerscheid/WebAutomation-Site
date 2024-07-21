@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 672                                                     $ #
+//# Revision     : $Rev:: 681                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: overview.inc 672 2024-07-12 13:20:57Z                  $ #
+//# File-ID      : $Id:: overview.inc 681 2024-07-21 14:27:14Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -340,8 +340,8 @@ class overview {
 				<tr>
 					<td colspan="3">Pflanze auf'm Tisch</td>
 					<td colspan="3">
-						<span data-ws="BasisTest_Moisture" class="ps-input">undefined</span>
-						<span data-ws="BasisTest_Moisture" class="<?=wpa::indikatorPfl?>"><?=wpHTML_EMPTY?></span>
+						<span data-ws="WZ_PF_TI_Moisture" class="ps-input">undefined</span>
+						<span data-ws="WZ_PF_TI_Moisture" class="<?=wpa::indikatorPfl?>"><?=wpHTML_EMPTY?></span>
 					</td>
 				</tr>
 				<tr>

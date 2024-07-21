@@ -1,0 +1,75 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 16.07.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 682                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: dpactive.req 682 2024-07-21 14:28:53Z                    $ #
+//#                                                                                 #
+//###################################################################################
+/** @var stdAjax $system */
+namespace popup\std;
+use system\Helper\wpDatabase;
+use system\std;
+
+
+class dpactive {
+	//###################################################################################
+	const c_renamedpnamespace = 'renamedpnamespace';
+	public static function renamedpnamespace() {
+		$iddpnamespace = std::posts('iddpnamespace');
+		$database = new wpDatabase();
+		$database->query('SELECT [name], [description] FROM [dpnamespace] WHERE [id_dpnamespace] = ' . $iddpnamespace);
+		$erg = $database->fetch();
+		echo '
+<div class="table" data-dpnamespace="' . $iddpnamespace . '">
+	<div class="tr">
+		<div class="td"><label for="UpdateDpNamespaceName">Name:</label></div>
+		<div class="td"><input type="text" class="ps-input" id="UpdateDpNamespaceName" value="' . $erg['name'] . '" /></div>
+	</div>
+	<div class="tr">
+		<div class="td"><label for="UpdateDpNamespaceDescription">Beschreibung:</label></div>
+		<div class="td"><input type="text" class="ps-input" id="UpdateDpNamespaceDescription" value="' . $erg['description'] . '" /></div>
+	</div>
+</div>';
+	}
+	//###################################################################################
+	const c_dpgroupadd = 'dpgroupadd';
+	public static function dpgroupadd() {
+		echo '
+<h3>' . std::posts('headline') . '</h3>
+<div class="table">
+	<div class="tr">
+		<div class="td"><label for="NewGroupInNamespaceName">Name:</label></div>
+		<div class="td"><input type="text" class="ps-input" id="NewGroupInNamespaceName" /></div>
+	</div>
+	<div class="tr">
+		<div class="td"><label for="NewGroupInNamespaceNameDesc">Beschreibung:</label></div>
+		<div class="td"><input type="text" class="ps-input" id="NewGroupInNamespaceNameDesc" /></div>
+	</div>
+</div>';
+	}
+}
+switch(std::gets('param1')) {
+	case dpactive::c_renamedpnamespace:
+		dpactive::renamedpnamespace();
+		break;
+	case dpactive::c_dpgroupadd:
+		dpactive::dpgroupadd();
+		break;
+	default:
+		\system\html::default();
+		break;
+}
+
+//###################################################################################
+// Hilfsfunktionen
+//###################################################################################
+

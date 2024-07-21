@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 677                                                     $ #
+//# Revision     : $Rev:: 680                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.inc 677 2024-07-15 13:51:59Z                      $ #
+//# File-ID      : $Id:: d1mini.inc 680 2024-07-20 00:28:36Z                      $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
@@ -38,6 +38,7 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 		<span class="ps-button SetCmd" data-ip="<?=$erg['ip'] ?>" data-cmd="ForceMqttUpdate" title="Force MQTT Update">Force MQTT Update</span>
 		<span class="ps-button SetCmd" data-ip="<?=$erg['ip'] ?>" data-cmd="UpdateHTTP" title="Setup Http">Setup Http</span>
 		<span class="ps-button SetCmd" data-ip="<?=$erg['ip'] ?>" data-cmd="RestartDevice" title="neu starten">neu starten</span>
+		<a class="ps-button" target="_blank" href="http://<?=$erg['ip'] ?>/print">Device Site</a>
 	</div>
 	<div class="ps-flex-container page">
 	<? if($d1Mini->FreakaZoneDevice->useModul->DHT11 ||
