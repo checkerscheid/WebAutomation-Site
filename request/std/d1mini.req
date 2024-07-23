@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 666                                                     $ #
+//# Revision     : $Rev:: 684                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.req 666 2024-07-10 19:43:40Z                      $ #
+//# File-ID      : $Id:: d1mini.req 684 2024-07-23 21:58:22Z                      $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -39,18 +39,56 @@ class d1mini {
 	}
 	const c_setcmd = 'setcmd';
 	public static function setcmd($ip, $cmd) {
-		$context = stream_context_create([
+		try {
+			file_get_contents('http://' . $ip . '/setCmd?cmd=' . $cmd, 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+		//echo file_get_contents('http://' . $ip . '/setCmd?cmd=RestartDevice');
+	}
+	const c_NeoPixelDemo = 'NeoPixelDemo';
+	public static function NeoPixelDemo($ip) {
+		try {
+			$cmd = 'demo=1';
+			file_get_contents('http://' . $ip . '/setNeoPixelDemo?' . $cmd, 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+	}
+	const c_NeoPixelEffect = 'NeoPixelEffect';
+	public static function NeoPixelEffect($ip) {
+		try {
+			$cmd = 'effect=' . std::posts('id');
+			file_get_contents('http://' . $ip . '/setNeoPixelEffect?' . $cmd, 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+	}
+	const c_NeoPixelSimple = 'NeoPixelSimple';
+	public static function NeoPixelSimple($ip) {
+		try {
+			$cmd = 'r=' . std::posts('r') . '&g=' . std::posts('g') . '&b=' . std::posts('b');
+			file_get_contents('http://' . $ip . '/setNeoPixelSimple?' . $cmd, 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+	}
+	const c_NeoPixel = 'NeoPixel';
+	public static function NeoPixel($ip) {
+		try {
+			$cmd = 'pixel=' . std::posts('pixel') . '&r=' . std::posts('r') . '&g=' . std::posts('g') . '&b=' . std::posts('b');
+			file_get_contents('http://' . $ip . '/setNeoPixel?' . $cmd, 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+	}
+	private static function getContext() {
+		return stream_context_create([
 			"http" => [
 				"method"=>"GET",
 				"timeout" => 1
 			]
 		]);
-		try {
-			file_get_contents('http://' . $ip . '/setCmd?cmd=' . $cmd, 0, $context);
-		} catch(Exception $e) {
-			// Fail silently
-		}
-		//echo file_get_contents('http://' . $ip . '/setCmd?cmd=RestartDevice');
 	}
 }
 
@@ -66,6 +104,22 @@ switch(std::gets('param1')) {
 		//###################################################################################
 	case d1mini::c_setcmd:
 		d1mini::setcmd(std::posts('ip'), std::posts('cmd'));
+		break;
+		//###################################################################################
+	case d1mini::c_NeoPixelDemo:
+		d1mini::NeoPixelDemo(std::posts('ip'));
+		break;
+		//###################################################################################
+	case d1mini::c_NeoPixelSimple:
+		d1mini::NeoPixelSimple(std::posts('ip'));
+		break;
+		//###################################################################################
+	case d1mini::c_NeoPixel:
+		d1mini::NeoPixel(std::posts('ip'));
+		break;
+		//###################################################################################
+	case d1mini::c_NeoPixelEffect:
+		d1mini::NeoPixelEffect(std::posts('ip'));
 		break;
 		//###################################################################################
 	default:

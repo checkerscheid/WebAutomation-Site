@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 26.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 677                                                     $ #
+//# Revision     : $Rev:: 684                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.psys 677 2024-07-15 13:51:59Z                     $ #
+//# File-ID      : $Id:: d1mini.psys 684 2024-07-23 21:58:22Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -90,6 +90,9 @@ class d1mini {
 			}
 			if($this->status->FreakaZoneDevice->useModul->AnalogOut) {
 				$this->setAnalogOut();
+			}
+			if($this->status->FreakaZoneDevice->useModul->AnalogOut2) {
+				$this->setAnalogOut2();
 			}
 			if($this->status->FreakaZoneDevice->useModul->Relais ||
 					$this->status->FreakaZoneDevice->useModul->RelaisShield) {
@@ -202,6 +205,27 @@ class d1mini {
 		$id_mqtttopicHandError = $this->insertTopic('ERROR/AnalogOutHand');
 		$id_dp_handError = $this->mergeDP($id_mqtttopicHandError, 'AnalogOutHandError', 'AnalogOut Hand Error', '0:Automatik;1:Hand;', 'NULL', 0, 1);
 		$this->mergeAlarm($id_dp_handError, 'AnalogOutHandError', 'AnalogOut Hand Error', AlarmType::Handbetrieb);
+	}
+	private function setAnalogOut2() {
+		$id_mqtttopic = $this->insertTopic('AnalogOut2/Output');
+		$id_dp = $this->mergeDP($id_mqtttopic, 'AnalogOut2', 'AnalogOut 2', '%', 0);
+		$this->mergeTrend($id_dp, 'AnalogOut2', 0);
+
+		$id_mqtttopicHand = $this->insertTopic('AnalogOut2/Hand');
+		$this->mergeDP($id_mqtttopicHand, 'AnalogOut2Hand', 'AnalogOut 2 Hand', '%', 0);
+
+		$id_mqtttopicAuto = $this->insertTopic('AnalogOut2/Auto');
+		$this->mergeDP($id_mqtttopicAuto, 'AnalogOut2Auto', 'AnalogOut 2 Auto', '%', 0);
+
+		$id_mqtttopicSetHand = $this->insertTopic('settings/AnalogOut2/SetHand');
+		$this->mergeDP($id_mqtttopicSetHand, 'AnalogOut2SetHand', 'AnalogOut 2 Hand', '0:Automatik;1:Hand;', 'NULL', 0, 1);
+
+		$id_mqtttopicHandValue = $this->insertTopic('settings/AnalogOut2/SetHandValue');
+		$this->mergeDP($id_mqtttopicHandValue, 'AnalogOut2SetHandValue', 'AnalogOut 2 Hand Value', '%', 0);
+
+		$id_mqtttopicHandError = $this->insertTopic('ERROR/AnalogOut2Hand');
+		$id_dp_handError = $this->mergeDP($id_mqtttopicHandError, 'AnalogOut2HandError', 'AnalogOut 2 Hand Error', '0:Automatik;1:Hand;', 'NULL', 0, 1);
+		$this->mergeAlarm($id_dp_handError, 'AnalogOut2HandError', 'AnalogOut 2 Hand Error', AlarmType::Handbetrieb);
 	}
 	private function setRelais($hasMoisture) {
 		$id_mqtttopic = $this->insertTopic('Relais/Output');

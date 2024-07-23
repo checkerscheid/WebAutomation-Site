@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 677                                                     $ #
+//# Revision     : $Rev:: 684                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: system.js 677 2024-07-15 13:51:59Z                       $ #
+//# File-ID      : $Id:: system.js 684 2024-07-23 21:58:22Z                       $ #
 //#                                                                                 #
 //###################################################################################
 use system\wpInit;
@@ -282,6 +282,7 @@ $(document).ready(function() {
 	$('.pagecontent .pa-slider').slider({
 		min: 0,
 		max: 100,
+		range: 'min',
 		start: function() {
 			$(this).addClass('WriteOnly');
 			$(this).find('a').append('<span class="toleft"></span>');

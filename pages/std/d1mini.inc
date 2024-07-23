@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 680                                                     $ #
+//# Revision     : $Rev:: 684                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.inc 680 2024-07-20 00:28:36Z                      $ #
+//# File-ID      : $Id:: d1mini.inc 684 2024-07-23 21:58:22Z                      $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
@@ -33,7 +33,7 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 <div id="d1mini">
 	<h1><?=$headline['name']?> <?=$erg['name'] ?></h1>
 	<h2><?=$erg['description'] ?></h2>
-	<p>(<?=$erg['ip'] ?>, <?=$erg['mac'] ?>)</p>
+	<p id="storedIP" data-ip="<?=$erg['ip'] ?>">(<?=$erg['ip'] ?>, <?=$erg['mac'] ?>)</p>
 	<div class="buttonContainer">
 		<span class="ps-button SetCmd" data-ip="<?=$erg['ip'] ?>" data-cmd="ForceMqttUpdate" title="Force MQTT Update">Force MQTT Update</span>
 		<span class="ps-button SetCmd" data-ip="<?=$erg['ip'] ?>" data-cmd="UpdateHTTP" title="Setup Http">Setup Http</span>
@@ -219,6 +219,67 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 			</table>
 		</div>
 	<? } ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->NeoPixel) { ?>
+		<div class="ps-container">
+			<h3>NeoPixel</h3>
+			<div>
+				<span class="colorpreview"><?=wpHTML_EMPTY ?></span><br />
+				<input type="text" id="NeoPixelR" class="ps-input NeoPixelColor" placeholder="Red 0 - 255" />
+				<input type="text" id="NeoPixelG" class="ps-input NeoPixelColor" placeholder="Green 0 - 255" />
+				<input type="text" id="NeoPixelB" class="ps-input NeoPixelColor" placeholder="Blue 0 - 255" />
+			</div>
+			<div id="colorPicker" class="ps-container">
+				<canvas id="picker" width="100" height="100"></canvas>
+				<div class="rgb-slider" id="rVal"></div>
+				<div class="rgb-slider" id="gVal"></div>
+				<div class="rgb-slider" id="bVal"></div>
+				<div class="rgb-slider" id="wwVal" data-topic="<?=$erg['name'] ?>/settings/AnalogOut/SetHandValue"></div>
+				<div class="rgb-slider" id="cwVal" data-topic="<?=$erg['name'] ?>/settings/AnalogOut2/SetHandValue"></div>
+			</div>
+			<hr />
+			<div>
+				<span class="ps-input ModeName" data-ws="BasisTest_NeoPixel_ModeName">-</span><br />
+				<span class="ps-button setNeoPixelDemo">Demo Mode</span>
+				<span class="ps-button setNeoPixelSimple">Eine Farbe</span>
+				<span class="ps-button setNeoPixelAus">Aus</span>
+			</div>
+			<hr />
+			<div class="ps-flex-container">
+			<? for($i = 0; $i < 50; $i++) { ?>
+				<div class="colorBorderContainer">
+					<div class="colorBorder" data-led="<?=($i)?>" title="<?=($i)?>"></div>
+				</div>
+			<? } ?>
+			</div>
+			<hr />
+			<div>
+<?
+$modes = array(
+	//0 => 'ModeStatic',
+	1 => 'ModeColorWipeRed',
+	2 => 'ModeColorWipeGreen',
+	3 => 'ModeColorWipeBlue',
+	4 => 'ModeTheaterChaseWhite',
+	5 => 'ModeTheaterChaseRed',
+	6 => 'ModeTheaterChaseGreen',
+	7 => 'ModeTheaterChaseBlue',
+	8 => 'ModeRainbow',
+	9 => 'ModeTheaterChaseRainbow',
+	10 => 'ModeRunnerRed',
+	11 => 'ModeRunnerGreen',
+	12 => 'ModeRunnerBlue',
+	13 => 'ModeRandom'
+	//14 => 'ModeComplex'
+);
+foreach($modes as $id => $name) {
+?>
+				<span class="ps-button setNeoPixelEffect" data-id="<?=$id ?>"><?=$name ?></span>
+<?
+}
+?>
+			</div>
+		</div>
+	<? } ?>
 	<? if($d1Mini->FreakaZoneDevice->useModul->AnalogOut) { ?>
 		<div class="ps-container">
 			<h3>AnalogOut</h3>
@@ -271,6 +332,63 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 				<tr>
 					<td colspan="6">
 						<div class="topic-slider" data-ws="<?=$erg['name'] ?>_AnalogOutHand" data-topic="<?=$erg['name'] ?>/settings/AnalogOut/SetHandValue"></div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	<? } ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->AnalogOut2) { ?>
+		<div class="ps-container">
+			<h3>AnalogOut2</h3>
+			<table summary="">
+				<tr>
+					<td colspan="3">Analog Output 2:</td>
+					<td colspan="3">
+						<span class="ps-input" data-ws="<?=$erg['name'] ?>_AnalogOut2">undefined</span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">Modus:</td>
+					<td colspan="3">
+						<span class="ps-input <?=wpa::GreenYellow ?>" data-ws="<?=$erg['name'] ?>_AnalogOut2HandError">undefined</span>
+					</td>
+				</tr>
+				<tr><td colspan="6"><hr /></td></tr>
+				<tr>
+					<td colspan="3">Automatikwert:</td>
+					<td colspan="3">
+						<span class="ps-input" data-ws="<?=$erg['name'] ?>_AnalogOut2Auto">undefined</span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">Handwert:</td>
+					<td colspan="3">
+						<span class="ps-input" data-ws="<?=$erg['name'] ?>_AnalogOut2Hand">undefined</span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="6"><h3>Bedienung</h3></td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						Hand / Auto
+					</td>
+					<td colspan="2">
+						<span class="ps-button writeTopic" data-topic="<?=$erg['name'] ?>/settings/AnalogOut2/SetHand" data-write="0">Automatik</span>
+					</td>
+					<td colspan="2">
+						<span class="ps-button writeTopic" data-topic="<?=$erg['name'] ?>/settings/AnalogOut2/SetHand" data-write="1">Hand</span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						Handwert
+					</td>
+					<td colspan="4"></td>
+				</tr>
+				<tr>
+					<td colspan="6">
+						<div class="topic-slider" data-ws="<?=$erg['name'] ?>_AnalogOut2Hand" data-topic="<?=$erg['name'] ?>/settings/AnalogOut2/SetHandValue"></div>
 					</td>
 				</tr>
 			</table>

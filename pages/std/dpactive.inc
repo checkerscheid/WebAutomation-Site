@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 582                                                     $ #
+//# Revision     : $Rev:: 683                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: dpactive.inc 582 2024-04-10 06:45:45Z                    $ #
+//# File-ID      : $Id:: dpactive.inc 683 2024-07-22 13:00:46Z                    $ #
 //#                                                                                 #
 //###################################################################################
 /**
@@ -35,7 +35,8 @@ while($erg = $database->fetch()) {
 <?
 
 	$database->query("SELECT
-		[id_dpnamespace], [name], [description], ISNULL([usergroupwrite], 100) AS [usergroupwrite], ISNULL([usergroupwrite], -1) AS [fromns], [active]
+		[id_dpnamespace], [name], [description],
+		ISNULL([usergroupwrite], 100) AS [usergroupwrite], ISNULL([usergroupwrite], -1) AS [fromns], [active]
 		FROM [dpnamespace] ORDER BY [name]");
 	while($erg = $database->fetch()) {
 		$inheritted = 'default';
