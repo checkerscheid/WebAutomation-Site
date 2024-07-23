@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 680                                                     $ #
+//# Revision     : $Rev:: 684                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.js 680 2024-07-20 00:28:36Z                       $ #
+//# File-ID      : $Id:: d1mini.js 684 2024-07-23 21:58:22Z                       $ #
 //#                                                                                 #
 //###################################################################################
 use system\std
@@ -19,6 +19,86 @@ use system\std
 //<? require_once('script/system/websockets.js') ?>
 ws.logEnabled = true;
 p.page.load = function() {
+	var canvas = document.getElementById('picker');
+	var ctx = canvas.getContext('2d');
+
+	var image = new Image();
+	image.onload = function () {
+		ctx.drawImage(image, 0, 0, image.width, image.height);
+	};
+	image.src = 'images/layout/colorwheel5.png';
+	var canvasClicked = false;
+	$('#picker').mousemove(function(e) {
+		$('#rVal').addClass('WriteOnly');
+		$('#gVal').addClass('WriteOnly');
+		$('#bVal').addClass('WriteOnly');
+		
+		if(!canvasClicked) {
+			var canvasOffset = $(canvas).offset();
+			var canvasX = Math.floor(e.pageX - canvasOffset.left);
+			var canvasY = Math.floor(e.pageY - canvasOffset.top);
+			
+			var imageData = ctx.getImageData(canvasX, canvasY, 1, 1);
+			var pixel = imageData.data;
+			if((pixel[0] + pixel[1] + pixel[2]) > 0) {
+				$('#rVal').slider('option', 'value', Math.floor(pixel[0] / 2.55));
+				$('#gVal').slider('option', 'value', Math.floor(pixel[1] / 2.55));
+				$('#bVal').slider('option', 'value', Math.floor(pixel[2] / 2.55));
+				$('#NeoPixelR').val(pixel[0]);
+				$('#NeoPixelG').val(pixel[1]);
+				$('#NeoPixelB').val(pixel[2]);
+				changeColorPreview();
+			}
+		}
+	}).mouseout(function() {
+		canvasClicked = false;
+		$('#rVal').removeClass('WriteOnly');
+		$('#gVal').removeClass('WriteOnly');
+		$('#bVal').removeClass('WriteOnly');
+	}).click(function(e) {
+		canvasClicked = true;
+		var canvasOffset = $(canvas).offset();
+		var canvasX = Math.floor(e.pageX - canvasOffset.left);
+		var canvasY = Math.floor(e.pageY - canvasOffset.top);
+		
+		var imageData = ctx.getImageData(canvasX, canvasY, 1, 1);
+		var pixel = imageData.data;
+		
+		if((pixel[0] + pixel[1] + pixel[2]) > 0) {
+			var cr = Math.floor(pixel[0] / 2.55);
+			p.log.write('rot: ' + cr);
+			var cg = Math.floor(pixel[1] / 2.55);
+			p.log.write('gruen: ' + cg);
+			var cb = Math.floor(pixel[2] / 2.55);
+			p.log.write('blau: ' + cb);
+			//p.automation.writeMulti([rot + '_SW', gruen + '_SW', blau + '_SW'], [cr, cg, cb]);
+			$('#rVal').removeClass('WriteOnly');
+			$('#gVal').removeClass('WriteOnly');
+			$('#bVal').removeClass('WriteOnly');
+		}
+	});
+	$('.rgb-slider').slider({
+		min: 0,
+		max: 100,
+		range: 'min',
+		start: function() {
+			$(this).addClass('WriteOnly');
+			$(this).find('a').append('<span class="toleft"></span>');
+		},
+		slide: function(event, ui) {
+			var TheValue = ui.value;
+			var TheSpan = $(this).find('span.toleft');
+			$(TheSpan).text(TheValue);
+		},
+		stop: function(event, ui) {
+			if($(this).attr('id') == 'rVal') $('#NeoPixelR').val(Math.floor(ui.value * 2.55));
+			if($(this).attr('id') == 'gVal') $('#NeoPixelG').val(Math.floor(ui.value * 2.55));
+			if($(this).attr('id') == 'bVal') $('#NeoPixelB').val(Math.floor(ui.value * 2.55));
+			changeColorPreview();
+			//p.automation.write($(this).attr('data-value'), ui.value);
+			$(this).removeClass('WriteOnly').find('a').text('');
+		}
+	});
 	// ?? warum war das? $.get('std.d1mini.getD1MiniSettings.<?=std::gets("param1")?>.req');
 	$('.buttonContainer').on('click', '.SetCmd', function() {
 		var ip = $(this).attr('data-ip');
@@ -105,5 +185,72 @@ p.page.load = function() {
 			});
 		});
 	});
+	$('.setNeoPixelDemo').on('click', function() {
+		var that = $(this);
+		const demo = {
+			ip: $('#storedIP').attr('data-ip')
+		};
+		$.post('std.d1mini.NeoPixelDemo.req', demo, function(data) {
+		}, 'json');
+	});
+	$('.setNeoPixelEffect').on('click', function() {
+		var that = $(this);
+		const effect = {
+			ip: $('#storedIP').attr('data-ip'),
+			id: $(that).attr('data-id')
+		};
+		$.post('std.d1mini.NeoPixelEffect.req', effect, function(data) {
+		}, 'json');
+	});
+	$('.setNeoPixelSimple').on('click', function() {
+		var that = $(this);
+		const simple = {
+			ip: $('#storedIP').attr('data-ip'),
+			r: $('#NeoPixelR').val(),
+			g: $('#NeoPixelG').val(),
+			b: $('#NeoPixelB').val()
+		};
+		$.post('std.d1mini.NeoPixelSimple.req', simple, function(data) {
+		}, 'json');
+	});
+	$('.setNeoPixelAus').on('click', function() {
+		var that = $(this);
+		const simple = {
+			ip: $('#storedIP').attr('data-ip'),
+			r: 0,
+			g: 0,
+			b: 0
+		};
+		$.post('std.d1mini.NeoPixelSimple.req', simple, function(data) {
+		}, 'json');
+		$('.topic-slider').each(function() {
+			const topic = $(this).attr('data-topic');
+			$.post('std.d1mini.writetopic.req', {topic:topic, value:0});
+		});
+	});
+	$('.colorBorder').on('click', function() {
+		var that = $(this);
+		const led = {
+			ip: $('#storedIP').attr('data-ip'),
+			pixel: $(this).attr('data-led'),
+			r: $('#NeoPixelR').val(),
+			g: $('#NeoPixelG').val(),
+			b: $('#NeoPixelB').val()
+		};
+		$(that).css('backgroundColor', 'rgb(' + led.r + ', ' + led.g + ', ' + led.b + ')');
+		$.post('std.d1mini.NeoPixel.req', led, function(data) {
+		}, 'json');
+	});
+	$('.NeoPixelColor').on('change', function() {
+		changeColorPreview();
+	});
 	ws.connect();
 };
+function changeColorPreview() {
+	const led = {
+		r: $('#NeoPixelR').val(),
+		g: $('#NeoPixelG').val(),
+		b: $('#NeoPixelB').val()
+	};
+	$('.colorpreview').css('backgroundColor', 'rgb(' + led.r + ', ' + led.g + ', ' + led.b + ')');
+}

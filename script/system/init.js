@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 677                                                     $ #
+//# Revision     : $Rev:: 684                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: init.js 677 2024-07-15 13:51:59Z                         $ #
+//# File-ID      : $Id:: init.js 684 2024-07-23 21:58:22Z                         $ #
 //#                                                                                 #
 //###################################################################################
 use system\wpInit;
@@ -1538,6 +1538,7 @@ var p = {
 				min: p.popup.slider.Min,
 				max: p.popup.slider.Max,
 				step: p.popup.slider.Step,
+				range: 'min',
 				start: function() {
 					$(this).addClass('WriteOnly');
 					$(this).find('a').append('<span class="toleft">--</span>');
@@ -1558,6 +1559,7 @@ var p = {
 				min: p.popup.slider.Min,
 				max: p.popup.slider.Max,
 				step: p.popup.slider.Step,
+				range: 'min',
 				start: function() {
 					$(this).addClass('WriteOnly');
 					$(this).find('a').append('<span class="toleft">--</span>');
