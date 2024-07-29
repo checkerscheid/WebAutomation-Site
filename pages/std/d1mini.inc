@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 684                                                     $ #
+//# Revision     : $Rev:: 685                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.inc 684 2024-07-23 21:58:22Z                      $ #
+//# File-ID      : $Id:: d1mini.inc 685 2024-07-29 03:34:17Z                      $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
@@ -29,6 +29,7 @@ $erg = $database->fetch();
 
 $WebCom = new WebCom();
 $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
+//std::test_array($d1Mini);
 ?>
 <div id="d1mini">
 	<h1><?=$headline['name']?> <?=$erg['name'] ?></h1>
@@ -59,9 +60,9 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 					<td>Max Cycle:</td>
 					<td>
 						<span class="ps-input ps-param"
-							data-topic="<?=$erg['name'] ?>/settings/DHT/maxCycle"
+							data-topic="<?=$erg['name'] ?>/settings/DHT/CalcCycle"
 							data-unit="sec">
-							<?=$d1Mini->FreakaZoneDevice->DHT->MaxCycleDHT ?> sec
+							<?=$d1Mini->FreakaZoneDevice->DHT->CalcCycle ?> ms
 						</span>
 					</td>
 				</tr>
@@ -101,9 +102,9 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 					<td>Max Cycle:</td>
 					<td>
 						<span class="ps-input ps-param"
-							data-topic="<?=$erg['name'] ?>/settings/LDR/maxCycle"
+							data-topic="<?=$erg['name'] ?>/settings/LDR/CalcCycle"
 							data-unit="sec">
-							<?=$d1Mini->FreakaZoneDevice->LDR->MaxCycleLDR ?> sec
+							<?=$d1Mini->FreakaZoneDevice->LDR->CalcCycle ?> ms
 						</span>
 					</td>
 				</tr>
@@ -113,7 +114,7 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 						<span class="ps-input ps-parambool"
 							data-topic="<?=$erg['name'] ?>/settings/LDR/useAvg"
 							data-unit="0:Off;1:On;">
-							<?=($d1Mini->FreakaZoneDevice->LDR->useLDRAvg ? 'On' : 'Off') ?>
+							<?=($d1Mini->FreakaZoneDevice->LDR->useAvg ? 'On' : 'Off') ?>
 						</span>
 					</td>
 				</tr>
@@ -123,7 +124,7 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 						<span class="ps-input ps-param"
 							data-topic="<?=$erg['name'] ?>/settings/LDR/Correction"
 							data-unit="lux">
-							<?=$d1Mini->FreakaZoneDevice->LDR->LDRCorrection ?> lux
+							<?=$d1Mini->FreakaZoneDevice->LDR->Correction ?> lux
 						</span>
 					</td>
 				</tr>
@@ -143,9 +144,9 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 					<td>Max Cycle:</td>
 					<td>
 						<span class="ps-input ps-param"
-							data-topic="<?=$erg['name'] ?>/settings/Light/maxCycle"
+							data-topic="<?=$erg['name'] ?>/settings/Light/CalcCycle"
 							data-unit="sec">
-							<?=$d1Mini->FreakaZoneDevice->Light->MaxCycleLight ?> sec
+							<?=$d1Mini->FreakaZoneDevice->Light->CalcCycle ?> ms
 						</span>
 					</td>
 				</tr>
@@ -155,7 +156,7 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 						<span class="ps-input ps-parambool"
 							data-topic="<?=$erg['name'] ?>/settings/Light/useAvg"
 							data-unit="0:Off;1:On;">
-							<?=($d1Mini->FreakaZoneDevice->Light->useLightAvg ? 'On' : 'Off') ?>
+							<?=($d1Mini->FreakaZoneDevice->Light->useAvg ? 'On' : 'Off') ?>
 						</span>
 					</td>
 				</tr>
@@ -165,7 +166,7 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 						<span class="ps-input ps-param"
 							data-topic="<?=$erg['name'] ?>/settings/Light/Correction"
 							data-unit="lux">
-							<?=$d1Mini->FreakaZoneDevice->Light->LightCorrection ?> lux
+							<?=$d1Mini->FreakaZoneDevice->Light->Correction ?> lux
 						</span>
 					</td>
 				</tr>
@@ -221,38 +222,53 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 	<? } ?>
 	<? if($d1Mini->FreakaZoneDevice->useModul->NeoPixel) { ?>
 		<div class="ps-container">
-			<h3>NeoPixel</h3>
-			<div>
+			<h3>NeoPixel Farben</h3>
+			<div id="colorPicker">
 				<span class="colorpreview"><?=wpHTML_EMPTY ?></span><br />
-				<input type="text" id="NeoPixelR" class="ps-input NeoPixelColor" placeholder="Red 0 - 255" />
-				<input type="text" id="NeoPixelG" class="ps-input NeoPixelColor" placeholder="Green 0 - 255" />
-				<input type="text" id="NeoPixelB" class="ps-input NeoPixelColor" placeholder="Blue 0 - 255" />
-			</div>
-			<div id="colorPicker" class="ps-container">
-				<canvas id="picker" width="100" height="100"></canvas>
+				<input type="text" id="NeoPixelR" class="ps-input NeoPixelColor" placeholder="Red 0 - 255" value="<?=$d1Mini->FreakaZoneDevice->NeoPixel->ValueR ?>" />
+				<input type="text" id="NeoPixelG" class="ps-input NeoPixelColor" placeholder="Green 0 - 255" value="<?=$d1Mini->FreakaZoneDevice->NeoPixel->ValueG ?>" />
+				<input type="text" id="NeoPixelB" class="ps-input NeoPixelColor" placeholder="Blue 0 - 255" value="<?=$d1Mini->FreakaZoneDevice->NeoPixel->ValueB ?>" />
+				<hr />
 				<div class="rgb-slider" id="rVal"></div>
 				<div class="rgb-slider" id="gVal"></div>
 				<div class="rgb-slider" id="bVal"></div>
-				<div class="rgb-slider" id="wwVal" data-topic="<?=$erg['name'] ?>/settings/AnalogOut/SetHandValue"></div>
-				<div class="rgb-slider" id="cwVal" data-topic="<?=$erg['name'] ?>/settings/AnalogOut2/SetHandValue"></div>
-			</div>
-			<hr />
-			<div>
-				<span class="ps-input ModeName" data-ws="BasisTest_NeoPixel_ModeName">-</span><br />
-				<span class="ps-button setNeoPixelDemo">Demo Mode</span>
-				<span class="ps-button setNeoPixelSimple">Eine Farbe</span>
-				<span class="ps-button setNeoPixelAus">Aus</span>
-			</div>
-			<hr />
-			<div class="ps-flex-container">
-			<? for($i = 0; $i < 50; $i++) { ?>
-				<div class="colorBorderContainer">
-					<div class="colorBorder" data-led="<?=($i)?>" title="<?=($i)?>"></div>
+				<hr />
+				<div class="ps-flex-container">
+					<div id="pickerContainer">
+						<canvas id="picker" width="200" height="200"></canvas>
+					</div>
+					<div>
+						<span class="ps-button setNeoPixelPia">Pia's Fav</span><br />
+						<span class="ps-button setNeoPixelSimple">Eine Farbe</span><br />
+						<span class="ps-button setNeoPixelAus">Aus</span>
+					</div>
 				</div>
-			<? } ?>
+				<hr />
+				<div class="ps-flex-container NeoPixelContainer">
+				<? for($i = 0; $i < 50; $i++) { ?>
+					<div class="colorBorderContainer">
+						<div class="colorBorder" data-led="<?=($i)?>" title="<?=($i)?>"></div>
+					</div>
+				<? } ?>
+				</div>
+				<hr />
+				<h3>Brightness (<span id="showBrVal"><?=round($d1Mini->FreakaZoneDevice->NeoPixel->Brightness / 2.55) ?></span> %)</h3>
+				<div class="rgb-slider" id="brVal"></div>
+				<h3>Warmweiß (<span id="showWWVal"><?=$d1Mini->FreakaZoneDevice->AnalogOut->HandValue ?></span> %)</h3>
+				<div class="rgb-slider" id="wwVal"></div>
+				<h3>Kaltweiß (<span id="showCWVal"><?=$d1Mini->FreakaZoneDevice->AnalogOut2->HandValue ?></span> %)</h3>
+				<div class="rgb-slider" id="cwVal"></div>
 			</div>
-			<hr />
-			<div>
+		</div>
+		<div class="ps-container">
+			<h3>NeoPixel Scenen</h3>
+			<div class="NeoPixelContainer">
+				<div>
+					<span class="ps-input ModeName" data-ws="<?=$erg['name'] ?>_ModeName">-</span><br />
+					<span class="ps-button setNeoPixelDemo">Demo Mode</span>
+				</div>
+				<hr />
+				<div>
 <?
 $modes = array(
 	//0 => 'ModeStatic',
@@ -268,19 +284,22 @@ $modes = array(
 	10 => 'ModeRunnerRed',
 	11 => 'ModeRunnerGreen',
 	12 => 'ModeRunnerBlue',
-	13 => 'ModeRandom'
+	13 => 'ModeRandom',
+	20 => 'ModeColorWipePurple',
+	21 => 'ModeRunnerPurple'
 	//14 => 'ModeComplex'
 );
 foreach($modes as $id => $name) {
 ?>
-				<span class="ps-button setNeoPixelEffect" data-id="<?=$id ?>"><?=$name ?></span>
+					<span class="ps-button setNeoPixelEffect" data-id="<?=$id ?>"><?=$name ?></span><br />
 <?
 }
 ?>
+				</div>
 			</div>
 		</div>
 	<? } ?>
-	<? if($d1Mini->FreakaZoneDevice->useModul->AnalogOut) { ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->AnalogOut && !$d1Mini->FreakaZoneDevice->useModul->NeoPixel) { ?>
 		<div class="ps-container">
 			<h3>AnalogOut</h3>
 			<table summary="">
@@ -290,13 +309,13 @@ foreach($modes as $id => $name) {
 						<span class="ps-input" data-ws="<?=$erg['name'] ?>_AnalogOut">undefined</span>
 					</td>
 				</tr>
+				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
 					<td colspan="3">Modus:</td>
 					<td colspan="3">
 						<span class="ps-input <?=wpa::GreenYellow ?>" data-ws="<?=$erg['name'] ?>_AnalogOutHandError">undefined</span>
 					</td>
 				</tr>
-				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
 					<td colspan="3">Automatikwert:</td>
 					<td colspan="3">
@@ -309,6 +328,7 @@ foreach($modes as $id => $name) {
 						<span class="ps-input" data-ws="<?=$erg['name'] ?>_AnalogOutHand">undefined</span>
 					</td>
 				</tr>
+				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
 					<td colspan="6"><h3>Bedienung</h3></td>
 				</tr>
@@ -334,10 +354,41 @@ foreach($modes as $id => $name) {
 						<div class="topic-slider" data-ws="<?=$erg['name'] ?>_AnalogOutHand" data-topic="<?=$erg['name'] ?>/settings/AnalogOut/SetHandValue"></div>
 					</td>
 				</tr>
+			<? if($d1Mini->FreakaZoneDevice->useModul->DHT11 ||
+					$d1Mini->FreakaZoneDevice->useModul->DHT22) { ?>
+				<tr><td colspan="6"><hr /></td></tr>
+				<tr>
+					<td colspan="6"><h3>PID</h3></td>
+				</tr>
+				<tr>
+					<td colspan="3">SetPoint:</td>
+					<td colspan="3">
+						<span class="ps-input ps-param" data-ws="<?=$erg['name'] ?>_AnalogOutSetPoint">undefined</span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">Kp:</td>
+					<td colspan="3">
+						<span class="ps-input ps-param" data-ws="<?=$erg['name'] ?>_AnalogOutKp">undefined</span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">Tv:</td>
+					<td colspan="3">
+						<span class="ps-input ps-param" data-ws="<?=$erg['name'] ?>_AnalogOutTv">undefined</span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">Tn:</td>
+					<td colspan="3">
+						<span class="ps-input ps-param" data-ws="<?=$erg['name'] ?>_AnalogOutTn">undefined</span>
+					</td>
+				</tr>
+			<? } ?>
 			</table>
 		</div>
 	<? } ?>
-	<? if($d1Mini->FreakaZoneDevice->useModul->AnalogOut2) { ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->AnalogOut2 && !$d1Mini->FreakaZoneDevice->useModul->NeoPixel) { ?>
 		<div class="ps-container">
 			<h3>AnalogOut2</h3>
 			<table summary="">
@@ -503,9 +554,9 @@ foreach($modes as $id => $name) {
 					<td>Max Cycle:</td>
 					<td>
 						<span class="ps-input ps-param"
-							data-topic="<?=$erg['name'] ?>/settings/Rain/maxCycle"
+							data-topic="<?=$erg['name'] ?>/settings/Rain/CalcCycle"
 							data-unit="sec">
-							<?=$d1Mini->FreakaZoneDevice->Rain->MaxCycleRain ?> sec</span>
+							<?=$d1Mini->FreakaZoneDevice->Rain->CalcCycle ?> ms</span>
 					</td>
 				</tr>
 				<tr>
@@ -514,7 +565,7 @@ foreach($modes as $id => $name) {
 						<span class="ps-input ps-parambool"
 							data-topic="<?=$erg['name'] ?>/settings/Rain/useAvg"
 							data-unit="0:Off;1:On;">
-							<?=($d1Mini->FreakaZoneDevice->Rain->useRainAvg ? 'On' : 'Off') ?></span>
+							<?=($d1Mini->FreakaZoneDevice->Rain->useAvg ? 'On' : 'Off') ?></span>
 					</td>
 				</tr>
 				<tr>
@@ -523,7 +574,7 @@ foreach($modes as $id => $name) {
 						<span class="ps-input ps-param"
 							data-topic="<?=$erg['name'] ?>/settings/Rain/Correction"
 							data-unit="lux">
-							<?=$d1Mini->FreakaZoneDevice->Rain->RainCorrection ?> lux</span>
+							<?=$d1Mini->FreakaZoneDevice->Rain->Correction ?> lux</span>
 					</td>
 				</tr>
 			</table>
@@ -542,8 +593,9 @@ foreach($modes as $id => $name) {
 					<td>Max Cycle:</td>
 					<td>
 						<span class="ps-input ps-param"
-							data-topic="<?=$erg['name'] ?>/settings/Moisture/maxCycle">
-							<?=$d1Mini->FreakaZoneDevice->Moisture->MaxCycleMoisture ?> sec
+							data-topic="<?=$erg['name'] ?>/settings/Moisture/CalcCycle"
+							data-unit="sec">
+							<?=$d1Mini->FreakaZoneDevice->Moisture->CalcCycle ?> ms
 						</span>
 					</td>
 				</tr>
@@ -553,7 +605,7 @@ foreach($modes as $id => $name) {
 						<span class="ps-input ps-parambool"
 							data-unit="0:Off;1:On;"
 							data-topic="<?=$erg['name'] ?>/settings/Moisture/useAvg">
-							<?=($d1Mini->FreakaZoneDevice->Moisture->useMoistureAvg ? 'On' : 'Off') ?>
+							<?=($d1Mini->FreakaZoneDevice->Moisture->useAvg ? 'On' : 'Off') ?>
 						</span>
 					</td>
 				</tr>
@@ -563,7 +615,7 @@ foreach($modes as $id => $name) {
 						<span class="ps-input ps-param"
 							data-unit="%"
 							data-topic="<?=$erg['name'] ?>/settings/Moisture/Min">
-							<?=$d1Mini->FreakaZoneDevice->Moisture->MoistureMin ?> %
+							<?=$d1Mini->FreakaZoneDevice->Moisture->Min ?> %
 						</span>
 					</td>
 				</tr>
@@ -572,7 +624,7 @@ foreach($modes as $id => $name) {
 					<td>
 						<span class="ps-input ps-param"
 							data-topic="<?=$erg['name'] ?>/settings/Moisture/Dry">
-							<?=$d1Mini->FreakaZoneDevice->Moisture->MoistureDry ?>
+							<?=$d1Mini->FreakaZoneDevice->Moisture->Dry ?>
 						</span>
 					</td>
 				</tr>
@@ -581,7 +633,7 @@ foreach($modes as $id => $name) {
 					<td>
 						<span class="ps-input ps-param"
 							data-topic="<?=$erg['name'] ?>/settings/Moisture/Wet">
-							<?=$d1Mini->FreakaZoneDevice->Moisture->MoistureWet ?></span>
+							<?=$d1Mini->FreakaZoneDevice->Moisture->Wet ?></span>
 					</td>
 				</tr>
 			</table>
@@ -600,9 +652,9 @@ foreach($modes as $id => $name) {
 					<td>Max Cycle:</td>
 					<td>
 						<span class="ps-input ps-param"
-							data-unit="sec"
-							data-topic="<?=$erg['name'] ?>/settings/Distance/maxCycle">
-							<?=$d1Mini->FreakaZoneDevice->Distance->MaxCycleDistance ?> sec
+							data-topic="<?=$erg['name'] ?>/settings/Distance/CalcCycle"
+							data-unit="sec">
+							<?=$d1Mini->FreakaZoneDevice->Distance->CalcCycle ?> ms
 						</span>
 					</td>
 				</tr>
@@ -612,7 +664,7 @@ foreach($modes as $id => $name) {
 						<span class="ps-input ps-param"
 							data-unit="l"
 							data-topic="<?=$erg['name'] ?>/settings/Distance/correction">
-							<?=$d1Mini->FreakaZoneDevice->Distance->distanceCorrection ?> l
+							<?=$d1Mini->FreakaZoneDevice->Distance->Correction ?> l
 						</span>
 					</td>
 				</tr>

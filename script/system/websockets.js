@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 08.06.2021                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 680                                                     $ #
+//# Revision     : $Rev:: 685                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: websockets.js 680 2024-07-20 00:28:36Z                   $ #
+//# File-ID      : $Id:: websockets.js 685 2024-07-29 03:34:17Z                   $ #
 //#                                                                                 #
 //###################################################################################
 use system\Helper\wpa;
@@ -172,8 +172,8 @@ var ws = {
 							} else if($(this).hasClass('<?=wpa::indikator ?>')) {
 								let indiTemp = {"m": 21, "n": 23.5, "p": 25};
 								let indiTempOut = {"m": 15, "n": 23.5, "p": 25};
-								let indiHum = {"m": 37.5, "n": 45, "p": 50};
-								let indiPfl = {"m": 35, "n": 45, "p": 55};
+								let indiHum = {"m": 37.5, "n": 45, "p": 55};
+								let indiPfl = {"m": 40, "n": 50, "p": 55};
 								$(this).removeClass('indi-m indi-0 indi-p indi-pp');
 								let indi;
 								let n = Number(that.value.replace(',', '.'));

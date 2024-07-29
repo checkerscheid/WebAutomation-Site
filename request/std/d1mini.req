@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 684                                                     $ #
+//# Revision     : $Rev:: 685                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.req 684 2024-07-23 21:58:22Z                      $ #
+//# File-ID      : $Id:: d1mini.req 685 2024-07-29 03:34:17Z                      $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -73,6 +73,41 @@ class d1mini {
 			// Fail silently
 		}
 	}
+	const c_NeoPixelPia = 'NeoPixelPia';
+	public static function NeoPixelPia($ip) {
+		try {
+			file_get_contents('http://' . $ip . '/setNeoPixelPia', 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+	}
+	const c_NeoPixelBrightness = 'NeoPixelBrightness';
+	public static function NeoPixelBrightness($ip) {
+		try {
+			$cmd = 'brightness=' . std::posts('brightness');
+			file_get_contents('http://' . $ip . '/setNeoPixelBrightness?' . $cmd, 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+	}
+	const c_NeoPixelCW = 'NeoPixelCW';
+	public static function NeoPixelCW($ip) {
+		try {
+			$cmd = 'cw=' . std::posts('cw');
+			file_get_contents('http://' . $ip . '/setNeoPixelCW?' . $cmd, 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+	}
+	const c_NeoPixelWW = 'NeoPixelWW';
+	public static function NeoPixelWW($ip) {
+		try {
+			$cmd = 'ww=' . std::posts('ww');
+			file_get_contents('http://' . $ip . '/setNeoPixelWW?' . $cmd, 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+	}
 	const c_NeoPixel = 'NeoPixel';
 	public static function NeoPixel($ip) {
 		try {
@@ -112,6 +147,22 @@ switch(std::gets('param1')) {
 		//###################################################################################
 	case d1mini::c_NeoPixelSimple:
 		d1mini::NeoPixelSimple(std::posts('ip'));
+		break;
+		//###################################################################################
+	case d1mini::c_NeoPixelPia:
+		d1mini::NeoPixelPia(std::posts('ip'));
+		break;
+		//###################################################################################
+	case d1mini::c_NeoPixelBrightness:
+		d1mini::NeoPixelBrightness(std::posts('ip'));
+		break;
+		//###################################################################################
+	case d1mini::c_NeoPixelWW:
+		d1mini::NeoPixelWW(std::posts('ip'));
+		break;
+		//###################################################################################
+	case d1mini::c_NeoPixelCW:
+		d1mini::NeoPixelCW(std::posts('ip'));
 		break;
 		//###################################################################################
 	case d1mini::c_NeoPixel:

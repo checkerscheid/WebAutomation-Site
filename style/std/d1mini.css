@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 684                                                     $ #
+//# Revision     : $Rev:: 685                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.css 684 2024-07-23 21:58:22Z                      $ #
+//# File-ID      : $Id:: d1mini.css 685 2024-07-29 03:34:17Z                      $ #
 //#                                                                                 #
 //###################################################################################
 ?> d1mini */
@@ -23,12 +23,17 @@
 #d1mini .colorBorder { border:1px solid #666; width:20px; height:20px; }
 #d1mini .colorpreview { display:inline-block; min-width:150px; height:25px; border:1px solid #CCC; border-radius:2px; }
 #d1mini .setNeoPixelEffect, #d1mini .ModeName { width:auto; min-width:100px; }
+#d1mini .NeoPixelContainer { max-width:350px; margin:auto; }
+#d1mini .setNeoPixelDemo, #d1mini .setNeoPixelEffect { min-width:200px; }
 
 #dialog .newDpVal { width:auto; min-width:250px; }
 
 #colorPicker { max-width:350px; margin:auto; }
 #colorPicker .rgb-slider { margin:15px 0; }
-#picker { border:1px solid #CCC; border-radius:10px; box-shadow:6px 6px 8px 0px #222; cursor:crosshair; }
+#colorPicker .ps-input { min-width:40px; max-width:40px; width:40px; }
+#pickerContainer { padding:5px; border:1px solid #CCC; border-radius:10px; box-shadow:6px 6px 8px 0px #222; }
+#picker { cursor:crosshair;
+	background:transparent url(images/layout/ColorWheelBG.png) center center no-repeat; }
 #rVal .ui-slider-range { background: #ef2929; }
 #rVal .ui-slider-handle { background: #ef2929; }
 #gVal .ui-slider-range { background: #8ae234; }
@@ -39,4 +44,11 @@
 #wwVal .ui-slider-handle { background: #f1f17e; }
 #cwVal .ui-slider-range { background: #e3eaf7; }
 #cwVal .ui-slider-handle { background: #e3eaf7; }
+
+@media (orientation: portrait) {
+	#d1mini .ps-button { padding:25px 6px; }
+	#d1mini .ps-button.pa-scene { padding:25px 25px; }
+	#d1mini .ui-slider .ui-slider-handle { width:30px; height:30px; }
+	#d1mini .ui-slider-horizontal { height:20px; }
+}
 

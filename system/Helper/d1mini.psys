@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 26.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 684                                                     $ #
+//# Revision     : $Rev:: 685                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.psys 684 2024-07-23 21:58:22Z                     $ #
+//# File-ID      : $Id:: d1mini.psys 685 2024-07-29 03:34:17Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -94,6 +94,9 @@ class d1mini {
 			if($this->status->FreakaZoneDevice->useModul->AnalogOut2) {
 				$this->setAnalogOut2();
 			}
+			if($this->status->FreakaZoneDevice->useModul->NeoPixel) {
+				$this->setNeoPixel();
+			}
 			if($this->status->FreakaZoneDevice->useModul->Relais ||
 					$this->status->FreakaZoneDevice->useModul->RelaisShield) {
 				$this->setRelais($this->status->FreakaZoneDevice->useModul->Moisture);
@@ -118,174 +121,209 @@ class d1mini {
 		$id_mqtttopic = $this->insertTopic('info/WiFi/RSSI');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'Rssi', 'Signal', 'db', 0, -130, 0);
 		$this->mergeTrend($id_dp, 'Signal', 120);
-		echo "saved: 'Signal' ";
+		echo "saved: 'Signal'<br />";
 	}
 	private function setOnline() {
 		$id_mqtttopic = $this->insertTopic('ERROR/Online');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'Online', 'Online', '0:online;1:offline;');
 		$this->mergeAlarm($id_dp, 'Online', 'Online');
-		echo "saved: 'Online Error' ";
+		echo "saved: 'Online Error'<br />";
 	}
 	private function setRest() {
 		$id_mqtttopic = $this->insertTopic('ERROR/Rest');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'ERROR_Rest', 'Rest Error', '0:Ok;1:Error;');
 		$this->mergeAlarm($id_dp, 'ERROR_Rest', 'Rest Error', 3);
-		echo "saved: 'Rest Error' ";
+		echo "saved: 'Rest Error'<br />";
 	}
 	private function setNewUpdate() {
 		$id_mqtttopic = $this->insertTopic('ERROR/NewVersion');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'NewVersion', 'Version', '0:aktuell;1:Neue Version;');
 		$this->mergeAlarm($id_dp, 'NewVersion', 'Version', alarmtype::Meldung, AlarmCondition::gleich, 1);
-		echo "saved: 'NewVersion' ";
+		echo "saved: 'NewVersion'<br />";
 	}
 	private function setDHT() {
 		$id_mqtttopic_temp = $this->insertTopic('Temperature');
 		$id_dp_temp = $this->mergeDP($id_mqtttopic_temp, 'Temp', 'Temperatur', '°C', 1, -50);
 		$this->mergeTrend($id_dp_temp, 'Temperatur');
-		echo "saved: 'Temperatur' ";
+		echo "saved: 'Temperatur', ";
 		$id_mqtttopic_hum = $this->insertTopic('Humidity');
 		$id_dp_hum = $this->mergeDP($id_mqtttopic_hum, 'Hum', 'Feuchte', '%rF', 0);
 		$this->mergeTrend($id_dp_hum, 'Feuchte');
-		echo "saved: 'Feuchte' ";
+		echo "saved: 'Feuchte', ";
 		$id_mqtttopic_err = $this->insertTopic('ERROR/HT');
 		$id_dp_err = $this->mergeDP($id_mqtttopic_err, 'ERROR_HT', 'HT Sensor Error', '0:Ok;1:Error;');
 		$this->mergeAlarm($id_dp_err, 'ERROR_HT', 'HT Sensor Error');
-		echo "saved: 'HT Sensor Error' ";
+		echo "saved: 'HT Sensor Error'<br />";
 	}
 	private function setLDR() {
 		$id_mqtttopic = $this->insertTopic('LDR');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'LDR', 'LDR', 'lux', 0, 0, 1024);
 		$this->mergeTrend($id_dp, 'LDR', 30);
-		echo "saved: 'LDR' ";
+		echo "saved: 'LDR',";
 		$id_mqtttopic_err = $this->insertTopic('ERROR/LDR');
 		$id_dp_err = $this->mergeDP($id_mqtttopic_err, 'ERROR_LDR', 'LDR Sensor Error', '0:Ok;1:Error;');
 		$this->mergeAlarm($id_dp_err, 'ERROR_LDR', 'LDR Sensor Error');
-		echo "saved: 'LDR Sensor Error' ";
+		echo "saved: 'LDR Sensor Error'<br />";
 	}
 	private function setLight() {
 		$id_mqtttopic = $this->insertTopic('Light');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'Light', 'Licht', 'lux', 0, 0, 1024);
 		$this->mergeTrend($id_dp, 'Licht', 30);
-		echo "saved: 'Licht' ";
+		echo "saved: 'Licht',";
 		$id_mqtttopic_err = $this->insertTopic('ERROR/Licht');
 		$id_dp_err = $this->mergeDP($id_mqtttopic_err, 'ERROR_Licht', 'Licht Sensor Error', '0:Ok;1:Error;');
 		$this->mergeAlarm($id_dp_err, 'ERROR_Licht', 'Licht Sensor Error');
-		echo "saved: 'Licht Sensor Error' ";
+		echo "saved: 'Licht Sensor Error'<br />";
 	}
 	private function setBM() {
 		$id_mqtttopic = $this->insertTopic('BM');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'BM', 'Bewegung', '0:Stille;1:Bewegung;');
 		$this->mergeTrend($id_dp, 'Bewegung', 0);
-		echo "saved: 'Bewegung' ";
+		echo "saved: 'Bewegung'<br />";
 	}
 	private function setWindow() {
 		$id_mqtttopic = $this->insertTopic('Window');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'Window', 'Fenster', '0:geschlossen;1:offen;');
 		$this->mergeAlarm($id_dp, 'Window', 'Fenster offen', alarmtype::Meldung, AlarmCondition::ungleich, 0);
 		$this->mergeTrend($id_dp, 'Fenster', 0);
-		echo "saved: 'Fensterkontakt' ";
+		echo "saved: 'Fensterkontakt'<br />";
 	}
 	private function setAnalogOut() {
 		$id_mqtttopic = $this->insertTopic('AnalogOut/Output');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'AnalogOut', 'AnalogOut', '%', 0);
 		$this->mergeTrend($id_dp, 'AnalogOut', 0);
-
+		echo "saved: 'AnalogOut',";
 		$id_mqtttopicHand = $this->insertTopic('AnalogOut/Hand');
 		$this->mergeDP($id_mqtttopicHand, 'AnalogOutHand', 'AnalogOut Hand', '%', 0);
-
+		echo "saved: 'AnalogOut Hand',";
 		$id_mqtttopicAuto = $this->insertTopic('AnalogOut/Auto');
 		$this->mergeDP($id_mqtttopicAuto, 'AnalogOutAuto', 'AnalogOut Auto', '%', 0);
-
+		echo "saved: 'AnalogOut Auto',";
 		$id_mqtttopicSetHand = $this->insertTopic('settings/AnalogOut/SetHand');
-		$this->mergeDP($id_mqtttopicSetHand, 'AnalogOutSetHand', 'AnalogOut Hand', '0:Automatik;1:Hand;', 'NULL', 0, 1);
-
+		$this->mergeDP($id_mqtttopicSetHand, 'AnalogOutSetHand', 'AnalogOut Set Hand', '0:Automatik;1:Hand;', 'NULL', 0, 1);
+		echo "saved: 'AnalogOut Set Hand',";
 		$id_mqtttopicHandValue = $this->insertTopic('settings/AnalogOut/SetHandValue');
-		$this->mergeDP($id_mqtttopicHandValue, 'AnalogOutSetHandValue', 'AnalogOut Hand Value', '%', 0);
-
+		$this->mergeDP($id_mqtttopicHandValue, 'AnalogOutSetHandValue', 'AnalogOut SetHand Value', '%', 0);
+		echo "saved: 'AnalogOut SetHand Value',";
 		$id_mqtttopicHandError = $this->insertTopic('ERROR/AnalogOutHand');
 		$id_dp_handError = $this->mergeDP($id_mqtttopicHandError, 'AnalogOutHandError', 'AnalogOut Hand Error', '0:Automatik;1:Hand;', 'NULL', 0, 1);
 		$this->mergeAlarm($id_dp_handError, 'AnalogOutHandError', 'AnalogOut Hand Error', AlarmType::Handbetrieb);
+		echo "saved: 'AnalogOut Hand Error',";
+		if($this->status->FreakaZoneDevice->useModul->DHT11 ||
+			$this->status->FreakaZoneDevice->useModul->DHT22) {
+				$id_mqtttopicKp = $this->insertTopic('settings/AnalogOut/Kp');
+				$id_dp = $this->mergeDP($id_mqtttopicKp, 'AnalogOutKp', 'Verstärkung', '', 0);
+				echo "saved: 'Verstärkung',";
+				$id_mqtttopicTv = $this->insertTopic('settings/AnalogOut/Tv');
+				$id_dp = $this->mergeDP($id_mqtttopicTv, 'AnalogOutTv', 'Verzögerung', 's', 2);
+				echo "saved: 'Verzögerung',";
+				$id_mqtttopicTn = $this->insertTopic('settings/AnalogOut/Tn');
+				$id_dp = $this->mergeDP($id_mqtttopicTn, 'AnalogOutTn', 'Nachstellzeit', 's', 2);
+				echo "saved: 'Nachstellzeit',";
+				$id_mqtttopicSetPoint = $this->insertTopic('settings/AnalogOut/SetPoint');
+				$id_dp = $this->mergeDP($id_mqtttopicSetPoint, 'AnalogOutSetPoint', 'Sollwert', '%rF', 0);
+				echo "saved: 'SetPoint',";
+		}
+		echo "saved: 'AnalogOut'<br />";
 	}
 	private function setAnalogOut2() {
 		$id_mqtttopic = $this->insertTopic('AnalogOut2/Output');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'AnalogOut2', 'AnalogOut 2', '%', 0);
 		$this->mergeTrend($id_dp, 'AnalogOut2', 0);
-
+		echo "saved: 'AnalogOut 2',";
 		$id_mqtttopicHand = $this->insertTopic('AnalogOut2/Hand');
 		$this->mergeDP($id_mqtttopicHand, 'AnalogOut2Hand', 'AnalogOut 2 Hand', '%', 0);
-
+		echo "saved: 'AnalogOut 2 Hand',";
 		$id_mqtttopicAuto = $this->insertTopic('AnalogOut2/Auto');
 		$this->mergeDP($id_mqtttopicAuto, 'AnalogOut2Auto', 'AnalogOut 2 Auto', '%', 0);
-
+		echo "saved: 'AnalogOut 2 Auto',";
 		$id_mqtttopicSetHand = $this->insertTopic('settings/AnalogOut2/SetHand');
-		$this->mergeDP($id_mqtttopicSetHand, 'AnalogOut2SetHand', 'AnalogOut 2 Hand', '0:Automatik;1:Hand;', 'NULL', 0, 1);
-
+		$this->mergeDP($id_mqtttopicSetHand, 'AnalogOut2SetHand', 'AnalogOut 2 Set Hand', '0:Automatik;1:Hand;', 'NULL', 0, 1);
+		echo "saved: 'AnalogOut 2 Set Hand',";
 		$id_mqtttopicHandValue = $this->insertTopic('settings/AnalogOut2/SetHandValue');
-		$this->mergeDP($id_mqtttopicHandValue, 'AnalogOut2SetHandValue', 'AnalogOut 2 Hand Value', '%', 0);
-
+		$this->mergeDP($id_mqtttopicHandValue, 'AnalogOut2SetHandValue', 'AnalogOut 2 Set Hand Value', '%', 0);
+		echo "saved: 'AnalogOut 2 Set Hand Value',";
 		$id_mqtttopicHandError = $this->insertTopic('ERROR/AnalogOut2Hand');
 		$id_dp_handError = $this->mergeDP($id_mqtttopicHandError, 'AnalogOut2HandError', 'AnalogOut 2 Hand Error', '0:Automatik;1:Hand;', 'NULL', 0, 1);
 		$this->mergeAlarm($id_dp_handError, 'AnalogOut2HandError', 'AnalogOut 2 Hand Error', AlarmType::Handbetrieb);
+		echo "saved: 'AnalogOut 2 Hand Error'<br />";
+	}
+	private function setNeoPixel() {
+		$id_mqtttopicR = $this->insertTopic('NeoPixel/R');
+		$id_mqtttopicG = $this->insertTopic('NeoPixel/G');
+		$id_mqtttopicB = $this->insertTopic('NeoPixel/B');
+		$id_mqtttopicBrightness = $this->insertTopic('NeoPixel/Brightness');
+		$id_mqtttopicModeName = $this->insertTopic('NeoPixel/ModeName');
+		$id_mqtttopicDemo = $this->insertTopic('NeoPixel/Demo');
+		$this->mergeDP($id_mqtttopicR, 'R', 'R', '', 0);
+		$this->mergeDP($id_mqtttopicG, 'G', 'G', '', 0);
+		$this->mergeDP($id_mqtttopicB, 'B', 'B', '', 0);
+		$this->mergeDP($id_mqtttopicBrightness, 'Brightness', 'Brightness', '%', 0);
+		$this->mergeDP($id_mqtttopicModeName, 'ModeName', 'ModeName', '', 0);
+		$this->mergeDP($id_mqtttopicDemo, 'Demo', 'Demo', '0:inaktiv;1:aktiv;');
+		echo "saved: 'NeoPixel'<br />";
 	}
 	private function setRelais($hasMoisture) {
 		$id_mqtttopic = $this->insertTopic('Relais/Output');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'Pumpe', 'Pumpe', '0:Aus;1:Ein;');
 		$this->mergeTrend($id_dp, 'Pumpe', 0);
-
+		echo "saved: 'Pumpe',";
 		$id_mqtttopicHand = $this->insertTopic('Relais/Hand');
 		$this->mergeDP($id_mqtttopicHand, 'PumpeHand', 'Pumpe Hand', '0:Aus;1:Ein;', 'NULL', 0, 1);
-
+		echo "saved: 'Pumpe Hand',";
 		$id_mqtttopicAuto = $this->insertTopic('Relais/Auto');
 		$this->mergeDP($id_mqtttopicAuto, 'PumpeAuto', 'Pumpe Auto', '0:Aus;1:Ein;', 'NULL', 0, 1);
-
+		echo "saved: 'Pumpe Auto',";
 		$id_mqtttopicSetHand = $this->insertTopic('settings/Relais/SetHand');
 		$this->mergeDP($id_mqtttopicSetHand, 'PumpeSetHand', 'Pumpe Hand', '0:Automatik;1:Hand;', 'NULL', 0, 1);
-
+		echo "saved: 'Pumpe Hand',";
 		$id_mqtttopicHandValue = $this->insertTopic('settings/Relais/SetHandValue');
 		$this->mergeDP($id_mqtttopicHandValue, 'PumpeSetHandValue', 'Pumpe Hand Value', '0:Aus;1:Ein;', 'NULL', 0, 1);
-
+		echo "saved: 'Pumpe Hand Value',";
 		$id_mqtttopicHandError = $this->insertTopic('ERROR/RelaisHand');
 		$id_dp_handError = $this->mergeDP($id_mqtttopicHandError, 'PumpeHandError', 'Pumpe Hand Error', '0:Automatik;1:Hand;', 'NULL', 0, 1);
 		$this->mergeAlarm($id_dp_handError, 'PumpeHandError', 'Pumpe Hand Error', AlarmType::Handbetrieb);
-
+		echo "saved: 'Pumpe Hand Error',";
 		if($hasMoisture) {
 			$id_mqtttopicWaterEmpty = $this->insertTopic('ERROR/WaterEmpty');
 			$id_dp_WaterEmpty = $this->mergeDP($id_mqtttopicWaterEmpty, 'WaterEmpty', 'Wasser leer', '0:OK;1:leer;', 'NULL', 0, 1);
 			$this->mergeAlarm($id_dp_WaterEmpty, 'WaterEmpty', 'Wasser leer', AlarmType::Warnung);
+			echo "saved: 'Wasser leer',";
 		}
+		echo "saved: 'Relais'<br />";
 	}
 	private function setRain() {
 		$id_mqtttopic = $this->insertTopic('Rain');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'Rain', 'Regen', 'l/min', 3, 0, 10);
 		$this->mergeTrend($id_dp, 'Regen');
-		echo "saved: 'Regen' ";
+		echo "saved: 'Regen',";
 		$id_mqtttopic_err = $this->insertTopic('ERROR/Rain');
 		$id_dp_err = $this->mergeDP($id_mqtttopic_err, 'ERROR_Rain', 'Regen Sensor Error', '0:Ok;1:Error;');
 		$this->mergeAlarm($id_dp_err, 'ERROR_Rain', 'Regen Sensor Error');
-		echo "saved: 'Regen Sensor Error' ";
+		echo "saved: 'Regen Sensor Error'<br />";
 	}
 	private function setVolume() {
 		$id_mqtttopic = $this->insertTopic('Volume');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'Vol', 'Füllstand', 'l', 0, 0, 10000);
 		$this->mergeTrend($id_dp, 'Füllstand');
-		echo "saved: 'Füllstand' ";
+		echo "saved: 'Füllstand',";
 		$id_mqtttopic_err = $this->insertTopic('ERROR/Distance');
 		$id_dp_err = $this->mergeDP($id_mqtttopic_err, 'ERROR_Distance', 'Volume Sensor Error', '0:Ok;1:Error;');
 		$this->mergeAlarm($id_dp_err, 'ERROR_Distance', 'Volume Sensor Error');
-		echo "saved: 'Volume Sensor Error' ";
+		echo "saved: 'Volume Sensor Error'<br />";
 	}
 	private function setMoisture() {
 		$id_mqtttopic = $this->insertTopic('Moisture');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'Moisture', 'Moisture', '%', 0);
 		$this->mergeTrend($id_dp, 'Moisture');
-		echo "saved: 'Moisture' ";
+		echo "saved: 'Moisture', ";
 		$id_mqtttopic_errmin = $this->insertTopic('ERROR/MoistureMin');
 		$id_dp_errmin = $this->mergeDP($id_mqtttopic_errmin, 'ERROR_MoistureMin', 'Pflanze zu trocken', '0:Ok;1:zu trocken;');
 		$this->mergeAlarm($id_dp_errmin, 'ERROR_MoistureMin', 'Pflanze zu trocken', alarmtype::Warnung);
 		$id_mqtttopic_err = $this->insertTopic('ERROR/Moisture');
 		$id_dp_err = $this->mergeDP($id_mqtttopic_err, 'ERROR_Moisture', 'Moisture Sensor Error', '0:Ok;1:Error;');
 		$this->mergeAlarm($id_dp_err, 'ERROR_Moisture', 'Moisture Sensor Error');
-		echo "saved: 'Moisture Sensor Error' ";
+		echo "saved: 'Moisture Sensor Error'<br />";
 	}
 	private function mergeDivice($active = 1) {
 		$sql = "
