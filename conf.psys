@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 673                                                     $ #
+//# Revision     : $Rev:: 689                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: conf.psys 673 2024-07-12 13:22:12Z                       $ #
+//# File-ID      : $Id:: conf.psys 689 2024-08-01 01:58:39Z                       $ #
 //#                                                                                 #
 //###################################################################################
 use system\wpInit;
@@ -24,7 +24,7 @@ wpInit::$StartseiteStd = false;
 wpInit::$PageName = 'Freaka<span class="fzz">Z</span>one';
 wpInit::$AlarmsToShow = 2;
 wpInit::$menuorder = array(
-	'wohnzimmer', 'schlafzimmer', 'buero', 'kueche', 'bad', 'kinderzimmer'
+	'pia', 'wohnzimmer', 'schlafzimmer', 'buero', 'kueche', 'bad', 'kinderzimmer'
 );
 wpInit::$systemmenuorder['webvisucs']['Plug Ins'] = array( 'trendselect', 'calendar', 'calendarscene', 'opcrouter' );
 wpInit::$systemmenuorder['webvisucs']['Sonstiges'] = array('weather', 'betriebsstunden', 'kamera');

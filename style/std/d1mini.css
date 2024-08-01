@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 688                                                     $ #
+//# Revision     : $Rev:: 689                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.css 688 2024-07-29 03:53:39Z                      $ #
+//# File-ID      : $Id:: d1mini.css 689 2024-08-01 01:58:39Z                      $ #
 //#                                                                                 #
 //###################################################################################
 ?> d1mini */
@@ -34,6 +34,9 @@
 #pickerContainer { padding:5px; border:1px solid #CCC; border-radius:10px; box-shadow:6px 6px 8px 0px #222; }
 #picker { cursor:crosshair;
 	background:transparent url(images/layout/ColorWheelBG.png) center center no-repeat; }
+#d1mini .sleepHourSlider, #d1mini .sleepMinuteSlider { margin:auto; }
+#d1mini .sleepHourSlider a, #d1mini .sleepMinuteSlider a { text-decoration:none; outline:none; }
+#d1mini .sleepHour, #d1mini .sleepMinute { width:30px; min-width:30px; }
 #rVal .ui-slider-range { background: #ef2929; }
 #rVal .ui-slider-handle { background: #ef2929; }
 #gVal .ui-slider-range { background: #8ae234; }

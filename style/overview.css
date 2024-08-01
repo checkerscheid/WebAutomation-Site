@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 591                                                     $ #
+//# Revision     : $Rev:: 689                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.css 591 2024-04-24 20:57:52Z                  $ #
+//# File-ID      : $Id:: overview.css 689 2024-08-01 01:58:39Z                    $ #
 //#                                                                                 #
 //###################################################################################
 ?> uebersicht */
@@ -20,6 +20,7 @@
 #uebersicht .wartungmeldung { display:block; padding:4px; margin:5px; color:#FFBF00; border:1px solid #CCC; }
 #uebersicht .ps-container { margin:10px; padding:10px; float:left; }
 #uebersicht .ps-container .ps-input, #uebersicht .ps-container .ps-button { display:inline-block; width:100px; text-align:center; }
+#uebersicht .ps-container a.ps-button { width:auto; display:block; text-decoration:none; }
 #uebersicht .ps-container hr { margin:5px auto; }
 #uebersicht .ps-button { padding:8px 6px; }
 #uebersicht .ps-button.pa-scene { padding:8px 25px; }

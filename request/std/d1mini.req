@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 688                                                     $ #
+//# Revision     : $Rev:: 689                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.req 688 2024-07-29 03:53:39Z                      $ #
+//# File-ID      : $Id:: d1mini.req 689 2024-08-01 01:58:39Z                      $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -73,6 +73,15 @@ class d1mini {
 			// Fail silently
 		}
 	}
+	const c_NeoPixelSleep = 'NeoPixelSleep';
+	public static function NeoPixelSleep($ip) {
+		try {
+			$cmd = 'sleep=' . std::posts('sleep');
+			file_get_contents('http://' . $ip . '/setNeoPixelSleep?' . $cmd, 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+	}
 	const c_NeoPixelPia = 'NeoPixelPia';
 	public static function NeoPixelPia($ip) {
 		try {
@@ -104,6 +113,16 @@ class d1mini {
 		try {
 			$cmd = 'ww=' . std::posts('ww');
 			file_get_contents('http://' . $ip . '/setNeoPixelWW?' . $cmd, 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+	}
+	const c_NeoPixelAus = 'NeoPixelAus';
+	public static function NeoPixelAus($ip) {
+		try {
+			file_get_contents('http://' . $ip . '/setNeoPixelCW?cw=0', 0, self::getContext());
+			file_get_contents('http://' . $ip . '/setNeoPixelWW?ww=0', 0, self::getContext());
+			file_get_contents('http://' . $ip . '/setNeoPixelSimple?r=0&g=0&b=0', 0, self::getContext());
 		} catch(Exception $e) {
 			// Fail silently
 		}
@@ -149,6 +168,10 @@ switch(std::gets('param1')) {
 		d1mini::NeoPixelSimple(std::posts('ip'));
 		break;
 		//###################################################################################
+	case d1mini::c_NeoPixelSleep:
+		d1mini::NeoPixelSleep(std::posts('ip'));
+		break;
+		//###################################################################################
 	case d1mini::c_NeoPixelPia:
 		d1mini::NeoPixelPia(std::posts('ip'));
 		break;
@@ -164,6 +187,9 @@ switch(std::gets('param1')) {
 	case d1mini::c_NeoPixelCW:
 		d1mini::NeoPixelCW(std::posts('ip'));
 		break;
+		//###################################################################################
+	case d1mini::c_NeoPixelAus:
+		d1mini::NeoPixelAus(std::posts('ip'));
 		//###################################################################################
 	case d1mini::c_NeoPixel:
 		d1mini::NeoPixel(std::posts('ip'));

@@ -9,15 +9,19 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 681                                                     $ #
+//# Revision     : $Rev:: 689                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: overview.inc 681 2024-07-21 14:27:14Z                  $ #
+//# File-ID      : $Id:: overview.inc 689 2024-08-01 01:58:39Z                  $ #
 //#                                                                                 #
 //###################################################################################
-/** @var Type $points */
+/**
+ * @var Type $points
+ */
 namespace pages;
 use system\Helper\wpa;
+use system\Helper\shelly;
 require_once 'system/Helper/wpa.psys';
+require_once 'system/Helper/shelly.psys';
 $points = array(
 	'Sommer'	=> 'Sommerbetrieb',
 	'num1'		=> 'storage_numeric_reg01',
@@ -28,7 +32,7 @@ class overview {
 	private static $Licht = array(
 		'BA_SP'			=> 'Bad Spiegelbeleuchtung',
 		'KZ_BE'			=> 'Kinderzimmer Bett',
-		'SY_TB'			=> 'Testboard',
+		'Testboard'		=> 'Testboard',
 		'GA_BT'			=> 'Blumentöpfe'
 	);
 	private static $SystemRelay = array(
@@ -44,72 +48,28 @@ class overview {
 		'KU_RU'			=> 'Küche',
 		'BA_RU'			=> 'Bad',
 		'KZ_HTp'		=> 'Kinderzimmer',
+		'WZ_PF_FE'		=> 'Wohnzimmer Pflanze',
+		'BA_Lue'		=> 'Bad Lüfter',
 		'KE'			=> 'Keller',
 		'GA_WE_Ost'		=> 'Wetterstation Ost',
 		'GA_WE_Sued'	=> 'Wetterstation Süd',
-		'BasisTest'		=> 'Breadboard',
-		'WG1_HTp'		=> 'Wintergarten',
-		'SZ1_HT'		=> 'Schlafzimmer',
-		'GA1_FS'		=> 'Gartenhaus',
-		'FL2_HT'		=> 'Flur',
-		'GA2_WE_Gaube'	=> 'Wetterstation Gaube'
-	);
-	private static $RSSI = array(
-		'WZ_HT3'		=> 'Wohnzimmer',
-		'WZ_PF_FE'		=> 'Pflanze am Fenster',
-		'WZ_PF_FE_RE1'	=> 'Pflanze am Fenster 1. rechts',
-		'WZ_PF_FE_RE2'	=> 'Pflanze am Fenster 2. rechts',
-		'WZ_PF_FE_LI'	=> 'Pflanze am Fenster links',
-		'WZ_PF_TE'		=> 'Pflanze zur Terrasse',
-		'BasisEmpty'	=> 'Test ohne Senosren',
-		'BasisTest'		=> 'Breadboard',
-		'SZ_RU'			=> 'Schlafzimmer',
-		'BU_RU'			=> 'Büro',
-		'KU_RU'			=> 'Küche',
-		'BA_RU'			=> 'Bad',
-		'BA_SP'			=> 'Bad Spiegelbeleuchtung',
-		'KZ_RU'			=> 'Kinderzimmer',
-		'KZ_HTp'		=> 'Kinderzimmer HTp',
-		'KZ_BE'			=> 'Kinderzimmer Bett',
-		'SY_TB'			=> 'Testboard',
-		'KE'			=> 'Keller',
-		'GA_BT'			=> 'Blumentöpfe',
-		'SY_SS'			=> 'Schaltschrank',
-		'SY_WW'			=> 'Warmwasser',
-		'SY_WM'			=> 'Waschmaschine',
-		'GA_WE_Ost'		=> 'Wetterstation Ost',
-		'GA_WE_Sued'	=> 'Wetterstation Süd',
+		//'BasisTest'		=> 'Breadboard',
 		'WG1_HTp'		=> 'EG Wintergarten',
 		'SZ1_HT'		=> 'EG Schlafzimmer',
 		'GA1_FS'		=> 'EG Gartenhaus',
-		'GA2_WE_Gaube'	=> 'Wetterstation Gaube',
-		'FL2_HT'		=> 'OG Flur'
+		'FL2_HT'		=> 'OG Flur',
+		'GA2_WE_Gaube'	=> 'OG Wetterstation Gaube'
 	);
-	private static $d1Minis = array(
-		'BA_SP',
-		'KZ_BE',
-		'SY_TB',
-		'KE',
-		'GA_BT',
-		'SY_SS',
-		'SY_WW',
-		'SY_WM',
-		'WZ_PF_FE',
-		'WZ_PF_FE_RE1',
-		'WZ_PF_FE_RE2',
-		'WZ_PF_FE_LI',
-		'WZ_PF_TE',
-		'BasisEmpty',
-		'BasisTest',
-		'SZ_RU',
-		'BU_RU',
-		'KU_RU',
-		'BA_RU',
-		'KZ_RU',
-		'GA_WE_Ost',
-		'GA_WE_Sued',
-		'GA1_FS',
-		'GA2_WE_Gaube'
+	private static $Pflanze = array(
+		'WZ_PF_TI' => 'Pflanze auf\'m Tisch',
+		'WZ_PF_TE' => 'Pflanze zur Terrasse',
+		'WZ_PF_FE' => 'Pflanze am Fenster in der Ecke',
+		'WZ_PF_FE_LI' => 'Pflanze am Fenster, links',
+		'WZ_PF_FE_RE1' => 'Pflanze am Fenster, 1. rechts',
+		'WZ_PF_FE_RE2' => 'Pflanze am Fenster, 2. rechts',
+		'Melonie' => 'Melonie',
+		'KZ_PF_PF' => 'Pflanzi',
+		'KZ_PF_BU' => 'Buschi'
 	);
 	public static function getD1HT() {
 		$returns = '';
@@ -147,6 +107,20 @@ class overview {
 		}
 		return $returns;
 	}
+	public static function getPflanze() {
+		$returns = '';
+		foreach(overview::$Pflanze as $name => $desc) {
+			$returns .= '
+				<tr>
+					<td colspan="3">' . $desc . '</td>
+					<td colspan="3">
+						<span data-ws="' . $name . '_Moisture" class="ps-input">undefined</span>
+						<span data-ws="WZ_PF_TI_Moisture" class="' . wpa::indikatorPfl . '">' . wpHTML_EMPTY . '</span>
+					</td>
+				</tr>';
+		}
+		return $returns;
+	}
 	public static function getPower() {
 		$returns = '';
 		$all = overview::$Licht + overview::$SystemRelay;
@@ -159,20 +133,35 @@ class overview {
 		}
 		return $returns;
 	}
-	public static function getRSSI() {
+	public static function getD1Mini() {
+		GLOBAL $database;
 		$returns = '';
-		foreach(overview::$RSSI as $dp => $name) {
+		$database->query("SELECT [name], [description] FROM [d1mini] ORDER BY [name]");
+		while($erg = $database->fetch()) {
 			$returns .= '
 				<tr>
-					<td colspan="2">' . $name . ':</td>
-					<td colspan="2"><span data-ws="' . $dp . '_Rssi" class="' . wpa::rssi . '">-</span></td>
-					<td colspan="2">';
-			if(in_array($dp, overview::$d1Minis)) {
-				$returns .= '<span data-ws="' . $dp . '_Online" class="ps-input ' . wpa::GreenRed . '">-</span>';
-			}
-			$returns .= '
+					<td colspan="2">' . $erg['description'] . ':</td>
+					<td colspan="2"><span data-ws="' . $erg['name']. '_Rssi" class="' . wpa::rssi . '">-</span></td>
+					<td colspan="2">
+						<span data-ws="' . $erg['name'] . '_Online" class="ps-input ' . wpa::GreenRed . '">-</span>
 					</td>
 				</tr>';
+		}
+		return $returns;
+	}
+	public static function getShelly() {
+		GLOBAL $database;
+		$returns = '';
+		$database->query("SELECT [mqtt_id], [type], [name] FROM [shelly] WHERE [mqtt_id] IS NOT NULL ORDER BY [name]");
+		while($erg = $database->fetch()) {
+			if(shelly::isGen2($erg['type'])) {
+				$returns .= '
+					<tr>
+						<td colspan="2">' . $erg['name'] . ':</td>
+						<td colspan="2"><span data-ws="' . $erg['mqtt_id']. '_Rssi" class="' . wpa::rssi . '">-</span></td>
+						<td colspan="2"></td>
+					</tr>';
+			}
 		}
 		return $returns;
 	}
@@ -185,6 +174,7 @@ class overview {
 				<tr><td colspan="6"><h2>Licht / Relais</h2></td></tr>
 				<tr><td colspan="6"><hr /></td></tr>
 				<?=overview::getLicht() ?>
+				<tr><td colspan="6"><a class="ps-button" href="std.d1mini.WZ_NP.htm">Wohnzimmer NeoPixel</a></td></tr>
 				<tr><td colspan="6"><h2>Energie</h2></td></tr>
 				<tr><td colspan="6"><hr /></td></tr>
 				<?=overview::getPower() ?>
@@ -256,11 +246,11 @@ class overview {
 					<td colspan="2"></td>
 					<td colspan="2"><span data-ws="GA2_WE_Gaube_Rain" class="ps-input">undefined</span></td>
 				</tr>
-				<tr>
+				<!--tr>
 					<td colspan="2">Innen:</td>
 					<td colspan="2"><span data-ws="BasisTest_Light" class="ps-input">undefined</span></td>
 					<td colspan="2"></td>
-				</tr>
+				</tr-->
 				<tr><td colspan="6"><h2>Wetter</h2></td></tr>
 				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
@@ -337,55 +327,7 @@ class overview {
 						<span data-ws="WZ_PF_FE_Hum" class="<?=wpa::indikatorHum?>"><?=wpHTML_EMPTY?></span>
 					</td>
 				</tr>
-				<tr>
-					<td colspan="3">Pflanze auf'm Tisch</td>
-					<td colspan="3">
-						<span data-ws="WZ_PF_TI_Moisture" class="ps-input">undefined</span>
-						<span data-ws="WZ_PF_TI_Moisture" class="<?=wpa::indikatorPfl?>"><?=wpHTML_EMPTY?></span>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="3">Pflanze zur Terrasse</td>
-					<td colspan="3">
-						<span data-ws="WZ_PF_TE_Moisture" class="ps-input">undefined</span>
-						<span data-ws="WZ_PF_TE_Moisture" class="<?=wpa::indikatorPfl?>"><?=wpHTML_EMPTY?></span>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="3">Pflanze am Fenster in der Ecke</td>
-					<td colspan="3">
-						<span data-ws="WZ_PF_FE_Moisture" class="ps-input">undefined</span>
-						<span data-ws="WZ_PF_FE_Moisture" class="<?=wpa::indikatorPfl?>"><?=wpHTML_EMPTY?></span>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="3">Pflanze am Fenster, links</td>
-					<td colspan="3">
-						<span data-ws="WZ_PF_FE_LI_Moisture" class="ps-input">undefined</span>
-						<span data-ws="WZ_PF_FE_LI_Moisture" class="<?=wpa::indikatorPfl?>"><?=wpHTML_EMPTY?></span>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="3">Pflanze am Fenster, 1. rechts</td>
-					<td colspan="3">
-						<span data-ws="WZ_PF_FE_RE1_Moisture" class="ps-input">undefined</span>
-						<span data-ws="WZ_PF_FE_RE1_Moisture" class="<?=wpa::indikatorPfl?>"><?=wpHTML_EMPTY?></span>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="3">Pflanze am Fenster, 2. rechts</td>
-					<td colspan="3">
-						<span data-ws="WZ_PF_FE_RE2_Moisture" class="ps-input">undefined</span>
-						<span data-ws="WZ_PF_FE_RE2_Moisture" class="<?=wpa::indikatorPfl?>"><?=wpHTML_EMPTY?></span>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="3">Melonie</td>
-					<td colspan="3">
-						<span data-ws="Melonie_Moisture" class="ps-input">undefined</span>
-						<span data-ws="Melonie_Moisture" class="<?=wpa::indikatorPfl?>"><?=wpHTML_EMPTY?></span>
-					</td>
-				</tr>
+				<?=overview::getPflanze() ?>
 				<tr><td colspan="6"><h2>Test</h2></td></tr>
 				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
@@ -414,9 +356,12 @@ class overview {
 	<div class="ps-container">
 		<table id="Energie">
 			<tbody>
-				<tr><td colspan="6"><h2>Signalstärke</h2></td></tr>
+				<tr><td colspan="6"><h2>Signalstärke D1 Mini</h2></td></tr>
 				<tr><td colspan="6"><hr /></td></tr>
-				<?=overview::getRSSI() ?>
+				<?=overview::getD1Mini() ?>
+				<tr><td colspan="6"><h2>Signalstärke Shelly</h2></td></tr>
+				<tr><td colspan="6"><hr /></td></tr>
+				<?=overview::getShelly() ?>
 			</tbody>
 		</table>
 	</div>

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 684                                                     $ #
+//# Revision     : $Rev:: 689                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: system.css 684 2024-07-23 21:58:22Z                      $ #
+//# File-ID      : $Id:: system.css 689 2024-08-01 01:58:39Z                      $ #
 //#                                                                                 #
 //###################################################################################
 use system\wpInit
@@ -413,6 +413,11 @@ span.ps-checkbox, label.ps-checkbox { display:inline-block; }
 .ps-image-status.trend-ia { background-image:url(images/layout/mini_trend_ia.png); }
 .ps-image-status.calendar-ia { background-image:url(images/layout/mini_calendar_ia.png); }
 .ps-image-status.route-ia { background-image:url(images/layout/mini_route_ia.png); }
+
+.handContainer { width:122px; position:relative; margin:auto; }
+span.hand.pa-hide { display:inline-block; width:25px; height:25px;
+	position:absolute; right:4px; top:1px;
+	background:transparent url(images/visuelemente/hand.png) center center no-repeat; }
 
 .wpa-rssi { display:inline-block; height:24px; line-height:24px; padding-left:29px; white-space:nowrap;
 	background:transparent url(images/visuelemente/empfang.png) left center no-repeat; }

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 681                                                     $ #
+//# Revision     : $Rev:: 689                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 681 2024-07-21 14:27:14Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 689 2024-08-01 01:58:39Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -198,6 +198,7 @@ class uebersicht {
 			<table>
 				<tbody>
 					<tr><td colspan="2"><hr /></td></tr>
+					<tr><td colspan="2"><a class="ps-button" href="std.d1mini.WZ_NP.htm">Wohnzimmer NeoPixel</a></td></tr>
 					<?=uebersicht::tasterShellyDimmer('Wohnzimmer <br class="showonportrait" />Lautsprecher', 'WZ_LS')?>
 					<?=uebersicht::tasterShelly('Wohnzimmer <br class="showonportrait" />Herz', 'WZ_HZ')?>
 					<?=uebersicht::tasterShelly('Wohnzimmer <br class="showonportrait" />Stehlampe', 'WZ_SL')?>
@@ -323,18 +324,22 @@ foreach($zimmer as $kurz => $name) {
 						<td><span class="ps-input ps-operable zp" data-ws="_<?=$kurz?>_RT_SW" data-bm="<?=$kurz?>_ZP_RM" data-zp="<?=$kurz?>_ZP" title="bm: ZP aktiv">-</span></td>
 						<td>
 <?	if($kurz != 'KZ') { ?>
-						<span id="<?=$kurz?>_FB" class="ps-input pa-EinAus <?=wpa::GreyGreen?> bedienbar" data-ws="_DO_<?=$kurz?>_FB" data-popup="<?=$name?>">-</span>
-						<span class="hand pa-hide" data-value="<?=$kurz?>_FB_Hand"></span>
-						<?=($kurz == 'WZ') ? '<br /><span id="KA_FB" class="ps-input pa-EinAus ' . wpa::GreyGreen . ' bedienbar" data-ws="_DO_KA_FB" data-popup="Kaminzimmer" title="Kaminzimmer">-</span>
-							<span class="hand pa-hide" data-value="KA_FB_Hand"></span>' : '' ?>
+						<div class="handContainer">
+							<span id="<?=$kurz?>_FB" class="ps-input pa-EinAus <?=wpa::GreyGreen?> bedienbar" data-ws="_DO_<?=$kurz?>_FB" data-popup="<?=$name?>">-</span>
+							<span class="hand pa-hide" data-value="<?=$kurz?>_FB_Hand"></span>
+						</div>
+						<?=($kurz == 'WZ') ? '<div class="handContainer"><span id="KA_FB" class="ps-input pa-EinAus ' . wpa::GreyGreen . ' bedienbar" data-ws="_DO_KA_FB" data-popup="Kaminzimmer" title="Kaminzimmer">-</span>
+							<span class="hand pa-hide" data-value="KA_FB_Hand"></span></div>' : '' ?>
 <? } else {?>
 						<span id="KZ_VT_MAX" class="ps-input ps-param" data-ws="_KZ_VT_MAX" data-popup="Ventilstellung Maximalwert">-</span>
 <? } ?>
 						</td>
 						<td>
 <? if($kurz == 'KU' || $kurz == 'BA' || $kurz == 'KZ') { ?>
-						<span id="<?=$kurz?>_VT" class="ps-input pa-Analog bedienbar" data-value="<?=$kurz?>_VT" data-popup="<?=$name?>">-</span>
-						<span class="hand pa-hide" data-value="<?=$kurz?>_VT_Hand"></span>
+						<div class="handContainer">
+							<span id="<?=$kurz?>_VT" class="ps-input pa-Analog bedienbar" data-value="<?=$kurz?>_VT" data-popup="<?=$name?>">-</span>
+							<span class="hand pa-hide" data-value="<?=$kurz?>_VT_Hand"></span>
+						</div>
 <? } ?>
 						</td>
 					</tr>

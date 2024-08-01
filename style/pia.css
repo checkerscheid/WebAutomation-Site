@@ -9,10 +9,51 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 27.07.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 688                                                     $ #
+//# Revision     : $Rev:: 689                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pia.css 688 2024-07-29 03:53:39Z                         $ #
+//# File-ID      : $Id:: pia.css 689 2024-08-01 01:58:39Z                         $ #
 //#                                                                                 #
 //###################################################################################
 ?> pia */
-div.center { position:relative; width:1860px; margin:auto; margin-top:15px; }
+#pia h2, #pia p { text-align: center; }
+#pia .buttonContainer { text-align:center; }
+#pia .topic-slider { margin:10px 0; }
+#pia .colorBorderContainer { padding:2px; }
+#pia .colorBorder { border:1px solid #666; width:20px; height:20px; }
+#pia .colorpreview { display:inline-block; min-width:150px; height:25px; border:1px solid #CCC; border-radius:2px; }
+#pia .setNeoPixelEffect, #pia .ModeName { width:auto; min-width:100px; }
+#pia .NeoPixelContainer { max-width:350px; margin:auto; }
+#pia .setNeoPixelDemo, #pia .setNeoPixelEffect { min-width:200px; }
+#pia .indikatoContainer { position:relative; width:122px; }
+#pia .ps-operable { cursor:pointer; }
+#dialog .newDpVal { width:auto; min-width:250px; }
+
+#colorPicker { max-width:350px; margin:auto; }
+#colorPicker .rgb-slider { margin:15px 0; }
+#colorPicker .ps-input { min-width:40px; max-width:40px; width:40px; }
+#pickerContainer { padding:5px; border:1px solid #CCC; border-radius:10px; box-shadow:6px 6px 8px 0px #222; }
+#picker { cursor:crosshair;
+	background:transparent url(images/layout/ColorWheelBG.png) center center no-repeat; }
+#pia .sleepHourSlider, #pia .sleepMinuteSlider { margin:auto; }
+#pia .sleepHourSlider a, #pia .sleepMinuteSlider a { text-decoration:none; outline:none; }
+#pia .sleepHour, #pia .sleepMinute { width:30px; min-width:30px; }
+#rVal .ui-slider-range { background: #ef2929; }
+#rVal .ui-slider-handle { background: #ef2929; }
+#gVal .ui-slider-range { background: #8ae234; }
+#gVal .ui-slider-handle { background: #8ae234; }
+#bVal .ui-slider-range { background: #729fcf; }
+#bVal .ui-slider-handle { background: #729fcf; }
+#wwVal .ui-slider-range { background: #f1f17e; }
+#wwVal .ui-slider-handle { background: #f1f17e; }
+#cwVal .ui-slider-range { background: #e3eaf7; }
+#cwVal .ui-slider-handle { background: #e3eaf7; }
+
+@media (orientation: portrait) {
+	#pia .ps-button { padding:25px 6px; }
+	#pia .ps-button.pa-scene { padding:25px 25px; }
+	#pia .ui-slider .ui-slider-handle { width:30px; height:30px; }
+	#pia .ui-slider-horizontal { height:20px; }
+	#pia .ps-input { font-size:18px; padding:5px; }
+	#pia span.hand.pa-hide { top:3px; }
+	#pia span.wpa-indikator { top:8px; }
+}

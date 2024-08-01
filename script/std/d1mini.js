@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 688                                                     $ #
+//# Revision     : $Rev:: 689                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.js 688 2024-07-29 03:53:39Z                       $ #
+//# File-ID      : $Id:: d1mini.js 689 2024-08-01 01:58:39Z                       $ #
 //#                                                                                 #
 //###################################################################################
 use system\std
@@ -156,6 +156,15 @@ p.page.load = function() {
 		$.post('std.d1mini.NeoPixelSimple.req', simple, function(data) {
 		}, 'json');
 	});
+	$('.setSleepTimer').on('click', function() {
+		var sec = ($('.sleepHour').text() * 60 * 60) + ($('.sleepMinute').text() * 60);
+		const sleep = {
+			ip: $('#storedIP').attr('data-ip'),
+			sleep: sec
+		};
+		$.post('std.d1mini.NeoPixelSleep.req', sleep, function(data) {
+		}, 'json');
+	});
 	$('.colorBorder').on('click', function() {
 		var that = $(this);
 		const led = {
@@ -288,6 +297,29 @@ function getColorPicker() {
 			
 			//p.automation.write($(this).attr('data-value'), ui.value);
 			$(this).removeClass('WriteOnly').find('a').text('');
+		}
+	});
+	$('.sleepHourSlider').slider({
+		min: 0,
+		max: 2,
+		orientation: 'vertical',
+		range: 'min',
+		slide: function(event, ui) {
+			var TheValue = ui.value;
+			var TheSpan = $('.sleepHour');
+			$(TheSpan).text(TheValue);
+		}
+	});
+	$('.sleepMinuteSlider').slider({
+		min: 0,
+		max: 59,
+		step: 5,
+		orientation: 'vertical',
+		range: 'min',
+		slide: function(event, ui) {
+			var TheValue = ui.value;
+			var TheSpan = $('.sleepMinute');
+			$(TheSpan).text(TheValue);
 		}
 	});
 	$('#rVal').slider('option', 'value', $('#NeoPixelR').val());

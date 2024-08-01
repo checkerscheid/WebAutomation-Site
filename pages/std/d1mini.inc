@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 688                                                     $ #
+//# Revision     : $Rev:: 689                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.inc 688 2024-07-29 03:53:39Z                      $ #
+//# File-ID      : $Id:: d1mini.inc 689 2024-08-01 01:58:39Z                      $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
@@ -245,7 +245,7 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 				</div>
 				<hr />
 				<div class="ps-flex-container NeoPixelContainer">
-				<? for($i = 0; $i < 50; $i++) { ?>
+				<? for($i = 0; $i < $d1Mini->FreakaZoneDevice->NeoPixel->PixelCount; $i++) { ?>
 					<div class="colorBorderContainer">
 						<div class="colorBorder" data-led="<?=($i)?>" title="<?=($i)?>"></div>
 					</div>
@@ -285,6 +285,7 @@ $modes = array(
 	11 => 'ModeRunnerGreen',
 	12 => 'ModeRunnerBlue',
 	13 => 'ModeRandom',
+	15 => 'ModeRainbowTv',
 	20 => 'ModeColorWipePurple',
 	21 => 'ModeRunnerPurple'
 	//14 => 'ModeComplex'
@@ -295,6 +296,23 @@ foreach($modes as $id => $name) {
 <?
 }
 ?>
+				</div>
+				<hr />
+				<div>
+					<span>Sleep:</span>
+					<hr />
+					<div class="ps-flex-container">
+						<div>
+							<span class="ps-input sleepHour">0</span> h
+							<div class="sleepHourSlider"></div>
+						</div>
+						<div>
+							<span class="ps-input sleepMinute">0</span> min
+							<div class="sleepMinuteSlider"></div>
+						</div>
+					</div>
+					<hr />
+					<span class="ps-button setSleepTimer">set</span>
 				</div>
 			</div>
 		</div>
