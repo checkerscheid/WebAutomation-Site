@@ -1,0 +1,174 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 01.08.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 691                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: wpNeoPixel.psys 691 2024-08-02 00:27:24Z                 $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\system;
+
+use system\std;
+use Exception;
+wpNeoPixel::$ip = std::posts('ip');
+class wpNeoPixel {
+	public static $ip;
+	const c_NeoPixelDemo = 'NeoPixelDemo';
+	public static function NeoPixelDemo() {
+		try {
+			$cmd = 'demo=1';
+			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelDemo?' . $cmd, 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+	}
+	const c_NeoPixelEffect = 'NeoPixelEffect';
+	public static function NeoPixelEffect() {
+		try {
+			$cmd = 'effect=' . std::posts('id');
+			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelEffect?' . $cmd, 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+	}
+	const c_NeoPixelSimple = 'NeoPixelSimple';
+	public static function NeoPixelSimple() {
+		try {
+			$cmd = 'r=' . std::posts('r') . '&g=' . std::posts('g') . '&b=' . std::posts('b');
+			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelSimple?' . $cmd, 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+	}
+	const c_NeoPixelSleep = 'NeoPixelSleep';
+	public static function NeoPixelSleep() {
+		try {
+			$cmd = 'sleep=' . std::posts('sleep');
+			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelSleep?' . $cmd, 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+	}
+	const c_NeoPixelPia = 'NeoPixelPia';
+	public static function NeoPixelPia() {
+		try {
+			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelPia', 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+	}
+	const c_NeoPixelBrightness = 'NeoPixelBrightness';
+	public static function NeoPixelBrightness() {
+		try {
+			$cmd = 'brightness=' . std::posts('brightness');
+			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelBrightness?' . $cmd, 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+	}
+	const c_NeoPixelCW = 'NeoPixelCW';
+	public static function NeoPixelCW() {
+		try {
+			$cmd = 'cw=' . std::posts('cw');
+			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelCW?' . $cmd, 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+	}
+	const c_NeoPixelWW = 'NeoPixelWW';
+	public static function NeoPixelWW() {
+		try {
+			$cmd = 'ww=' . std::posts('ww');
+			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelWW?' . $cmd, 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+	}
+	const c_NeoPixelAus = 'NeoPixelAus';
+	public static function NeoPixelAus() {
+		try {
+			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelCW?cw=0', 0, self::getContext());
+			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelWW?ww=0', 0, self::getContext());
+			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelSimple?r=0&g=0&b=0', 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+	}
+	const c_NeoPixel = 'NeoPixel';
+	public static function NeoPixel() {
+		try {
+			$cmd = 'pixel=' . std::posts('pixel') . '&r=' . std::posts('r') . '&g=' . std::posts('g') . '&b=' . std::posts('b');
+			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixel?' . $cmd, 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+	}
+	const c_getNeoPixel = 'getNeoPixel';
+	public static function getNeoPixel() {
+		header(wpJSON_HEADER);
+		echo file_get_contents('http://' . wpNeoPixel::$ip . '/getNeoPixel');
+	}
+	private static function getContext() {
+		return stream_context_create([
+			"http" => [
+				"method"=>"GET",
+				"timeout" => 1
+			]
+		]);
+	}
+}
+
+switch(std::gets('param1')) {
+		//###################################################################################
+	case wpNeoPixel::c_NeoPixelDemo:
+		wpNeoPixel::NeoPixelDemo();
+		break;
+		//###################################################################################
+	case wpNeoPixel::c_NeoPixelSimple:
+		wpNeoPixel::NeoPixelSimple();
+		break;
+		//###################################################################################
+	case wpNeoPixel::c_NeoPixelSleep:
+		wpNeoPixel::NeoPixelSleep();
+		break;
+		//###################################################################################
+	case wpNeoPixel::c_NeoPixelPia:
+		wpNeoPixel::NeoPixelPia();
+		break;
+		//###################################################################################
+	case wpNeoPixel::c_NeoPixelBrightness:
+		wpNeoPixel::NeoPixelBrightness();
+		break;
+		//###################################################################################
+	case wpNeoPixel::c_NeoPixelWW:
+		wpNeoPixel::NeoPixelWW();
+		break;
+		//###################################################################################
+	case wpNeoPixel::c_NeoPixelCW:
+		wpNeoPixel::NeoPixelCW();
+		break;
+		//###################################################################################
+	case wpNeoPixel::c_NeoPixelAus:
+		wpNeoPixel::NeoPixelAus();
+		//###################################################################################
+	case wpNeoPixel::c_NeoPixel:
+		wpNeoPixel::NeoPixel();
+		break;
+		//###################################################################################
+	case wpNeoPixel::c_NeoPixelEffect:
+		wpNeoPixel::NeoPixelEffect();
+		break;
+		//###################################################################################
+	case wpNeoPixel::c_getNeoPixel:
+		wpNeoPixel::getNeoPixel();
+		break;
+}
+

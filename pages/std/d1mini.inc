@@ -9,17 +9,19 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 689                                                     $ #
+//# Revision     : $Rev:: 690                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.inc 689 2024-08-01 01:58:39Z                      $ #
+//# File-ID      : $Id:: d1mini.inc 690 2024-08-02 00:24:56Z                      $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
 namespace pages\std;
 use system\std, system\WebCom;
 use system\Helper\wpa;
+use system\Helper\wpNeoPixel;
 
 require_once 'system/Helper/wpa.psys';
+require_once 'system/Helper/wpNeoPixel.psys';
 
 $database->query("SELECT TOP 1 [name] FROM [webpages] WHERE [src] = 'd1mini'");
 $headline = $database->fetch();
@@ -221,101 +223,12 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 		</div>
 	<? } ?>
 	<? if($d1Mini->FreakaZoneDevice->useModul->NeoPixel) { ?>
-		<div class="ps-container">
-			<h3>NeoPixel Farben</h3>
-			<div id="colorPicker">
-				<span class="colorpreview"><?=wpHTML_EMPTY ?></span><br />
-				<input type="text" id="NeoPixelR" class="ps-input NeoPixelColor" placeholder="Red 0 - 255" value="<?=$d1Mini->FreakaZoneDevice->NeoPixel->ValueR ?>" />
-				<input type="text" id="NeoPixelG" class="ps-input NeoPixelColor" placeholder="Green 0 - 255" value="<?=$d1Mini->FreakaZoneDevice->NeoPixel->ValueG ?>" />
-				<input type="text" id="NeoPixelB" class="ps-input NeoPixelColor" placeholder="Blue 0 - 255" value="<?=$d1Mini->FreakaZoneDevice->NeoPixel->ValueB ?>" />
-				<hr />
-				<div class="rgb-slider" id="rVal"></div>
-				<div class="rgb-slider" id="gVal"></div>
-				<div class="rgb-slider" id="bVal"></div>
-				<hr />
-				<div class="ps-flex-container">
-					<div id="pickerContainer">
-						<canvas id="picker" width="200" height="200"></canvas>
-					</div>
-					<div>
-						<span class="ps-button setNeoPixelPia">Pia's Fav</span><br />
-						<span class="ps-button setNeoPixelSimple">Eine Farbe</span><br />
-						<span class="ps-button setNeoPixelAus">Aus</span>
-					</div>
-				</div>
-				<hr />
-				<div class="ps-flex-container NeoPixelContainer">
-				<? for($i = 0; $i < $d1Mini->FreakaZoneDevice->NeoPixel->PixelCount; $i++) { ?>
-					<div class="colorBorderContainer">
-						<div class="colorBorder" data-led="<?=($i)?>" title="<?=($i)?>"></div>
-					</div>
-				<? } ?>
-				</div>
-				<hr />
-				<h3>Brightness (<span id="showBrVal"><?=round($d1Mini->FreakaZoneDevice->NeoPixel->Brightness / 2.55) ?></span> %)</h3>
-				<div class="rgb-slider" id="brVal"></div>
-				<h3>Warmweiß (<span id="showWWVal"><?=$d1Mini->FreakaZoneDevice->AnalogOut->HandValue ?></span> %)</h3>
-				<div class="rgb-slider" id="wwVal"></div>
-				<h3>Kaltweiß (<span id="showCWVal"><?=$d1Mini->FreakaZoneDevice->AnalogOut2->HandValue ?></span> %)</h3>
-				<div class="rgb-slider" id="cwVal"></div>
-			</div>
-		</div>
-		<div class="ps-container">
-			<h3>NeoPixel Scenen</h3>
-			<div class="NeoPixelContainer">
-				<div>
-					<span class="ps-input ModeName" data-ws="<?=$erg['name'] ?>_ModeName">-</span><br />
-					<span class="ps-button setNeoPixelDemo">Demo Mode</span>
-				</div>
-				<hr />
-				<div>
 <?
-$modes = array(
-	//0 => 'ModeStatic',
-	1 => 'ModeColorWipeRed',
-	2 => 'ModeColorWipeGreen',
-	3 => 'ModeColorWipeBlue',
-	4 => 'ModeTheaterChaseWhite',
-	5 => 'ModeTheaterChaseRed',
-	6 => 'ModeTheaterChaseGreen',
-	7 => 'ModeTheaterChaseBlue',
-	8 => 'ModeRainbow',
-	9 => 'ModeTheaterChaseRainbow',
-	10 => 'ModeRunnerRed',
-	11 => 'ModeRunnerGreen',
-	12 => 'ModeRunnerBlue',
-	13 => 'ModeRandom',
-	15 => 'ModeRainbowTv',
-	20 => 'ModeColorWipePurple',
-	21 => 'ModeRunnerPurple'
-	//14 => 'ModeComplex'
-);
-foreach($modes as $id => $name) {
+	$neoPixel = new wpNeoPixel($erg['ip'], $erg['name']);
+	$neoPixel->getStatusFromJson($d1Mini->FreakaZoneDevice);
+	$neoPixel->getColorPicker();
+	$neoPixel->getColorScenen();
 ?>
-					<span class="ps-button setNeoPixelEffect" data-id="<?=$id ?>"><?=$name ?></span><br />
-<?
-}
-?>
-				</div>
-				<hr />
-				<div>
-					<span>Sleep:</span>
-					<hr />
-					<div class="ps-flex-container">
-						<div>
-							<span class="ps-input sleepHour">0</span> h
-							<div class="sleepHourSlider"></div>
-						</div>
-						<div>
-							<span class="ps-input sleepMinute">0</span> min
-							<div class="sleepMinuteSlider"></div>
-						</div>
-					</div>
-					<hr />
-					<span class="ps-button setSleepTimer">set</span>
-				</div>
-			</div>
-		</div>
 	<? } ?>
 	<? if($d1Mini->FreakaZoneDevice->useModul->AnalogOut && !$d1Mini->FreakaZoneDevice->useModul->NeoPixel) { ?>
 		<div class="ps-container">

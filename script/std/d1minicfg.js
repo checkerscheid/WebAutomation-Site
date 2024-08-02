@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 03.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 677                                                     $ #
+//# Revision     : $Rev:: 690                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.js 677 2024-07-15 13:51:59Z                    $ #
+//# File-ID      : $Id:: d1minicfg.js 690 2024-08-02 00:24:56Z                    $ #
 //#                                                                                 #
 //###################################################################################
 ?> d1minicfg */
@@ -414,7 +414,7 @@ function D1MiniRenew(d1minigroup) {
 			//setTextIfNotStored(key, 'ssid', value.Ssid);
 			var updateMode = value.UpdateMode ? '<span class="ps-fontyellow">aktiv</span>' : '<span class="ps-fontgreen">deaktiviert</span>';
 			setTextIfNotStored(key, 'updatemode', updateMode);
-			setTextIfNotStored(key, 'compiledWith', value.compiledWith);
+			setTextIfNotStored(key, 'compiledwith', value.compiledWith);
 			var td = $(`tr[data-json=${key}] td.json`);
 			$(td).html('<div class="showJsonContainer">' +
 				'<div>' +
@@ -455,7 +455,7 @@ function setD1MiniInfo(data) {
 			}
 		}
 	}
-	setTextIfNotStored(name, 'compiledWith', (compiledWith.length > 2 ? compiledWith.slice(0, -2) : compiledWith));
+	setTextIfNotStored(name, 'compiledwith', (compiledWith.length > 2 ? compiledWith.slice(0, -2) : compiledWith));
 	var td = $(`tr[data-json=${name}] td.json`);
 	$(td).html('<div class="showJsonContainer">' +
 		'<div>' +
