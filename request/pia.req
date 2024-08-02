@@ -1,31 +1,21 @@
-/*<?
+<?
 //###################################################################################
 //#                                                                                 #
-//#                (C) FreakaZone GmbH                                              #
-//#                =======================                                          #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
 //#                                                                                 #
 //###################################################################################
 //#                                                                                 #
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 690                                                     $ #
+//# Revision     : $Rev:: 691                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.css 690 2024-08-02 00:24:56Z                      $ #
+//# File-ID      : $Id:: pia.req 691 2024-08-02 00:27:24Z                         $ #
 //#                                                                                 #
 //###################################################################################
-?> d1mini */
+namespace request;
 
-<? require_once 'style/system/wpNeoPixel.css'; ?>
+require_once 'request/system/wpNeoPixel.psys';
 
-#d1mini h2, #d1mini p { text-align: center; }
-#d1mini table { margin:auto; }
-#d1mini .buttonContainer { text-align:center; }
-#dialog .newDpVal { width:auto; min-width:250px; }
-
-@media (orientation: portrait) {
-	#d1mini .ps-button { padding:25px 6px; }
-	#d1mini .ui-slider .ui-slider-handle { width:30px; height:30px; }
-	#d1mini .ui-slider-horizontal { height:20px; }
-}
-
+?>

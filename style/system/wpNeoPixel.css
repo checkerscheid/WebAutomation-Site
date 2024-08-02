@@ -1,0 +1,61 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 01.08.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 691                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: wpNeoPixel.css 691 2024-08-02 00:27:24Z                  $ #
+//#                                                                                 #
+//###################################################################################
+?> wpNeoPixel */
+
+.pickerContainer { padding:5px; border:1px solid #CCC; border-radius:10px; box-shadow:6px 6px 8px 0px #222; }
+#picker { cursor:crosshair;
+	background:transparent url(images/layout/ColorWheelBG.png) center center no-repeat; }
+
+.colorPicker { max-width:350px; margin:auto; }
+.colorPicker .colorpreview { display:inline-block; min-width:150px; height:25px; border:1px solid #CCC; border-radius:2px; }
+.colorPicker .rgb-slider { margin:15px 0; }
+.colorPicker .ps-input { min-width:40px; max-width:40px; width:40px; }
+.colorPicker .rVal .ui-slider-range { background: #ef2929; }
+.colorPicker .rVal .ui-slider-handle { background: #ef2929; }
+.colorPicker .gVal .ui-slider-range { background: #8ae234; }
+.colorPicker .gVal .ui-slider-handle { background: #8ae234; }
+.colorPicker .bVal .ui-slider-range { background: #729fcf; }
+.colorPicker .bVal .ui-slider-handle { background: #729fcf; }
+.colorPicker .colorBorderContainer { padding:2px; }
+.colorPicker .colorBorder { border:1px solid #666; width:20px; height:20px; }
+.colorPicker .wwVal .ui-slider-range { background: #f1f17e; }
+.colorPicker .wwVal .ui-slider-handle { background: #f1f17e; }
+.colorPicker .cwVal .ui-slider-range { background: #e3eaf7; }
+.colorPicker .cwVal .ui-slider-handle { background: #e3eaf7; }
+
+.sceneContainer { max-width:350px; margin:auto; }
+.sceneContainer .ModeName,
+.sceneContainer .setNeoPixelEffect { width:auto; min-width:100px; }
+.sceneContainer .setNeoPixelDemo,
+.sceneContainer .setNeoPixelEffect { min-width:200px; }
+.sceneContainer .sleepHourSlider,
+.sceneContainer .sleepMinuteSlider { margin:auto; }
+.sceneContainer .sleepHourSlider a,
+.sceneContainer .sleepMinuteSlider a { text-decoration:none; outline:none; }
+.sceneContainer .sleepHour,
+.sceneContainer .sleepMinute { width:30px; min-width:30px; }
+
+@media (orientation: portrait) {
+	.colorPicker .ps-button { padding:25px 6px; }
+	.colorPicker .ps-button.pa-scene { padding:25px 25px; }
+	.colorPicker .ui-slider .ui-slider-handle { width:30px; height:30px; }
+	.colorPicker .ui-slider-horizontal { height:20px; }
+	.colorPicker .ps-input { font-size:18px; padding:5px; }
+	.colorPicker span.hand.pa-hide { top:3px; }
+	.colorPicker span.wpa-indikator { top:8px; }
+}
+

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 26.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 685                                                     $ #
+//# Revision     : $Rev:: 691                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.psys 685 2024-07-29 03:34:17Z                     $ #
+//# File-ID      : $Id:: d1mini.psys 691 2024-08-02 00:27:24Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -23,13 +23,6 @@ use system\WebCom;
  * @todo SQL, connect D1Mini to MQTT Topic
  */
 class d1mini {
-	const DHT = 'DHT';
-	const LDR = 'LDR';
-	const Light = 'Light';
-	const BM = 'BM';
-	const Window = 'Window';
-	const Rain = 'Rain';
-	const Distance = 'Distance';
 
 	private $database, $webCom, $status;
 	private $idD1MiniGroup, $idMqttGroup, $idDBGroup, $idTrendGroup, $idAlarmGroup;

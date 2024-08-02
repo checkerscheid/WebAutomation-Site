@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 689                                                     $ #
+//# Revision     : $Rev:: 690                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: conf.psys 689 2024-08-01 01:58:39Z                       $ #
+//# File-ID      : $Id:: conf.psys 690 2024-08-02 00:24:56Z                       $ #
 //#                                                                                 #
 //###################################################################################
 use system\wpInit;
@@ -27,10 +27,10 @@ wpInit::$menuorder = array(
 	'pia', 'wohnzimmer', 'schlafzimmer', 'buero', 'kueche', 'bad', 'kinderzimmer'
 );
 wpInit::$systemmenuorder['webvisucs']['Plug Ins'] = array( 'trendselect', 'calendar', 'calendarscene', 'opcrouter' );
-wpInit::$systemmenuorder['webvisucs']['Sonstiges'] = array('weather', 'betriebsstunden', 'kamera');
+wpInit::$systemmenuorder['webvisucs']['Sonstiges'] = array('wetter', 'weather', 'betriebsstunden', 'kamera');
 wpInit::$systemmenuorder['system']['Systeminformationen'] = array('sys_codesys');
 wpInit::$systemmenuorder['system']['Entwicklung'] = array('websockets');
-wpInit::$noStdPageInSystem = array('betriebsstunden', 'websockets', 'kamera');
+wpInit::$noStdPageInSystem = array('wetter', 'betriebsstunden', 'websockets', 'kamera');
 wpInit::$stdpoints = array('AT' => '_GA_RT');
 wpInit::$showATinFooter = '_GA_RT';
 wpInit::$weathercode = '2804554';
