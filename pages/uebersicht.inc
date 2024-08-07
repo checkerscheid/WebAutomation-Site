@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 689                                                     $ #
+//# Revision     : $Rev:: 692                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 689 2024-08-01 01:58:39Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 692 2024-08-07 11:51:08Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -224,9 +224,11 @@ class uebersicht {
 					<tr><td colspan="2"><hr /></td></tr>
 					<?=uebersicht::tasterShellyDimmer('Flur', 'BU_FL')?>
 					<tr><td colspan="2"><hr /></td></tr>
+					<tr><td colspan="2"><a class="ps-button" href="std.d1mini.BA_Lue.htm"> Bad Lüfter</a></td></tr>
 					<?=uebersicht::tasterShellyDimmer('Bad', 'BA')?>
 					<?=uebersicht::tasterShelly('Bad <br class="showonportrait" />Spiegelschrank', 'BA_SP')?>
 					<tr><td colspan="2"><hr /></td></tr>
+					<tr><td colspan="2"><a class="ps-button" href="std.d1mini.KZ_NP.htm">Kinderzimmer NeoPixel</a></td></tr>
 					<?=uebersicht::tasterShelly('Kinderzimmer', 'KZ')?>
 					<?=uebersicht::tasterShelly('Kinderzimmer <br class="showonportrait" />Bett', 'KZ_BE')?>
 					<?=uebersicht::tasterShelly('Kinderzimmer <br class="showonportrait" />Nachtlicht', 'KZ_NL')?>

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 542                                                     $ #
+//# Revision     : $Rev:: 692                                                     $ #
 //# Author       : $Author:: checker                                              $ #
-//# File-ID      : $Id:: trendselect.css 542 2023-12-14 04:13:23Z checker         $ #
+//# File-ID      : $Id:: trendselect.css 692 2024-08-07 11:51:08Z checker         $ #
 //#                                                                                 #
 //###################################################################################
 ?> trendselect */
@@ -20,6 +20,7 @@
 #trendselect span.text { line-height:30px; }
 #trendselect span.description { display:inline-block; width:140px; }
 #trendselect .trend { width:300px; }
+#trendselect .GroupHeadLine, #trendselect .ps-tree-parent { white-space: nowrap; }
 #trendexists .ps-button { float:right; }
 #choosentrend .ps-button { float:left; }
 #trendexists, #trendconfig, #trendusercfg { float:left; border:1px solid #CCC; padding:5px; margin:10px; width:350px; }

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 684                                                     $ #
+//# Revision     : $Rev:: 692                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: init.js 684 2024-07-23 21:58:22Z                         $ #
+//# File-ID      : $Id:: init.js 692 2024-08-07 11:51:08Z                         $ #
 //#                                                                                 #
 //###################################################################################
 use system\wpInit;
@@ -174,6 +174,11 @@ var p = {
 			$('#dialog').html('<h1 class="neg">An dieser Seite wird noch gearbeitet</h1>').dialog({
 			title: 'in Work', modal: true, width: p.popup.width.middle,
 			buttons: null});
+		},
+		isTouchDevice: function() {
+			return (('ontouchstart' in window) ||
+				(navigator.maxTouchPoints > 0) ||
+				(navigator.msMaxTouchPoints > 0));
 		},
 		load: null,
 		get: null

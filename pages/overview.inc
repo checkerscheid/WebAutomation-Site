@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 689                                                     $ #
+//# Revision     : $Rev:: 692                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: overview.inc 689 2024-08-01 01:58:39Z                  $ #
+//# File-ID      : $Id:: overview.inc 692 2024-08-07 11:51:08Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /**
@@ -175,6 +175,8 @@ class overview {
 				<tr><td colspan="6"><hr /></td></tr>
 				<?=overview::getLicht() ?>
 				<tr><td colspan="6"><a class="ps-button" href="std.d1mini.WZ_NP.htm">Wohnzimmer NeoPixel</a></td></tr>
+				<tr><td colspan="6"><a class="ps-button" href="std.d1mini.KZ_NP.htm">Kinderzimmer NeoPixel</a></td></tr>
+				<tr><td colspan="6"><a class="ps-button" href="std.d1mini.BA_Lue.htm">Bad Lüfter</a></td></tr>
 				<tr><td colspan="6"><h2>Energie</h2></td></tr>
 				<tr><td colspan="6"><hr /></td></tr>
 				<?=overview::getPower() ?>

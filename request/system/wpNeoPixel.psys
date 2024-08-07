@@ -9,15 +9,19 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 691                                                     $ #
+//# Revision     : $Rev:: 692                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpNeoPixel.psys 691 2024-08-02 00:27:24Z                 $ #
+//# File-ID      : $Id:: wpNeoPixel.psys 692 2024-08-07 11:51:08Z                 $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\system;
 
 use system\std;
+use system\Helper\wpDatabase;
+use system\Helper\security;
 use Exception;
+use system\Helper\wpNeoPixel as wpNP;
+require_once 'system/Helper/wpNeoPixel.psys';
 wpNeoPixel::$ip = std::posts('ip');
 class wpNeoPixel {
 	public static $ip;
@@ -30,6 +34,16 @@ class wpNeoPixel {
 			// Fail silently
 		}
 	}
+	const c_NeoPixelColor = 'NeoPixelColor';
+	public static function NeoPixelColor() {
+		try {
+			$cmd = 'r=' . std::posts('r') . '&g=' . std::posts('g') . '&b=' . std::posts('b');
+			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelColor?' . $cmd, 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+		wpNP::saveColor(std::posts('r'), std::posts('g'), std::posts('b'));
+	}
 	const c_NeoPixelEffect = 'NeoPixelEffect';
 	public static function NeoPixelEffect() {
 		try {
@@ -39,28 +53,11 @@ class wpNeoPixel {
 			// Fail silently
 		}
 	}
-	const c_NeoPixelSimple = 'NeoPixelSimple';
-	public static function NeoPixelSimple() {
-		try {
-			$cmd = 'r=' . std::posts('r') . '&g=' . std::posts('g') . '&b=' . std::posts('b');
-			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelSimple?' . $cmd, 0, self::getContext());
-		} catch(Exception $e) {
-			// Fail silently
-		}
-	}
 	const c_NeoPixelSleep = 'NeoPixelSleep';
 	public static function NeoPixelSleep() {
 		try {
 			$cmd = 'sleep=' . std::posts('sleep');
 			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelSleep?' . $cmd, 0, self::getContext());
-		} catch(Exception $e) {
-			// Fail silently
-		}
-	}
-	const c_NeoPixelPia = 'NeoPixelPia';
-	public static function NeoPixelPia() {
-		try {
-			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelPia', 0, self::getContext());
 		} catch(Exception $e) {
 			// Fail silently
 		}
@@ -92,12 +89,18 @@ class wpNeoPixel {
 			// Fail silently
 		}
 	}
-	const c_NeoPixelAus = 'NeoPixelAus';
-	public static function NeoPixelAus() {
+	const c_setNeoPixelOff = 'setNeoPixelOff';
+	public static function setNeoPixelOff() {
 		try {
-			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelCW?cw=0', 0, self::getContext());
-			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelWW?ww=0', 0, self::getContext());
-			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelSimple?r=0&g=0&b=0', 0, self::getContext());
+			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelOff', 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+	}
+	const c_setNeoPixelOn = 'setNeoPixelOn';
+	public static function setNeoPixelOn() {
+		try {
+			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelOn', 0, self::getContext());
 		} catch(Exception $e) {
 			// Fail silently
 		}
@@ -110,11 +113,32 @@ class wpNeoPixel {
 		} catch(Exception $e) {
 			// Fail silently
 		}
+		wpNP::saveColor(std::posts('r'), std::posts('g'), std::posts('b'));
 	}
 	const c_getNeoPixel = 'getNeoPixel';
 	public static function getNeoPixel() {
 		header(wpJSON_HEADER);
 		echo file_get_contents('http://' . wpNeoPixel::$ip . '/getNeoPixel');
+	}
+	const c_getSavedColor = 'getSavedColor';
+	public static function getSavedColor() {
+		$database = new wpDatabase();
+		$database->query("SELECT TOP(13) [np].[name], [np].[r], [np].[g], [np].[b], [np].[brightness] FROM [neopixel] [np]
+			LEFT JOIN [user] [u] ON [u].[id_user] = [np].[id_user]
+			WHERE [u].[id_user] = '" . security::getIdFromUser() . "'
+			ORDER BY [np].[saved] DESC");
+		while($erg = $database->fetch()) {
+?>
+					<div class="colorBorderContainer">
+						<div class="colorBorderFav"
+							data-r="<?=$erg['r']?>"
+							data-g="<?=$erg['g']?>"
+							data-b="<?=$erg['b']?>"
+							title="<?=$erg['name']?>"
+							style="background-color: rgb(<?=$erg['r'] ?>, <?=$erg['g'] ?>, <?=$erg['b'] ?>);"></div>
+					</div>
+<?
+		}
 	}
 	private static function getContext() {
 		return stream_context_create([
@@ -132,16 +156,12 @@ switch(std::gets('param1')) {
 		wpNeoPixel::NeoPixelDemo();
 		break;
 		//###################################################################################
-	case wpNeoPixel::c_NeoPixelSimple:
-		wpNeoPixel::NeoPixelSimple();
+	case wpNeoPixel::c_NeoPixelColor:
+		wpNeoPixel::NeoPixelColor();
 		break;
 		//###################################################################################
 	case wpNeoPixel::c_NeoPixelSleep:
 		wpNeoPixel::NeoPixelSleep();
-		break;
-		//###################################################################################
-	case wpNeoPixel::c_NeoPixelPia:
-		wpNeoPixel::NeoPixelPia();
 		break;
 		//###################################################################################
 	case wpNeoPixel::c_NeoPixelBrightness:
@@ -156,11 +176,20 @@ switch(std::gets('param1')) {
 		wpNeoPixel::NeoPixelCW();
 		break;
 		//###################################################################################
-	case wpNeoPixel::c_NeoPixelAus:
-		wpNeoPixel::NeoPixelAus();
+	case wpNeoPixel::c_setNeoPixelOff:
+		wpNeoPixel::setNeoPixelOff();
+		break;
+		//###################################################################################
+	case wpNeoPixel::c_setNeoPixelOn:
+		wpNeoPixel::setNeoPixelOn();
+		break;
 		//###################################################################################
 	case wpNeoPixel::c_NeoPixel:
 		wpNeoPixel::NeoPixel();
+		break;
+		//###################################################################################
+	case wpNeoPixel::c_getSavedColor:
+		wpNeoPixel::getSavedColor();
 		break;
 		//###################################################################################
 	case wpNeoPixel::c_NeoPixelEffect:

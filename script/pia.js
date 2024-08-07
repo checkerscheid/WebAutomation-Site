@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 27.07.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 690                                                     $ #
+//# Revision     : $Rev:: 692                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pia.js 690 2024-08-02 00:24:56Z                          $ #
+//# File-ID      : $Id:: pia.js 692 2024-08-07 11:51:08Z                          $ #
 //#                                                                                 #
 //###################################################################################
 use system\std
@@ -20,7 +20,7 @@ use system\std
 //<? require_once('script/system/wpNeoPixel.js') ?>
 ws.logEnabled = true;
 p.page.load = function() {
-	wpNeoPixel.Init('std.pia');
+	wpNeoPixel.Init('pia');
 	$('#pia').on('click', '.ps-input.ps-operable.zp', function() {
 		var dpType = 'VT_BOOL';
 		if($(this).attr('data-bm') == 'KZ_ZP_RM') dpType = 'SW';

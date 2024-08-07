@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 691                                                     $ #
+//# Revision     : $Rev:: 692                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpNeoPixel.js 691 2024-08-02 00:27:24Z                   $ #
+//# File-ID      : $Id:: wpNeoPixel.js 692 2024-08-07 11:51:08Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> wpNeoPixel */
@@ -22,7 +22,6 @@ var wpNeoPixel = {
 	image: null,
 	ip: null,
 	target:null,
-	canvasClicked: false,
 	Init: function(target) {
 		let returns = false;
 		wpNeoPixel.ip = $('.wpNeoPixel').attr('data-ip');
@@ -36,12 +35,13 @@ var wpNeoPixel = {
 			};
 			wpNeoPixel.image.src = 'images/layout/ColorWheel.png';
 			wpNeoPixel.Register();
-			$('#rVal').slider('option', 'value', $('#NeoPixelR').val());
-			$('#gVal').slider('option', 'value', $('#NeoPixelG').val());
-			$('#bVal').slider('option', 'value', $('#NeoPixelB').val());
-			$('#brVal').slider('option', 'value', $('#showBrVal').text());
-			$('#wwVal').slider('option', 'value', $('#showWWVal').text());
-			$('#cwVal').slider('option', 'value', $('#showCWVal').text());
+			wpNeoPixel.getSavedColor();
+			$('.rVal').slider('option', 'value', $('.NeoPixelR').val());
+			$('.gVal').slider('option', 'value', $('.NeoPixelG').val());
+			$('.bVal').slider('option', 'value', $('.NeoPixelB').val());
+			$('.brVal').slider('option', 'value', $('.showBrVal').text());
+			$('.wwVal').slider('option', 'value', $('.showWWVal').text());
+			$('.cwVal').slider('option', 'value', $('.showCWVal').text());
 			returns = true;
 		}
 		return returns;
@@ -62,31 +62,18 @@ var wpNeoPixel = {
 			$.post(wpNeoPixel.target + '.NeoPixelEffect.req', effect, function(data) {
 			}, 'json');
 		});
-		$('.setNeoPixelSimple').on('click', function() {
-			const simple = {
-				ip: wpNeoPixel.ip,
-				r: $('.NeoPixelR').val(),
-				g: $('.NeoPixelG').val(),
-				b: $('.NeoPixelB').val()
-			};
-			$.post(wpNeoPixel.target + '.NeoPixelSimple.req', simple, function(data) {
-			}, 'json');
-		});
-		$('.setNeoPixelPia').on('click', function() {
-			const pia = {
+		$('.setNeoPixelOn').on('click', function() {
+			const on = {
 				ip: wpNeoPixel.ip
 			};
-			$.post(wpNeoPixel.target + '.NeoPixelPia.req', pia, function(data) {
+			$.post(wpNeoPixel.target + '.setNeoPixelOn.req', on, function(data) {
 			}, 'json');
 		});
-		$('.setNeoPixelAus').on('click', function() {
-			const simple = {
-				ip: wpNeoPixel.ip,
-				r: 0,
-				g: 0,
-				b: 0
+		$('.setNeoPixelOff').on('click', function() {
+			const off = {
+				ip: wpNeoPixel.ip
 			};
-			$.post(wpNeoPixel.target + '.NeoPixelSimple.req', simple, function(data) {
+			$.post(wpNeoPixel.target + '.setNeoPixelOff.req', off, function(data) {
 			}, 'json');
 		});
 		$('.setSleepTimer').on('click', function() {
@@ -110,45 +97,111 @@ var wpNeoPixel = {
 			$.post(wpNeoPixel.target + '.NeoPixel.req', led, function(data) {
 			}, 'json');
 		});
-		$('.NeoPixelColor').on('change', function() {
-			wpNeoPixel.changeColorPreview();
+		$('.savedColor').on('click', '.colorBorderFav', function() {
+			const led = {
+				ip: wpNeoPixel.ip,
+				r: $(this).attr('data-r'),
+				g: $(this).attr('data-g'),
+				b: $(this).attr('data-b')
+			};
+			wpNeoPixel.changeColorSlider(led.r, led.g, led.b);
+			wpNeoPixel.changeColorPreview(led.r, led.g, led.b);
+			$.post(wpNeoPixel.target + '.NeoPixelColor.req', led, function(data) {
+			}, 'json');
+			wpNeoPixel.getSavedColor();
 		});
 		$('#picker').mousemove(function(e) {
-			if(!wpNeoPixel.canvasClicked) {
-				var canvasOffset = $(wpNeoPixel.canvas).offset();
-				var canvasX = Math.floor(e.pageX - canvasOffset.left);
-				var canvasY = Math.floor(e.pageY - canvasOffset.top);
-				
-				var imageData = wpNeoPixel.ctx.getImageData(canvasX, canvasY, 1, 1);
-				var pixel = imageData.data;
-				if((pixel[0] + pixel[1] + pixel[2]) > 0) {
-					$('.rVal').slider('option', 'value', Math.floor(pixel[0] / 2.55));
-					$('.gVal').slider('option', 'value', Math.floor(pixel[1] / 2.55));
-					$('.bVal').slider('option', 'value', Math.floor(pixel[2] / 2.55));
-					$('.NeoPixelR').val(pixel[0]);
-					$('.NeoPixelG').val(pixel[1]);
-					$('.NeoPixelB').val(pixel[2]);
-					wpNeoPixel.changeColorPreview();
-				}
-			}
-		}).mouseout(function() {
-			wpNeoPixel.canvasClicked = false;
-		}).click(function(e) {
-			wpNeoPixel.canvasClicked = true;
 			var canvasOffset = $(wpNeoPixel.canvas).offset();
 			var canvasX = Math.floor(e.pageX - canvasOffset.left);
 			var canvasY = Math.floor(e.pageY - canvasOffset.top);
-			
 			var imageData = wpNeoPixel.ctx.getImageData(canvasX, canvasY, 1, 1);
 			var pixel = imageData.data;
-			
 			if((pixel[0] + pixel[1] + pixel[2]) > 0) {
-				var cr = Math.floor(pixel[0] / 2.55);
-				var cg = Math.floor(pixel[1] / 2.55);
-				var cb = Math.floor(pixel[2] / 2.55);
+				var r = pixel[0];
+				var g = pixel[1];
+				var b = pixel[2];
+				wpNeoPixel.changeColorSlider(r, g, b);
+				wpNeoPixel.changeColorPreview(r, g, b);
+			}
+		}).click(function(e) {
+			var canvasOffset = $(wpNeoPixel.canvas).offset();
+			var canvasX = Math.floor(e.pageX - canvasOffset.left);
+			var canvasY = Math.floor(e.pageY - canvasOffset.top);
+			var imageData = wpNeoPixel.ctx.getImageData(canvasX, canvasY, 1, 1);
+			var pixel = imageData.data;
+			if((pixel[0] + pixel[1] + pixel[2]) > 0) {
+				var r = pixel[0];
+				var g = pixel[1];
+				var b = pixel[2];
+				wpNeoPixel.changeColorSlider(r, g, b);
+				wpNeoPixel.changeColorPreview(r, g, b);
+				wpNeoPixel.getSavedColor();
+				$('.NeoPixelR').val(r);
+				$('.NeoPixelG').val(g);
+				$('.NeoPixelB').val(b);
+				const color = {
+					ip: wpNeoPixel.ip,
+					r: r,
+					g: g,
+					b: b
+				};
+				$.post(wpNeoPixel.target + '.NeoPixelColor.req', color, function(data) {
+				}, 'json');
+				wpNeoPixel.getSavedColor();
 			}
 		});
 		$('.rgb-slider').slider({
+			min: 0,
+			max: 255,
+			range: 'min',
+			start: function() {
+				$(this).addClass('WriteOnly');
+				$(this).find('a').append('<span class="toleft"></span>');
+			},
+			slide: function(event, ui) {
+				var TheValue = ui.value;
+				var TheSpan = $(this).find('span.toleft');
+				$(TheSpan).text(TheValue);
+				if($(this).hasClass('rVal') || $(this).hasClass('gVal') || $(this).hasClass('bVal')) {
+					if($(this).hasClass('rVal')) $('.NeoPixelR').val(ui.value);
+					if($(this).hasClass('gVal')) $('.NeoPixelG').val(ui.value);
+					if($(this).hasClass('bVal')) $('.NeoPixelB').val(ui.value);
+					var r = $('.NeoPixelR').val();
+					var g = $('.NeoPixelG').val();
+					var b = $('.NeoPixelB').val();
+					wpNeoPixel.changeColorPreview(r, g, b);
+				}
+			},
+			stop: function(event, ui) {
+				if(($(this).hasClass('rVal') || $(this).hasClass('gVal') || $(this).hasClass('bVal')) && $(this).hasClass('WriteOnly')) {
+					if($(this).hasClass('rVal')) $('.NeoPixelR').val(ui.value);
+					if($(this).hasClass('gVal')) $('.NeoPixelG').val(ui.value);
+					if($(this).hasClass('bVal')) $('.NeoPixelB').val(ui.value);
+					const slider = {
+						ip: wpNeoPixel.ip,
+						r: $('.NeoPixelR').val(),
+						g: $('.NeoPixelG').val(),
+						b: $('.NeoPixelB').val()
+					};
+					wpNeoPixel.changeColorPreview(slider.r, slider.g, slider.b);
+					$.post(wpNeoPixel.target + '.NeoPixelColor.req', slider, function(data) {
+					}, 'json');
+					wpNeoPixel.getSavedColor();
+				}
+				if($(this).hasClass('brVal')) {
+					$('.showBrVal').text(ui.value);
+					const br = {
+						ip: wpNeoPixel.ip,
+						brightness: ui.value
+					};
+					$.post(wpNeoPixel.target + '.NeoPixelBrightness.req', br, function(data) {
+					}, 'json');
+				}
+				wpNeoPixel.changeColorPreview();
+				$(this).removeClass('WriteOnly').find('a').text('');
+			}
+		});
+		$('.cww-slider').slider({
 			min: 0,
 			max: 100,
 			range: 'min',
@@ -162,18 +215,6 @@ var wpNeoPixel = {
 				$(TheSpan).text(TheValue);
 			},
 			stop: function(event, ui) {
-				if($(this).hasClass('rVal')) $('.NeoPixelR').val(Math.floor(ui.value * 2.55));
-				if($(this).hasClass('gVal')) $('.NeoPixelG').val(Math.floor(ui.value * 2.55));
-				if($(this).hasClass('bVal')) $('.NeoPixelB').val(Math.floor(ui.value * 2.55));
-				if($(this).hasClass('brVal')) {
-					$('.showBrVal').text(ui.value);
-					const br = {
-						ip: wpNeoPixel.ip,
-						brightness: ui.value
-					};
-					$.post(wpNeoPixel.target + '.NeoPixelBrightness.req', br, function(data) {
-					}, 'json');
-				}
 				if($(this).hasClass('wwVal')) {
 					$('.showWWVal').text(ui.value);
 					const ww = {
@@ -192,7 +233,6 @@ var wpNeoPixel = {
 					$.post(wpNeoPixel.target + '.NeoPixelCW.req', cw, function(data) {
 					}, 'json');
 				}
-				wpNeoPixel.changeColorPreview();
 				$(this).removeClass('WriteOnly').find('a').text('');
 			}
 		});
@@ -220,12 +260,17 @@ var wpNeoPixel = {
 			}
 		});
 	},
-	changeColorPreview: function() {
-		const led = {
-			r: $('.NeoPixelR').val(),
-			g: $('.NeoPixelG').val(),
-			b: $('.NeoPixelB').val()
-		};
-		$('.colorpreview').css('backgroundColor', 'rgb(' + led.r + ', ' + led.g + ', ' + led.b + ')');
+	changeColorPreview: function(r, g, b) {
+		$('.colorpreview').css('backgroundColor', 'rgb(' + r + ', ' + g + ', ' + b + ')');
+	},
+	changeColorSlider: function(r, g, b) {
+		$('.rVal').slider('option', 'value', r);
+		$('.gVal').slider('option', 'value', g);
+		$('.bVal').slider('option', 'value', b);
+	},
+	getSavedColor: function() {
+		$.get(wpNeoPixel.target + '.getSavedColor.req', function(data) {
+			$('.savedColor').html(data);
+		});
 	}
 };

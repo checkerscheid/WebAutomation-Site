@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 691                                                     $ #
+//# Revision     : $Rev:: 692                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpNeoPixel.css 691 2024-08-02 00:27:24Z                  $ #
+//# File-ID      : $Id:: wpNeoPixel.css 692 2024-08-07 11:51:08Z                  $ #
 //#                                                                                 #
 //###################################################################################
 ?> wpNeoPixel */
@@ -19,10 +19,12 @@
 .pickerContainer { padding:5px; border:1px solid #CCC; border-radius:10px; box-shadow:6px 6px 8px 0px #222; }
 #picker { cursor:crosshair;
 	background:transparent url(images/layout/ColorWheelBG.png) center center no-repeat; }
+.colorPicker .ps-flex-container { margin:10px 0; }
 
 .colorPicker { max-width:350px; margin:auto; }
 .colorPicker .colorpreview { display:inline-block; min-width:150px; height:25px; border:1px solid #CCC; border-radius:2px; }
-.colorPicker .rgb-slider { margin:15px 0; }
+.colorPicker .rgb-slider,
+.colorPicker .cww-slider { margin:15px 0; }
 .colorPicker .ps-input { min-width:40px; max-width:40px; width:40px; }
 .colorPicker .rVal .ui-slider-range { background: #ef2929; }
 .colorPicker .rVal .ui-slider-handle { background: #ef2929; }
@@ -31,7 +33,8 @@
 .colorPicker .bVal .ui-slider-range { background: #729fcf; }
 .colorPicker .bVal .ui-slider-handle { background: #729fcf; }
 .colorPicker .colorBorderContainer { padding:2px; }
-.colorPicker .colorBorder { border:1px solid #666; width:20px; height:20px; }
+.colorPicker .colorBorder,
+.colorPicker .colorBorderFav { border:1px solid #666; width:20px; height:20px; cursor:pointer; }
 .colorPicker .wwVal .ui-slider-range { background: #f1f17e; }
 .colorPicker .wwVal .ui-slider-handle { background: #f1f17e; }
 .colorPicker .cwVal .ui-slider-range { background: #e3eaf7; }
