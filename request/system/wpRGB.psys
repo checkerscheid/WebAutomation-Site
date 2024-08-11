@@ -1,0 +1,134 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 01.08.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 694                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: wpRGB.psys 694 2024-08-11 22:33:43Z                 $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\system;
+
+use system\std;
+use system\Helper\wpDatabase;
+use system\Helper\security;
+use system\Helper\wpRGB as wpRGBSystem;
+require_once 'system/Helper/wpRGB.psys';
+wpRGB::$ip = std::posts('ip');
+class wpRGB {
+	public static $ip;
+	const c_RGBColor = 'RGBColor';
+	public static function RGBColor() {
+		self::setRGB();
+		wpRGBSystem::saveColor(std::posts('r'), std::posts('g'), std::posts('b'));
+	}
+	const c_RGBBrightness = 'RGBBrightness';
+	public static function RGBBrightness() {
+		self::setRGB();
+	}
+	const c_RGBTurn = 'RGBTurn';
+	public static function RGBTurn() {
+		self::setRGB();
+	}
+	const c_getRGBSavedColor = 'getRGBSavedColor';
+	public static function getRGBSavedColor() {
+		$database = new wpDatabase();
+		$database->query("SELECT TOP(9) [np].[name], [np].[r], [np].[g], [np].[b], [np].[brightness] FROM [NeoPixel] [np]
+			LEFT JOIN [user] [u] ON [u].[id_user] = [np].[id_user]
+			WHERE [u].[id_user] = '" . security::getIdFromUser() . "'
+			ORDER BY [np].[fav] DESC, [np].[saved] DESC");
+		while($erg = $database->fetch()) {
+?>
+					<div class="colorBorderContainer">
+						<div class="colorBorderFav"
+							data-r="<?=$erg['r']?>"
+							data-g="<?=$erg['g']?>"
+							data-b="<?=$erg['b']?>"
+							title="<?=$erg['name']?>"
+							style="background-color: rgb(<?=$erg['r'] ?>, <?=$erg['g'] ?>, <?=$erg['b'] ?>);"></div>
+					</div>
+<?
+		}
+	}
+	private static function setRGB() {
+		$turn = std::posts('turn');
+		$turnstr = '';
+		if($turn == 'true' || $turn == 'false') {
+			$turnstr = 'turn=' . ($turn == 'true' ? 'on' : 'off');
+		}
+		$gain = std::posts('brightness');
+		$gainstr = '';
+		if($gain != '') {
+			$gainint = intval(std::posts('brightness'));
+			if($gainint < 0) $gainint = 0;
+			if($gainint > 100) $gainint = 100;
+			$gainstr = 'gain=' . $gainint;
+		}
+		$red = std::posts('r');
+		$redstr = '';
+		if($red != '') {
+			$redint = intval(std::posts('r'));
+			if($redint < 0) $redint = 0;
+			if($redint > 255) $redint = 255;
+			$redstr = 'red=' . $redint;
+		}
+		$green = std::posts('g');
+		$greenstr = '';
+		if($green != '') {
+			$greenint = intval(std::posts('g'));
+			if($greenint < 0) $greenint = 0;
+			if($greenint > 255) $greenint = 255;
+			$greenstr = 'green=' . $greenint;
+		}
+		$blue = std::posts('b');
+		$bluestr = '';
+		if($blue != '') {
+			$blueint = intval(std::posts('b'));
+			if($blueint < 0) $blueint = 0;
+			if($blueint > 255) $blueint = 255;
+			$bluestr = 'blue=' . $blueint;
+		}
+		if($turnstr != '' || $gainstr != '' || $redstr != '' || $greenstr != '' || $bluestr != '') {
+			if($turnstr != '' && $gainstr != '') $urlext = $turnstr . '&' . $gainstr;
+			else $urlext = $turnstr . $gainstr;
+			if($urlext != '' && $redstr != '') $urlext = $urlext . '&' . $redstr;
+			else $urlext = $urlext . $redstr;
+			if($urlext != '' && $greenstr != '') $urlext = $urlext . '&' . $greenstr;
+			else $urlext = $urlext . $greenstr;
+			if($urlext != '' && $bluestr != '') $urlext = $urlext . '&' . $bluestr;
+			else $urlext = $urlext . $bluestr;
+
+			$http = file_get_contents('http://' . wpRGB::$ip . '/color/0?' . $urlext);
+			echo $http;
+		} else {
+			echo std::test_array($_POST, 'ERROR');
+		}
+	}
+}
+
+switch(std::gets('param1')) {
+		//###################################################################################
+	case wpRGB::c_RGBColor:
+		wpRGB::RGBColor();
+		break;
+		//###################################################################################
+	case wpRGB::c_RGBBrightness:
+		wpRGB::RGBBrightness();
+		break;
+		//###################################################################################
+	case wpRGB::c_RGBTurn:
+		wpRGB::RGBTurn();
+		break;
+		//###################################################################################
+	case wpRGB::c_getRGBSavedColor:
+		wpRGB::getRGBSavedColor();
+		break;
+}
+

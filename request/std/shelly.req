@@ -9,14 +9,13 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 693                                                     $ #
+//# Revision     : $Rev:: 694                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pia.req 693 2024-08-11 22:32:17Z                         $ #
+//# File-ID      : $Id:: shelly.req 694 2024-08-11 22:33:43Z                      $ #
 //#                                                                                 #
 //###################################################################################
-namespace request;
+namespace request\std;
 
-require_once 'request/system/wpNeoPixel.psys';
 require_once 'request/system/wpRGB.psys';
 
 ?>

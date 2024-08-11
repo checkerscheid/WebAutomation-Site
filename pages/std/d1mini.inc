@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 690                                                     $ #
+//# Revision     : $Rev:: 693                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.inc 690 2024-08-02 00:24:56Z                      $ #
+//# File-ID      : $Id:: d1mini.inc 693 2024-08-11 22:32:17Z                      $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
@@ -287,6 +287,17 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 				</tr>
 			<? if($d1Mini->FreakaZoneDevice->useModul->DHT11 ||
 					$d1Mini->FreakaZoneDevice->useModul->DHT22) { ?>
+				<tr><td colspan="6"><hr /></td></tr>
+				<tr>
+					<td colspan="3">Max Cycle:</td>
+					<td colspan="3">
+						<span class="ps-input ps-param"
+							data-topic="<?=$erg['name'] ?>/settings/AnalogOut/CalcCycle"
+							data-unit="sec">
+							<?=$d1Mini->FreakaZoneDevice->AnalogOut->CalcCycle ?> ms
+						</span>
+					</td>
+				</tr>
 				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
 					<td colspan="6"><h3>PID</h3></td>

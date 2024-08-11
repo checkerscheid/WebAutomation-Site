@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 26.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 691                                                     $ #
+//# Revision     : $Rev:: 693                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.psys 691 2024-08-02 00:27:24Z                     $ #
+//# File-ID      : $Id:: d1mini.psys 693 2024-08-11 22:32:17Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -249,6 +249,7 @@ class d1mini {
 		$id_mqtttopicModeName = $this->insertTopic('NeoPixel/ModeName');
 		$id_mqtttopicDemo = $this->insertTopic('NeoPixel/Demo');
 		$id_mqtttopicSleep = $this->insertTopic('NeoPixel/Sleep');
+		$id_mqtttopicBorder = $this->insertTopic('NeoPixel/Border');
 		$this->mergeDP($id_mqtttopicR, 'R', 'R', '', 0);
 		$this->mergeDP($id_mqtttopicG, 'G', 'G', '', 0);
 		$this->mergeDP($id_mqtttopicB, 'B', 'B', '', 0);
@@ -256,6 +257,7 @@ class d1mini {
 		$this->mergeDP($id_mqtttopicModeName, 'ModeName', 'ModeName', '', 0);
 		$this->mergeDP($id_mqtttopicDemo, 'Demo', 'Demo', '0:inaktiv;1:aktiv;');
 		$this->mergeDP($id_mqtttopicSleep, 'Sleep', 'Sleep', 'sec', 0);
+		$this->mergeDP($id_mqtttopicBorder, 'Border', 'Border', '0:Aus;1:Ein;');
 		echo "saved: 'NeoPixel'<br />";
 	}
 	private function setRelais($hasMoisture) {

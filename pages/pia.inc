@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 27.07.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 690                                                     $ #
+//# Revision     : $Rev:: 693                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pia.inc 690 2024-08-02 00:24:56Z                         $ #
+//# File-ID      : $Id:: pia.inc 693 2024-08-11 22:32:17Z                         $ #
 //#                                                                                 #
 //###################################################################################
 /**
@@ -26,9 +26,11 @@ use system\Helper\wpa;
 use system\Helper\wpDatabase;
 use system\Helper\security;
 use system\Helper\wpNeoPixel;
+use system\Helper\wpRGB;
 
 require_once 'system/Helper/wpa.psys';
 require_once 'system/Helper/wpNeoPixel.psys';
+require_once 'system/Helper/wpRGB.psys';
 
 $database->query("SELECT [id_d1mini], [name], [description], [ip], [mac] FROM [d1mini] WHERE [name] = 'KZ_NP'");
 $erg = $database->fetch();
@@ -57,6 +59,10 @@ $points = array(
 	$neoPixel->getStatusFromJson($d1Mini->FreakaZoneDevice);
 	$neoPixel->getColorPicker();
 	$neoPixel->getColorScenen();
+?>
+<?
+	$rgb = new wpRGB('172.17.80.97', 'shellies/RGBW2');
+	$rgb->getColorPicker();
 ?>
 		<div class="ps-container">
 			<table summary="">

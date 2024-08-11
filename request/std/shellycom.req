@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 16.12.2019                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 677                                                     $ #
+//# Revision     : $Rev:: 693                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: shellycom.req 677 2024-07-15 13:51:59Z                   $ #
+//# File-ID      : $Id:: shellycom.req 693 2024-08-11 22:32:17Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -98,7 +98,7 @@ switch(std::gets('param1')) {
 		$shellyType = json_decode(file_get_contents('http://' . $ShellyIP . '/shelly'));
 		if(ShellyDevice::isLight($shellyType))
 			$http = file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/light/0');
-			if(ShellyDevice::isRelay($shellyType))
+		if(ShellyDevice::isRelay($shellyType))
 			$http = file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/relay/0');
 		echo $http;
 		break;
@@ -110,7 +110,7 @@ switch(std::gets('param1')) {
 			$http = json_decode(file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/settings'));
 			if(ShellyDevice::isLight($shellyType))
 				echo json_encode($http->lights[0]);
-				if(ShellyDevice::isRelay($shellyType))
+			if(ShellyDevice::isRelay($shellyType))
 				echo json_encode($http->relays[0]);
 		}
 		if(ShellyDevice::isGen2($shellyType)) {
