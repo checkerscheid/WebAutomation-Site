@@ -1,22 +1,25 @@
-<?
+/*<?
 //###################################################################################
 //#                                                                                 #
-//#              (C) FreakaZone GmbH                                                #
-//#              =======================                                            #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
 //#                                                                                 #
 //###################################################################################
 //#                                                                                 #
 //# Author       : Christian Scheid                                                 #
-//# Date         : 13.06.2024                                                       #
+//# Date         : 27.07.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 693                                                     $ #
+//# Revision     : $Rev:: 694                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pia.req 693 2024-08-11 22:32:17Z                         $ #
+//# File-ID      : $Id:: shelly.js 694 2024-08-11 22:33:43Z                       $ #
 //#                                                                                 #
 //###################################################################################
-namespace request;
-
-require_once 'request/system/wpNeoPixel.psys';
-require_once 'request/system/wpRGB.psys';
-
-?>
+use system\std
+?> pia */
+//<? require_once('script/system/websockets.js') ?>
+//<? require_once('script/system/wpRGB.js') ?>
+ws.logEnabled = true;
+p.page.load = function() {
+	wpRGB.Init('std.shelly');
+	ws.connect();
+};

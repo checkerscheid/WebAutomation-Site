@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 692                                                     $ #
+//# Revision     : $Rev:: 693                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: system.css 692 2024-08-07 11:51:08Z                      $ #
+//# File-ID      : $Id:: system.css 693 2024-08-11 22:32:17Z                      $ #
 //#                                                                                 #
 //###################################################################################
 use system\wpInit
@@ -571,8 +571,8 @@ table.dataTable thead th.noborder { border:none; }
 .LED_warn { width:21px; height:21px;
 	background:transparent url(images/layout/LED_warn.png) no-repeat; }
 
-.pa-slider a, .shelly-dimmer a, .topic-slider a, .rgb-slider a { text-decoration:none; outline:none; }
-.pa-slider span.toleft, .shelly-dimmer span.toleft, .topic-slider span.toleft, .rgb-slider span.toleft {
+.pa-slider a, .shelly-dimmer a, .topic-slider a { text-decoration:none; outline:none; }
+.pa-slider span.toleft, .shelly-dimmer span.toleft, .topic-slider span.toleft {
 	position:relative; top:-25px; left:10px; background:#151515;
 	border:1px solid #888; border-radius:2px; padding:3px; }
 

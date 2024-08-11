@@ -1,0 +1,111 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 11.08.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 694                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: wpRGB.psys 694 2024-08-11 22:33:43Z                      $ #
+//#                                                                                 #
+//###################################################################################
+namespace system\Helper;
+/**
+ * generiert die Oberfläche für die RGB Shelly
+ * @author Checker
+ */
+class wpRGB {
+	private $database, $status;
+	private $ip, $name;
+	public function __construct($ip, $name) {
+		$this->database = new wpDatabase();
+		$this->ip = $ip;
+		$this->name = $name;
+		$this->getStatus();
+	}
+	private function getStatus() {
+		$this->status = \json_decode(file_get_contents('http://' . $this->ip . '/status'), true);
+		//$WebCom = new WebCom();
+		//$res = \json_decode($WebCom->send('getD1MiniStatus', $this->ip));
+		//$this->status = $res->FreakaZoneDevice;
+		//std::test_array($this->status, 'getStatus');
+	}
+	public function getColorPicker() {
+		$r = $this->status['lights'][0]['red'];
+		$g = $this->status['lights'][0]['green'];
+		$b = $this->status['lights'][0]['blue'];
+		$br = $this->status['lights'][0]['gain'];
+?>
+		<div class="wpRGB ps-container" data-ip="<?=$this->ip ?>">
+			<h3>RGB Farben</h3>
+			<div class="colorPicker">
+				<span class="RGBColorPreview" style="background-color:rgb(<?=$r ?>, <?=$g ?>, <?=$b ?>);"><?=wpHTML_EMPTY ?></span>
+				<div<?=(security::checkGroup(security::entwickler) ? '' : ' class="ps-hidden"') ?>>
+					<input type="text" class="ps-input RGBColor RGBColorR" placeholder="Red 0 - 255" value="<?=$r ?>" />
+					<input type="text" class="ps-input RGBColor RGBColorG" placeholder="Green 0 - 255" value="<?=$g ?>" />
+					<input type="text" class="ps-input RGBColor RGBColorB" placeholder="Blue 0 - 255" value="<?=$b ?>" />
+				</div>
+				<hr />
+				<div class="RGBSavedColor ps-flex-container">
+				</div>
+				<hr />
+				<div class="RGBSlider RGBSliderR"></div>
+				<div class="RGBSlider RGBSliderG"></div>
+				<div class="RGBSlider RGBSliderB"></div>
+				<hr />
+				<h3>Brightness (<span class="RGBColorBr"><?=$br ?></span> %)</h3>
+				<div class="RGBSlider RGBSliderBr"></div>
+				<hr />
+				<div class="ps-flex-container">
+					<div class="pickerContainer">
+						<canvas id="RGBpicker" width="200" height="200"></canvas>
+					</div>
+					<div>
+						<span class="ps-button setRGBColor">Color</span><br />
+						<span class="ps-button setRGBOn">Ein</span><br />
+						<span class="ps-button setRGBOff">Aus</span>
+					</div>
+				</div>
+			</div>
+		</div>
+<?
+	}
+	public static function saveColor($r, $g, $b) {
+		global $database;
+		if(!($database instanceof wpDatabase)) {
+			$database = new wpDatabase();
+		}
+				$sql = "
+MERGE INTO [neopixel] AS [TARGET]
+	USING (
+		VALUES (
+			" . $r . "," . $g . "," . $b . ", " . security::getIdFromUser() . "
+		)
+	) AS [SOURCE] (
+			[r], [g], [b], [id_user]
+	) ON
+		[TARGET].[r] = [SOURCE].[r] AND
+		[TARGET].[g] = [SOURCE].[g] AND
+		[TARGET].[b] = [SOURCE].[b] AND
+		[TARGET].[id_user] = [SOURCE].[id_user]
+	WHEN MATCHED THEN
+		UPDATE SET
+			[TARGET].[saved] = GETDATE()
+	WHEN NOT MATCHED THEN
+		INSERT (
+			[r], [g], [b], [id_user]
+		)
+		VALUES (
+			[SOURCE].[r], [SOURCE].[g], [SOURCE].[b], [SOURCE].[id_user]
+		)
+	OUTPUT [INSERTED].[id_neopixel] AS [ID];";
+		$database->query($sql);
+		echo 'saved';
+	}
+}
+?>

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 692                                                     $ #
+//# Revision     : $Rev:: 693                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpNeoPixel.psys 692 2024-08-07 11:51:08Z                 $ #
+//# File-ID      : $Id:: wpNeoPixel.psys 693 2024-08-11 22:32:17Z                 $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -65,22 +65,22 @@ class wpNeoPixel {
 		<div class="wpNeoPixel ps-container" data-ip="<?=$this->ip ?>">
 			<h3>NeoPixel Farben</h3>
 			<div class="colorPicker">
-				<span class="colorpreview" style="background-color:rgb(<?=$r ?>, <?=$g ?>, <?=$b ?>);"><?=wpHTML_EMPTY ?></span>
+				<span class="NeoPixelColorPreview" style="background-color:rgb(<?=$r ?>, <?=$g ?>, <?=$b ?>);"><?=wpHTML_EMPTY ?></span>
 				<div<?=(security::checkGroup(security::entwickler) ? '' : ' class="ps-hidden"') ?>>
 					<input type="text" class="ps-input NeoPixelColor NeoPixelR" placeholder="Red 0 - 255" value="<?=$r ?>" />
 					<input type="text" class="ps-input NeoPixelColor NeoPixelG" placeholder="Green 0 - 255" value="<?=$g ?>" />
 					<input type="text" class="ps-input NeoPixelColor NeoPixelB" placeholder="Blue 0 - 255" value="<?=$b ?>" />
 				</div>
 				<hr />
-				<div class="savedColor ps-flex-container">
+				<div class="NeoPixelSavedColor ps-flex-container">
 				</div>
 				<hr />
-				<div class="rgb-slider rVal"></div>
-				<div class="rgb-slider gVal"></div>
-				<div class="rgb-slider bVal"></div>
+				<div class="NeoPixelSlider NeoPixelSliderR"></div>
+				<div class="NeoPixelSlider NeoPixelSliderG"></div>
+				<div class="NeoPixelSlider NeoPixelSliderB"></div>
 				<hr />
-				<h3>Brightness (<span class="showBrVal"><?=round($this->status->NeoPixel->Brightness / 2.55) ?></span> %)</h3>
-				<div class="rgb-slider brVal"></div>
+				<h3>Brightness (<span class="NeoPixelBr"><?=round($this->status->NeoPixel->Brightness / 2.55) ?></span> %)</h3>
+				<div class="NeoPixelSlider NeoPixelSliderBr"></div>
 				<hr />
 				<div class="ps-flex-container">
 					<div class="pickerContainer">
@@ -88,7 +88,8 @@ class wpNeoPixel {
 					</div>
 					<div>
 						<span class="ps-button setNeoPixelOff">Aus</span><br />
-						<span class="ps-button setNeoPixelOn">An</span>
+						<span class="ps-input <?=wpa::GreyGreen?>" data-ws="<?=$this->name ?>_Border">-</span><br />
+						<span class="ps-button setNeoPixelBorder">Border</span>
 					</div>
 				</div>
 				<div class="ps-flex-container">
@@ -104,10 +105,10 @@ class wpNeoPixel {
 ?>
 				</div>
 				<hr />
-				<h3>Warmweiß (<span class="showWWVal"><?=$this->status->AnalogOut->HandValue ?></span> %)</h3>
-				<div class="cww-slider wwVal"></div>
-				<h3>Kaltweiß (<span class="showCWVal"><?=$this->status->AnalogOut2->HandValue ?></span> %)</h3>
-				<div class="cww-slider cwVal"></div>
+				<h3>Warmweiß (<span class="NeoPixelWW"><?=$this->status->AnalogOut->HandValue ?></span> %)</h3>
+				<div class="NeoPixelSliderW NeoPixelSliderWW"></div>
+				<h3>Kaltweiß (<span class="NeoPixelCW"><?=$this->status->AnalogOut2->HandValue ?></span> %)</h3>
+				<div class="NeoPixelSliderW NeoPixelSliderCW"></div>
 			</div>
 		</div>
 <?
@@ -118,7 +119,7 @@ class wpNeoPixel {
 			<h3>NeoPixel Scenen</h3>
 			<div class="sceneContainer">
 				<div>
-					<span class="ps-input ModeName" data-ws="<?=$this->name ?>_ModeName">-</span><br />
+					<span class="ps-input NeoPixelModeName" data-ws="<?=$this->name ?>_ModeName">-</span><br />
 					<span class="ps-button setNeoPixelDemo">Demo Mode</span>
 				</div>
 				<hr />
@@ -134,20 +135,19 @@ class wpNeoPixel {
 				<hr />
 				<div>
 					<span>Sleep:</span><br />
-					<span class="ps-input" data-ws="<?=$this->name ?>_Sleep">-</span>
+					<span class="ps-input <?=wpa::SecToTime ?>" data-ws="<?=$this->name ?>_Sleep">-</span>
 					<hr />
 					<div class="ps-flex-container">
 						<div>
-							<span class="ps-input sleepHour">0</span> h
-							<div class="sleepHourSlider"></div>
+							<span class="ps-input NeoPixelSleepHour">0</span> <span class="NeoPixelSleepUnit">h</span>
+							<div class="NeoPixelSleepSlider NeoPixelSleepHourSlider"></div>
 						</div>
 						<div>
-							<span class="ps-input sleepMinute">0</span> min
-							<div class="sleepMinuteSlider"></div>
+							<span class="ps-input NeoPixelSleepMinute">0</span> <span class="NeoPixelSleepUnit">min</span>
+							<div class="NeoPixelSleepSlider NeoPixelSleepMinuteSlider"></div>
 						</div>
 					</div>
-					<hr />
-					<span class="ps-button setSleepTimer">set</span>
+					<span class="ps-button setNeoPixelSleep">set</span>
 				</div>
 			</div>
 		</div>

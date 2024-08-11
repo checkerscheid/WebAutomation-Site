@@ -9,16 +9,17 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 27.07.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 690                                                     $ #
+//# Revision     : $Rev:: 693                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pia.css 690 2024-08-02 00:24:56Z                         $ #
+//# File-ID      : $Id:: pia.css 693 2024-08-11 22:32:17Z                         $ #
 //#                                                                                 #
 //###################################################################################
 ?> pia */
 
 <? require_once 'style/system/wpNeoPixel.css'; ?>
+<? require_once 'style/system/wpRGB.css'; ?>
 
-#pia h2, #pia p { text-align: center; }
+#pia h2, #pia p,
 #pia .buttonContainer { text-align:center; }
 #pia .topic-slider { margin:10px 0; }
 

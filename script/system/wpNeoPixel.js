@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 692                                                     $ #
+//# Revision     : $Rev:: 693                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpNeoPixel.js 692 2024-08-07 11:51:08Z                   $ #
+//# File-ID      : $Id:: wpNeoPixel.js 693 2024-08-11 22:32:17Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> wpNeoPixel */
@@ -36,12 +36,12 @@ var wpNeoPixel = {
 			wpNeoPixel.image.src = 'images/layout/ColorWheel.png';
 			wpNeoPixel.Register();
 			wpNeoPixel.getSavedColor();
-			$('.rVal').slider('option', 'value', $('.NeoPixelR').val());
-			$('.gVal').slider('option', 'value', $('.NeoPixelG').val());
-			$('.bVal').slider('option', 'value', $('.NeoPixelB').val());
-			$('.brVal').slider('option', 'value', $('.showBrVal').text());
-			$('.wwVal').slider('option', 'value', $('.showWWVal').text());
-			$('.cwVal').slider('option', 'value', $('.showCWVal').text());
+			$('.NeoPixelSliderR').slider('option', 'value', $('.NeoPixelR').val());
+			$('.NeoPixelSliderG').slider('option', 'value', $('.NeoPixelG').val());
+			$('.NeoPixelSliderB').slider('option', 'value', $('.NeoPixelB').val());
+			$('.NeoPixelSliderBr').slider('option', 'value', $('.NeoPixelBr').text() * 2.55);
+			$('.NeoPixelSliderWW').slider('option', 'value', $('.NeoPixelWW').text());
+			$('.NeoPixelSliderCW').slider('option', 'value', $('.NeoPixelCW').text());
 			returns = true;
 		}
 		return returns;
@@ -62,22 +62,23 @@ var wpNeoPixel = {
 			$.post(wpNeoPixel.target + '.NeoPixelEffect.req', effect, function(data) {
 			}, 'json');
 		});
-		$('.setNeoPixelOn').on('click', function() {
-			const on = {
-				ip: wpNeoPixel.ip
-			};
-			$.post(wpNeoPixel.target + '.setNeoPixelOn.req', on, function(data) {
-			}, 'json');
-		});
 		$('.setNeoPixelOff').on('click', function() {
 			const off = {
 				ip: wpNeoPixel.ip
 			};
 			$.post(wpNeoPixel.target + '.setNeoPixelOff.req', off, function(data) {
+				console.log(data);
 			}, 'json');
 		});
-		$('.setSleepTimer').on('click', function() {
-			var sec = ($('.sleepHour').text() * 60 * 60) + ($('.sleepMinute').text() * 60);
+		$('.setNeoPixelBorder').on('click', function() {
+			const border = {
+				ip: wpNeoPixel.ip
+			};
+			$.post(wpNeoPixel.target + '.setNeoPixelBorder.req', border, function(data) {
+			}, 'json');
+		});
+		$('.setNeoPixelSleep').on('click', function() {
+			var sec = ($('.NeoPixelSleepHour').text() * 60 * 60) + ($('.NeoPixelSleepMinute').text() * 60);
 			const sleep = {
 				ip: wpNeoPixel.ip,
 				sleep: sec
@@ -97,7 +98,7 @@ var wpNeoPixel = {
 			$.post(wpNeoPixel.target + '.NeoPixel.req', led, function(data) {
 			}, 'json');
 		});
-		$('.savedColor').on('click', '.colorBorderFav', function() {
+		$('.NeoPixelSavedColor').on('click', '.colorBorderFav', function() {
 			const led = {
 				ip: wpNeoPixel.ip,
 				r: $(this).attr('data-r'),
@@ -150,7 +151,7 @@ var wpNeoPixel = {
 				wpNeoPixel.getSavedColor();
 			}
 		});
-		$('.rgb-slider').slider({
+		$('.NeoPixelSlider').slider({
 			min: 0,
 			max: 255,
 			range: 'min',
@@ -160,12 +161,15 @@ var wpNeoPixel = {
 			},
 			slide: function(event, ui) {
 				var TheValue = ui.value;
+				if($(this).hasClass('NeoPixelSliderBr')) {
+					TheValue = Math.round(ui.value / 2.55);
+				}
 				var TheSpan = $(this).find('span.toleft');
 				$(TheSpan).text(TheValue);
-				if($(this).hasClass('rVal') || $(this).hasClass('gVal') || $(this).hasClass('bVal')) {
-					if($(this).hasClass('rVal')) $('.NeoPixelR').val(ui.value);
-					if($(this).hasClass('gVal')) $('.NeoPixelG').val(ui.value);
-					if($(this).hasClass('bVal')) $('.NeoPixelB').val(ui.value);
+				if($(this).hasClass('NeoPixelSliderR') || $(this).hasClass('NeoPixelSliderG') || $(this).hasClass('NeoPixelSliderB')) {
+					if($(this).hasClass('NeoPixelSliderR')) $('.NeoPixelR').val(ui.value);
+					if($(this).hasClass('NeoPixelSliderG')) $('.NeoPixelG').val(ui.value);
+					if($(this).hasClass('NeoPixelSliderB')) $('.NeoPixelB').val(ui.value);
 					var r = $('.NeoPixelR').val();
 					var g = $('.NeoPixelG').val();
 					var b = $('.NeoPixelB').val();
@@ -173,10 +177,10 @@ var wpNeoPixel = {
 				}
 			},
 			stop: function(event, ui) {
-				if(($(this).hasClass('rVal') || $(this).hasClass('gVal') || $(this).hasClass('bVal')) && $(this).hasClass('WriteOnly')) {
-					if($(this).hasClass('rVal')) $('.NeoPixelR').val(ui.value);
-					if($(this).hasClass('gVal')) $('.NeoPixelG').val(ui.value);
-					if($(this).hasClass('bVal')) $('.NeoPixelB').val(ui.value);
+				if(($(this).hasClass('NeoPixelSliderR') || $(this).hasClass('NeoPixelSliderG') || $(this).hasClass('NeoPixelSliderB')) && $(this).hasClass('WriteOnly')) {
+					if($(this).hasClass('NeoPixelSliderR')) $('.NeoPixelR').val(ui.value);
+					if($(this).hasClass('NeoPixelSliderG')) $('.NeoPixelG').val(ui.value);
+					if($(this).hasClass('NeoPixelSliderB')) $('.NeoPixelB').val(ui.value);
 					const slider = {
 						ip: wpNeoPixel.ip,
 						r: $('.NeoPixelR').val(),
@@ -188,8 +192,8 @@ var wpNeoPixel = {
 					}, 'json');
 					wpNeoPixel.getSavedColor();
 				}
-				if($(this).hasClass('brVal')) {
-					$('.showBrVal').text(ui.value);
+				if($(this).hasClass('NeoPixelSliderBr')) {
+					$('.NeoPixelBr').text(Math.round(ui.value / 2.55));
 					const br = {
 						ip: wpNeoPixel.ip,
 						brightness: ui.value
@@ -201,7 +205,7 @@ var wpNeoPixel = {
 				$(this).removeClass('WriteOnly').find('a').text('');
 			}
 		});
-		$('.cww-slider').slider({
+		$('.NeoPixelSliderW').slider({
 			min: 0,
 			max: 100,
 			range: 'min',
@@ -215,8 +219,8 @@ var wpNeoPixel = {
 				$(TheSpan).text(TheValue);
 			},
 			stop: function(event, ui) {
-				if($(this).hasClass('wwVal')) {
-					$('.showWWVal').text(ui.value);
+				if($(this).hasClass('NeoPixelSliderWW')) {
+					$('.NeoPixelWW').text(ui.value);
 					const ww = {
 						ip: wpNeoPixel.ip,
 						ww: ui.value
@@ -224,8 +228,8 @@ var wpNeoPixel = {
 					$.post(wpNeoPixel.target + '.NeoPixelWW.req', ww, function(data) {
 					}, 'json');
 				}
-				if($(this).hasClass('cwVal')) {
-					$('.showCWVal').text(ui.value);
+				if($(this).hasClass('NeoPixelSliderCW')) {
+					$('.NeoPixelCW').text(ui.value);
 					const cw = {
 						ip: wpNeoPixel.ip,
 						cw: ui.value
@@ -236,18 +240,18 @@ var wpNeoPixel = {
 				$(this).removeClass('WriteOnly').find('a').text('');
 			}
 		});
-		$('.sleepHourSlider').slider({
+		$('.NeoPixelSleepHourSlider').slider({
 			min: 0,
 			max: 2,
 			orientation: 'vertical',
 			range: 'min',
 			slide: function(event, ui) {
 				var TheValue = ui.value;
-				var TheSpan = $('.sleepHour');
+				var TheSpan = $('.NeoPixelSleepHour');
 				$(TheSpan).text(TheValue);
 			}
 		});
-		$('.sleepMinuteSlider').slider({
+		$('.NeoPixelSleepMinuteSlider').slider({
 			min: 0,
 			max: 59,
 			step: 5,
@@ -255,22 +259,22 @@ var wpNeoPixel = {
 			range: 'min',
 			slide: function(event, ui) {
 				var TheValue = ui.value;
-				var TheSpan = $('.sleepMinute');
+				var TheSpan = $('.NeoPixelSleepMinute');
 				$(TheSpan).text(TheValue);
 			}
 		});
 	},
 	changeColorPreview: function(r, g, b) {
-		$('.colorpreview').css('backgroundColor', 'rgb(' + r + ', ' + g + ', ' + b + ')');
+		$('.NeoPixelColorPreview').css('backgroundColor', 'rgb(' + r + ', ' + g + ', ' + b + ')');
 	},
 	changeColorSlider: function(r, g, b) {
-		$('.rVal').slider('option', 'value', r);
-		$('.gVal').slider('option', 'value', g);
-		$('.bVal').slider('option', 'value', b);
+		$('.NeoPixelSliderR').slider('option', 'value', r);
+		$('.NeoPixelSliderG').slider('option', 'value', g);
+		$('.NeoPixelSliderB').slider('option', 'value', b);
 	},
 	getSavedColor: function() {
-		$.get(wpNeoPixel.target + '.getSavedColor.req', function(data) {
-			$('.savedColor').html(data);
+		$.get(wpNeoPixel.target + '.getNeoPixelSavedColor.req', function(data) {
+			$('.NeoPixelSavedColor').html(data);
 		});
 	}
 };

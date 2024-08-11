@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 08.06.2021                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 676                                                     $ #
+//# Revision     : $Rev:: 693                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpa.psys 676 2024-07-12 14:19:18Z                        $ #
+//# File-ID      : $Id:: wpa.psys 693 2024-08-11 22:32:17Z                        $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -33,4 +33,5 @@ class wpa {
 	public const formatdate = 'wpa-formatdate';
 	public const formattime = 'wpa-formattime';
 	public const formatdatetime = 'wpa-formatdatetime';
+	public const SecToTime = 'wpa-sectotime';
 }

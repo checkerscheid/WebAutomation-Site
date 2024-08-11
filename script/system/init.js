@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 692                                                     $ #
+//# Revision     : $Rev:: 693                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: init.js 692 2024-08-07 11:51:08Z                         $ #
+//# File-ID      : $Id:: init.js 693 2024-08-11 22:32:17Z                         $ #
 //#                                                                                 #
 //###################################################################################
 use system\wpInit;
@@ -1683,6 +1683,22 @@ var p = {
 			} else {
 				returns = null;
 			}
+			return returns;
+		},
+		secToTime: function(sec) {
+			if(isNaN(sec)) {
+				return '00:00';
+			}
+			let diff = sec;
+			var seconds = Math.floor(diff % 60);
+			diff = diff / 60;
+			var minutes = Math.floor(diff % 60);
+			diff = diff / 60;
+			var hours = Math.floor(diff % 24);
+			var returns = '';
+			returns += ((hours < 10) ? '0' : '') + hours + ':';
+			returns += ((minutes < 10) ? '0' : '') + minutes + ':';
+			returns += ((seconds < 10) ? '0' : '') + seconds;
 			return returns;
 		}
 	},

@@ -1,22 +1,22 @@
-<?
+/*<?
 //###################################################################################
 //#                                                                                 #
-//#              (C) FreakaZone GmbH                                                #
-//#              =======================                                            #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
 //#                                                                                 #
 //###################################################################################
 //#                                                                                 #
 //# Author       : Christian Scheid                                                 #
-//# Date         : 13.06.2024                                                       #
+//# Date         : 27.07.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 693                                                     $ #
+//# Revision     : $Rev:: 694                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pia.req 693 2024-08-11 22:32:17Z                         $ #
+//# File-ID      : $Id:: shelly.css 694 2024-08-11 22:33:43Z                      $ #
 //#                                                                                 #
 //###################################################################################
-namespace request;
+?> pia */
 
-require_once 'request/system/wpNeoPixel.psys';
-require_once 'request/system/wpRGB.psys';
+<? require_once 'style/system/wpRGB.css'; ?>
 
-?>
+#shelly h2, #shelly p,
+#shelly .buttonContainer { text-align:center; }
