@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 668                                                     $ #
+//# Revision     : $Rev:: 561                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: alarmhistorics.js 668 2024-07-10 22:06:10Z               $ #
+//# File-ID      : $Id:: alarmhistorics.js 561 2024-01-16 02:06:50Z               $ #
 //#                                                                                 #
 //###################################################################################
 use system\Helper\wpDatabase;

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 693                                                     $ #
+//# Revision     : $Rev:: 695                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpNeoPixel.psys 693 2024-08-11 22:32:17Z                 $ #
+//# File-ID      : $Id:: wpNeoPixel.psys 695 2024-08-19 07:50:21Z                 $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -30,10 +30,11 @@ class wpNeoPixel {
 		1 => 'Color Wipe',
 		2 => 'Theater Chase',
 		3 => 'Rainbow',
-		4 => 'Theater Chase Rainbow',
-		5 => 'Runner',
-		6 => 'Random',
-		7 => 'Rainbow Tv'
+		4 => 'Rainbow Wheel',
+		5 => 'Theater Chase Rainbow',
+		6 => 'Runner',
+		7 => 'Random',
+		8 => 'Rainbow Tv'
 	);
 	public function __construct($ip, $name) {
 		$this->database = new wpDatabase();
@@ -88,6 +89,8 @@ class wpNeoPixel {
 					</div>
 					<div>
 						<span class="ps-button setNeoPixelOff">Aus</span><br />
+						<span class="ps-button setNeoPixelOffBlender">Aus Blender</span><br />
+						<span class="ps-button setNeoPixelOffRunner">Aus Runner</span><br />
 						<span class="ps-input <?=wpa::GreyGreen?>" data-ws="<?=$this->name ?>_Border">-</span><br />
 						<span class="ps-button setNeoPixelBorder">Border</span>
 					</div>
@@ -104,11 +107,18 @@ class wpNeoPixel {
 		}
 ?>
 				</div>
+				<? if($this->status->useModul->AnalogOut ||
+					$this->status->useModul->AnalogOut2) { ?>
 				<hr />
+				<? if($this->status->useModul->AnalogOut) { ?>
 				<h3>Warmweiß (<span class="NeoPixelWW"><?=$this->status->AnalogOut->HandValue ?></span> %)</h3>
 				<div class="NeoPixelSliderW NeoPixelSliderWW"></div>
+				<? } ?>
+				<? if($this->status->useModul->AnalogOut2) { ?>
 				<h3>Kaltweiß (<span class="NeoPixelCW"><?=$this->status->AnalogOut2->HandValue ?></span> %)</h3>
 				<div class="NeoPixelSliderW NeoPixelSliderCW"></div>
+				<? } ?>
+				<? } ?>
 			</div>
 		</div>
 <?

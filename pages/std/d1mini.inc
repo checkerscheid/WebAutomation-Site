@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 693                                                     $ #
+//# Revision     : $Rev:: 695                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.inc 693 2024-08-11 22:32:17Z                      $ #
+//# File-ID      : $Id:: d1mini.inc 695 2024-08-19 07:50:21Z                      $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
@@ -217,7 +217,7 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 			<table summary="">
 				<tr>
 					<td>Fensterkontakt:</td>
-					<td><span class="ps-input <?=wpa::GreyGreen ?>" data-ws="<?=$erg['name'] ?>_FK">undefined</span></td>
+					<td><span class="ps-input <?=wpa::GreyGreen ?>" data-ws="<?=$erg['name'] ?>_Window">undefined</span></td>
 				</tr>
 			</table>
 		</div>
@@ -628,6 +628,55 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 							data-topic="<?=$erg['name'] ?>/settings/Distance/Height">
 							<?=$d1Mini->FreakaZoneDevice->Distance->height ?> cm
 						</span>
+					</td>
+				</tr>
+			</table>
+		</div>
+	<? } ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->ImpulseCounter) { ?>
+		<div class="ps-container">
+			<h3>ImpulseCounter</h3>
+			<table summary="">
+				<tr>
+					<td>KWh:</td>
+					<td><span class="ps-input" data-ws="<?=$erg['name'] ?>_KWh">undefined</span></td>
+				</tr>
+				<tr>
+					<td>set KWh:</td>
+					<td>
+						<span class="ps-input ps-param"
+							data-topic="<?=$erg['name'] ?>/settings/ImpulseCounter/SetKWh"
+							data-ws="<?=$erg['name'] ?>_KWh"
+							data-unit="KWh">undefined
+						</span>
+					</td>
+				</tr>
+				<tr><td colspan="2"><hr /></td></tr>
+				<tr>
+					<td>Max Cycle:</td>
+					<td>
+						<span class="ps-input ps-param"
+							data-topic="<?=$erg['name'] ?>/settings/ImpulseCounter/CalcCycle"
+							data-unit="sec">
+							<?=$d1Mini->FreakaZoneDevice->ImpulseCounter->CalcCycle ?> ms
+						</span>
+					</td>
+				</tr>
+				<tr>
+					<td>Silver:</td>
+					<td>
+						<span class="ps-input ps-param"
+							data-topic="<?=$erg['name'] ?>/settings/ImpulseCounter/Silver">
+							<?=$d1Mini->FreakaZoneDevice->ImpulseCounter->Silver ?>
+						</span>
+					</td>
+				</tr>
+				<tr>
+					<td>Red:</td>
+					<td>
+						<span class="ps-input ps-param"
+							data-topic="<?=$erg['name'] ?>/settings/ImpulseCounter/Red">
+							<?=$d1Mini->FreakaZoneDevice->ImpulseCounter->Red ?></span>
 					</td>
 				</tr>
 			</table>

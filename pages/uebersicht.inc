@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 692                                                     $ #
+//# Revision     : $Rev:: 695                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 692 2024-08-07 11:51:08Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 695 2024-08-19 07:50:21Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -205,6 +205,7 @@ class uebersicht {
 					<?=uebersicht::tasterShellyDimmer('Kamin', 'WZ_KA')?>
 					<?=uebersicht::tasterShellyDimmer('Wohnzimmer', 'WZ')?>
 					<?=uebersicht::tasterShelly('Wohnzimmer <br class="showonportrait" />Lichtleiste', 'WZ_LL')?>
+					<tr><td colspan="2"><a class="ps-button" href="std.d1mini.WZ_PF_TE.htm">Wohnzimmer RGB Pflanze</a></td></tr>
 					<tr><td colspan="2"><hr /></td></tr>
 					<?=uebersicht::tasterShellyDimmer('Schlafzimmer', 'SZ')?>
 					<tr><td colspan="2"><hr /></td></tr>

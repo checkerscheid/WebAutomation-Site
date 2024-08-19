@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 668                                                     $ #
+//# Revision     : $Rev:: 550                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: emailhistorics.js 668 2024-07-10 22:06:10Z               $ #
+//# File-ID      : $Id:: emailhistorics.js 550 2023-12-25 03:02:54Z               $ #
 //#                                                                                 #
 //###################################################################################
 use system\Helper\wpDatabase;

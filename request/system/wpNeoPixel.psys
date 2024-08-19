@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 693                                                     $ #
+//# Revision     : $Rev:: 695                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpNeoPixel.psys 693 2024-08-11 22:32:17Z                 $ #
+//# File-ID      : $Id:: wpNeoPixel.psys 695 2024-08-19 07:50:21Z                 $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\system;
@@ -99,6 +99,26 @@ class wpNeoPixel {
 		}
 		echo '{"erg":"S_OK","msg":"setNeoPixelOff"}';
 	}
+	const c_setNeoPixelOffBlender = 'setNeoPixelOffBlender';
+	public static function setNeoPixelOffBlender() {
+		header(wpJSON_HEADER);
+		try {
+			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelOffBlender', 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+		echo '{"erg":"S_OK","msg":"setNeoPixelOffBlender"}';
+	}
+	const c_setNeoPixelOffRunner = 'setNeoPixelOffRunner';
+	public static function setNeoPixelOffRunner() {
+		header(wpJSON_HEADER);
+		try {
+			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelOffRunner', 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+		echo '{"erg":"S_OK","msg":"setNeoPixelOffRunner"}';
+	}
 	const c_setNeoPixelBorder = 'setNeoPixelBorder';
 	public static function setNeoPixelBorder() {
 		try {
@@ -125,14 +145,14 @@ class wpNeoPixel {
 	const c_getNeoPixelSavedColor = 'getNeoPixelSavedColor';
 	public static function getNeoPixelSavedColor() {
 		$database = new wpDatabase();
-		$database->query("SELECT TOP(9) [np].[name], [np].[r], [np].[g], [np].[b], [np].[brightness] FROM [neopixel] [np]
+		$database->query("SELECT TOP(9) [np].[name], [np].[r], [np].[g], [np].[b], [np].[brightness], [np].[fav] FROM [neopixel] [np]
 			LEFT JOIN [user] [u] ON [u].[id_user] = [np].[id_user]
 			WHERE [u].[id_user] = " . security::getIdFromUser() . "
 			ORDER BY [np].[fav] DESC, [np].[saved] DESC");
 		while($erg = $database->fetch()) {
 ?>
 					<div class="colorBorderContainer">
-						<div class="colorBorderFav"
+						<div class="colorBorderFav<?=($erg['fav'] == '1' ? ' myFav' : '') ?>"
 							data-r="<?=$erg['r']?>"
 							data-g="<?=$erg['g']?>"
 							data-b="<?=$erg['b']?>"
@@ -180,6 +200,14 @@ switch(std::gets('param1')) {
 		//###################################################################################
 	case wpNeoPixel::c_setNeoPixelOff:
 		wpNeoPixel::setNeoPixelOff();
+		break;
+		//###################################################################################
+	case wpNeoPixel::c_setNeoPixelOffBlender:
+		wpNeoPixel::setNeoPixelOffBlender();
+		break;
+		//###################################################################################
+	case wpNeoPixel::c_setNeoPixelOffRunner:
+		wpNeoPixel::setNeoPixelOffRunner();
 		break;
 		//###################################################################################
 	case wpNeoPixel::c_setNeoPixelBorder:

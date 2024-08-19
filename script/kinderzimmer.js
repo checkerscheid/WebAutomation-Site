@@ -10,8 +10,8 @@
 //# Date         : 14.01.2014                                                       #
 //#                                                                                 #
 //# Revision     : $Rev:: 677                                                     $ #
-//# Author       : $Author:: checker                                              $ #
-//# File-ID      : $Id:: kinderzimmer.js 677 2024-07-15 13:51:59Z checker         $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: kinderzimmer.js 677 2024-07-15 13:51:59Z                 $ #
 //#                                                                                 #
 //###################################################################################
 ?> kinderzimmer */

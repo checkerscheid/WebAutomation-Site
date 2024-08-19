@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 11.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 694                                                     $ #
+//# Revision     : $Rev:: 692                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpRGB.psys 694 2024-08-11 22:33:43Z                      $ #
+//# File-ID      : $Id:: wpNeoPixel.psys 692 2024-08-07 11:51:08Z                 $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;

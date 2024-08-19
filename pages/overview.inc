@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 692                                                     $ #
+//# Revision     : $Rev:: 695                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: overview.inc 692 2024-08-07 11:51:08Z                  $ #
+//# File-ID      : $Id:: overview.inc 695 2024-08-19 07:50:21Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /**
@@ -46,6 +46,7 @@ class overview {
 		'SZ_RU'			=> 'Schlafzimmer',
 		'BU_RU'			=> 'Büro',
 		'KU_RU'			=> 'Küche',
+		'FL_RU'			=> 'Flur',
 		'BA_RU'			=> 'Bad',
 		'KZ_HTp'		=> 'Kinderzimmer',
 		'WZ_PF_FE'		=> 'Wohnzimmer Pflanze',
@@ -175,8 +176,10 @@ class overview {
 				<tr><td colspan="6"><hr /></td></tr>
 				<?=overview::getLicht() ?>
 				<tr><td colspan="6"><a class="ps-button" href="std.d1mini.WZ_NP.htm">Wohnzimmer NeoPixel</a></td></tr>
+				<tr><td colspan="6"><a class="ps-button" href="std.d1mini.WZ_PF_TE.htm">Wohnzimmer Pflanze</a></td></tr>
 				<tr><td colspan="6"><a class="ps-button" href="std.d1mini.KZ_NP.htm">Kinderzimmer NeoPixel</a></td></tr>
 				<tr><td colspan="6"><a class="ps-button" href="std.d1mini.BA_Lue.htm">Bad Lüfter</a></td></tr>
+				<tr><td colspan="6"><a class="ps-button" href="std.d1mini.UG_EMeter.htm">Elektrozähler</a></td></tr>
 				<tr><td colspan="6"><h2>Energie</h2></td></tr>
 				<tr><td colspan="6"><hr /></td></tr>
 				<?=overview::getPower() ?>
@@ -302,6 +305,11 @@ class overview {
 					<td colspan="2">Küche:</td>
 					<td colspan="2"><span data-ws="KU_RU_LDR" class="ps-input">undefined</span></td>
 					<td colspan="2"><span data-ws="KU_RU_BM" class="ps-input <?=wpa::GreyGreen ?>">undefined</span></td>
+				</tr>
+				<tr>
+					<td colspan="2">Flur:</td>
+					<td colspan="2"><span data-ws="FL_RU_LDR" class="ps-input">undefined</span></td>
+					<td colspan="2"><span data-ws="FL_RU_BM" class="ps-input <?=wpa::GreyGreen ?>">undefined</span></td>
 				</tr>
 				<tr>
 					<td colspan="2">Bad:</td>

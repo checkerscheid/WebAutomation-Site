@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 693                                                     $ #
+//# Revision     : $Rev:: 695                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpNeoPixel.js 693 2024-08-11 22:32:17Z                   $ #
+//# File-ID      : $Id:: wpNeoPixel.js 695 2024-08-19 07:50:21Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> wpNeoPixel */
@@ -67,6 +67,24 @@ var wpNeoPixel = {
 				ip: wpNeoPixel.ip
 			};
 			$.post(wpNeoPixel.target + '.setNeoPixelOff.req', off, function(data) {
+				console.log(data);
+			}, 'json');
+		});
+		$('.setNeoPixelOffBlender').on('click', function() {
+			const off = {
+				ip: wpNeoPixel.ip,
+				steps: 5
+			};
+			$.post(wpNeoPixel.target + '.setNeoPixelOffBlender.req', off, function(data) {
+				console.log(data);
+			}, 'json');
+		});
+		$('.setNeoPixelOffRunner').on('click', function() {
+			const off = {
+				ip: wpNeoPixel.ip,
+				steps: 5
+			};
+			$.post(wpNeoPixel.target + '.setNeoPixelOffRunner.req', off, function(data) {
 				console.log(data);
 			}, 'json');
 		});

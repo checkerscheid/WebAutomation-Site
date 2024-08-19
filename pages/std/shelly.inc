@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 694                                                     $ #
+//# Revision     : $Rev:: 690                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: shelly.inc 694 2024-08-11 22:33:43Z                      $ #
+//# File-ID      : $Id:: d1mini.inc 690 2024-08-02 00:24:56Z                      $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
