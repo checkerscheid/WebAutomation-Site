@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 690                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.req 690 2024-08-02 00:24:56Z                      $ #
+//# File-ID      : $Id:: d1mini.req 696 2024-10-06 19:11:29Z                      $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -21,6 +21,7 @@ use system\Helper\wpDatabase;
 
 //require_once 'system/Helper/d1mini.psys';
 require_once 'request/system/wpNeoPixel.psys';
+require_once 'request/system/wpCwWw.psys';
 
 class d1mini {
 	const c_writetopic = 'writetopic';
@@ -46,6 +47,11 @@ class d1mini {
 			// Fail silently
 		}
 		//echo file_get_contents('http://' . $ip . '/setCmd?cmd=RestartDevice');
+	}
+	const c_setsimplecmd = 'setsimplecmd';
+	private static function setsimplecmd() {
+		$erg = file_get_contents('http://' . $ip . '/setCmd?cmd=' . $cmd);
+		echo $erg;
 	}
 	private static function getContext() {
 		return stream_context_create([

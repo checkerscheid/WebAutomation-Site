@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 673                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: system.psys 673 2024-07-12 13:22:12Z                     $ #
+//# File-ID      : $Id:: system.psys 696 2024-10-06 19:11:29Z                     $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $sdata */
@@ -637,8 +637,8 @@ class htmlBase extends wpInit {
 	public static function getUebersichtMenu() {
 		global $database;
 		$getsSrc = std::gets('src') == '' ? wpInit::$StartSeite : std::gets('src');
-		$src = (in_array($getsSrc, htmlBase::$needParam)) ? $getsSrc.'.'.std::gets('param1') : $getsSrc;
-		$database->query("SELECT [id_webpages] FROM [webpages] WHERE [src] = '" . $src . "'");
+		//$src = (in_array($getsSrc, htmlBase::$needParam)) ? $getsSrc.'.'.std::gets('param1') : $getsSrc;
+		$database->query("SELECT [id_webpages] FROM [webpages] WHERE [src] = '" . $getsSrc . "'");
 		$id_webpage = $database->fetch()['id_webpages'];
 		$database->query("SELECT [id_src], [src], [name], [inwork] FROM [webpages] WHERE [id_parent_webpage] = " . $id_webpage . " ORDER BY [position]");
 		echo '<div id="ps-uebersicht-navi-container">'; // zur absoluten positionierung

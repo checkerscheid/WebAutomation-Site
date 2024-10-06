@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 680                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.js 680 2024-07-20 00:28:36Z                   $ #
+//# File-ID      : $Id:: uebersicht.js 696 2024-10-06 19:11:29Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> uebersicht */
@@ -52,6 +52,40 @@ p.page.load = function() {
 	$('#uebersicht').on('click', '.clicklicht', function() {
 		var write = $(this).attr('data-taster');
 		p.automation.write(write, 'True');
+	});
+	$('#uebersicht').on('click', '.AllesAus', function() {
+		const allesaus = [
+			// Wohnzimmer
+			setNeoPixelOff('172.17.80.99', 'Wohnzimmer NeoPixel Lichtleiste'),
+			setShellyDimmerOff('172.17.80.92', 'Wohnzimmer Lautsprecher'),
+			setNeoPixelOff('172.17.80.98', 'Wohnzimmer Lautsprecher farbe'),
+			setShellyDimmerOff('172.17.80.94', 'Wohnzimmer Kamin'),
+			setNeoPixelOff('172.17.80.106', 'Wohnzimmer RGB Pflanze'),
+			setShellyRelayOff('172.17.80.95', 'Wohnzimmer Herz'),
+			setShellyRelayOff('172.17.80.93', 'Wohnzimmer Stehlampe'),
+			setShellyDimmerOff('172.17.80.90', 'Wohnzimmer'),
+			setShellyRelayOff('172.17.80.91', 'Wohnzimmer Lichtleiste'),
+			// Schlafzimmer
+			setShellyDimmerOff('172.17.80.110', 'Schlafzimmer'),
+			// Küche
+			setShellyRelayOff('172.17.80.130', 'Küche'),
+			setShellyRelayOff('172.17.80.131', 'Küche Strahler'),
+			// Bad
+			setShellyDimmerOff('172.17.80.150', 'Bad'),
+			// Kinderzimmer
+			setNeoPixelOff('172.17.80.169', 'Kinderzimmer NeoPixel Lichtleiste'),
+			setShellyRelayOff('172.17.80.160', 'Kinderzimmer'),
+			setShellyRelayOff('172.17.80.161', 'Kinderzimmer Bett'),
+			setShellyRelayOff('172.17.80.162', 'Kinderzimmer Nachtlicht'),
+			setShellyRGBWOff('172.17.80.163', 'Kinderzimmer Bilderrahmen')
+		];
+		Promise.all(allesaus).then((responses) => {
+			var msg = 'Alles aus:<br />';
+			for(const response of responses) {
+				msg += response;// + '<br />';
+			}
+			p.page.alert(msg, 5000);
+		});
 	});
 	$('#uebersicht').on('click', '.wz-gemuetlich', function() {
 		const promiseLautsprecher = new Promise((resolve) => {
@@ -120,6 +154,18 @@ p.page.load = function() {
 			if(data.erg != 'S_OK') p.page.alert(data.msg, 3000);
 		}, 'json');
 	});
+	$('#uebersicht').on('click', '.RU_Auto', function() {
+		const setAuto = {
+			ip: $(this).attr('data-ip')
+		};
+		$.post('uebersicht.setAuto.req', setAuto, null, 'json');
+	});
+	$('#uebersicht').on('click', '.RU_Manual', function() {
+		const setManual = {
+			ip: $(this).attr('data-ip')
+		};
+		$.post('uebersicht.setManual.req', setManual, null, 'json');
+	});
 	$('#uebersicht').on('click', '.ps-input.ps-operable.zp', function() {
 		var dpType = 'VT_BOOL';
 		if($(this).attr('data-bm') == 'KZ_ZP_RM') dpType = 'SW';
@@ -185,6 +231,42 @@ p.page.load = function() {
 			$(this).removeClass('WriteOnly').find('a').text('');
 		}
 	});
+	$('.setNeoPixelOff').on('click', function() {
+		var ip = $(this).attr('data-ip');
+		if($(this).hasClass('ps-yellow')) {
+			$.post('uebersicht.setNeoPixelOff.req', {ip:ip});
+		} else {
+			$.post('uebersicht.setNeoPixelOn.req', {ip:ip});
+		}
+	});
+	$('.setCwWwOff').on('click', function() {
+		var ip = $(this).attr('data-ip');
+		if($(this).hasClass('ps-yellow')) {
+			$.post('uebersicht.CwWwOff.req', {ip:ip});
+		} else {
+			$.post('uebersicht.CwWwOn.req', {ip:ip});
+		}
+	});
+/*	$('.brightness-slider').slider({
+		min: 0,
+		max: 255,
+		step: 12.75,
+		start: function() {
+			$(this).addClass('WriteOnly');
+			$(this).find('a').append('<span class="toleft">--</span>');
+		},
+		slide: function(event, ui) {
+			var TheValue = Math.round(ui.value / 2.55);
+			var TheSpan = $(this).find('span.toleft');
+			$(TheSpan).text(TheValue);
+		},
+		stop: function(event, ui) {
+			var ip = $(this).attr('data-ip');
+			$.post('uebersicht.NeoPixelBrightness.req', {ip:ip, brightness:ui.value});
+			$(this).find('.ui-slider-handle').attr('title', ui.value + ' %');
+			$(this).removeClass('WriteOnly').find('a').text('');
+		}
+	});*/
 	p.getValues();
 	ws.connect();
 	hastimeout();
@@ -267,3 +349,40 @@ function shellydimmer() {
 	});
 	window.setTimeout(function() { shellydimmer(); }, 30000);
 }
+function setShellyRelayOff(ip, name) {
+	return new Promise((resolve) => {
+		$.post('std.shellycom.set-relay.req', {ShellyIP:ip, turn:'false'},
+			function(data) {
+				resolve(name + ' ist aus');
+			},
+		'json');
+	});
+}
+function setShellyDimmerOff(ip, name) {
+	return new Promise((resolve) => {
+		$.post('std.shellycom.set-dimmer.req', {ShellyIP:ip, turn:'false'},
+			function(data) {
+				resolve(name + ' ist ' + (data.ison ? 'an' : 'aus') + ', (' + data.brightness + ' %)');
+			},
+		'json');
+	});
+}
+function setShellyRGBWOff(ip, name) {
+	return new Promise((resolve) => {
+		$.post('std.shellycom.set-rgbw.req', {ShellyIP:ip, turn:'false'},
+			function(data) {
+				resolve(name + ' ist aus');
+			},
+		'json');
+	});
+}
+function setNeoPixelOff(ip, name) {
+	return new Promise((resolve) => {
+		$.post('uebersicht.setNeoPixelOff.req', {ip:ip},
+			function(data) {
+				resolve(name + ' ist aus');
+			},
+		'json');
+	});
+}
+

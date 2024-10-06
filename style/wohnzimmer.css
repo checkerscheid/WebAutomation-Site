@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 26.01.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 677                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wohnzimmer.css 677 2024-07-15 13:51:59Z                  $ #
+//# File-ID      : $Id:: wohnzimmer.css 696 2024-10-06 19:11:29Z                  $ #
 //#                                                                                 #
 //###################################################################################
 ?> wohnzimmer */
@@ -41,4 +41,7 @@
 @media (orientation: portrait) {
 	.page .ps-button, #dialog .ps-button { padding:25px 6px; }
 }
+#D1MiniSites { right:10px; top:10px; }
+#D1MiniSites * { position:static; }
+#D1MiniSites a { display:block; width:auto; }
 #FK_TE { top:247px; left:360px; } /* new: checker 2021-12-03T08:02:22 */

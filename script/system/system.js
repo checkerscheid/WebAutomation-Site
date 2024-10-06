@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 684                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: system.js 684 2024-07-23 21:58:22Z                       $ #
+//# File-ID      : $Id:: system.js 696 2024-10-06 19:11:29Z                       $ #
 //#                                                                                 #
 //###################################################################################
 use system\wpInit;
@@ -216,13 +216,25 @@ $(document).ready(function() {
 	$('body').on('click', '[data-point][data-write]', function() {
 		p.automation.write($(this).attr('data-point'), $(this).attr('data-write'));
 	});
+	$('body').on('click', '[data-ws][data-write]', function() {
+		p.automation.wswrite($(this).attr('data-id'), $(this).attr('data-write'));
+	});
 	$('body').on('click', '[data-multipoint][data-write]', function() {
 		var dps = $(this).attr('data-multipoint');
 		dps = dps.split(',');
 		p.automation.writeMulti(dps, $(this).attr('data-write'));
 	});
 	$('body').on('click', '.ShellyDirect', function() {
-		$.post('shellydirect.req', {bm:$(this).attr('data-value')});
+		var tosend = {};
+		var attrvalue = $(this).attr('data-value');
+		if(typeof attrvalue !== 'undefined' && attrvalue !== false) {
+			tosend = {bm:$(this).attr('data-value')};
+		}
+		var attrws = $(this).attr('data-ws');
+		if(typeof attrws !== 'undefined' && attrws !== false) {
+			tosend = {bm:$(this).attr('data-ws')};
+		}
+		$.post('shellydirect.req', tosend);
 	});
 	$('body').on('click', '.pa-scene[data-scene]', function() {
 		$.post('std.writescene.setid.req', {id:$(this).attr('data-scene')}, function(data) {

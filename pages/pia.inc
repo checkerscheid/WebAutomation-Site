@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 27.07.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 693                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pia.inc 693 2024-08-11 22:32:17Z                         $ #
+//# File-ID      : $Id:: pia.inc 696 2024-10-06 19:11:29Z                         $ #
 //#                                                                                 #
 //###################################################################################
 /**
@@ -61,7 +61,7 @@ $points = array(
 	$neoPixel->getColorScenen();
 ?>
 <?
-	$rgb = new wpRGB('172.17.80.97', 'shellies/RGBW2');
+	$rgb = new wpRGB('172.17.80.163', 'shellies/RGBW2');
 	$rgb->getColorPicker();
 ?>
 		<div class="ps-container">
@@ -85,14 +85,14 @@ $points = array(
 					<td colspan="2">Schreibtisch</td>
 					<td colspan="2">
 						<div class="indikatoContainer">
-							<span class="ps-input" data-ws="KZ_HTp_Temp">-</span>
-							<span class="<?=wpa::indikatorTemp?>" data-ws="KZ_HTp_Temp"><?=wpHTML_EMPTY?></span>
+							<span class="ps-input" data-ws="KZ_HT3_Temp">-</span>
+							<span class="<?=wpa::indikatorTemp?>" data-ws="KZ_HT3_Temp"><?=wpHTML_EMPTY?></span>
 						</div>
 					</td>
 					<td colspan="2">
 						<div class="indikatoContainer">
-							<span class="ps-input" data-ws="KZ_HTp_Hum">-</span>
-							<span class="<?=wpa::indikatorHum?>" data-ws="KZ_HTp_Hum"><?=wpHTML_EMPTY?></span>
+							<span class="ps-input" data-ws="KZ_HT3_Hum">-</span>
+							<span class="<?=wpa::indikatorHum?>" data-ws="KZ_HT3_Hum"><?=wpHTML_EMPTY?></span>
 						</div>
 					</td>
 				</tr>

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 26.01.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 688                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: kinderzimmer.css 688 2024-07-29 03:53:39Z                $ #
+//# File-ID      : $Id:: kinderzimmer.css 696 2024-10-06 19:11:29Z                $ #
 //#                                                                                 #
 //###################################################################################
 ?> kinderzimmer */
@@ -36,6 +36,9 @@
 	#LI { top:69px; left:596px; }
 	#LI_SL { top:184px; left:654px; }
 }
+#D1MiniSites { right:10px; top:10px; }
+#D1MiniSites * { position:static; }
+#D1MiniSites a { display:block; width:auto; }
 
 #FK_LI { top:325px; left:714px; } /* new: checker 2021-12-03T08:02:54 */
 #FK_RE { top:325px; left:466px; } /* new: checker 2021-12-03T08:02:57 */

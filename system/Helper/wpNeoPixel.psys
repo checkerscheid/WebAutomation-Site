@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 695                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpNeoPixel.psys 695 2024-08-19 07:50:21Z                 $ #
+//# File-ID      : $Id:: wpNeoPixel.psys 696 2024-10-06 19:11:29Z                 $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -76,12 +76,12 @@ class wpNeoPixel {
 				<div class="NeoPixelSavedColor ps-flex-container">
 				</div>
 				<hr />
-				<div class="NeoPixelSlider NeoPixelSliderR"></div>
-				<div class="NeoPixelSlider NeoPixelSliderG"></div>
-				<div class="NeoPixelSlider NeoPixelSliderB"></div>
+				<div class="NeoPixelSlider NeoPixelSliderR wpSlider" data-ws="<?=$this->name ?>_R"></div>
+				<div class="NeoPixelSlider NeoPixelSliderG wpSlider" data-ws="<?=$this->name ?>_G"></div>
+				<div class="NeoPixelSlider NeoPixelSliderB wpSlider" data-ws="<?=$this->name ?>_B"></div>
 				<hr />
 				<h3>Brightness (<span class="NeoPixelBr"><?=round($this->status->NeoPixel->Brightness / 2.55) ?></span> %)</h3>
-				<div class="NeoPixelSlider NeoPixelSliderBr"></div>
+				<div class="NeoPixelSliderW NeoPixelSliderBr wpSlider-255" data-ws="<?=$this->name ?>_Brightness"></div>
 				<hr />
 				<div class="ps-flex-container">
 					<div class="pickerContainer">
@@ -112,11 +112,11 @@ class wpNeoPixel {
 				<hr />
 				<? if($this->status->useModul->AnalogOut) { ?>
 				<h3>Warmweiß (<span class="NeoPixelWW"><?=$this->status->AnalogOut->HandValue ?></span> %)</h3>
-				<div class="NeoPixelSliderW NeoPixelSliderWW"></div>
+				<div class="NeoPixelSliderW NeoPixelSliderWW wpSlider-255" data-ws="<?=$this->name ?>_AnalogOut"></div>
 				<? } ?>
 				<? if($this->status->useModul->AnalogOut2) { ?>
 				<h3>Kaltweiß (<span class="NeoPixelCW"><?=$this->status->AnalogOut2->HandValue ?></span> %)</h3>
-				<div class="NeoPixelSliderW NeoPixelSliderCW"></div>
+				<div class="NeoPixelSliderW NeoPixelSliderCW wpSlider-255" data-ws="<?=$this->name ?>_AnalogOut2"></div>
 				<? } ?>
 				<? } ?>
 			</div>
@@ -134,6 +134,7 @@ class wpNeoPixel {
 				</div>
 				<hr />
 				<div>
+					<div class="NeoPixelSliderEffectSpeed"></div>
 <?
 		foreach(self::modes as $id => $name) {
 ?>

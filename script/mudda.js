@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 665                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: mudda.js 665 2024-07-09 22:56:49Z                        $ #
+//# File-ID      : $Id:: mudda.js 696 2024-10-06 19:11:29Z                        $ #
 //#                                                                                 #
 //###################################################################################
 ?> mudda */
@@ -23,8 +23,53 @@ timezoneJS.timezone.defaultZoneFile = ['europe.txt'];
 timezoneJS.timezone.init({async: true});
 
 p.page.load = function() {
+	$('#mudda').on('click', '.pa-EinAus.bedienbar', function() {
+		var headline = $(this).attr('data-popup');
+		var id = $(this).attr('id');
+		$.post('std.wstruefalse.pop', {elem:id, headline:headline, type:'AufZu'}, function(data) {
+			$('#dialog').html(data).dialog({
+				title: 'Ventilbedienung', modal: true, width: '300px'
+			});
+			ws.register();
+		});
+	});
+	$('#mudda').on('click', '.ps-param', function() {
+		var obj = {
+			name: $(this).attr('data-wswrite'),
+			headline: $(this).attr('data-popup')
+		};
+		$.post('wsparam.pop', obj, function(data) {
+			$('#dialog').html(data).dialog({
+				title: 'Parameter', modal: true, width: '300px',
+				buttons: {
+					abbrechen: {
+						text: 'Abbrechen',
+						click: function() {
+							$('#dialog').dialog('close');
+						}
+					},
+					speichern: {
+						text: 'speichern',
+						click: function() {
+							p.automation.wswrite($('#numpad').attr('data-id'), $('#oskinput').val());
+							$('#dialog').dialog('close');
+						}
+					}
+				
+				}
+			});
+		});
+	});
+	$('#mudda').on('click', '.cleanMyTrends', function() {
+		$.get('mudda.cleanMyTrends.req', function(data) {
+			if(data.erg == 'S_OK') {
+				getTrendDataMudda();
+			}
+		}, 'json');
+	});
 	getTrendDataMudda();
 	ws.connect();
+	p.getValues();
 };
 function getTrendDataMudda() {
 	var objTemp = {

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 695                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.inc 695 2024-08-19 07:50:21Z                      $ #
+//# File-ID      : $Id:: d1mini.inc 696 2024-10-06 19:11:29Z                      $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
@@ -19,9 +19,13 @@ namespace pages\std;
 use system\std, system\WebCom;
 use system\Helper\wpa;
 use system\Helper\wpNeoPixel;
+use system\Helper\wpCwWw;
+use system\Helper\wpUnderfloor;
 
 require_once 'system/Helper/wpa.psys';
 require_once 'system/Helper/wpNeoPixel.psys';
+require_once 'system/Helper/wpCwWw.psys';
+require_once 'system/Helper/wpUnderfloor.psys';
 
 $database->query("SELECT TOP 1 [name] FROM [webpages] WHERE [src] = 'd1mini'");
 $headline = $database->fetch();
@@ -41,6 +45,7 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 		<span class="ps-button SetCmd" data-ip="<?=$erg['ip'] ?>" data-cmd="ForceMqttUpdate" title="Force MQTT Update">Force MQTT Update</span>
 		<span class="ps-button SetCmd" data-ip="<?=$erg['ip'] ?>" data-cmd="UpdateHTTP" title="Setup Http">Setup Http</span>
 		<span class="ps-button SetCmd" data-ip="<?=$erg['ip'] ?>" data-cmd="RestartDevice" title="neu starten">neu starten</span>
+		<span class="ps-button SetSimpleCmd" data-ip="<?=$erg['ip'] ?>" data-cmd="Blink" title="Blink">Blink</span>
 		<a class="ps-button" target="_blank" href="http://<?=$erg['ip'] ?>/print">Device Site</a>
 	</div>
 	<div class="ps-flex-container page">
@@ -222,7 +227,8 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 			</table>
 		</div>
 	<? } ?>
-	<? if($d1Mini->FreakaZoneDevice->useModul->NeoPixel) { ?>
+	<? if(isset($d1Mini->FreakaZoneDevice->useModul->NeoPixel) &&
+		$d1Mini->FreakaZoneDevice->useModul->NeoPixel) { ?>
 <?
 	$neoPixel = new wpNeoPixel($erg['ip'], $erg['name']);
 	$neoPixel->getStatusFromJson($d1Mini->FreakaZoneDevice);
@@ -230,7 +236,19 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 	$neoPixel->getColorScenen();
 ?>
 	<? } ?>
-	<? if($d1Mini->FreakaZoneDevice->useModul->AnalogOut && !$d1Mini->FreakaZoneDevice->useModul->NeoPixel) { ?>
+	<? if(isset($d1Mini->FreakaZoneDevice->useModul->CwWw) &&
+		$d1Mini->FreakaZoneDevice->useModul->CwWw) { ?>
+<?
+	$cwww = new wpCwWw($erg['ip'], $erg['name']);
+	$cwww->getStatusFromJson($d1Mini->FreakaZoneDevice);
+	$cwww->getColorPicker();
+	$cwww->getColorScenen();
+?>
+	<? } ?>
+	<? if(isset($d1Mini->FreakaZoneDevice->useModul->AnalogOut) &&
+			$d1Mini->FreakaZoneDevice->useModul->AnalogOut &&
+			!$d1Mini->FreakaZoneDevice->useModul->NeoPixel &&
+			!$d1Mini->FreakaZoneDevice->useModul->CwWw) { ?>
 		<div class="ps-container">
 			<h3>AnalogOut</h3>
 			<table summary="">
@@ -330,7 +348,10 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 			</table>
 		</div>
 	<? } ?>
-	<? if($d1Mini->FreakaZoneDevice->useModul->AnalogOut2 && !$d1Mini->FreakaZoneDevice->useModul->NeoPixel) { ?>
+	<? if(isset($d1Mini->FreakaZoneDevice->useModul->AnalogOut2) &&
+			$d1Mini->FreakaZoneDevice->useModul->AnalogOut2 &&
+			!$d1Mini->FreakaZoneDevice->useModul->NeoPixel &&
+			!$d1Mini->FreakaZoneDevice->useModul->CwWw) { ?>
 		<div class="ps-container">
 			<h3>AnalogOut2</h3>
 			<table summary="">
@@ -387,6 +408,38 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 			</table>
 		</div>
 	<? } ?>
+	<? if(isset($d1Mini->FreakaZoneDevice->useModul->Underfloor1) &&
+		$d1Mini->FreakaZoneDevice->useModul->Underfloor1) { ?>
+<?
+	$underfloor1 = new wpUnderfloor($erg['ip'], $erg['name'], 1);
+	$underfloor1->getStatusFromJson($d1Mini->FreakaZoneDevice);
+	$underfloor1->getUnderfloor();
+?>
+	<? } ?>
+	<? if(isset($d1Mini->FreakaZoneDevice->useModul->Underfloor2) &&
+		$d1Mini->FreakaZoneDevice->useModul->Underfloor2) { ?>
+<?
+	$underfloor2 = new wpUnderfloor($erg['ip'], $erg['name'], 2);
+	$underfloor2->getStatusFromJson($d1Mini->FreakaZoneDevice);
+	$underfloor2->getUnderfloor();
+?>
+	<? } ?>
+	<? if(isset($d1Mini->FreakaZoneDevice->useModul->Underfloor3) &&
+		$d1Mini->FreakaZoneDevice->useModul->Underfloor3) { ?>
+<?
+	$underfloor3 = new wpUnderfloor($erg['ip'], $erg['name'], 3);
+	$underfloor3->getStatusFromJson($d1Mini->FreakaZoneDevice);
+	$underfloor3->getUnderfloor();
+?>
+	<? } ?>
+	<? if(isset($d1Mini->FreakaZoneDevice->useModul->Underfloor4) &&
+		$d1Mini->FreakaZoneDevice->useModul->Underfloor4) { ?>
+<?
+	$underfloor4 = new wpUnderfloor($erg['ip'], $erg['name'], 4);
+	$underfloor4->getStatusFromJson($d1Mini->FreakaZoneDevice);
+	$underfloor4->getUnderfloor();
+?>
+	<? } ?>
 	<? if($d1Mini->FreakaZoneDevice->useModul->Relais ||
 			$d1Mini->FreakaZoneDevice->useModul->RelaisShield) { ?>
 		<div class="ps-container">
@@ -417,6 +470,7 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 						<span class="ps-input <?=wpa::GreyGreen ?>" data-ws="<?=$erg['name'] ?>_PumpeHand">undefined</span>
 					</td>
 				</tr>
+				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
 					<td colspan="6"><h3>Bedienung</h3></td>
 				</tr>
@@ -480,6 +534,13 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 					</td>
 				</tr>
 	<? } ?>
+				<tr><td colspan="6"><hr /></td></tr>
+				<tr>
+					<td colspan="3">pumpTest:</td>
+					<td colspan="3">
+						<span class="ps-button writeTopic" data-topic="<?=$erg['name'] ?>/settings/Relais/StartPumpTest" data-write="1">Ein</span>
+					</td>
+				</tr>
 			</table>
 		</div>
 	<? } ?>
@@ -633,7 +694,8 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 			</table>
 		</div>
 	<? } ?>
-	<? if($d1Mini->FreakaZoneDevice->useModul->ImpulseCounter) { ?>
+	<? if(isset($d1Mini->FreakaZoneDevice->useModul->ImpulseCounter) &&
+		$d1Mini->FreakaZoneDevice->useModul->ImpulseCounter) { ?>
 		<div class="ps-container">
 			<h3>ImpulseCounter</h3>
 			<table summary="">

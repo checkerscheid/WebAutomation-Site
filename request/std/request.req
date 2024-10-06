@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 658                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: request.req 658 2024-07-07 22:13:04Z                     $ #
+//# File-ID      : $Id:: request.req 696 2024-10-06 19:11:29Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -28,6 +28,7 @@ class request {
 	const c_activedpextended = 'activedpextended';
 	const c_activesystem = 'activesystem';
 	const c_writedp = 'writedp';
+	const c_wswritedp = 'wswritedp';
 	const c_writemultidp = 'writemultidp';
 	const c_togglewrite = 'togglewrite';
 	const c_ForceMqttUpdate = 'ForceMqttUpdate';
@@ -94,6 +95,12 @@ switch(std::gets('param1')) {
 		} else {
 			echo 'Dieser Datenpunkt existiert nicht';
 		}
+		break;
+//###################################################################################
+	case request::c_wswritedp:
+		$WebCom = new WebCom();
+		$req = $WebCom->send('WriteDP', $_SESSION[SESSION_ID]['LEVEL'].'%~%'.std::posts('item').'%~%'.std::posts('value'));
+		echo $req;
 		break;
 //###################################################################################
 	case request::c_writemultidp:

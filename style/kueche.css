@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 26.01.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 677                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: kueche.css 677 2024-07-15 13:51:59Z                      $ #
+//# File-ID      : $Id:: kueche.css 696 2024-10-06 19:11:29Z                      $ #
 //#                                                                                 #
 //###################################################################################
 ?> kueche */
@@ -35,5 +35,8 @@
 	#LI { top:1px; left:471px; }
 	#LI_LL { top:140px; left:547px; }
 }
+#D1MiniSites { right:10px; top:10px; }
+#D1MiniSites * { position:static; }
+#D1MiniSites a { display:block; width:auto; }
 
 #FK { top:237px; left:362px; } /* new: checker 2021-12-03T08:02:14 */

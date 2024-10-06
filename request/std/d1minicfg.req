@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 04.03.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 690                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.req 690 2024-08-02 00:24:56Z                   $ #
+//# File-ID      : $Id:: d1minicfg.req 696 2024-10-06 19:11:29Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -365,7 +365,7 @@ class d1minicfg {
 	const c_updateColumn = 'updateColumn';
 	public static function updateColumn($id, $column, $value) {
 		$wpDatabase = new wpDatabase();
-		if($value != '') {
+		if($value != '' || $column == 'compiledwith') {
 			$sql = "UPDATE [d1mini] SET [$column] = '$value' WHERE [id_d1mini] = $id";
 			$wpDatabase->query($sql);
 		}

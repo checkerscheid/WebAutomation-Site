@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 26.01.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 677                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: bad.css 677 2024-07-15 13:51:59Z                         $ #
+//# File-ID      : $Id:: bad.css 696 2024-10-06 19:11:29Z                         $ #
 //#                                                                                 #
 //###################################################################################
 ?> bad */
@@ -35,5 +35,8 @@
 	#LI { top:220px; left:320px; }
 	#LI_SP { top:94px; left:297px; }
 }
+#D1MiniSites { right:10px; top:10px; }
+#D1MiniSites * { position:static; }
+#D1MiniSites a { display:block; width:auto; }
 
 #FK { top:107px; left:48px; } /* new: checker 2021-12-03T08:02:40 */

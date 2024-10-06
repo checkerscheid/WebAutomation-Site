@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 26.01.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 626                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: project.css 626 2024-06-17 15:18:36Z                     $ #
+//# File-ID      : $Id:: project.css 696 2024-10-06 19:11:29Z                     $ #
 //#                                                                                 #
 //###################################################################################
 ?> projekt */
@@ -92,7 +92,7 @@ html.black { background:#606060 url(images/layout/black/main-border.png) repeat-
 .black .info, .black .ps-fontblue { color:#00F; }
 .black .ps-grey { color:#808080; }
 .black .ps-tree-parent:hover { background-color:#888; border-radius:2px; }
-html.black .ps-navi-button { color:#636363; }
+/*html.black .ps-navi-button { color:#636363; } - für was war das*/
 .black .ps-container { background-image:linear-gradient(rgba(50,50,50,0.7) 25%, rgba(21,21,21,0.7) 100%); }
 .black .pagecontent table.dataTable td, .black .pagecontent table.dataTable td * { color:#4a4a4a; }
 .black .ps-input.ps-param, .black .ps-input.ps-parambool { cursor:pointer; color:#004caf; }

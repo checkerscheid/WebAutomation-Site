@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 695                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 695 2024-08-19 07:50:21Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 696 2024-10-06 19:11:29Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -52,7 +52,6 @@ $points = array(
 	'LI_BM_WZ_SL'		=> '_WZ_BM_LI_SL',
 	'LI_BM_WZ_HZ'		=> '_WZ_BM_LI_HZ',
 	'LI_BM_WZ_KA'		=> '_WZ_BM_LI_KA',
-	'LI_BM_WZ_FE'		=> '_WZ_BM_LI_FE',
 	'LI_BM_SZ'			=> '_SZ_BM_LI',
 	'LI_BM_KU'			=> '_KU_BM_LI',
 	'LI_BM_KU_ST'		=> '_KU_BM_LI_ST',
@@ -60,6 +59,7 @@ $points = array(
 	'LI_BM_BU'			=> '_BU_BM_LI',
 	'LI_BM_BU_FL'		=> '_BU_BM_LI_FL',
 	'LI_BM_KZ'			=> '_KZ_BM_LI',
+	'LI_BM_KZ_RGB'		=> '_KZ_BM_LI_RGB',
 	'LI_BM_KZ_BE'		=> '_KZ_BM_LI_BE',
 	'LI_BM_KZ_NL'		=> '_KZ_BM_LI_NL',
 	'LI_BM_BA'			=> '_BA_BM_LI',
@@ -70,7 +70,8 @@ $points = array(
 	'LI_BM_GA_TR'		=> '_GA_BM_LI_TR',
 	'LI_BM_SS'			=> '_SY_SS',
 	'LI_BM_WW'			=> '_SY_WW',
-	'LI_BM_WM'			=> '_SY_WM',
+	'LI_BM_KS'			=> '_SY_KS',
+	'LI_BM_EG_HZG_FB'	=> 'EG_HZG_FB',
 
 	'LI_BM_WB_FE'		=> '_WB_BM_LI_FE',
 	'LI_BM_WB_KA'		=> '_WB_BM_LI_KA',
@@ -89,6 +90,12 @@ $points = array(
 	'Wartung'			=> '_Wartung',
 	'RandomNumeric'		=> 'RandomNumeric'
 );
+const WZ_NP = '172.17.80.99';
+const WZ_LS_NP = '172.17.80.98';
+const WZ_PF_TE = '172.17.80.106';
+const KZ_NP = '172.17.80.169';
+const KU_CwWw = '172.17.80.142';
+const BU_RU = '172.17.80.125';
 //std::test_array($iplist);
 foreach($zimmer as $kurz => $name) {
 	if($kurz != 'KZ') {
@@ -187,6 +194,42 @@ class uebersicht {
 			</tr>';
 		return $return;
 	}
+	public static function NeoPixel($ip, $name, $desc) {
+		$return = '
+			<tr>
+				<td class="description">
+					<a href="std.d1mini.' . $name . '.htm">' . $desc . '</a>
+				</td>
+				<td>
+					<span class="ps-button setNeoPixelOff ' . wpa::GreyYellow . '" data-ws="' . $name . '_MaxPercent" data-ip="' . $ip . '"
+						data-True="Ein" data-False="Aus">undefined</span>
+				</td>
+			</tr>
+			<!--tr>
+				<td colspan="2">
+					<div class="brightness-slider" data-ws="' . $name . '_MaxPercent" data-ip="' . $ip . '"></div>
+				</td>
+			</tr-->';
+		return $return;
+	}
+	public static function CwWw($ip, $name, $desc) {
+		$return = '
+			<tr>
+				<td class="description">
+					<a href="std.d1mini.' . $name . '.htm">' . $desc . '</a>
+				</td>
+				<td>
+					<span class="ps-button setCwWwOff ' . wpa::GreyYellow . '" data-ws="' . $name . '_MaxPercent" data-ip="' . $ip . '"
+						data-True="Ein" data-False="Aus">undefined</span>
+				</td>
+			</tr>
+			<!--tr>
+				<td colspan="2">
+					<div class="brightness-slider" data-ws="' . $name . '_MaxPercent" data-ip="' . $ip . '"></div>
+				</td>
+			</tr-->';
+		return $return;
+	}
 }
 ?>
 
@@ -198,18 +241,26 @@ class uebersicht {
 			<table>
 				<tbody>
 					<tr><td colspan="2"><hr /></td></tr>
-					<tr><td colspan="2"><a class="ps-button" href="std.d1mini.WZ_NP.htm">Wohnzimmer NeoPixel</a></td></tr>
+					<?=uebersicht::NeoPixel(WZ_NP, 'WZ_NP', 'Wohnzimmer NeoPixel')?>
 					<?=uebersicht::tasterShellyDimmer('Wohnzimmer <br class="showonportrait" />Lautsprecher', 'WZ_LS')?>
+					<?=uebersicht::NeoPixel(WZ_LS_NP, 'WZ_LS_NP', 'Lautsprecher Farbe')?>
+					<?=uebersicht::NeoPixel(WZ_PF_TE, 'WZ_PF_TE', 'RGB Pflanze')?>
 					<?=uebersicht::tasterShelly('Wohnzimmer <br class="showonportrait" />Herz', 'WZ_HZ')?>
 					<?=uebersicht::tasterShelly('Wohnzimmer <br class="showonportrait" />Stehlampe', 'WZ_SL')?>
 					<?=uebersicht::tasterShellyDimmer('Kamin', 'WZ_KA')?>
 					<?=uebersicht::tasterShellyDimmer('Wohnzimmer', 'WZ')?>
 					<?=uebersicht::tasterShelly('Wohnzimmer <br class="showonportrait" />Lichtleiste', 'WZ_LL')?>
-					<tr><td colspan="2"><a class="ps-button" href="std.d1mini.WZ_PF_TE.htm">Wohnzimmer RGB Pflanze</a></td></tr>
 					<tr><td colspan="2"><hr /></td></tr>
 					<?=uebersicht::tasterShellyDimmer('Schlafzimmer', 'SZ')?>
 					<tr><td colspan="2"><hr /></td></tr>
 					<?=uebersicht::tasterShellyDimmer('Büro', 'BU')?>
+					<tr>
+						<td colspan="2"><span class="ps-input <?=wpa::GreenYellow ?>" data-ws="BU_RU_Manual">undefined</span></td>
+					</tr>
+					<tr>
+						<td><span class="ps-button RU_Auto" data-ip="<?=BU_RU ?>">Auto</span></td>
+						<td><span class="ps-button RU_Manual" data-ip="<?=BU_RU ?>">Manual</span></td>
+					</tr>
 				</tbody>
 			</table>
 		</div>
@@ -218,8 +269,10 @@ class uebersicht {
 			<h2>Licht</h2>
 			<table>
 				<tbody>
+					<tr><td colspan="2"><span class="ps-button twoColumns AllesAus"> Alles aus</span></td></tr>
 					<tr><td colspan="2"><hr /></td></tr>
 					<?=uebersicht::tasterShelly('Küche', 'KU')?>
+					<?=uebersicht::CwWw(KU_CwWw, 'KU_CwWw', 'Küche White-LED')?>
 					<?=uebersicht::tasterShelly('Küche <br class="showonportrait" />Strahler', 'KU_ST')?>
 					<?=uebersicht::tasterShelly('Küche <br class="showonportrait" />Kaffee', 'KU_KA')?>
 					<tr><td colspan="2"><hr /></td></tr>
@@ -229,8 +282,9 @@ class uebersicht {
 					<?=uebersicht::tasterShellyDimmer('Bad', 'BA')?>
 					<?=uebersicht::tasterShelly('Bad <br class="showonportrait" />Spiegelschrank', 'BA_SP')?>
 					<tr><td colspan="2"><hr /></td></tr>
-					<tr><td colspan="2"><a class="ps-button" href="std.d1mini.KZ_NP.htm">Kinderzimmer NeoPixel</a></td></tr>
+					<?=uebersicht::NeoPixel(KZ_NP, 'KZ_NP', 'Kinderzimmer NeoPixel')?>
 					<?=uebersicht::tasterShelly('Kinderzimmer', 'KZ')?>
+					<?=uebersicht::tasterShelly('Bilderrahmen', 'KZ_RGB')?>
 					<?=uebersicht::tasterShelly('Kinderzimmer <br class="showonportrait" />Bett', 'KZ_BE')?>
 					<?=uebersicht::tasterShelly('Kinderzimmer <br class="showonportrait" />Nachtlicht', 'KZ_NL')?>
 					<tr><td colspan="2"><hr /></td></tr>
@@ -250,10 +304,9 @@ class uebersicht {
 					<?=uebersicht::tasterShelly('Weihnachtsbaum', 'WB_WB')?>
 					<? } ?>
 					<?=uebersicht::tasterShelly('Testboard', 'SY_DI')?>
-					<?=uebersicht::tasterShelly('Feuer', 'WZ_FE')?>
-					<tr>
+					<!--tr>
 						<td colspan="2"><span class="ps-button wz-feuer">set Feuerfarbe</span></td>
-					</tr>
+					</tr-->
 					<? if($useWeihnachten) { ?>
 					<tr>
 						<td><span class="ps-button wz-wn-an">Alles an</span></td>
@@ -275,11 +328,12 @@ class uebersicht {
 					<tr><td colspan="2"><hr /></td></tr>
 					<?=uebersicht::tasterShelly('Schaltschrank', 'SS')?>
 					<?=uebersicht::tasterShelly('Warmwasser', 'WW')?>
-					<?=uebersicht::tasterShelly('Waschmaschine', 'WM')?>
+					<?=uebersicht::tasterShelly('Kühlschrank', 'KS')?>
 					<? /*=uebersicht::taster('Garten <br class="showonportrait" />Töpfe', 'GA_BT')*/?>
 					<tr><td colspan="2"><hr /></td></tr>
 					<tr><td colspan="2"><h2>Mudda</h2></td></tr>
 					<tr><td colspan="2"><hr /></td></tr>
+					<?=uebersicht::tasterShelly('Heizung', 'EG_HZG_FB')?>
 					<?=uebersicht::tasterShelly('WLAN', 'MU_WLAN')?>
 					<? /* ?>
 					<tr><td colspan="2"><h2>Anette</h2></td></tr>
@@ -311,7 +365,6 @@ class uebersicht {
 					</tr>
 <?
 foreach($zimmer as $kurz => $name) {
-	$SH = $kurz == 'WZ' || $kurz == 'KZ' ? 'SH' : 'D1';
 ?>
 					<tr>
 						<td colspan="4"><span><?=$name?></span></td>
@@ -346,14 +399,22 @@ foreach($zimmer as $kurz => $name) {
 <? } ?>
 						</td>
 					</tr>
+<?
+		$dpTemp = $kurz . '_RU_Temp';
+		$dpHum = $kurz . '_RU_Hum';
+		if($kurz == 'WZ' || $kurz == 'KZ') {
+			$dpTemp = '_' . $kurz . '_RT_SH';
+			$dpHum = '_' . $kurz . '_RF_SH';
+		}
+?>
 					<tr>
 						<td>
-							<span class="ps-input" data-ws="_<?=$kurz?>_RT_<?=$SH ?>" title="UG <?=$name?> Temperatur">-</span>
-							<span class="<?=wpa::indikatorTemp?>" data-ws="_<?=$kurz?>_RT_<?=$SH ?>"><?=wpHTML_EMPTY ?></span>
+							<span class="ps-input" data-ws="<?=$dpTemp ?>" title="UG <?=$name?> Temperatur">-</span>
+							<span class="<?=wpa::indikatorTemp?>" data-ws="<?=$dpTemp ?>"><?=wpHTML_EMPTY ?></span>
 						</td>
 						<td>
-							<span class="ps-input" data-ws="_<?=$kurz?>_RF_<?=$SH ?>" title="UG <?=$name?> Feuchte">-</span>
-							<span class="<?=wpa::indikatorHum?>" data-ws="_<?=$kurz?>_RF_<?=$SH ?>"><?=wpHTML_EMPTY ?></span>
+							<span class="ps-input" data-ws="<?=$dpHum ?>" title="UG <?=$name?> Feuchte">-</span>
+							<span class="<?=wpa::indikatorHum?>" data-ws="<?=$dpHum ?>"><?=wpHTML_EMPTY ?></span>
 						</td>
 					</tr>
 <? } ?>

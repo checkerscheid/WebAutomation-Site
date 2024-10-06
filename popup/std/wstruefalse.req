@@ -1,0 +1,131 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 20.12.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: truefalse.req 550 2023-12-25 03:02:54Z                   $ #
+//#                                                                                 #
+//###################################################################################
+namespace popup\std;
+use system\std;
+use system\Helper\wpa;
+require_once 'system/Helper/wpa.psys';
+$dataWriteTrue = (std::posts('writeTrue') == '') ? '1' : std::posts('writeTrue');
+$dataWriteFalse = (std::posts('writeFalse') == '') ? '0' : std::posts('writeFalse');
+switch(std::posts('type')) {
+	case 'AufZu':
+		$dataTrue = (std::posts('dataTrue') == '') ? '' : ' data-true="'.std::posts('dataTrue').'"';
+		$dataFalse = (std::posts('dataFalse') == '') ? '' : ' data-false="'.std::posts('dataFalse').'"';
+		$textTrue = (std::posts('dataTrue') == '') ? 'Auf' : std::posts('dataTrue');
+		$textFalse = (std::posts('dataFalse') == '') ? 'Zu' : std::posts('dataFalse');
+		break;
+	case 'ZuAuf':
+		$dataTrue = (std::posts('dataTrue') == '') ? '' : ' data-true="'.std::posts('dataTrue').'"';
+		$dataFalse = (std::posts('dataFalse') == '') ? '' : ' data-false="'.std::posts('dataFalse').'"';
+		$textTrue = (std::posts('dataTrue') == '') ? 'Zu' : std::posts('dataTrue');
+		$textFalse = (std::posts('dataFalse') == '') ? 'Auf' : std::posts('dataFalse');
+		break;
+	case 'EinAus':
+		$dataTrue = (std::posts('dataTrue') == '') ? '' : ' data-true="'.std::posts('dataTrue').'"';
+		$dataFalse = (std::posts('dataFalse') == '') ? '' : ' data-false="'.std::posts('dataFalse').'"';
+		$textTrue = (std::posts('dataTrue') == '') ? 'Ein' : std::posts('dataTrue');
+		$textFalse = (std::posts('dataFalse') == '') ? 'Aus' : std::posts('dataFalse');
+		break;
+	case 'AusEin':
+		$dataTrue = (std::posts('dataTrue') == '') ? '' : ' data-true="'.std::posts('dataTrue').'"';
+		$dataFalse = (std::posts('dataFalse') == '') ? '' : ' data-false="'.std::posts('dataFalse').'"';
+		$textTrue = (std::posts('dataTrue') == '') ? 'Aus' : std::posts('dataTrue');
+		$textFalse = (std::posts('dataFalse') == '') ? 'Ein' : std::posts('dataFalse');
+		break;
+	case 'HeizenKuehlen':
+		$dataTrue = (std::posts('dataTrue') == '') ? '' : ' data-true="'.std::posts('dataTrue').'"';
+		$dataFalse = (std::posts('dataFalse') == '') ? '' : ' data-false="'.std::posts('dataFalse').'"';
+		$textTrue = (std::posts('dataTrue') == '') ? 'Heizen' : std::posts('dataTrue');
+		$textFalse = (std::posts('dataFalse') == '') ? 'Kühlen' : std::posts('dataFalse');
+		break;
+	default:
+		$dataTrue = '';
+		$dataFalse= '';
+		$textTrue = 'True';
+		$textFalse = 'False';
+		break;
+}
+
+?>
+
+<div class="popup bedienung">
+	<h1><?=std::posts('headline')?></h1>
+	<table summary="">
+		<tr>
+			<td colspan="2">
+				<hr />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<span>Status:</span>
+			</td>
+			<td>
+				<span class="ps-input <?=wpa::GreyGreen ?>" data-ws="<?=std::posts('elem')?>"<?=$dataTrue.$dataFalse?>>undefined</span>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<span>Automatik:</span>
+			</td>
+			<td>
+				<span class="ps-input <?=wpa::GreyGreen ?>" data-ws="<?=std::posts('elem')?>_Auto"<?=$dataTrue.$dataFalse?>>undefined</span>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<hr />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<span>Hand / Auto:</span>
+			</td>
+			<td>
+				<span class="ps-input  <?=wpa::GreenYellow ?>" data-ws="<?=std::posts('elem')?>_HandError">undefined</span>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<span class="ps-button wpNoAction" data-ws="<?=std::posts('elem')?>_SetHand" data-write="0">Automatik</span>
+			</td>
+			<td>
+				<span class="ps-button wpNoAction" data-ws="<?=std::posts('elem')?>_SetHand" data-write="1">Hand</span>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<hr />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<span>Handvorwahl:</span>
+			</td>
+			<td>
+				<span class="ps-input <?=wpa::GreyGreen ?>" data-ws="<?=std::posts('elem')?>_Hand"<?=$dataTrue.$dataFalse?>>undefined</span>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<span class="ps-button wpNoAction" data-ws="<?=std::posts('elem')?>_SetHandValue" data-write="<?=$dataWriteTrue?>"><?=$textTrue?></span>
+			</td>
+			<td>
+				<span class="ps-button wpNoAction" data-ws="<?=std::posts('elem')?>_SetHandValue" data-write="<?=$dataWriteFalse?>"><?=$textFalse?></span>
+			</td>
+		</tr>
+	</table>
+</div>

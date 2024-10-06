@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 26.01.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 550                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: schlafzimmer.inc 550 2023-12-25 03:02:54Z                $ #
+//# File-ID      : $Id:: schlafzimmer.inc 696 2024-10-06 19:11:29Z                $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -33,4 +33,9 @@ $points += $schlafzimmer->getDatapoints();
 
 <div id="schlafzimmer" class="page">
 <?=$schlafzimmer->print(); ?>
+	<div id="D1MiniSites" class="ps-container">
+		<ul>
+			<li><a class="ps-button" href="std.d1mini.SZ_RU.htm">Raumüberwachung</a></li>
+		</ul>
+	</div>
 </div>

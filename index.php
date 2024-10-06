@@ -10,9 +10,9 @@ header('Content-Type: text/html; charset=utf-8');
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 673                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: index.php 673 2024-07-12 13:22:12Z                       $ #
+//# File-ID      : $Id:: index.php 696 2024-10-06 19:11:29Z                       $ #
 //#                                                                                 #
 //###################################################################################
 /** @var array $points */
@@ -198,7 +198,7 @@ if(security::checkGroup(security::entwickler)) {
 						}
 						if(security::checkGroup(security::benutzer)) {
 							echo '
-<span class="Autologoff">
+<span class="Autologoff ps-hidden">
 	<span class="ps-sm-hide"><span class="ps-md-hide">automatisches </span>Abmelden in </span>
 	<span class="AutologoffTime">'.wpHTML_EMPTY.'</span>
 </span>';

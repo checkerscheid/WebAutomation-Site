@@ -9,25 +9,28 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 689                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.css 689 2024-08-01 01:58:39Z                  $ #
+//# File-ID      : $Id:: uebersicht.css 696 2024-10-06 19:11:29Z                  $ #
 //#                                                                                 #
 //###################################################################################
 ?> uebersicht */
 
 /* #uebersicht { background:transparent url(images/uebersicht.jpg) center top no-repeat; min-height:410px; } */
-
+.pagecontent { background:transparent url(images/uebersicht_haus.png) center center no-repeat; background-size:100% auto; }
+@media (orientation: portrait) {
+	.pagecontent { background-size:auto 100%; }
+}
 #uebersicht .wartungmeldung { display:block; padding:4px; margin:5px; color:#FFBF00; border:1px solid #CCC; }
 #uebersicht .ps-container { margin:10px; padding:10px; float:left; }
 #uebersicht .ps-container .ps-input, #uebersicht .ps-container .ps-button { display:inline-block; width:100px; text-align:center; }
-#uebersicht .ps-container a.ps-button { width:auto; display:block; text-decoration:none; }
+#uebersicht .ps-container a.ps-button, #uebersicht .ps-container .ps-button.twoColumns { width:auto; display:block; text-decoration:none; }
 #uebersicht .ps-container .RenewShellyState { min-width:100px; width:auto; }
 #uebersicht .ps-container hr { margin:5px auto; }
 #uebersicht .ps-button { padding:8px 6px; }
 #uebersicht .ps-button.pa-scene { padding:8px 25px; }
 
-#uebersicht .shelly-dimmer { margin:5px 0 10px 0; }
+#uebersicht .shelly-dimmer, #uebersicht .brigthness-dimmer { margin:5px 0 10px 0; }
 .black #uebersicht .ps-yellow { color:#111; }
 
 #uebersicht .clicklicht, #uebersicht .ps-operable { cursor:pointer; }

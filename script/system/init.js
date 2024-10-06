@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 693                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: init.js 693 2024-08-11 22:32:17Z                         $ #
+//# File-ID      : $Id:: init.js 696 2024-10-06 19:11:29Z                         $ #
 //#                                                                                 #
 //###################################################################################
 use system\wpInit;
@@ -226,6 +226,11 @@ var p = {
 				dokuparam = 'False';
 			}
 			$.post('std.request.writedp.req', {item:point, value:value, doku:dokuparam}, function(data) {
+				if(data != 'S_OK') p.page.alert(data);
+			});
+		},
+		wswrite: function(point, value) {
+			$.post('std.request.wswritedp.req', {item:point, value:value}, function(data) {
 				if(data != 'S_OK') p.page.alert(data);
 			});
 		},

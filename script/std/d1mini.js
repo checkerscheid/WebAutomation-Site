@@ -9,23 +9,30 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 690                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.js 690 2024-08-02 00:24:56Z                       $ #
+//# File-ID      : $Id:: d1mini.js 696 2024-10-06 19:11:29Z                       $ #
 //#                                                                                 #
 //###################################################################################
 use system\std
 ?> d1mini */
 //<? require_once('script/system/websockets.js') ?>
 //<? require_once('script/system/wpNeoPixel.js') ?>
+//<? require_once('script/system/wpCwWw.js') ?>
 ws.logEnabled = true;
 p.page.load = function() {
 	wpNeoPixel.Init('std.d1mini');
+	wpCwWw.Init('std.d1mini');
 	// ?? warum war das? $.get('std.d1mini.getD1MiniSettings.<?=std::gets("param1")?>.req');
 	$('.buttonContainer').on('click', '.SetCmd', function() {
 		var ip = $(this).attr('data-ip');
 		var cmd = $(this).attr('data-cmd');
 		$.post('std.d1mini.setcmd.req', {ip:ip, cmd:cmd});
+	});
+	$('.buttonContainer').on('click', '.SetSimpleCmd', function() {
+		var ip = $(this).attr('data-ip');
+		var cmd = $(this).attr('data-cmd');
+		$.post('std.d1mini.setsimplecmd.req', {ip:ip, cmd:cmd});
 	});
 	
 	$('.page').on('click', '.writeTopic', function() {

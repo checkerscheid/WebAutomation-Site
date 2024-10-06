@@ -1,0 +1,59 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 20.12.2013                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 550                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: paramnumpad.req 550 2023-12-25 03:02:54Z                 $ #
+//#                                                                                 #
+//###################################################################################
+namespace popup;
+use system\std;
+use system\Helper\wpDatabase;
+$database = new wpDatabase();
+$database->query("SELECT [id_dp], [unit], [min], [max] FROM [dp] WHERE [name] = '" .std::posts('name') . "'");
+$erg = $database->fetch();
+
+?>
+
+<div class="popup">
+	<h2><?=std::posts('headline') ?></h2>
+	<div id="numpad" data-elem="<?=std::posts('name') ?>" data-id="<?=$erg['id_dp'] ?>">
+		<div>
+			<hr />
+			min: <?=$erg['min'] . ' ' . $erg['unit'] ?><br />
+			max: <?=$erg['max'] . ' ' . $erg['unit'] ?>
+		</div>
+		<div>
+	<?
+if(preg_match('/((\d){1,}:.*;){1,}/', $erg['unit'])> 0) {
+	echo '
+			<h1>'.std::posts('id').'<h1></td>
+			<hr />';
+	$unit = substr($erg['unit'], 0, -1);
+	$arr = explode(';', $unit);
+	echo '
+			<select class="nAuswahl ps-input">';
+	foreach($arr as $state) {
+		echo '
+				<option data-wert="'.trim(strstr($state, ':', true)).'">
+					' . str_replace(':', '', strstr($state, ':')) . '
+				</option>';
+	}
+	echo '
+			</select>';
+} else {
+	echo '
+			<input id="oskinput" class="ps-input" type="text" />';
+}
+	?>
+		</div>
+	</div>
+</div>

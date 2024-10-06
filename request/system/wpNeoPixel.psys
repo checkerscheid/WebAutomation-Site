@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 695                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpNeoPixel.psys 695 2024-08-19 07:50:21Z                 $ #
+//# File-ID      : $Id:: wpNeoPixel.psys 696 2024-10-06 19:11:29Z                 $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\system;
@@ -66,7 +66,17 @@ class wpNeoPixel {
 	public static function NeoPixelBrightness() {
 		try {
 			$cmd = 'brightness=' . std::posts('brightness');
-			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelBrightness?' . $cmd, 0, self::getContext());
+			//file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelBrightness?' . $cmd, 0, self::getContext());
+			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelBrightness?' . $cmd);
+		} catch(Exception $e) {
+			// Fail silently
+		}
+	}
+	const c_NeoPixelEffectSpeed = 'NeoPixelEffectSpeed';
+	public static function NeoPixelEffectSpeed() {
+		try {
+			$cmd = 'effectSpeed=' . std::posts('effectSpeed');
+			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelEffectSpeed?' . $cmd, 0, self::getContext());
 		} catch(Exception $e) {
 			// Fail silently
 		}
@@ -89,15 +99,27 @@ class wpNeoPixel {
 			// Fail silently
 		}
 	}
-	const c_setNeoPixelOff = 'setNeoPixelOff';
-	public static function setNeoPixelOff() {
+	const c_setNeoPixelOn = 'setNeoPixelOn';
+	public static function setNeoPixelOn() {
 		header(wpJSON_HEADER);
+		$result = '{"erg":"S_OK","msg":"setNeoPixelOn"}';
 		try {
-			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelOff', 0, self::getContext());
+			$result = file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelOn', 0, self::getContext());
 		} catch(Exception $e) {
 			// Fail silently
 		}
-		echo '{"erg":"S_OK","msg":"setNeoPixelOff"}';
+		echo $result;
+	}
+	const c_setNeoPixelOff = 'setNeoPixelOff';
+	public static function setNeoPixelOff() {
+		header(wpJSON_HEADER);
+		$result = '{"erg":"S_OK","msg":"setNeoPixelOn"}';
+		try {
+			$result = file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelOff', 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+		echo $result;
 	}
 	const c_setNeoPixelOffBlender = 'setNeoPixelOffBlender';
 	public static function setNeoPixelOffBlender() {
@@ -190,6 +212,10 @@ switch(std::gets('param1')) {
 		wpNeoPixel::NeoPixelBrightness();
 		break;
 		//###################################################################################
+	case wpNeoPixel::c_NeoPixelEffectSpeed:
+		wpNeoPixel::NeoPixelEffectSpeed();
+		break;
+		//###################################################################################
 	case wpNeoPixel::c_NeoPixelWW:
 		wpNeoPixel::NeoPixelWW();
 		break;
@@ -200,6 +226,10 @@ switch(std::gets('param1')) {
 		//###################################################################################
 	case wpNeoPixel::c_setNeoPixelOff:
 		wpNeoPixel::setNeoPixelOff();
+		break;
+		//###################################################################################
+	case wpNeoPixel::c_setNeoPixelOn:
+		wpNeoPixel::setNeoPixelOn();
 		break;
 		//###################################################################################
 	case wpNeoPixel::c_setNeoPixelOffBlender:

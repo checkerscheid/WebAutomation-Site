@@ -9,14 +9,15 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 690                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.css 690 2024-08-02 00:24:56Z                      $ #
+//# File-ID      : $Id:: d1mini.css 696 2024-10-06 19:11:29Z                      $ #
 //#                                                                                 #
 //###################################################################################
 ?> d1mini */
 
 <? require_once 'style/system/wpNeoPixel.css'; ?>
+<? require_once 'style/system/wpCwWw.css'; ?>
 
 #d1mini h2, #d1mini p { text-align: center; }
 #d1mini table { margin:auto; }

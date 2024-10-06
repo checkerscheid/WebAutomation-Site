@@ -1,0 +1,115 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 01.08.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 695                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: wpNeoPixel.psys 695 2024-08-19 07:50:21Z                 $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\system;
+
+use system\std;
+use Exception;
+require_once 'system/Helper/wpCwWw.psys';
+wpCwWw::$ip = std::posts('ip');
+class wpCwWw {
+	public static $ip;
+	const c_CwWwEffect = 'CwWwEffect';
+	public static function CwWwEffect() {
+		try {
+			$cmd = 'effect=' . std::posts('id');
+			file_get_contents('http://' . wpCwWw::$ip . '/setCwWwEffect?' . $cmd, 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+	}
+	const c_CwWwSleep = 'CwWwSleep';
+	public static function CwWwSleep() {
+		try {
+			$cmd = 'sleep=' . std::posts('sleep');
+			file_get_contents('http://' . wpCwWw::$ip . '/setCwWwSleep?' . $cmd, 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+	}
+	const c_CwWwOn = 'CwWwOn';
+	public static function CwWwOn() {
+		try {
+			$cmd = 'turn=1';
+			file_get_contents('http://' . wpCwWw::$ip . '/setCwWw?' . $cmd, 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+	}
+	const c_CwWwOff = 'CwWwOff';
+	public static function CwWwOff() {
+		try {
+			$cmd = 'turn=0';
+			file_get_contents('http://' . wpCwWw::$ip . '/setCwWw?' . $cmd, 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+	}
+	const c_CwWwCW = 'CwWwCW';
+	public static function CwWwCW() {
+		try {
+			$cmd = 'cw=' . std::posts('cw');
+			file_get_contents('http://' . wpCwWw::$ip . '/setCwWw?' . $cmd, 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+	}
+	const c_CwWwWW = 'CwWwWW';
+	public static function CwWwWW() {
+		try {
+			$cmd = 'ww=' . std::posts('ww');
+			file_get_contents('http://' . wpCwWw::$ip . '/setCwWw?' . $cmd, 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+	}
+	private static function getContext() {
+		return stream_context_create([
+			"http" => [
+				"method"=>"GET",
+				"timeout" => 1
+			]
+		]);
+	}
+}
+
+switch(std::gets('param1')) {
+		//###################################################################################
+	case wpCwWw::c_CwWwEffect:
+		wpCwWw::CwWwEffect();
+		break;
+		//###################################################################################
+	case wpCwWw::c_CwWwSleep:
+		wpCwWw::CwWwSleep();
+		break;
+		//###################################################################################
+	case wpCwWw::c_CwWwOn:
+		wpCwWw::CwWwOn();
+		break;
+		//###################################################################################
+	case wpCwWw::c_CwWwOff:
+		wpCwWw::CwWwOff();
+		break;
+		//###################################################################################
+	case wpCwWw::c_CwWwWW:
+		wpCwWw::CwWwWW();
+		break;
+		//###################################################################################
+	case wpCwWw::c_CwWwCW:
+		wpCwWw::CwWwCW();
+		break;
+}
+

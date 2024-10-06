@@ -1,0 +1,40 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 01.10.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 660                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: overview.req 660 2024-07-07 22:34:47Z                    $ #
+//#                                                                                 #
+//###################################################################################
+namespace request;
+
+use system\std;
+use system\Helper\wpDatabase;
+
+class mudda {
+	const c_cleanMyTrends = 'cleanMyTrends';
+	public static function cleanMyTrends() {
+		$database = new wpDatabase();
+		$database->query("DELETE FROM [trendvalue] WHERE
+			([id_trend] = 1096 OR [id_trend] = 1077 OR [id_trend] = 1079 OR [id_trend] = 1095 OR [id_trend] = 1076 OR [id_trend] = 1078)
+			AND [value] = '0'");
+		$database->fetch();
+		echo '{"erg":"S_OK"}';
+	}
+}
+switch(std::gets('param1')) {
+		//###################################################################################
+	case mudda::c_cleanMyTrends:
+		mudda::cleanMyTrends();
+		break;
+
+}
+?>

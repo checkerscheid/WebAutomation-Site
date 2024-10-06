@@ -1,0 +1,63 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 28.08.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 660                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: overview.req 660 2024-07-07 22:34:47Z                    $ #
+//#                                                                                 #
+//###################################################################################
+namespace request;
+
+use Exception;
+use system\std;
+
+require_once 'request/system/wpNeoPixel.psys';
+require_once 'request/system/wpCwWw.psys';
+
+class uebersicht {
+	const c_SetAuto = 'setAuto';
+	public static function SetAuto() {
+		try {
+			$cmd = 'mode=auto';
+			file_get_contents('http://' . std::posts('ip') . '/setBM?' . $cmd, 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+	}
+	const c_SetManual = 'setManual';
+	public static function SetManual() {
+		try {
+			$cmd = 'mode=manual';
+			file_get_contents('http://' . std::posts('ip') . '/setBM?' . $cmd, 0, self::getContext());
+		} catch(Exception $e) {
+			// Fail silently
+		}
+	}
+	private static function getContext() {
+		return stream_context_create([
+			"http" => [
+				"method"=>"GET",
+				"timeout" => 1
+			]
+		]);
+	}
+}
+switch(std::gets('param1')) {
+		//###################################################################################
+	case uebersicht::c_SetAuto:
+		uebersicht::SetAuto();
+		break;
+		//###################################################################################
+	case uebersicht::c_SetManual:
+		uebersicht::SetManual();
+		break;
+}
+?>

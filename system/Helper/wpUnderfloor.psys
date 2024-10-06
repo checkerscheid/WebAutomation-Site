@@ -1,0 +1,108 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 01.08.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 695                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: wpNeoPixel.psys 695 2024-08-19 07:50:21Z                 $ #
+//#                                                                                 #
+//###################################################################################
+namespace system\Helper;
+use system\WebCom;
+use system\std;
+
+/**
+ * generiert die Oberfläche für die Underfloor erweiterung auf dem D1 Mini
+ * @author Checker
+ */
+class wpUnderfloor {
+	private $status, $modulStatus;
+	private $ip, $name, $no, $modulName;
+
+	public function __construct($ip, $name, $no) {
+		$this->ip = $ip;
+		$this->name = $name;
+		$this->no = $no;
+		$this->modulName = 'Underfloor ' . $no;
+	}
+	private function getStatus() {
+		$WebCom = new WebCom();
+		$res = \json_decode($WebCom->send('getD1MiniStatus', $this->ip));
+		$this->status = $res->FreakaZoneDevice;
+		//std::test_array($this->status, 'getStatus');
+		$this->getModulStatus();
+	}
+	public function getStatusFromJson($json) {
+		$this->status = $json;
+		//std::test_array($this->status, 'getStatusFromJson');
+		$this->getModulStatus();
+	}
+	private function getModulStatus() {
+		switch($this->no) {
+			case 1:
+				$this->modulStatus = $this->status->Underfloor1;
+				break;
+			case 2:
+				$this->modulStatus = $this->status->Underfloor2;
+				break;
+			case 3:
+				$this->modulStatus = $this->status->Underfloor3;
+				break;
+			case 4:
+				$this->modulStatus = $this->status->Underfloor4;
+				break;
+		}
+		//std::test_array($this->modulStatus, 'getModulStatus');
+	}
+	public function getUnderfloor() {
+?>
+	<div class="ps-container">
+		<h3><?=$this->modulName ?></h3>
+		<table summary="">
+			<tr>
+				<td>Ventil:</td>
+				<td><span class="ps-input" data-ws="<?=$this->name ?>_Underfloor<?=$this->no ?>">undefined</span></td>
+			</tr>
+			<tr><td colspan="2"><hr /></td></tr>
+			<tr>
+				<td>Max Cycle:</td>
+				<td>
+					<span class="ps-input ps-param"
+						data-topic="<?=$this->name ?>/settings/Underfloor<?=$this->no ?>/CalcCycle"
+						data-unit="sec">
+						<?=$this->modulStatus->CalcCycle ?> ms
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td>SetPoint:</td>
+				<td>
+					<span class="ps-input ps-param"
+						data-topic="<?=$this->name ?>/settings/Underfloor<?=$this->no ?>/SetPoint"
+						data-unit="°C">
+						<?=$this->modulStatus->SetPoint ?> °C
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td>TempUrl:</td>
+				<td>
+					<span class="ps-input ps-param"
+						data-topic="<?=$this->name ?>/settings/Underfloor<?=$this->no ?>/TempUrl">
+						<?=$this->modulStatus->TempUrl ?>
+					</span>
+				</td>
+			</tr>
+		</table>
+	</div>
+<?
+	}
+}
+?>

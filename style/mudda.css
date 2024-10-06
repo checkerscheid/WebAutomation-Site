@@ -9,14 +9,18 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 674                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: mudda.css 674 2024-07-12 14:10:44Z                       $ #
+//# File-ID      : $Id:: mudda.css 696 2024-10-06 19:11:29Z                       $ #
 //#                                                                                 #
 //###################################################################################
 ?> mudda */
 
+.pagecontent { background:transparent url(images/uebersicht_haus.png) center center no-repeat; background-size:100% auto; }
+@media (orientation: portrait) {
+	.pagecontent { background-size:auto 100%; }
+}
 #mudda table { margin:auto; }
 #ergTemp, #ergHum { display:block; width:100%; height:300px; }
 
-#mudda .forecast { min-width: 100px; width: auto; }
+#mudda .forecast, #mudda .cleanMyTrends { min-width: 100px; width: auto; }

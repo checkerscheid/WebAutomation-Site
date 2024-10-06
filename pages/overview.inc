@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 695                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: overview.inc 695 2024-08-19 07:50:21Z                  $ #
+//# File-ID      : $Id:: overview.inc 696 2024-10-06 19:11:29Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /**
@@ -38,7 +38,7 @@ class overview {
 	private static $SystemRelay = array(
 		'SY_SS'			=> 'Schaltschrank',
 		'SY_WW'			=> 'Warmwasser',
-		'SY_WM'			=> 'Waschmaschine'
+		'SY_KS'			=> 'Kühlschrank'
 	);
 	private static $HT = array(
 		'WZ_HT3'		=> 'Wohnzimmer',
@@ -48,7 +48,7 @@ class overview {
 		'KU_RU'			=> 'Küche',
 		'FL_RU'			=> 'Flur',
 		'BA_RU'			=> 'Bad',
-		'KZ_HTp'		=> 'Kinderzimmer',
+		'KZ_HT3'		=> 'Kinderzimmer',
 		'WZ_PF_FE'		=> 'Wohnzimmer Pflanze',
 		'BA_Lue'		=> 'Bad Lüfter',
 		'KE'			=> 'Keller',
@@ -116,7 +116,7 @@ class overview {
 					<td colspan="3">' . $desc . '</td>
 					<td colspan="3">
 						<span data-ws="' . $name . '_Moisture" class="ps-input">undefined</span>
-						<span data-ws="WZ_PF_TI_Moisture" class="' . wpa::indikatorPfl . '">' . wpHTML_EMPTY . '</span>
+						<span data-ws="' . $name . '_Moisture" class="' . wpa::indikatorPfl . '">' . wpHTML_EMPTY . '</span>
 					</td>
 				</tr>';
 		}
@@ -137,11 +137,11 @@ class overview {
 	public static function getD1Mini() {
 		GLOBAL $database;
 		$returns = '';
-		$database->query("SELECT [name], [description] FROM [d1mini] ORDER BY [name]");
+		$database->query("SELECT [name], [description], [ip] FROM [d1mini] ORDER BY [name]");
 		while($erg = $database->fetch()) {
 			$returns .= '
 				<tr>
-					<td colspan="2">' . $erg['description'] . ':</td>
+					<td colspan="2"><a href="http://' . $erg['ip'] . '/print" target="_blank">' . $erg['description'] . '</a>:</td>
 					<td colspan="2"><span data-ws="' . $erg['name']. '_Rssi" class="' . wpa::rssi . '">-</span></td>
 					<td colspan="2">
 						<span data-ws="' . $erg['name'] . '_Online" class="ps-input ' . wpa::GreenRed . '">-</span>
@@ -175,7 +175,8 @@ class overview {
 				<tr><td colspan="6"><h2>Licht / Relais</h2></td></tr>
 				<tr><td colspan="6"><hr /></td></tr>
 				<?=overview::getLicht() ?>
-				<tr><td colspan="6"><a class="ps-button" href="std.d1mini.WZ_NP.htm">Wohnzimmer NeoPixel</a></td></tr>
+				<tr><td colspan="6"><a class="ps-button" href="std.d1mini.WZ_NP.htm">Wohnzimmer Lichtleiste</a></td></tr>
+				<tr><td colspan="6"><a class="ps-button" href="std.d1mini.WZ_LS_NP.htm">Wohnzimmer Lautsprecher</a></td></tr>
 				<tr><td colspan="6"><a class="ps-button" href="std.d1mini.WZ_PF_TE.htm">Wohnzimmer Pflanze</a></td></tr>
 				<tr><td colspan="6"><a class="ps-button" href="std.d1mini.KZ_NP.htm">Kinderzimmer NeoPixel</a></td></tr>
 				<tr><td colspan="6"><a class="ps-button" href="std.d1mini.BA_Lue.htm">Bad Lüfter</a></td></tr>

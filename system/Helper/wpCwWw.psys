@@ -1,0 +1,110 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 01.08.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 695                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: wpNeoPixel.psys 695 2024-08-19 07:50:21Z                 $ #
+//#                                                                                 #
+//###################################################################################
+namespace system\Helper;
+use system\WebCom;
+//use system\std;
+//use system\Helper\security;
+/**
+ * generiert die Oberfläche für die Neopixel erweiterung auf dem D1 Mini
+ * @author Checker
+ */
+class wpCwWw {
+	private $database, $status;
+	private $ip, $name;
+	const modes = array(
+		4 => 'Smooth'
+	);
+	public function __construct($ip, $name) {
+		$this->database = new wpDatabase();
+		$this->ip = $ip;
+		$this->name = $name;
+		//$this->getStatus();
+		$this->getPixelStatus();
+	}
+	private function getStatus() {
+		$WebCom = new WebCom();
+		$res = \json_decode($WebCom->send('getD1MiniStatus', $this->ip));
+		$this->status = $res->FreakaZoneDevice;
+		//std::test_array($this->status, 'getStatus');
+	}
+	public function getStatusFromJson($json) {
+		$this->status = $json;
+		//std::test_array($this->status, 'getStatusFromJson');
+	}
+	private function getPixelStatus() {
+		$WebCom = new WebCom();
+		$this->pixelStatus = \json_decode($WebCom->send('getD1MiniCwWwStatus', $this->ip), true);
+		//std::test_array($this->pixelStatus, 'getPixelStatus');
+	}
+	public function getColorPicker() {
+?>
+		<div class="wpCwWw ps-container" data-ip="<?=$this->ip ?>">
+			<h3>CW-WW</h3>
+			<div class="colorPicker">
+				<hr />
+				<h3>Warmweiß (<span class="CwWwWW wp-b-to-p" data-ws="<?=$this->name ?>_AnalogOut"><?=floor($this->status->AnalogOut->HandValue / 2.55) ?></span>)</h3>
+				<div class="CwWwSliderW CwWwSliderWW wpSlider-255" data-ws="<?=$this->name ?>_AnalogOut"></div>
+				<h3>Kaltweiß (<span class="CwWwCW wp-b-to-p" data-ws="<?=$this->name ?>_AnalogOut2"><?=floor($this->status->AnalogOut2->HandValue / 2.55) ?></span>)</h3>
+				<div class="CwWwSliderW CwWwSliderCW wpSlider-255" data-ws="<?=$this->name ?>_AnalogOut2"></div>
+			</div>
+		</div>
+<?
+	}
+	public function getColorScenen() {
+?>
+		<div class="wpCwWw ps-container" data-ip="<?=$this->ip ?>">
+			<h3>CW-WW Scenen</h3>
+			<div class="sceneContainer">
+				<div>
+					<span class="ps-input CwWwModeName" data-ws="<?=$this->name ?>_ModeName">-</span><br />
+					<span class="ps-input <?=wpa::YellowGreen ?>" data-ws="<?=$this->name ?>_IsAuto">-</span>
+				</div>
+				<hr />
+				<div>
+					<span class="ps-button setCwWwOn">Ein</span><br />
+					<span class="ps-button setCwWwOff">Aus &amp; Auto</span><br />
+<?
+		foreach(self::modes as $id => $name) {
+?>
+					<span class="ps-button setCwWwEffect" data-id="<?=$id ?>"><?=$name ?></span><br />
+<?
+		}
+?>
+				</div>
+				<hr />
+				<div>
+					<span>Sleep:</span><br />
+					<span class="ps-input <?=wpa::SecToTime ?>" data-ws="<?=$this->name ?>_Sleep">-</span>
+					<hr />
+					<div class="ps-flex-container">
+						<div>
+							<span class="ps-input CwWwSleepHour">0</span> <span class="CwWwSleepUnit">h</span>
+							<div class="CwWwSleepSlider CwWwSleepHourSlider"></div>
+						</div>
+						<div>
+							<span class="ps-input CwWwSleepMinute">0</span> <span class="CwWwSleepUnit">min</span>
+							<div class="CwWwSleepSlider CwWwSleepMinuteSlider"></div>
+						</div>
+					</div>
+					<span class="ps-button setCwWwSleep">set</span>
+				</div>
+			</div>
+		</div>
+<?
+	}
+}
+?>

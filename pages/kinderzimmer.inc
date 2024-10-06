@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 26.01.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 550                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: kinderzimmer.inc 550 2023-12-25 03:02:54Z                $ #
+//# File-ID      : $Id:: kinderzimmer.inc 696 2024-10-06 19:11:29Z                $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -37,4 +37,12 @@ $points += $kinderzimmer->getDatapoints();
 
 <div id="kinderzimmer" class="page">
 	<?=$kinderzimmer->print(); ?>
+	<div id="D1MiniSites" class="ps-container">
+		<ul>
+			<li><a class="ps-button" href="std.d1mini.KZ_RU.htm">Raumüberwachung</a></li>
+			<li><a class="ps-button" href="std.d1mini.KZ_NP.htm">Lichtleiste</a></li>
+			<li><a class="ps-button" href="std.d1mini.KZ_PF_BU.htm">Buschi</a></li>
+			<li><a class="ps-button" href="std.d1mini.KZ_PF_PF.htm">Pflanzi</a></li>
+		</ul>
+	</div>
 </div>

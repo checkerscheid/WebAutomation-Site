@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 26.01.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 677                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: buero.css 677 2024-07-15 13:51:59Z                       $ #
+//# File-ID      : $Id:: buero.css 696 2024-10-06 19:11:29Z                       $ #
 //#                                                                                 #
 //###################################################################################
 ?> esszimmer */
@@ -35,6 +35,9 @@
 	#LI_KL { top:184px; left:380px; }
 	#LI_FL { top:172px; left:555px; }
 }
+#D1MiniSites { right:10px; top:10px; }
+#D1MiniSites * { position:static; }
+#D1MiniSites a { display:block; width:auto; }
 
 #LI { top:139px; left:275px; } /* new: checker 2021-07-10T14:29:33 */
 #LI_KL { top:214px; left:380px; } /* new: checker 2021-07-10T14:29:35 */

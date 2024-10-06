@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 08.06.2021                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 693                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: websockets.js 693 2024-08-11 22:32:17Z                   $ #
+//# File-ID      : $Id:: websockets.js 696 2024-10-06 19:11:29Z                   $ #
 //#                                                                                 #
 //###################################################################################
 use system\Helper\wpa;
@@ -46,14 +46,17 @@ var ws = {
 				ws.log('PING');
 			}
 			if(ws.alive > 15) {
+				ws.alive = 0;
 				ws.connection.close(1000, 'Timeout');
 				ws.error('close, Timeout');
-				ws.connect();
+				//ws.connect();
 			}
 		}, 2000);
 		$.each($('[data-ws]'), function() {
-			if($(this).attr('data-ws') != null && $(this).attr('data-ws') != '')
-				ws.registered.push($(this).attr('data-ws'));
+			if($(this).attr('data-ws') != null && $(this).attr('data-ws') != '' &&
+				!ws.registered.includes($(this).attr('data-ws'))) {
+				ws.registered.push($(this).attr('data-ws'));	
+			}
 		});
 		var cmd = {
 			'command': 'addDatapoints',
@@ -78,6 +81,7 @@ var ws = {
 				ws.log(e.data);
 			}
 			if(msg.response == 'getD1MiniJson') {
+				console.log(msg);
 				setD1MiniInfo(msg.data.D1Mini);
 			}
 			if(msg.response == 'SearchD1Mini') {
@@ -92,6 +96,7 @@ var ws = {
 					ws.log(that);
 					if($('[data-ws=' + that.name + ']').length) {
 						$.each($('[data-ws=' + that.name + ']'), function() {
+							$(this).attr('data-id', that.id);
 							var textTrue = $(this).attr('data-True');
 							var textFalse = $(this).attr('data-False');
 	//###################################################################################
@@ -149,6 +154,15 @@ var ws = {
 										.html(typeof(textTrue) == 'undefined' ? that.valuestring : textTrue);
 								}
 	//###################################################################################
+							} else if($(this).hasClass('<?=wpa::YellowGreen ?>')) {
+								if(that.value == 'False' || that.value == '0' || that.value == 'Off') {
+									$(this).removeClass('ps-green').addClass('ps-yellow')
+										.html(typeof(textFalse) == 'undefined' ? that.valuestring : textFalse);
+								} else {
+									$(this).removeClass('ps-yellow').addClass('ps-green')
+										.html(typeof(textTrue) == 'undefined' ? that.valuestring : textTrue);
+								}
+	//###################################################################################
 							} else if($(this).hasClass('<?=wpa::BlueYellow ?>')) {
 								if(that.value == 'False' || that.value == '0' || that.value == 'Off') {
 									$(this).removeClass('ps-yellow').addClass('ps-blue')
@@ -156,6 +170,13 @@ var ws = {
 								} else {
 									$(this).removeClass('ps-blue').addClass('ps-yellow')
 										.html(typeof(textTrue) == 'undefined' ? that.valuestring : textTrue);
+								}
+	//###################################################################################
+							} else if($(this).hasClass('pa-hide')) {
+								if(that.value == 'False' || that.value == '0' || that.value == 'Off') {
+									$(this).addClass('ps-hidden');
+								} else {
+									$(this).removeClass('ps-hidden');
 								}
 	//###################################################################################
 							} else if($(this).hasClass('<?=wpa::rssi ?>')) {
@@ -173,7 +194,7 @@ var ws = {
 								let indiTemp = {"m": 21, "n": 23.5, "p": 25};
 								let indiTempOut = {"m": 15, "n": 23.5, "p": 25};
 								let indiHum = {"m": 37.5, "n": 45, "p": 55};
-								let indiPfl = {"m": 40, "n": 50, "p": 55};
+								let indiPfl = {"m": 50, "n": 57, "p": 65};
 								$(this).removeClass('indi-m indi-0 indi-p indi-pp');
 								let indi;
 								let n = Number(that.value.replace(',', '.'));
@@ -202,10 +223,18 @@ var ws = {
 								$(this).text(p.time.print(that.value, true, true));
 							} else if($(this).hasClass('<?=wpa::SecToTime ?>')) {
 								$(this).text(p.time.secToTime(that.value));
-							} else if($(this).hasClass('topic-slider')) {
+							} else if($(this).hasClass('wp-b-to-p')) {
+								$(this).html(parseInt(that.value / 2.55) + ' ' + that.unit);
+							} else if($(this).hasClass('topic-slider') || $(this).hasClass('wpSlider')) {
 								if(!$(this).hasClass('WriteOnly')) {
 									$(this).slider('option', 'value', parseInt(that.value));
 								}
+							} else if($(this).hasClass('wpSlider-255')) {
+								if(!$(this).hasClass('WriteOnly')) {
+									$(this).slider('option', 'value', parseInt(that.value) / 2.55);
+								}
+							} else if($(this).hasClass('wpNoAction')) {
+								// do nothing
 							} else {
 								$(this).text(that.valuestring);
 							}

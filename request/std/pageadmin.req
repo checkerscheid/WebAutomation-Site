@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 550                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pageadmin.req 550 2023-12-25 03:02:54Z                   $ #
+//# File-ID      : $Id:: pageadmin.req 696 2024-10-06 19:11:29Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -80,13 +80,15 @@ switch(std::gets('param1')) {
 //# Author       : ' . $username . '#
 //# Date         : ' . date('d.m.Y') . '                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 550                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pageadmin.req 550 2023-12-25 03:02:54Z                   $ #
+//# File-ID      : $Id:: pageadmin.req 696 2024-10-06 19:11:29Z                   $ #
 //#                                                                                 #
 //###################################################################################
+namespace pages;
+use system\html;
 ?>
-<div id="page">
+<div id="' . $src . '">
 	<h1><? html::getPageHeadline();?></h1>
 	<div class="center">
 		<div class="navigationImages">
@@ -116,15 +118,15 @@ switch(std::gets('param1')) {
 //# Author       : ' . $username . '#
 //# Date         : ' . date('d.m.Y') . '                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 550                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pageadmin.req 550 2023-12-25 03:02:54Z                   $ #
+//# File-ID      : $Id:: pageadmin.req 696 2024-10-06 19:11:29Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> ' . $src . ' */
 p.page.load = function() {
 	p.menuStd.init();
-	p.getValues();
+	// p.getValues();
 };
 ';
 			fwrite($datei, $text);
@@ -142,13 +144,13 @@ p.page.load = function() {
 //# Author       : ' . $username . '#
 //# Date         : ' . date('d.m.Y') . '                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 550                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pageadmin.req 550 2023-12-25 03:02:54Z                   $ #
+//# File-ID      : $Id:: pageadmin.req 696 2024-10-06 19:11:29Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> ' . $src . ' */
-div.center { position:relative; width:1860px; margin:auto; margin-top:15px; }
+
 ';
 			fwrite($datei, $text);
 			fclose($datei);
@@ -178,11 +180,13 @@ div.center { position:relative; width:1860px; margin:auto; margin-top:15px; }
 //# Author       : ' . $username . '#
 //# Date         : ' . date('d.m.Y') . '                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 550                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pageadmin.req 550 2023-12-25 03:02:54Z                   $ #
+//# File-ID      : $Id:: pageadmin.req 696 2024-10-06 19:11:29Z                   $ #
 //#                                                                                 #
 //###################################################################################
+namespace pages;
+use system\html;
 ?>
 <div id="page">
 	<h1><? html::getPageHeadline();?></h1>
@@ -205,14 +209,14 @@ div.center { position:relative; width:1860px; margin:auto; margin-top:15px; }
 //# Author       : ' . $username . '#
 //# Date         : ' . date('d.m.Y') . '                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 550                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pageadmin.req 550 2023-12-25 03:02:54Z                   $ #
+//# File-ID      : $Id:: pageadmin.req 696 2024-10-06 19:11:29Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> ' . $src . ' */
 p.page.load = function() {
-	p.getValues();
+	// p.getValues();
 };
 ';
 			fwrite($datei, $text);
@@ -230,14 +234,13 @@ p.page.load = function() {
 //# Author       : ' . $username . '#
 //# Date         : ' . date('d.m.Y') . '                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 550                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pageadmin.req 550 2023-12-25 03:02:54Z                   $ #
+//# File-ID      : $Id:: pageadmin.req 696 2024-10-06 19:11:29Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> ' . $src . ' */
-div.center { position:relative; width:1860px; margin:auto; margin-top:15px; }
-div.center * { position:absolute; }
+
 ';
 			fwrite($datei, $text);
 			fclose($datei);

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 15.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 665                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: mqttactive.js 665 2024-07-09 22:56:49Z                   $ #
+//# File-ID      : $Id:: mqttactive.js 696 2024-10-06 19:11:29Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> mqttactive */
@@ -32,6 +32,15 @@ p.page.load = function() {
 	$('#submenu').on('click', '.ps-button', function() {
 		p.page.change('#erg', 'std.mqttactive.menu' + $(this).attr('data-target') + '.req', {table:groups.tablename});
 	});
+//###################################################################################
+// Markierungen
+//###################################################################################
+		$('#erg').on('click', '.markall', function() {
+			$('#erg .ps-checkbox:not(.ps-disabled)').addClass('checked');
+		});
+		$('#erg').on('click', '.markno', function() {
+			$('#erg .ps-checkbox:not(.ps-disabled)').removeClass('checked');
+		});
 //###################################################################################
 // Browse Topics
 //###################################################################################
