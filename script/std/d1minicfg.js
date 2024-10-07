@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 03.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 690                                                     $ #
+//# Revision     : $Rev:: 697                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.js 690 2024-08-02 00:24:56Z                    $ #
+//# File-ID      : $Id:: d1minicfg.js 697 2024-10-07 21:21:44Z                    $ #
 //#                                                                                 #
 //###################################################################################
 ?> d1minicfg */
@@ -411,6 +411,7 @@ function D1MiniRenew(d1minigroup) {
 			setTextIfNotStored(key, 'ip', value.Ip);
 			setTextIfNotStored(key, 'mac', mac);
 			setTextIfNotStored(key, 'version', value.Version);
+			setTextIfNotStored(key, 'updatechanel', value.UpdateChanel);
 			//setTextIfNotStored(key, 'ssid', value.Ssid);
 			var updateMode = value.UpdateMode ? '<span class="ps-fontyellow">aktiv</span>' : '<span class="ps-fontgreen">deaktiviert</span>';
 			setTextIfNotStored(key, 'updatemode', updateMode);
@@ -444,6 +445,7 @@ function setD1MiniInfo(data) {
 	setTextIfNotStored(name, 'ip', values.IP);
 	setTextIfNotStored(name, 'mac', mac);
 	setTextIfNotStored(name, 'version', values.Version);
+	setTextIfNotStored(name, 'updatechanel', values.UpdateChanel);
 	//setTextIfNotStored(key, 'ssid', value.Ssid);
 	var updateMode = values.UpdateMode ? '<span class="ps-fontyellow">aktiv</span>' : '<span class="ps-fontgreen">deaktiviert</span>';
 	setTextIfNotStored(name, 'updatemode', updateMode);

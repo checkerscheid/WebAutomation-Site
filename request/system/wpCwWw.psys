@@ -16,65 +16,52 @@
 //###################################################################################
 namespace request\system;
 
-use system\std;
-use Exception;
+use system\std, system\WebCom;
 require_once 'system/Helper/wpCwWw.psys';
 wpCwWw::$ip = std::posts('ip');
 class wpCwWw {
 	public static $ip;
 	const c_CwWwEffect = 'CwWwEffect';
 	public static function CwWwEffect() {
-		try {
-			$cmd = 'effect=' . std::posts('id');
-			file_get_contents('http://' . wpCwWw::$ip . '/setCwWwEffect?' . $cmd, 0, self::getContext());
-		} catch(Exception $e) {
-			// Fail silently
-		}
+		header(wpJSON_HEADER);
+		$cmd = 'effect=' . std::posts('id');
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', wpCwWw::$ip . '%~%' . 'setCwWwEffect?' . $cmd);
 	}
 	const c_CwWwSleep = 'CwWwSleep';
 	public static function CwWwSleep() {
-		try {
-			$cmd = 'sleep=' . std::posts('sleep');
-			file_get_contents('http://' . wpCwWw::$ip . '/setCwWwSleep?' . $cmd, 0, self::getContext());
-		} catch(Exception $e) {
-			// Fail silently
-		}
+		header(wpJSON_HEADER);
+		$cmd = 'sleep=' . std::posts('sleep');
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', wpCwWw::$ip . '%~%' . 'setCwWwSleep?' . $cmd);
 	}
 	const c_CwWwOn = 'CwWwOn';
 	public static function CwWwOn() {
-		try {
-			$cmd = 'turn=1';
-			file_get_contents('http://' . wpCwWw::$ip . '/setCwWw?' . $cmd, 0, self::getContext());
-		} catch(Exception $e) {
-			// Fail silently
-		}
+		header(wpJSON_HEADER);
+		$cmd = 'turn=1';
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', wpCwWw::$ip . '%~%' . 'setCwWw?' . $cmd);
 	}
 	const c_CwWwOff = 'CwWwOff';
 	public static function CwWwOff() {
-		try {
-			$cmd = 'turn=0';
-			file_get_contents('http://' . wpCwWw::$ip . '/setCwWw?' . $cmd, 0, self::getContext());
-		} catch(Exception $e) {
-			// Fail silently
-		}
+		header(wpJSON_HEADER);
+		$cmd = 'turn=0';
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', wpCwWw::$ip . '%~%' . 'setCwWw?' . $cmd);
 	}
 	const c_CwWwCW = 'CwWwCW';
 	public static function CwWwCW() {
-		try {
-			$cmd = 'cw=' . std::posts('cw');
-			file_get_contents('http://' . wpCwWw::$ip . '/setCwWw?' . $cmd, 0, self::getContext());
-		} catch(Exception $e) {
-			// Fail silently
-		}
+		header(wpJSON_HEADER);
+		$cmd = 'cw=' . std::posts('cw');
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', wpCwWw::$ip . '%~%' . 'setCwWw?' . $cmd);
 	}
 	const c_CwWwWW = 'CwWwWW';
 	public static function CwWwWW() {
-		try {
-			$cmd = 'ww=' . std::posts('ww');
-			file_get_contents('http://' . wpCwWw::$ip . '/setCwWw?' . $cmd, 0, self::getContext());
-		} catch(Exception $e) {
-			// Fail silently
-		}
+		header(wpJSON_HEADER);
+		$cmd = 'ww=' . std::posts('ww');
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', wpCwWw::$ip . '%~%' . 'setCwWw?' . $cmd);
 	}
 	private static function getContext() {
 		return stream_context_create([

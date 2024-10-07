@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 696                                                     $ #
+//# Revision     : $Rev:: 697                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.js 696 2024-10-06 19:11:29Z                       $ #
+//# File-ID      : $Id:: d1mini.js 697 2024-10-07 21:21:44Z                       $ #
 //#                                                                                 #
 //###################################################################################
 use system\std
@@ -25,16 +25,25 @@ p.page.load = function() {
 	wpCwWw.Init('std.d1mini');
 	// ?? warum war das? $.get('std.d1mini.getD1MiniSettings.<?=std::gets("param1")?>.req');
 	$('.buttonContainer').on('click', '.SetCmd', function() {
-		var ip = $(this).attr('data-ip');
+		var ip = $('#storedIP').attr('data-ip');
 		var cmd = $(this).attr('data-cmd');
 		$.post('std.d1mini.setcmd.req', {ip:ip, cmd:cmd});
 	});
 	$('.buttonContainer').on('click', '.SetSimpleCmd', function() {
-		var ip = $(this).attr('data-ip');
+		var ip = $('#storedIP').attr('data-ip');
 		var cmd = $(this).attr('data-cmd');
 		$.post('std.d1mini.setsimplecmd.req', {ip:ip, cmd:cmd});
 	});
-	
+	$('#d1mini').on('click', '.SetName', function() {
+		var ip = $('#storedIP').attr('data-ip');
+		var cmd = 'SetDeviceName&newName=' + $('.newName').val();
+		$.post('std.d1mini.setcmd.req', {ip:ip, cmd:cmd});
+	});
+	$('#d1mini').on('click', '.SetChanel', function() {
+		var ip = $('#storedIP').attr('data-ip');
+		var cmd = 'SetUpdateChanel&newUpdateChanel=' + $('.newChanel').val();
+		$.post('std.d1mini.setcmd.req', {ip:ip, cmd:cmd});
+	});
 	$('.page').on('click', '.writeTopic', function() {
 		const topic = $(this).attr('data-topic');
 		const value = $(this).attr('data-write');

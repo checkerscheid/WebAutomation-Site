@@ -9,13 +9,12 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 696                                                     $ #
+//# Revision     : $Rev:: 697                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.req 696 2024-10-06 19:11:29Z                      $ #
+//# File-ID      : $Id:: d1mini.req 697 2024-10-07 21:21:44Z                      $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
-use Exception;
 use system\std, system\WebCom;
 use system\Helper\wpDatabase;
 
@@ -41,25 +40,9 @@ class d1mini {
 	}
 	const c_setcmd = 'setcmd';
 	public static function setcmd($ip, $cmd) {
-		try {
-			file_get_contents('http://' . $ip . '/setCmd?cmd=' . $cmd, 0, self::getContext());
-		} catch(Exception $e) {
-			// Fail silently
-		}
-		//echo file_get_contents('http://' . $ip . '/setCmd?cmd=RestartDevice');
-	}
-	const c_setsimplecmd = 'setsimplecmd';
-	private static function setsimplecmd() {
-		$erg = file_get_contents('http://' . $ip . '/setCmd?cmd=' . $cmd);
-		echo $erg;
-	}
-	private static function getContext() {
-		return stream_context_create([
-			"http" => [
-				"method"=>"GET",
-				"timeout" => 1
-			]
-		]);
+		header(wpJSON_HEADER);
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', $ip . '%~%' . 'setCmd?cmd=' . $cmd);
 	}
 }
 

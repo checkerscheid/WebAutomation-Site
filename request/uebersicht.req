@@ -16,7 +16,7 @@
 //###################################################################################
 namespace request;
 
-use Exception;
+use system\WebCom;
 use system\std;
 
 require_once 'request/system/wpNeoPixel.psys';
@@ -25,29 +25,17 @@ require_once 'request/system/wpCwWw.psys';
 class uebersicht {
 	const c_SetAuto = 'setAuto';
 	public static function SetAuto() {
-		try {
-			$cmd = 'mode=auto';
-			file_get_contents('http://' . std::posts('ip') . '/setBM?' . $cmd, 0, self::getContext());
-		} catch(Exception $e) {
-			// Fail silently
-		}
+		header(wpJSON_HEADER);
+		$cmd = 'mode=auto';
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', std::posts('ip') . '%~%' . 'setBM?' . $cmd);
 	}
 	const c_SetManual = 'setManual';
 	public static function SetManual() {
-		try {
-			$cmd = 'mode=manual';
-			file_get_contents('http://' . std::posts('ip') . '/setBM?' . $cmd, 0, self::getContext());
-		} catch(Exception $e) {
-			// Fail silently
-		}
-	}
-	private static function getContext() {
-		return stream_context_create([
-			"http" => [
-				"method"=>"GET",
-				"timeout" => 1
-			]
-		]);
+		header(wpJSON_HEADER);
+		$cmd = 'mode=manual';
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', std::posts('ip') . '%~%' . 'setBM?' . $cmd);
 	}
 }
 switch(std::gets('param1')) {

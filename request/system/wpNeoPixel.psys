@@ -9,17 +9,17 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 696                                                     $ #
+//# Revision     : $Rev:: 697                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpNeoPixel.psys 696 2024-10-06 19:11:29Z                 $ #
+//# File-ID      : $Id:: wpNeoPixel.psys 697 2024-10-07 21:21:44Z                 $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\system;
 
+use system\WebCom;
 use system\std;
 use system\Helper\wpDatabase;
 use system\Helper\security;
-use Exception;
 use system\Helper\wpNeoPixel as wpNP;
 require_once 'system/Helper/wpNeoPixel.psys';
 wpNeoPixel::$ip = std::posts('ip');
@@ -27,142 +27,109 @@ class wpNeoPixel {
 	public static $ip;
 	const c_NeoPixelDemo = 'NeoPixelDemo';
 	public static function NeoPixelDemo() {
-		try {
-			$cmd = 'demo=1';
-			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelDemo?' . $cmd, 0, self::getContext());
-		} catch(Exception $e) {
-			// Fail silently
-		}
+		header(wpJSON_HEADER);
+		$cmd = 'demo=1';
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', wpNeoPixel::$ip . '%~%' . 'setNeoPixelDemo?' . $cmd);
 	}
 	const c_NeoPixelColor = 'NeoPixelColor';
 	public static function NeoPixelColor() {
-		try {
-			$cmd = 'r=' . std::posts('r') . '&g=' . std::posts('g') . '&b=' . std::posts('b');
-			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelColor?' . $cmd, 0, self::getContext());
-		} catch(Exception $e) {
-			// Fail silently
-		}
+		header(wpJSON_HEADER);
+		$cmd = 'r=' . std::posts('r') . '&g=' . std::posts('g') . '&b=' . std::posts('b');
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', wpNeoPixel::$ip . '%~%' . 'setNeoPixelColor?' . $cmd);
 		wpNP::saveColor(std::posts('r'), std::posts('g'), std::posts('b'));
 	}
 	const c_NeoPixelEffect = 'NeoPixelEffect';
 	public static function NeoPixelEffect() {
-		try {
-			$cmd = 'effect=' . std::posts('id');
-			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelEffect?' . $cmd, 0, self::getContext());
-		} catch(Exception $e) {
-			// Fail silently
-		}
+		header(wpJSON_HEADER);
+		$cmd = 'effect=' . std::posts('id');
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', wpNeoPixel::$ip . '%~%' . 'setNeoPixelEffect?' . $cmd);
 	}
 	const c_NeoPixelSleep = 'NeoPixelSleep';
 	public static function NeoPixelSleep() {
-		try {
-			$cmd = 'sleep=' . std::posts('sleep');
-			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelSleep?' . $cmd, 0, self::getContext());
-		} catch(Exception $e) {
-			// Fail silently
-		}
+		header(wpJSON_HEADER);
+		$cmd = 'sleep=' . std::posts('sleep');
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', wpNeoPixel::$ip . '%~%' . 'setNeoPixelSleep?' . $cmd);
 	}
 	const c_NeoPixelBrightness = 'NeoPixelBrightness';
 	public static function NeoPixelBrightness() {
-		try {
-			$cmd = 'brightness=' . std::posts('brightness');
-			//file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelBrightness?' . $cmd, 0, self::getContext());
-			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelBrightness?' . $cmd);
-		} catch(Exception $e) {
-			// Fail silently
-		}
+		header(wpJSON_HEADER);
+		$cmd = 'brightness=' . std::posts('brightness');
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', wpNeoPixel::$ip . '%~%' . 'setNeoPixelBrightness?' . $cmd);
 	}
 	const c_NeoPixelEffectSpeed = 'NeoPixelEffectSpeed';
 	public static function NeoPixelEffectSpeed() {
-		try {
-			$cmd = 'effectSpeed=' . std::posts('effectSpeed');
-			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelEffectSpeed?' . $cmd, 0, self::getContext());
-		} catch(Exception $e) {
-			// Fail silently
-		}
+		header(wpJSON_HEADER);
+		$cmd = 'effectSpeed=' . std::posts('effectSpeed');
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', wpNeoPixel::$ip . '%~%' . 'setNeoPixelEffectSpeed?' . $cmd);
 	}
 	const c_NeoPixelCW = 'NeoPixelCW';
 	public static function NeoPixelCW() {
-		try {
-			$cmd = 'cw=' . std::posts('cw');
-			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelCW?' . $cmd, 0, self::getContext());
-		} catch(Exception $e) {
-			// Fail silently
-		}
+		header(wpJSON_HEADER);
+		$cmd = 'cw=' . std::posts('cw');
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', wpNeoPixel::$ip . '%~%' . 'setNeoPixelCW?' . $cmd);
 	}
 	const c_NeoPixelWW = 'NeoPixelWW';
 	public static function NeoPixelWW() {
-		try {
-			$cmd = 'ww=' . std::posts('ww');
-			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelWW?' . $cmd, 0, self::getContext());
-		} catch(Exception $e) {
-			// Fail silently
-		}
+		header(wpJSON_HEADER);
+		$cmd = 'ww=' . std::posts('ww');
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', wpNeoPixel::$ip . '%~%' . 'setNeoPixelWW?' . $cmd);
 	}
 	const c_setNeoPixelOn = 'setNeoPixelOn';
 	public static function setNeoPixelOn() {
 		header(wpJSON_HEADER);
 		$result = '{"erg":"S_OK","msg":"setNeoPixelOn"}';
-		try {
-			$result = file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelOn', 0, self::getContext());
-		} catch(Exception $e) {
-			// Fail silently
-		}
+		$WebCom = new WebCom();
+		$WebCom->send('SetD1MiniUrlCmd', wpNeoPixel::$ip . '%~%' . 'setNeoPixelOn');
 		echo $result;
 	}
 	const c_setNeoPixelOff = 'setNeoPixelOff';
 	public static function setNeoPixelOff() {
 		header(wpJSON_HEADER);
 		$result = '{"erg":"S_OK","msg":"setNeoPixelOn"}';
-		try {
-			$result = file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelOff', 0, self::getContext());
-		} catch(Exception $e) {
-			// Fail silently
-		}
+		$WebCom = new WebCom();
+		$WebCom->send('SetD1MiniUrlCmd', wpNeoPixel::$ip . '%~%' . 'setNeoPixelOff');
 		echo $result;
 	}
 	const c_setNeoPixelOffBlender = 'setNeoPixelOffBlender';
 	public static function setNeoPixelOffBlender() {
 		header(wpJSON_HEADER);
-		try {
-			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelOffBlender', 0, self::getContext());
-		} catch(Exception $e) {
-			// Fail silently
-		}
+		$WebCom = new WebCom();
+		$WebCom->send('SetD1MiniUrlCmd', wpNeoPixel::$ip . '%~%' . 'setNeoPixelOffBlender');
 		echo '{"erg":"S_OK","msg":"setNeoPixelOffBlender"}';
 	}
 	const c_setNeoPixelOffRunner = 'setNeoPixelOffRunner';
 	public static function setNeoPixelOffRunner() {
 		header(wpJSON_HEADER);
-		try {
-			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelOffRunner', 0, self::getContext());
-		} catch(Exception $e) {
-			// Fail silently
-		}
+		$WebCom = new WebCom();
+		$WebCom->send('SetD1MiniUrlCmd', wpNeoPixel::$ip . '%~%' . 'setNeoPixelOffRunner');
 		echo '{"erg":"S_OK","msg":"setNeoPixelOffRunner"}';
 	}
 	const c_setNeoPixelBorder = 'setNeoPixelBorder';
 	public static function setNeoPixelBorder() {
-		try {
-			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixelBorder', 0, self::getContext());
-		} catch(Exception $e) {
-			// Fail silently
-		}
+		header(wpJSON_HEADER);
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', wpNeoPixel::$ip . '%~%' . 'setNeoPixelBorder');
 	}
 	const c_NeoPixel = 'NeoPixel';
 	public static function NeoPixel() {
-		try {
-			$cmd = 'pixel=' . std::posts('pixel') . '&r=' . std::posts('r') . '&g=' . std::posts('g') . '&b=' . std::posts('b');
-			file_get_contents('http://' . wpNeoPixel::$ip . '/setNeoPixel?' . $cmd, 0, self::getContext());
-		} catch(Exception $e) {
-			// Fail silently
-		}
+		$cmd = 'pixel=' . std::posts('pixel') . '&r=' . std::posts('r') . '&g=' . std::posts('g') . '&b=' . std::posts('b');
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', wpNeoPixel::$ip . '%~%' . 'setNeoPixel?' . $cmd);
 		wpNP::saveColor(std::posts('r'), std::posts('g'), std::posts('b'));
 	}
 	const c_getNeoPixel = 'getNeoPixel';
 	public static function getNeoPixel() {
 		header(wpJSON_HEADER);
-		echo file_get_contents('http://' . wpNeoPixel::$ip . '/getNeoPixel');
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', wpNeoPixel::$ip . '%~%' . 'getNeoPixel');
 	}
 	const c_getNeoPixelSavedColor = 'getNeoPixelSavedColor';
 	public static function getNeoPixelSavedColor() {
@@ -183,14 +150,6 @@ class wpNeoPixel {
 					</div>
 <?
 		}
-	}
-	private static function getContext() {
-		return stream_context_create([
-			"http" => [
-				"method"=>"GET",
-				"timeout" => 1
-			]
-		]);
 	}
 }
 

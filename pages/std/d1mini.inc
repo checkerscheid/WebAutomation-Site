@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 696                                                     $ #
+//# Revision     : $Rev:: 697                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.inc 696 2024-10-06 19:11:29Z                      $ #
+//# File-ID      : $Id:: d1mini.inc 697 2024-10-07 21:21:44Z                      $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
@@ -42,13 +42,27 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 	<h2><?=$erg['description'] ?></h2>
 	<p id="storedIP" data-ip="<?=$erg['ip'] ?>">(<?=$erg['ip'] ?>, <?=$erg['mac'] ?>)</p>
 	<div class="buttonContainer">
-		<span class="ps-button SetCmd" data-ip="<?=$erg['ip'] ?>" data-cmd="ForceMqttUpdate" title="Force MQTT Update">Force MQTT Update</span>
-		<span class="ps-button SetCmd" data-ip="<?=$erg['ip'] ?>" data-cmd="UpdateHTTP" title="Setup Http">Setup Http</span>
-		<span class="ps-button SetCmd" data-ip="<?=$erg['ip'] ?>" data-cmd="RestartDevice" title="neu starten">neu starten</span>
-		<span class="ps-button SetSimpleCmd" data-ip="<?=$erg['ip'] ?>" data-cmd="Blink" title="Blink">Blink</span>
+		<span class="ps-button SetCmd" data-cmd="ForceMqttUpdate" title="Force MQTT Update">Force MQTT Update</span>
+		<span class="ps-button SetCmd" data-cmd="UpdateHTTP" title="Setup Http">Setup Http</span>
+		<span class="ps-button SetCmd" data-cmd="RestartDevice" title="neu starten">neu starten</span>
+		<span class="ps-button SetSimpleCmd" data-cmd="Blink" title="Blink">Blink</span>
 		<a class="ps-button" target="_blank" href="http://<?=$erg['ip'] ?>/print">Device Site</a>
 	</div>
 	<div class="ps-flex-container page">
+		<div class="ps-container">
+			<span>newName:</span>
+			<input class="ps-input newName" type="text" value="<?=$erg['name'] ?>" />
+			<span class="ps-button SetName">speichern</span>
+			<hr />
+			<span>updateChanel:</span>
+			<select class="ps-input newChanel">
+				<option value="0">firmware</option>
+				<option value="1">light</option>
+				<option value="2">io</option>
+				<option value="3">heating</option>
+			</select>
+			<span class="ps-button SetChanel">speichern</span><br />
+		</div>
 	<? if($d1Mini->FreakaZoneDevice->useModul->DHT11 ||
 			$d1Mini->FreakaZoneDevice->useModul->DHT22) { ?>
 		<div class="ps-container">
@@ -246,9 +260,11 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 ?>
 	<? } ?>
 	<? if(isset($d1Mini->FreakaZoneDevice->useModul->AnalogOut) &&
-			$d1Mini->FreakaZoneDevice->useModul->AnalogOut &&
+			$d1Mini->FreakaZoneDevice->useModul->AnalogOut && (
+			!isset($d1Mini->FreakaZoneDevice->useModul->NeoPixel) ||
 			!$d1Mini->FreakaZoneDevice->useModul->NeoPixel &&
-			!$d1Mini->FreakaZoneDevice->useModul->CwWw) { ?>
+			!isset($d1Mini->FreakaZoneDevice->useModul->CwWw) ||
+			!$d1Mini->FreakaZoneDevice->useModul->CwWw)) { ?>
 		<div class="ps-container">
 			<h3>AnalogOut</h3>
 			<table summary="">
@@ -349,9 +365,11 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 		</div>
 	<? } ?>
 	<? if(isset($d1Mini->FreakaZoneDevice->useModul->AnalogOut2) &&
-			$d1Mini->FreakaZoneDevice->useModul->AnalogOut2 &&
+		$d1Mini->FreakaZoneDevice->useModul->AnalogOut2 && (
+			!isset($d1Mini->FreakaZoneDevice->useModul->NeoPixel) ||
 			!$d1Mini->FreakaZoneDevice->useModul->NeoPixel &&
-			!$d1Mini->FreakaZoneDevice->useModul->CwWw) { ?>
+			!isset($d1Mini->FreakaZoneDevice->useModul->CwWw) ||
+			!$d1Mini->FreakaZoneDevice->useModul->CwWw)) { ?>
 		<div class="ps-container">
 			<h3>AnalogOut2</h3>
 			<table summary="">

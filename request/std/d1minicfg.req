@@ -9,13 +9,13 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 04.03.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 696                                                     $ #
+//# Revision     : $Rev:: 697                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.req 696 2024-10-06 19:11:29Z                   $ #
+//# File-ID      : $Id:: d1minicfg.req 697 2024-10-07 21:21:44Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
-use Exception;
+
 use system\Helper\wpDatabase;
 use system\std, system\WebCom;
 use system\Helper\d1mini;
@@ -175,11 +175,11 @@ class d1minicfg {
 		d1minicfg::$maxVersion = $erg['version'];
 		$sql = 'SELECT ';
 		if(std::posts('d1minigroup') == 'ALL') {
-			$sql .= '[m].[id_d1mini], [m].[name], [g].[name] AS [group], [m].[description], [m].[ip], [m].[mac], [m].[version], [m].[compiledwith], [m].[active]
+			$sql .= '[m].[id_d1mini], [m].[name], [g].[name] AS [group], [m].[description], [m].[ip], [m].[mac], [m].[version], [m].[updatechanel], [m].[compiledwith], [m].[active]
 				FROM [d1mini] [m]
 				INNER JOIN [d1minigroup] [g] ON [m].[id_d1minigroup] = [g].[id_d1minigroup]';
 		} else {
-			$sql .= '[id_d1mini], [name], [description], [ip], [mac], [version], [compiledwith], [active]
+			$sql .= '[id_d1mini], [name], [description], [ip], [mac], [version], [updatechanel], [compiledwith], [active]
 				FROM [d1mini]
 				WHERE [id_d1minigroup] ' . (std::posts('d1minigroup') == 'NULL' ? 'IS NULL' : '= '.std::posts('d1minigroup'));
 		}
@@ -227,6 +227,7 @@ class d1minicfg {
 					<th>Version</th>
 					<th>MQTT</th>
 					<th>UpdateMode</th>
+					<th>UpdateChanel</th>
 					<th>aktiv</th>
 					<th>compiledWith</th>
 					<th></th>
@@ -313,6 +314,17 @@ class d1minicfg {
 					<td data-column="updatemode">
 						<span class="updatemode"></span>
 					</td>
+					<td data-column="updatechanel">
+						<div class="tdButton">
+							<div>
+								<span class="stored">' . $erg['updatechanel'] . '</span><br />
+								<span class="smallfont ps-fontyellow updatechanel"></span>
+							</div>
+							<div class="buttonContainer">
+								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice" title="von D1 Mini übernehmen"></span>
+							</div>
+						</div>
+					</td>
 					<td>
 						' . ($erg['active'] == 1 ? '<span class="ps-fontgreen">aktiv</span>' : '<span class="ps-fontyellow">deaktiviert</span>') . '
 					</td>
@@ -377,33 +389,15 @@ class d1minicfg {
 	}
 	const c_starthttpupdate = 'starthttpupdate';
 	public static function starthttpupdate($ip) {
-		$context = stream_context_create([
-			"http" => [
-				"method"=>"GET",
-				"timeout" => 1
-			]
-		]);
-		try {
-			file_get_contents('http://' . $ip . '/setCmd?cmd=UpdateHTTP', 0, $context);
-		} catch(Exception $e) {
-			// Fail silently
-		}
-		//echo file_get_contents('http://' . $ip . '/setCmd?cmd=UpdateHTTP');
+		header(wpJSON_HEADER);
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', $ip . '%~%' . 'setCmd?cmd=UpdateHTTP');
 	}
 	const c_restartdevice = 'restartdevice';
 	public static function restartdevice($ip) {
-		$context = stream_context_create([
-			"http" => [
-				"method"=>"GET",
-				"timeout" => 1
-			]
-		]);
-		try {
-			file_get_contents('http://' . $ip . '/setCmd?cmd=RestartDevice', 0, $context);
-		} catch(Exception $e) {
-			// Fail silently
-		}
-		//echo file_get_contents('http://' . $ip . '/setCmd?cmd=RestartDevice');
+		header(wpJSON_HEADER);
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', $ip . '%~%' . 'setCmd?cmd=RestartDevice');
 	}
 	const c_allGroup = 'allGroup';
 	public static function allGroup() {
