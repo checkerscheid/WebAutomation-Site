@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 26.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 696                                                     $ #
+//# Revision     : $Rev:: 698                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.psys 696 2024-10-06 19:11:29Z                     $ #
+//# File-ID      : $Id:: d1mini.psys 698 2024-10-08 06:11:10Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -196,7 +196,7 @@ class d1mini {
 		echo "saved: 'Licht Sensor Error'<br />";
 	}
 	private function setBM() {
-		$id_mqtttopic = $this->insertTopic('BM');
+		$id_mqtttopic = $this->insertTopic('BM/Output');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'BM', 'Bewegung', '0:Stille;1:Bewegung;');
 		$this->mergeTrend($id_dp, 'Bewegung', 0);
 
@@ -293,11 +293,11 @@ class d1mini {
 		echo "saved: 'NeoPixel'<br />";
 	}
 	private function setCwWw() {
-		$id_mqtttopicIsAuto = $this->insertTopic('CwWw/IsAuto');
+		$id_mqtttopicManual = $this->insertTopic('CwWw/Manual');
 		$id_mqtttopicMaxPercent = $this->insertTopic('CwWw/MaxPercent');
 		$id_mqtttopicModeName = $this->insertTopic('CwWw/ModeName');
 		$id_mqtttopicSleep = $this->insertTopic('CwWw/Sleep');
-		$this->mergeDP($id_mqtttopicIsAuto, 'IsAuto', 'Automatik', '0:Hand;1:Automatik;', 'NULL', 0, 1);
+		$this->mergeDP($id_mqtttopicManual, 'Manual', 'Automatik', '0:Automatik;1:Hand;', 'NULL', 0, 1);
 		$this->mergeDP($id_mqtttopicMaxPercent, 'MaxPercent', 'Max Percent', '', 0);
 		$this->mergeDP($id_mqtttopicModeName, 'ModeName', 'Mode Name', '', 0);
 		$this->mergeDP($id_mqtttopicSleep, 'Sleep', 'Sleep', 'sec', 0);

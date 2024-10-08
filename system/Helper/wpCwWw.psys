@@ -71,7 +71,7 @@ class wpCwWw {
 			<div class="sceneContainer">
 				<div>
 					<span class="ps-input CwWwModeName" data-ws="<?=$this->name ?>_ModeName">-</span><br />
-					<span class="ps-input <?=wpa::YellowGreen ?>" data-ws="<?=$this->name ?>_IsAuto">-</span>
+					<span class="ps-input <?=wpa::GreenYellow ?>" data-ws="<?=$this->name ?>_Manual">-</span>
 				</div>
 				<hr />
 				<div>

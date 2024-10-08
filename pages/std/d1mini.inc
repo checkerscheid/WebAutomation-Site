@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 697                                                     $ #
+//# Revision     : $Rev:: 698                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.inc 697 2024-10-07 21:21:44Z                      $ #
+//# File-ID      : $Id:: d1mini.inc 698 2024-10-08 06:11:10Z                      $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
@@ -50,18 +50,35 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 	</div>
 	<div class="ps-flex-container page">
 		<div class="ps-container">
-			<span>newName:</span>
-			<input class="ps-input newName" type="text" value="<?=$erg['name'] ?>" />
-			<span class="ps-button SetName">speichern</span>
-			<hr />
-			<span>updateChanel:</span>
-			<select class="ps-input newChanel">
-				<option value="0">firmware</option>
-				<option value="1">light</option>
-				<option value="2">io</option>
-				<option value="3">heating</option>
-			</select>
-			<span class="ps-button SetChanel">speichern</span><br />
+			<table summary="">
+				<tr>
+					<td><span>newName:</span></td>
+					<td><input class="ps-input newName" type="text" value="<?=$erg['name'] ?>" /></td>
+					<td><span class="ps-button SetName">speichern</span></td>
+				</tr>
+				<tr>
+					<td colspan="3"><hr /></td>
+				</tr>
+				<tr>
+					<td><span>updateChanel:</span></td>
+					<td>
+						<select class="ps-input newChanel">
+<?
+$updateChanel = array (
+	0 => 'firmware',
+	1 => 'light',
+	2 => 'io',
+	3 => 'heating'
+);
+foreach($updateChanel as $key => $value) {
+	echo '<option value="' . $key . '"' . ($d1Mini->FreakaZoneDevice->UpdateChanel == $value ? ' selected="selected"' : '') . '>' . $value . '</option>';
+}
+?>
+						</select>
+					</td>
+					<td><span class="ps-button SetChanel">speichern</span></td>
+				</tr>
+			</table>
 		</div>
 	<? if($d1Mini->FreakaZoneDevice->useModul->DHT11 ||
 			$d1Mini->FreakaZoneDevice->useModul->DHT22) { ?>
