@@ -9,13 +9,14 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 695                                                     $ #
+//# Revision     : $Rev:: 700                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpRGB.psys 695 2024-08-19 07:50:21Z                 $ #
+//# File-ID      : $Id:: wpRGB.psys 700 2024-10-14 00:13:37Z                 $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\system;
 
+use system\WebCom;
 use system\std;
 use system\Helper\wpDatabase;
 use system\Helper\security;
@@ -26,16 +27,26 @@ class wpRGB {
 	public static $ip;
 	const c_RGBColor = 'RGBColor';
 	public static function RGBColor() {
+		header(wpJSON_HEADER);
 		self::setRGB();
 		wpRGBSystem::saveColor(std::posts('r'), std::posts('g'), std::posts('b'));
 	}
 	const c_RGBBrightness = 'RGBBrightness';
 	public static function RGBBrightness() {
+		header(wpJSON_HEADER);
 		self::setRGB();
 	}
 	const c_RGBTurn = 'RGBTurn';
 	public static function RGBTurn() {
+		header(wpJSON_HEADER);
 		self::setRGB();
+	}
+	const c_RGBSleep = 'RGBSleep';
+	public static function RGBSleep() {
+		header(wpJSON_HEADER);
+		$cmd = 'timer=' . std::posts('sleep');
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', wpRGB::$ip . '%~%' . 'color/0?' . $cmd);
 	}
 	const c_getRGBSavedColor = 'getRGBSavedColor';
 	public static function getRGBSavedColor() {
@@ -125,6 +136,10 @@ switch(std::gets('param1')) {
 		//###################################################################################
 	case wpRGB::c_RGBTurn:
 		wpRGB::RGBTurn();
+		break;
+		//###################################################################################
+	case wpRGB::c_RGBSleep:
+		wpRGB::RGBSleep();
 		break;
 		//###################################################################################
 	case wpRGB::c_getRGBSavedColor:

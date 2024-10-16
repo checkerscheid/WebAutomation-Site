@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 695                                                     $ #
+//# Revision     : $Rev:: 701                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpNeoPixel.psys 695 2024-08-19 07:50:21Z                 $ #
+//# File-ID      : $Id:: wpCwWw.psys 701 2024-10-14 00:14:32Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\system;
@@ -62,14 +62,6 @@ class wpCwWw {
 		$cmd = 'ww=' . std::posts('ww');
 		$WebCom = new WebCom();
 		echo $WebCom->send('SetD1MiniUrlCmd', wpCwWw::$ip . '%~%' . 'setCwWw?' . $cmd);
-	}
-	private static function getContext() {
-		return stream_context_create([
-			"http" => [
-				"method"=>"GET",
-				"timeout" => 1
-			]
-		]);
 	}
 }
 

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 696                                                     $ #
+//# Revision     : $Rev:: 700                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpNeoPixel.js 696 2024-10-06 19:11:29Z                   $ #
+//# File-ID      : $Id:: wpNeoPixel.js 700 2024-10-14 00:13:37Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> wpNeoPixel */
@@ -63,21 +63,7 @@ var wpNeoPixel = {
 			}, 'json');
 		});
 		$('.setNeoPixelOff').on('click', function() {
-			const off = {
-				ip: wpNeoPixel.ip
-			};
-			$.post(wpNeoPixel.target + '.setNeoPixelOff.req', off, function(data) {
-				console.log(data);
-			}, 'json');
-		});
-		$('.setNeoPixelOffBlender').on('click', function() {
-			const off = {
-				ip: wpNeoPixel.ip,
-				steps: 2
-			};
-			$.post(wpNeoPixel.target + '.setNeoPixelOffBlender.req', off, function(data) {
-				console.log(data);
-			}, 'json');
+			wpNeoPixel.setOff();
 		});
 		$('.setNeoPixelOffRunner').on('click', function() {
 			const off = {
@@ -97,12 +83,7 @@ var wpNeoPixel = {
 		});
 		$('.setNeoPixelSleep').on('click', function() {
 			var sec = ($('.NeoPixelSleepHour').text() * 60 * 60) + ($('.NeoPixelSleepMinute').text() * 60);
-			const sleep = {
-				ip: wpNeoPixel.ip,
-				sleep: sec
-			};
-			$.post(wpNeoPixel.target + '.NeoPixelSleep.req', sleep, function(data) {
-			}, 'json');
+			wpNeoPixel.setSleep(sec);
 		});
 		$('.colorBorder').on('click', function() {
 			const led = {
@@ -316,5 +297,22 @@ var wpNeoPixel = {
 		$.get(wpNeoPixel.target + '.getNeoPixelSavedColor.req', function(data) {
 			$('.NeoPixelSavedColor').html(data);
 		});
+	},
+	setOff: function() {
+		const off = {
+			ip: wpNeoPixel.ip,
+			steps: 2
+		};
+		$.post(wpNeoPixel.target + '.setNeoPixelOff.req', off, function(data) {
+			console.log(data);
+		}, 'json');
+	},
+	setSleep: function(sec) {
+		const sleep = {
+			ip: wpNeoPixel.ip,
+			sleep: sec
+		};
+		$.post(wpNeoPixel.target + '.NeoPixelSleep.req', sleep, function(data) {
+		}, 'json');
 	}
 };

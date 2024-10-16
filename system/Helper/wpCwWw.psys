@@ -50,24 +50,18 @@ class wpCwWw {
 		$this->pixelStatus = \json_decode($WebCom->send('getD1MiniCwWwStatus', $this->ip), true);
 		//std::test_array($this->pixelStatus, 'getPixelStatus');
 	}
-	public function getColorPicker() {
+	public function getColorPicker($headline = 'CW-WW', $ww = 'Warmweiß', $cw = 'Kaltweiß') {
 ?>
 		<div class="wpCwWw ps-container" data-ip="<?=$this->ip ?>">
-			<h3>CW-WW</h3>
+			<h3><?=$headline ?></h3>
+			<hr />
 			<div class="colorPicker">
-				<hr />
-				<h3>Warmweiß (<span class="CwWwWW wp-b-to-p" data-ws="<?=$this->name ?>_AnalogOut"><?=floor($this->status->AnalogOut->HandValue / 2.55) ?></span>)</h3>
+				<h3><?=$ww ?> (<span class="CwWwWW wp-b-to-p" data-ws="<?=$this->name ?>_AnalogOut"><?=floor($this->status->AnalogOut->HandValue / 2.55) ?></span>)</h3>
 				<div class="CwWwSliderW CwWwSliderWW wpSlider-255" data-ws="<?=$this->name ?>_AnalogOut"></div>
-				<h3>Kaltweiß (<span class="CwWwCW wp-b-to-p" data-ws="<?=$this->name ?>_AnalogOut2"><?=floor($this->status->AnalogOut2->HandValue / 2.55) ?></span>)</h3>
+				<h3><?=$cw ?> (<span class="CwWwCW wp-b-to-p" data-ws="<?=$this->name ?>_AnalogOut2"><?=floor($this->status->AnalogOut2->HandValue / 2.55) ?></span>)</h3>
 				<div class="CwWwSliderW CwWwSliderCW wpSlider-255" data-ws="<?=$this->name ?>_AnalogOut2"></div>
 			</div>
-		</div>
-<?
-	}
-	public function getColorScenen() {
-?>
-		<div class="wpCwWw ps-container" data-ip="<?=$this->ip ?>">
-			<h3>CW-WW Scenen</h3>
+			<h3>Scenen</h3>
 			<div class="sceneContainer">
 				<div>
 					<span class="ps-input CwWwModeName" data-ws="<?=$this->name ?>_ModeName">-</span><br />
@@ -87,9 +81,8 @@ class wpCwWw {
 				</div>
 				<hr />
 				<div>
-					<span>Sleep:</span><br />
+					<h3>Sleeptimer:</h3>
 					<span class="ps-input <?=wpa::SecToTime ?>" data-ws="<?=$this->name ?>_Sleep">-</span>
-					<hr />
 					<div class="ps-flex-container">
 						<div>
 							<span class="ps-input CwWwSleepHour">0</span> <span class="CwWwSleepUnit">h</span>

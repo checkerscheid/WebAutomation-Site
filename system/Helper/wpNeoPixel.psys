@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 696                                                     $ #
+//# Revision     : $Rev:: 700                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpNeoPixel.psys 696 2024-10-06 19:11:29Z                 $ #
+//# File-ID      : $Id:: wpNeoPixel.psys 700 2024-10-14 00:13:37Z                 $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -33,8 +33,7 @@ class wpNeoPixel {
 		4 => 'Rainbow Wheel',
 		5 => 'Theater Chase Rainbow',
 		6 => 'Runner',
-		7 => 'Random',
-		8 => 'Rainbow Tv'
+		7 => 'Random'
 	);
 	public function __construct($ip, $name) {
 		$this->database = new wpDatabase();
@@ -58,13 +57,14 @@ class wpNeoPixel {
 		$this->pixelStatus = \json_decode($WebCom->send('getD1MiniNeoPixelStatus', $this->ip), true);
 		//std::test_array($this->pixelStatus, 'getPixelStatus');
 	}
-	public function getColorPicker() {
+	public function getColorPicker($headline = 'NeoPixel') {
 		$r = $this->status->NeoPixel->ValueR;
 		$g = $this->status->NeoPixel->ValueG;
 		$b = $this->status->NeoPixel->ValueB;
 ?>
 		<div class="wpNeoPixel ps-container" data-ip="<?=$this->ip ?>">
-			<h3>NeoPixel Farben</h3>
+			<h3><?=$headline ?> Farben</h3>
+			<hr />
 			<div class="colorPicker">
 				<span class="NeoPixelColorPreview" style="background-color:rgb(<?=$r ?>, <?=$g ?>, <?=$b ?>);"><?=wpHTML_EMPTY ?></span>
 				<div<?=(security::checkGroup(security::entwickler) ? '' : ' class="ps-hidden"') ?>>
@@ -89,13 +89,12 @@ class wpNeoPixel {
 					</div>
 					<div>
 						<span class="ps-button setNeoPixelOff">Aus</span><br />
-						<span class="ps-button setNeoPixelOffBlender">Aus Blender</span><br />
 						<span class="ps-button setNeoPixelOffRunner">Aus Runner</span><br />
 						<span class="ps-input <?=wpa::GreyGreen?>" data-ws="<?=$this->name ?>_Border">-</span><br />
 						<span class="ps-button setNeoPixelBorder">Border</span>
 					</div>
 				</div>
-				<div class="ps-flex-container">
+				<div class="ps-flex-container<?=(security::checkGroup(security::entwickler) ? '' : ' ps-hidden') ?>">
 <?
 		for($i = 0; $i < $this->status->NeoPixel->PixelCount; $i++) {
 ?>
@@ -123,17 +122,18 @@ class wpNeoPixel {
 		</div>
 <?
 	}
-	public function getColorScenen() {
+	public function getColorScenen($headline = 'NeoPixel') {
 ?>
 		<div class="wpNeoPixel ps-container" data-ip="<?=$this->ip ?>">
-			<h3>NeoPixel Scenen</h3>
+			<h3><?=$headline ?> Scenen</h3>
+			<hr />
 			<div class="sceneContainer">
 				<div>
 					<span class="ps-input NeoPixelModeName" data-ws="<?=$this->name ?>_ModeName">-</span><br />
 					<span class="ps-button setNeoPixelDemo">Demo Mode</span>
 				</div>
-				<hr />
 				<div>
+					<h3>Effect Speed</h3>
 					<div class="NeoPixelSliderEffectSpeed"></div>
 <?
 		foreach(self::modes as $id => $name) {
@@ -145,9 +145,8 @@ class wpNeoPixel {
 				</div>
 				<hr />
 				<div>
-					<span>Sleep:</span><br />
+					<h3>Sleeptimer:</h3>
 					<span class="ps-input <?=wpa::SecToTime ?>" data-ws="<?=$this->name ?>_Sleep">-</span>
-					<hr />
 					<div class="ps-flex-container">
 						<div>
 							<span class="ps-input NeoPixelSleepHour">0</span> <span class="NeoPixelSleepUnit">h</span>
@@ -194,7 +193,7 @@ MERGE INTO [neopixel] AS [TARGET]
 		)
 	OUTPUT [INSERTED].[id_neopixel] AS [ID];";
 		$database->query($sql);
-		echo 'saved';
+		//echo 'saved';
 	}
 }
 ?>

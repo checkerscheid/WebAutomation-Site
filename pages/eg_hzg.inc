@@ -1,23 +1,23 @@
 <?
 //###################################################################################
-//#																				 #
-//#				(C) FreakaZone GmbH											  #
-//#				=======================										  #
-//#																				 #
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
 //###################################################################################
-//#																				 #
-//# Author	   : Christian Scheid												 #
-//# Date		 : 30.09.2024													   #
-//#																				 #
-//# Revision	 : $Rev:: 550													 $ #
-//# Author	   : $Author::													  $ #
-//# File-ID	  : $Id:: pageadmin.req 550 2023-12-25 03:02:54Z				   $ #
-//#																				 #
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 30.09.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 701                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: eg_hzg.inc 701 2024-10-14 00:14:32Z                      $ #
+//#                                                                                 #
 //###################################################################################
 namespace pages;
 use system\Helper\wpa;
 require_once 'system/Helper/wpa.psys';
-class eg_hzg_fb {
+class eg_hzg {
 	private $headline;
 	private $group;
 	private $valve;
@@ -79,35 +79,35 @@ class eg_hzg_fb {
 <?
 	}
 }
-$kueche = new eg_hzg_fb('Küche', 1, 1);
+$kueche = new eg_hzg('Küche', 1, 1);
 $kueche->setTemp('KU1_RU_Temp');
 $kueche->setHum('KU1_RU_Hum');
 
-$wzmitte = new eg_hzg_fb('Wohnzimmer Mitte', 1, 2);
+$wzmitte = new eg_hzg('Wohnzimmer Mitte', 1, 2);
 $wzmitte->setTemp('WZ1_RU_Temp');
 $wzmitte->setHum('WZ1_RU_Hum');
 
-$wzfenster = new eg_hzg_fb('Wohnzimmer Fenster', 1, 3);
+$wzfenster = new eg_hzg('Wohnzimmer Fenster', 1, 3);
 $wzfenster->setTemp('WZ1_RU_Temp');
 $wzfenster->setHum('WZ1_RU_Hum');
 
-$wzkamin = new eg_hzg_fb('Wohnzimmer Kamin', 1, 4);
+$wzkamin = new eg_hzg('Wohnzimmer Kamin', 1, 4);
 $wzkamin->setTemp('WZ1_RU_Temp');
 $wzkamin->setHum('WZ1_RU_Hum');
 
-$essen = new eg_hzg_fb('Flur Essen', 2, 1);
+$essen = new eg_hzg('Flur Essen', 2, 1);
 $essen->setTemp('ES1_RU_Temp');
 $essen->setHum('ES1_RU_Hum');
 
-$bad = new eg_hzg_fb('Bad WC', 2, 2);
+$bad = new eg_hzg('Bad WC', 2, 2);
 $bad->setTemp('BA1_RU_Temp');
 $bad->setHum('BA1_RU_Hum');
 
-$eingang = new eg_hzg_fb('Flur Eingang', 2, 3);
+$eingang = new eg_hzg('Flur Eingang', 2, 3);
 $eingang->setTemp('FL1_RU_Temp');
 $eingang->setHum('FL1_RU_Hum');
 ?>
-<div id="eg_hzg_fb" class="page">
+<div id="eg_hzg" class="page">
 	<h1><? \system\html::getPageHeadline();?></h1>
 	<div class="ps-flex-container">
 <?

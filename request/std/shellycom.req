@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 16.12.2019                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 693                                                     $ #
+//# Revision     : $Rev:: 700                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: shellycom.req 693 2024-08-11 22:32:17Z                   $ #
+//# File-ID      : $Id:: shellycom.req 700 2024-10-14 00:13:37Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -49,6 +49,7 @@ class shellycom {
 	const c_set_dimmer = 'set-dimmer';
 	const c_set_rgbw = 'set-rgbw';
 	const c_set_datapoint = 'set-datapoint';
+	const c_set_relay_timer = 'set-relay-timer';
 
 	const c_do_scan = 'do-scan';
 	const c_do_scan_row = 'do-scan-row';
@@ -483,6 +484,21 @@ MERGE INTO [rest] AS [TARGET]
 		);";
 		$database->query($sql);
 		echo 'S_OK';
+		break;
+	//###################################################################################
+	case shellycom::c_set_relay_timer:
+		header(wpJSON_HEADER);
+		$cmd = 'timer=' . std::posts('sleep');
+		$WebCom = new WebCom();
+		$fc = file_get_contents('http://' . $ShellyIP . '/relay/0');
+		if($fc !== false) $jsondec = json_decode($fc);
+		if($fc !== false && json_last_error() == JSON_ERROR_NONE) {
+			//std::test_array($jsondec);
+			if($jsondec->ison) {
+				$cmd .= '&turn=on';
+			}
+		}
+		echo $WebCom->send('SetD1MiniUrlCmd', $ShellyIP . '%~%' . 'relay/0?' . $cmd);
 		break;
 	//###################################################################################
 	case shellycom::c_do_renewshellystate:

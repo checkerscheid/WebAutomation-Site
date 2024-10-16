@@ -1,23 +1,18 @@
-<?
+/*<?
 //###################################################################################
 //#                                                                                 #
-//#              (C) FreakaZone GmbH                                                #
-//#              =======================                                            #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
 //#                                                                                 #
 //###################################################################################
 //#                                                                                 #
 //# Author       : Christian Scheid                                                 #
-//# Date         : 13.06.2024                                                       #
+//# Date         : 08.10.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 700                                                     $ #
+//# Revision     : $Rev:: 701                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pia.req 700 2024-10-14 00:13:37Z                         $ #
+//# File-ID      : $Id:: ug_hzg.css 701 2024-10-14 00:14:32Z                      $ #
 //#                                                                                 #
 //###################################################################################
-namespace request;
+?> ug_hzg */
 
-require_once 'request/system/wpNeoPixel.psys';
-require_once 'request/system/wpRGB.psys';
-require_once 'request/system/wpCwWw.psys';
-
-?>

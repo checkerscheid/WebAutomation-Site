@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 696                                                     $ #
+//# Revision     : $Rev:: 700                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.js 696 2024-10-06 19:11:29Z                   $ #
+//# File-ID      : $Id:: uebersicht.js 700 2024-10-14 00:13:37Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> uebersicht */
@@ -67,9 +67,13 @@ p.page.load = function() {
 			setShellyRelayOff('172.17.80.91', 'Wohnzimmer Lichtleiste'),
 			// Schlafzimmer
 			setShellyDimmerOff('172.17.80.110', 'Schlafzimmer'),
+			// Flur
+			setFLRUAuto('172.17.80.125', 'Flur set Auto'),
+			setShellyDimmerOff('172.17.80.120', 'Flur'),
 			// Küche
 			setShellyRelayOff('172.17.80.130', 'Küche'),
 			setShellyRelayOff('172.17.80.131', 'Küche Strahler'),
+			setCwWwOff('172.17.80.142', 'Küche White-LED'),
 			// Bad
 			setShellyDimmerOff('172.17.80.150', 'Bad'),
 			// Kinderzimmer
@@ -379,6 +383,27 @@ function setShellyRGBWOff(ip, name) {
 function setNeoPixelOff(ip, name) {
 	return new Promise((resolve) => {
 		$.post('uebersicht.setNeoPixelOff.req', {ip:ip},
+			function(data) {
+				resolve(name + ' ist aus');
+			},
+		'json');
+	});
+}
+function setCwWwOff(ip, name) {
+	return new Promise((resolve) => {
+		$.post('uebersicht.CwWwOff.req', {ip:ip},
+			function(data) {
+				resolve(name + ' ist aus');
+			},
+		'json');
+	});
+}
+function setFLRUAuto(ip, name) {
+	return new Promise((resolve) => {
+		const setAuto = {
+			ip: ip
+		};
+		$.post('uebersicht.setAuto.req', setAuto,
 			function(data) {
 				resolve(name + ' ist aus');
 			},

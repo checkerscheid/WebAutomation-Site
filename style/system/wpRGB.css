@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 11.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 692                                                     $ #
+//# Revision     : $Rev:: 700                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpRGB.css 692 2024-08-07 11:51:08Z                       $ #
+//# File-ID      : $Id:: wpRGB.css 700 2024-10-14 00:13:37Z                       $ #
 //#                                                                                 #
 //###################################################################################
 ?> wpRGB */
@@ -43,6 +43,13 @@
 .colorPicker .colorBorderContainer { padding:2px; }
 .colorPicker .colorBorder { width:20px; height:20px; cursor:pointer; }
 .colorPicker .colorBorderFav { width:30px; height:30px; cursor:pointer; }
+
+.RGBSleep .RGBSleepSlider { margin:15px auto; }
+.RGBSleep .RGBSleepSlider a { text-decoration:none; outline:none; }
+.RGBSleep .RGBSleepSlider .ui-slider-handle { margin-left:-2px; }
+.RGBSleep .RGBSleepHour,
+.RGBSleep .RGBSleepMinute { width:30px; min-width:30px; }
+.RGBSleep .RGBSleepUnit { display:inline-block; line-height:16px; padding:5px 0; overflow:auto; }
 
 @media (orientation: portrait) {
 	.colorPicker .ps-button { padding:25px 6px; }

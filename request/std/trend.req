@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 628                                                     $ #
+//# Revision     : $Rev:: 700                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: trend.req 628 2024-06-19 19:08:13Z                       $ #
+//# File-ID      : $Id:: trend.req 700 2024-10-14 00:13:37Z                       $ #
 //#                                                                                 #
 //###################################################################################
 /**
@@ -56,19 +56,20 @@ class trend {
 		$this->nks = $nks;
 	}
 	public function setData($time, $value) {
-		if($this->isbool === null) {
-			if(strtolower($value) == 'true' || strtolower($value) == 'false') {
-				$this->isbool = true;
-			} else {
-				$this->isbool = false;
-				$this->dataarray[] = str_replace(',','.',strtolower($value));
-			}
-		}
 		if(str_replace(',','.',$value) > $this->max || $this->max == null) {
 			$this->max = str_replace(',','.',$value);
 		}
 		if(str_replace(',','.',$value) < $this->min || $this->min == null) {
 			$this->min = str_replace(',','.',$value);
+		}
+		if($this->isbool === null) {
+			if(strtolower($value) == 'true' || strtolower($value) == 'false' ||
+				(($this->min == 0 || $this->min == 1) && ($this->max == 0 || $this->max == 1))) {
+				$this->isbool = true;
+			} else {
+				$this->isbool = false;
+				$this->dataarray[] = str_replace(',','.',strtolower($value));
+			}
 		}
 		$data = '['.($time->getTimestamp() * 1000).', '.str_replace(',','.',strtolower($value)).'],';
 		$this->data .= $data;

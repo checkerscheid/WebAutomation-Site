@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 11.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 692                                                     $ #
+//# Revision     : $Rev:: 700                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpRGB.js 692 2024-08-07 11:51:08Z                        $ #
+//# File-ID      : $Id:: wpRGB.js 700 2024-10-14 00:13:37Z                        $ #
 //#                                                                                 #
 //###################################################################################
 ?> wpRGB */
@@ -66,13 +66,7 @@ var wpRGB = {
 			}, 'json');
 		});
 		$('.setRGBOff').on('click', function() {
-			const off = {
-				ip: wpRGB.ip,
-				turn: 'false'
-			};
-			$.post(wpRGB.target + '.RGBTurn.req', off, function(data) {
-				console.log(data);
-			}, 'json');
+			wpRGB.setOff();
 		});
 		$('.RGBSavedColor').on('click', '.colorBorderFav', function() {
 			const led = {
@@ -203,6 +197,33 @@ var wpRGB = {
 				$(this).removeClass('WriteOnly').find('a').text('');
 			}
 		});
+		$('.setRGBSleep').click(function() {
+			var sec = ($('.RGBSleepHour').text() * 60 * 60) + ($('.RGBSleepMinute').text() * 60);
+			wpRGB.setSleep(sec);
+		});
+		$('.RGBSleepHourSlider').slider({
+			min: 0,
+			max: 2,
+			orientation: 'vertical',
+			range: 'min',
+			slide: function(event, ui) {
+				var TheValue = ui.value;
+				var TheSpan = $('.RGBSleepHour');
+				$(TheSpan).text(TheValue);
+			}
+		});
+		$('.RGBSleepMinuteSlider').slider({
+			min: 0,
+			max: 59,
+			step: 5,
+			orientation: 'vertical',
+			range: 'min',
+			slide: function(event, ui) {
+				var TheValue = ui.value;
+				var TheSpan = $('.RGBSleepMinute');
+				$(TheSpan).text(TheValue);
+			}
+		});
 	},
 	changeColorPreview: function(r, g, b) {
 		$('.RGBColorPreview').css('backgroundColor', 'rgb(' + r + ', ' + g + ', ' + b + ')');
@@ -216,5 +237,22 @@ var wpRGB = {
 		$.get(wpRGB.target + '.getRGBSavedColor.req', function(data) {
 			$('.RGBSavedColor').html(data);
 		});
+	},
+	setOff: function() {
+		const off = {
+			ip: wpRGB.ip,
+			turn: 'false'
+		};
+		$.post(wpRGB.target + '.RGBTurn.req', off, function(data) {
+			console.log(data);
+		}, 'json');
+	},
+	setSleep: function(sec) {
+		const sleep = {
+			ip: wpRGB.ip,
+			sleep: sec
+		};
+		$.post(wpRGB.target + '.RGBSleep.req', sleep, function(data) {
+		}, 'json');
 	}
 };

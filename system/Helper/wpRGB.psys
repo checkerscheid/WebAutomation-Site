@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 11.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 692                                                     $ #
+//# Revision     : $Rev:: 700                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpNeoPixel.psys 692 2024-08-07 11:51:08Z                 $ #
+//# File-ID      : $Id:: wpRGB.psys 700 2024-10-14 00:13:37Z                      $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -35,14 +35,15 @@ class wpRGB {
 		//$this->status = $res->FreakaZoneDevice;
 		//std::test_array($this->status, 'getStatus');
 	}
-	public function getColorPicker() {
+	public function getColorPicker($headline = 'RGB Farben') {
 		$r = $this->status['lights'][0]['red'];
 		$g = $this->status['lights'][0]['green'];
 		$b = $this->status['lights'][0]['blue'];
 		$br = $this->status['lights'][0]['gain'];
 ?>
 		<div class="wpRGB ps-container" data-ip="<?=$this->ip ?>">
-			<h3>RGB Farben</h3>
+			<h3><?=$headline ?></h3>
+			<hr />
 			<div class="colorPicker">
 				<span class="RGBColorPreview" style="background-color:rgb(<?=$r ?>, <?=$g ?>, <?=$b ?>);"><?=wpHTML_EMPTY ?></span>
 				<div<?=(security::checkGroup(security::entwickler) ? '' : ' class="ps-hidden"') ?>>
@@ -71,6 +72,21 @@ class wpRGB {
 						<span class="ps-button setRGBOff">Aus</span>
 					</div>
 				</div>
+			</div>
+			<div>
+				<hr />
+				<h3>Sleeptimer:</h3>
+				<div class="ps-flex-container RGBSleep">
+					<div>
+						<span class="ps-input RGBSleepHour">0</span> <span class="RGBSleepUnit">h</span>
+						<div class="RGBSleepSlider RGBSleepHourSlider"></div>
+					</div>
+					<div>
+						<span class="ps-input RGBSleepMinute">0</span> <span class="RGBSleepUnit">min</span>
+						<div class="RGBSleepSlider RGBSleepMinuteSlider"></div>
+					</div>
+				</div>
+				<span class="ps-button setRGBSleep">set</span>
 			</div>
 		</div>
 <?
@@ -105,7 +121,7 @@ MERGE INTO [neopixel] AS [TARGET]
 		)
 	OUTPUT [INSERTED].[id_neopixel] AS [ID];";
 		$database->query($sql);
-		echo 'saved';
+		//echo 'saved';
 	}
 }
 ?>

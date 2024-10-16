@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 697                                                     $ #
+//# Revision     : $Rev:: 700                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpNeoPixel.psys 697 2024-10-07 21:21:44Z                 $ #
+//# File-ID      : $Id:: wpNeoPixel.psys 700 2024-10-14 00:13:37Z                 $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\system;
@@ -91,19 +91,11 @@ class wpNeoPixel {
 		echo $result;
 	}
 	const c_setNeoPixelOff = 'setNeoPixelOff';
-	public static function setNeoPixelOff() {
-		header(wpJSON_HEADER);
-		$result = '{"erg":"S_OK","msg":"setNeoPixelOn"}';
-		$WebCom = new WebCom();
-		$WebCom->send('SetD1MiniUrlCmd', wpNeoPixel::$ip . '%~%' . 'setNeoPixelOff');
-		echo $result;
-	}
-	const c_setNeoPixelOffBlender = 'setNeoPixelOffBlender';
 	public static function setNeoPixelOffBlender() {
 		header(wpJSON_HEADER);
 		$WebCom = new WebCom();
-		$WebCom->send('SetD1MiniUrlCmd', wpNeoPixel::$ip . '%~%' . 'setNeoPixelOffBlender');
-		echo '{"erg":"S_OK","msg":"setNeoPixelOffBlender"}';
+		echo $WebCom->send('SetD1MiniUrlCmd', wpNeoPixel::$ip . '%~%' . 'setNeoPixelOff');
+		//echo '{"erg":"S_OK","msg":"setNeoPixelOffBlender"}';
 	}
 	const c_setNeoPixelOffRunner = 'setNeoPixelOffRunner';
 	public static function setNeoPixelOffRunner() {
@@ -183,15 +175,11 @@ switch(std::gets('param1')) {
 		wpNeoPixel::NeoPixelCW();
 		break;
 		//###################################################################################
-	case wpNeoPixel::c_setNeoPixelOff:
-		wpNeoPixel::setNeoPixelOff();
-		break;
-		//###################################################################################
 	case wpNeoPixel::c_setNeoPixelOn:
 		wpNeoPixel::setNeoPixelOn();
 		break;
 		//###################################################################################
-	case wpNeoPixel::c_setNeoPixelOffBlender:
+	case wpNeoPixel::c_setNeoPixelOff:
 		wpNeoPixel::setNeoPixelOffBlender();
 		break;
 		//###################################################################################

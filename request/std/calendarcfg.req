@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 15.05.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 582                                                     $ #
+//# Revision     : $Rev:: 700                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: calendarcfg.req 582 2024-04-10 06:45:45Z                 $ #
+//# File-ID      : $Id:: calendarcfg.req 700 2024-10-14 00:13:37Z                 $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -134,7 +134,7 @@ switch(std::gets('param1')) {
 					INNER JOIN [dp] ON [dp].[id_dp] = [c].[id_dp]
 					WHERE [c].[id_calendargroup] IS NULL ORDER BY [c].[name]');
 		} else {
-			$database->query('SELECT [c].[id_calendar], [c].[name], [c].[active], [dp].[name] AS [dpname]
+			$database->query('SELECT [c].[id_calendar], [c].[name], [c].[active], [dp].[id_dp], [dp].[name] AS [dpname]
 						FROM [calendar] [c]
 					LEFT OUTER JOIN [calendargroup] [g] ON [g].[id_calendargroup] = [c].[id_calendargroup]
 					INNER JOIN [dp] ON [dp].[id_dp] = [c].[id_dp]

@@ -9,14 +9,15 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 27.07.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 693                                                     $ #
+//# Revision     : $Rev:: 700                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pia.css 693 2024-08-11 22:32:17Z                         $ #
+//# File-ID      : $Id:: pia.css 700 2024-10-14 00:13:37Z                         $ #
 //#                                                                                 #
 //###################################################################################
 ?> pia */
 
 <? require_once 'style/system/wpNeoPixel.css'; ?>
+<? require_once 'style/system/wpCwWw.css'; ?>
 <? require_once 'style/system/wpRGB.css'; ?>
 
 #pia h2, #pia p,
@@ -26,6 +27,13 @@
 #pia .indikatoContainer { position:relative; width:122px; }
 #pia .ps-operable { cursor:pointer; }
 #dialog .newDpVal { width:auto; min-width:250px; }
+
+.AllSleep .AllSleepSlider { margin:15px auto; }
+.AllSleep .AllSleepSlider a { text-decoration:none; outline:none; }
+.AllSleep .AllSleepSlider .ui-slider-handle { margin-left:-2px; }
+.AllSleep .AllSleepHour,
+.AllSleep .AllSleepMinute { width:30px; min-width:30px; }
+.AllSleep .AllSleepUnit { display:inline-block; line-height:16px; padding:5px 0; overflow:auto; }
 
 @media (orientation: portrait) {
 	#pia .ps-button { padding:25px 6px; }

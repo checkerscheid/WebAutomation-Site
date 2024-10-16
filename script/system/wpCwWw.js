@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 695                                                     $ #
+//# Revision     : $Rev:: 701                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpCwWw.js 695 2024-08-19 07:50:21Z                   $ #
+//# File-ID      : $Id:: wpCwWw.js 701 2024-10-14 00:14:32Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> wpCwWw */
@@ -44,21 +44,11 @@ var wpCwWw = {
 			}, 'json');
 		});
 		$('.setCwWwOff').on('click', function() {
-			const off = {
-				ip: wpCwWw.ip
-			};
-			$.post(wpCwWw.target + '.CwWwOff.req', off, function(data) {
-				console.log(data);
-			}, 'json');
+			wpCwWw.setOff();
 		});
 		$('.setCwWwSleep').on('click', function() {
 			var sec = ($('.CwWwSleepHour').text() * 60 * 60) + ($('.CwWwSleepMinute').text() * 60);
-			const sleep = {
-				ip: wpCwWw.ip,
-				sleep: sec
-			};
-			$.post(wpCwWw.target + '.CwWwSleep.req', sleep, function(data) {
-			}, 'json');
+			wpCwWw.setSleep(sec);
 		});
 		$('.CwWwSliderW').slider({
 			min: 0,
@@ -118,5 +108,21 @@ var wpCwWw = {
 				$(TheSpan).text(TheValue);
 			}
 		});
+	},
+	setOff: function() {
+		const off = {
+			ip: wpCwWw.ip
+		};
+		$.post(wpCwWw.target + '.CwWwOff.req', off, function(data) {
+			console.log(data);
+		}, 'json');
+	},
+	setSleep: function(sec) {
+		const sleep = {
+			ip: wpCwWw.ip,
+			sleep: sec
+		};
+		$.post(wpCwWw.target + '.CwWwSleep.req', sleep, function(data) {
+		}, 'json');
 	}
 };

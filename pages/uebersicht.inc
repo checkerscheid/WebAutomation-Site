@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 696                                                     $ #
+//# Revision     : $Rev:: 700                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 696 2024-10-06 19:11:29Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 700 2024-10-14 00:13:37Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -223,6 +223,11 @@ class uebersicht {
 						data-True="Ein" data-False="Aus">undefined</span>
 				</td>
 			</tr>
+			<tr>
+				<td colspan="2">
+					<span class="ps-input ' . wpa::GreenYellow . ' twoColumns" data-ws="' . $name . '_Manual">-</span>
+				</td>
+			</tr>
 			<!--tr>
 				<td colspan="2">
 					<div class="brightness-slider" data-ws="' . $name . '_MaxPercent" data-ip="' . $ip . '"></div>
@@ -255,7 +260,7 @@ class uebersicht {
 					<tr><td colspan="2"><hr /></td></tr>
 					<?=uebersicht::tasterShellyDimmer('Büro', 'BU')?>
 					<tr>
-						<td colspan="2"><span class="ps-input <?=wpa::GreenYellow ?>" data-ws="BU_RU_Manual">undefined</span></td>
+						<td colspan="2"><span class="ps-input twoColumns <?=wpa::GreenYellow ?>" data-ws="BU_RU_Manual">undefined</span></td>
 					</tr>
 					<tr>
 						<td><span class="ps-button RU_Auto" data-ip="<?=BU_RU ?>">Auto</span></td>
@@ -403,8 +408,8 @@ foreach($zimmer as $kurz => $name) {
 		$dpTemp = $kurz . '_RU_Temp';
 		$dpHum = $kurz . '_RU_Hum';
 		if($kurz == 'WZ' || $kurz == 'KZ') {
-			$dpTemp = '_' . $kurz . '_RT_SH';
-			$dpHum = '_' . $kurz . '_RF_SH';
+			$dpTemp = $kurz . '_HT3_Temp';
+			$dpHum = $kurz . '_HT3_Hum';
 		}
 ?>
 					<tr>

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 698                                                     $ #
+//# Revision     : $Rev:: 700                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.inc 698 2024-10-08 06:11:10Z                      $ #
+//# File-ID      : $Id:: d1mini.inc 700 2024-10-14 00:13:37Z                      $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
@@ -273,7 +273,6 @@ foreach($updateChanel as $key => $value) {
 	$cwww = new wpCwWw($erg['ip'], $erg['name']);
 	$cwww->getStatusFromJson($d1Mini->FreakaZoneDevice);
 	$cwww->getColorPicker();
-	$cwww->getColorScenen();
 ?>
 	<? } ?>
 	<? if(isset($d1Mini->FreakaZoneDevice->useModul->AnalogOut) &&

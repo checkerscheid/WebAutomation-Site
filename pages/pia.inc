@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 27.07.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 696                                                     $ #
+//# Revision     : $Rev:: 700                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pia.inc 696 2024-10-06 19:11:29Z                         $ #
+//# File-ID      : $Id:: pia.inc 700 2024-10-14 00:13:37Z                         $ #
 //#                                                                                 #
 //###################################################################################
 /**
@@ -26,10 +26,12 @@ use system\Helper\wpa;
 use system\Helper\wpDatabase;
 use system\Helper\security;
 use system\Helper\wpNeoPixel;
+use system\Helper\wpCwWw;
 use system\Helper\wpRGB;
 
 require_once 'system/Helper/wpa.psys';
 require_once 'system/Helper/wpNeoPixel.psys';
+require_once 'system/Helper/wpCwWw.psys';
 require_once 'system/Helper/wpRGB.psys';
 
 $database->query("SELECT [id_d1mini], [name], [description], [ip], [mac] FROM [d1mini] WHERE [name] = 'KZ_NP'");
@@ -54,32 +56,40 @@ $points = array(
 <div id="pia">
 	<h1><? html::getPageHeadline();?></h1>
 	<div class="ps-flex-container page">
-<?
-	$neoPixel = new wpNeoPixel($erg['ip'], $erg['name']);
-	$neoPixel->getStatusFromJson($d1Mini->FreakaZoneDevice);
-	$neoPixel->getColorPicker();
-	$neoPixel->getColorScenen();
-?>
-<?
-	$rgb = new wpRGB('172.17.80.163', 'shellies/RGBW2');
-	$rgb->getColorPicker();
-?>
 		<div class="ps-container">
 			<table summary="">
 				<tr>
-					<th colspan="6">Licht</th>
+					<td colspan="6">
+						<h3>Licht</h3>
+						<hr />
+						<span class="ps-button AllesAus">Alles Aus</span>
+					</td>
 				</tr>
 				<?=pia::tasterShelly('Kinderzimmer', 'KZ')?>
 				<?=pia::tasterShelly('Kinderzimmer <br class="showonportrait" />Bett', 'KZ_BE')?>
 				<?=pia::tasterShelly('Kinderzimmer <br class="showonportrait" />Nachtlicht', 'KZ_NL')?>
 				<tr>
-					<td colspan="6"><hr /></td>
+					<td colspan="6">
+						<div>
+							<hr />
+							<h3>Sleeptimer für alle:</h3>
+							<div class="ps-flex-container AllSleep">
+								<div>
+									<span class="ps-input AllSleepHour">0</span> <span class="AllSleepUnit">h</span>
+									<div class="AllSleepSlider AllSleepHourSlider"></div>
+								</div>
+								<div>
+									<span class="ps-input AllSleepMinute">0</span> <span class="AllSleepUnit">min</span>
+									<div class="AllSleepSlider AllSleepMinuteSlider"></div>
+								</div>
+							</div>
+							<span class="ps-button setAllSleep">set</span>
+						</div>
+					</td>
 				</tr>
+				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
 					<th colspan="6">Raumwohl</th>
-				</tr>
-				<tr>
-					<td colspan="6"><hr /></td>
 				</tr>
 				<tr>
 					<td colspan="2">Schreibtisch</td>
@@ -96,11 +106,9 @@ $points = array(
 						</div>
 					</td>
 				</tr>
+				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
 					<th colspan="6">Pflanzen</th>
-				</tr>
-				<tr>
-					<td colspan="6"><hr /></td>
 				</tr>
 				<tr>
 					<td colspan="3">Pflanzi</td>
@@ -120,11 +128,9 @@ $points = array(
 						</div>
 					</td>
 				</tr>
+				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
 					<th colspan="6">Heizung</th>
-				</tr>
-				<tr>
-					<td colspan="6"><hr /></td>
 				</tr>
 				<tr>
 					<td colspan="3">Temperatur</td>
@@ -149,8 +155,22 @@ $points = array(
 				</tr>
 			</table>
 		</div>
+<?
+	$neoPixel = new wpNeoPixel($erg['ip'], $erg['name']);
+	$neoPixel->getStatusFromJson($d1Mini->FreakaZoneDevice);
+	$neoPixel->getColorPicker('Lichtleiste');
+	$neoPixel->getColorScenen('Lichtleiste');
+?>
+<?
+	$rgb = new wpRGB('172.17.80.163', 'shellies/RGBW2');
+	$rgb->getColorPicker('Bilderrahmen');
+?>
+<?
+	$cwww = new wpCwWw('172.17.80.164', 'KZ_KE');
+	$cwww->getStatusFromJson($d1Mini->FreakaZoneDevice);
+	$cwww->getColorPicker('Halloween', 'schwebende Geister', 'Fensterschnee');
+?>
 	</div>
-	<p id="storedIP" data-ip="<?=$erg['ip'] ?>">(<?=$erg['ip'] ?>, <?=$erg['mac'] ?>)</p>
 </div>
 <?
 class pia {

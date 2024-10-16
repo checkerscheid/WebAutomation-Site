@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 15.05.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 665                                                     $ #
+//# Revision     : $Rev:: 700                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: shellycfg.req 665 2024-07-09 22:56:49Z                   $ #
+//# File-ID      : $Id:: shellycfg.req 700 2024-10-14 00:13:37Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -292,7 +292,7 @@ switch(std::gets('param1')) {
 							<tr data-id="' . $erg['id_shelly'] . '">
 								<td class="tar">
 									<div class="shelly-flex">
-										<span class="ps-checkbox sh-name ' . ($erg['active'] ? 'ps-green' : 'ps-yellow') . '" title="' . ($erg['active'] ? '' : 'in') . 'aktiv">' . $erg['name'] . '</span>
+										<span class="ps-checkbox sh-name ' . ($erg['active'] ? 'ps-fontgreen' : 'ps-fontyellow') . '" title="' . ($erg['active'] ? '' : 'in') . 'aktiv">' . $erg['name'] . '</span>
 										<span class="ps-image-button ps-edit sh-editname" title="Name">&nbsp;</span>
 									</div>
 								</td>
