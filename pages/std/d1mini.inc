@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 700                                                     $ #
+//# Revision     : $Rev:: 702                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.inc 700 2024-10-14 00:13:37Z                      $ #
+//# File-ID      : $Id:: d1mini.inc 702 2024-10-18 23:16:21Z                      $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
@@ -20,11 +20,13 @@ use system\std, system\WebCom;
 use system\Helper\wpa;
 use system\Helper\wpNeoPixel;
 use system\Helper\wpCwWw;
+use system\Helper\wpAnalogOut;
 use system\Helper\wpUnderfloor;
 
 require_once 'system/Helper/wpa.psys';
 require_once 'system/Helper/wpNeoPixel.psys';
 require_once 'system/Helper/wpCwWw.psys';
+require_once 'system/Helper/wpAnalogOut.psys';
 require_once 'system/Helper/wpUnderfloor.psys';
 
 $database->query("SELECT TOP 1 [name] FROM [webpages] WHERE [src] = 'd1mini'");
@@ -77,6 +79,11 @@ foreach($updateChanel as $key => $value) {
 						</select>
 					</td>
 					<td><span class="ps-button SetChanel">speichern</span></td>
+				</tr>
+				<tr>
+					<td><span>Boot Counter</span></td>
+					<td><span class="ps-input"><?=$d1Mini->FreakaZoneDevice->BootCounter ?></span></td>
+					<td class="buttonContainer"><span class="ps-button SetCmd" data-cmd="ResetBootCounter">reset</span></td>
 				</tr>
 			</table>
 		</div>
@@ -258,134 +265,52 @@ foreach($updateChanel as $key => $value) {
 			</table>
 		</div>
 	<? } ?>
-	<? if(isset($d1Mini->FreakaZoneDevice->useModul->NeoPixel) &&
-		$d1Mini->FreakaZoneDevice->useModul->NeoPixel) { ?>
+	<? if(isset($d1Mini->FreakaZoneDevice->useModul->Window2) &&
+		$d1Mini->FreakaZoneDevice->useModul->Window2) { ?>
+		<div class="ps-container">
+			<h3>Fenster 2</h3>
+			<table summary="">
+				<tr>
+					<td>Fensterkontakt:</td>
+					<td><span class="ps-input <?=wpa::GreyGreen ?>" data-ws="<?=$erg['name'] ?>_Window2">undefined</span></td>
+				</tr>
+			</table>
+		</div>
+	<? } ?>
+	<? if(isset($d1Mini->FreakaZoneDevice->useModul->Window3) &&
+		$d1Mini->FreakaZoneDevice->useModul->Window3) { ?>
+		<div class="ps-container">
+			<h3>Fenster3</h3>
+			<table summary="">
+				<tr>
+					<td>Fensterkontakt:</td>
+					<td><span class="ps-input <?=wpa::GreyGreen ?>" data-ws="<?=$erg['name'] ?>_Window3">undefined</span></td>
+				</tr>
+			</table>
+		</div>
+	<? } ?>
 <?
+if($d1Mini->FreakaZoneDevice->useModul->NeoPixel) {
 	$neoPixel = new wpNeoPixel($erg['ip'], $erg['name']);
 	$neoPixel->getStatusFromJson($d1Mini->FreakaZoneDevice);
 	$neoPixel->getColorPicker();
 	$neoPixel->getColorScenen();
-?>
-	<? } ?>
-	<? if(isset($d1Mini->FreakaZoneDevice->useModul->CwWw) &&
-		$d1Mini->FreakaZoneDevice->useModul->CwWw) { ?>
-<?
+}
+if($d1Mini->FreakaZoneDevice->useModul->CwWw) {
 	$cwww = new wpCwWw($erg['ip'], $erg['name']);
 	$cwww->getStatusFromJson($d1Mini->FreakaZoneDevice);
 	$cwww->getColorPicker();
-?>
-	<? } ?>
-	<? if(isset($d1Mini->FreakaZoneDevice->useModul->AnalogOut) &&
-			$d1Mini->FreakaZoneDevice->useModul->AnalogOut && (
-			!isset($d1Mini->FreakaZoneDevice->useModul->NeoPixel) ||
-			!$d1Mini->FreakaZoneDevice->useModul->NeoPixel &&
-			!isset($d1Mini->FreakaZoneDevice->useModul->CwWw) ||
-			!$d1Mini->FreakaZoneDevice->useModul->CwWw)) { ?>
-		<div class="ps-container">
-			<h3>AnalogOut</h3>
-			<table summary="">
-				<tr>
-					<td colspan="3">Analog Output:</td>
-					<td colspan="3">
-						<span class="ps-input" data-ws="<?=$erg['name'] ?>_AnalogOut">undefined</span>
-					</td>
-				</tr>
-				<tr><td colspan="6"><hr /></td></tr>
-				<tr>
-					<td colspan="3">Modus:</td>
-					<td colspan="3">
-						<span class="ps-input <?=wpa::GreenYellow ?>" data-ws="<?=$erg['name'] ?>_AnalogOutHandError">undefined</span>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="3">Automatikwert:</td>
-					<td colspan="3">
-						<span class="ps-input" data-ws="<?=$erg['name'] ?>_AnalogOutAuto">undefined</span>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="3">Handwert:</td>
-					<td colspan="3">
-						<span class="ps-input" data-ws="<?=$erg['name'] ?>_AnalogOutHand">undefined</span>
-					</td>
-				</tr>
-				<tr><td colspan="6"><hr /></td></tr>
-				<tr>
-					<td colspan="6"><h3>Bedienung</h3></td>
-				</tr>
-				<tr>
-					<td colspan="2">
-						Hand / Auto
-					</td>
-					<td colspan="2">
-						<span class="ps-button writeTopic" data-topic="<?=$erg['name'] ?>/settings/AnalogOut/SetHand" data-write="0">Automatik</span>
-					</td>
-					<td colspan="2">
-						<span class="ps-button writeTopic" data-topic="<?=$erg['name'] ?>/settings/AnalogOut/SetHand" data-write="1">Hand</span>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2">
-						Handwert
-					</td>
-					<td colspan="4"></td>
-				</tr>
-				<tr>
-					<td colspan="6">
-						<div class="topic-slider" data-ws="<?=$erg['name'] ?>_AnalogOutHand" data-topic="<?=$erg['name'] ?>/settings/AnalogOut/SetHandValue"></div>
-					</td>
-				</tr>
-			<? if($d1Mini->FreakaZoneDevice->useModul->DHT11 ||
-					$d1Mini->FreakaZoneDevice->useModul->DHT22) { ?>
-				<tr><td colspan="6"><hr /></td></tr>
-				<tr>
-					<td colspan="3">Max Cycle:</td>
-					<td colspan="3">
-						<span class="ps-input ps-param"
-							data-topic="<?=$erg['name'] ?>/settings/AnalogOut/CalcCycle"
-							data-unit="sec">
-							<?=$d1Mini->FreakaZoneDevice->AnalogOut->CalcCycle ?> ms
-						</span>
-					</td>
-				</tr>
-				<tr><td colspan="6"><hr /></td></tr>
-				<tr>
-					<td colspan="6"><h3>PID</h3></td>
-				</tr>
-				<tr>
-					<td colspan="3">SetPoint:</td>
-					<td colspan="3">
-						<span class="ps-input ps-param" data-ws="<?=$erg['name'] ?>_AnalogOutSetPoint">undefined</span>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="3">Kp:</td>
-					<td colspan="3">
-						<span class="ps-input ps-param" data-ws="<?=$erg['name'] ?>_AnalogOutKp">undefined</span>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="3">Tv:</td>
-					<td colspan="3">
-						<span class="ps-input ps-param" data-ws="<?=$erg['name'] ?>_AnalogOutTv">undefined</span>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="3">Tn:</td>
-					<td colspan="3">
-						<span class="ps-input ps-param" data-ws="<?=$erg['name'] ?>_AnalogOutTn">undefined</span>
-					</td>
-				</tr>
-			<? } ?>
-			</table>
-		</div>
-	<? } ?>
-	<? if(isset($d1Mini->FreakaZoneDevice->useModul->AnalogOut2) &&
-		$d1Mini->FreakaZoneDevice->useModul->AnalogOut2 && (
-			!isset($d1Mini->FreakaZoneDevice->useModul->NeoPixel) ||
-			!$d1Mini->FreakaZoneDevice->useModul->NeoPixel &&
-			!isset($d1Mini->FreakaZoneDevice->useModul->CwWw) ||
-			!$d1Mini->FreakaZoneDevice->useModul->CwWw)) { ?>
+}
+if($d1Mini->FreakaZoneDevice->useModul->AnalogOut &&
+	!$d1Mini->FreakaZoneDevice->useModul->NeoPixel &&
+	!$d1Mini->FreakaZoneDevice->useModul->CwWw) {
+	$analogOut = new wpAnalogOut($erg['ip'], $erg['name']);
+	$analogOut->getStatusFromJson($d1Mini->FreakaZoneDevice);
+	$analogOut->getHtml(true);
+}
+if($d1Mini->FreakaZoneDevice->useModul->AnalogOut2 &&
+	!$d1Mini->FreakaZoneDevice->useModul->NeoPixel &&
+	!$d1Mini->FreakaZoneDevice->useModul->CwWw) { ?>
 		<div class="ps-container">
 			<h3>AnalogOut2</h3>
 			<table summary="">

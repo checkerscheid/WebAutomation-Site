@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 697                                                     $ #
+//# Revision     : $Rev:: 702                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.req 697 2024-10-07 21:21:44Z                      $ #
+//# File-ID      : $Id:: d1mini.req 702 2024-10-18 23:16:21Z                      $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -21,6 +21,7 @@ use system\Helper\wpDatabase;
 //require_once 'system/Helper/d1mini.psys';
 require_once 'request/system/wpNeoPixel.psys';
 require_once 'request/system/wpCwWw.psys';
+require_once 'request/system/wpAnalogOut.psys';
 
 class d1mini {
 	const c_writetopic = 'writetopic';

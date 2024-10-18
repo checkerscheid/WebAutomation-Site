@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 26.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 698                                                     $ #
+//# Revision     : $Rev:: 702                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.psys 698 2024-10-08 06:11:10Z                     $ #
+//# File-ID      : $Id:: d1mini.psys 702 2024-10-18 23:16:21Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -80,6 +80,14 @@ class d1mini {
 			}
 			if($this->status->FreakaZoneDevice->useModul->Window) {
 				$this->setWindow();
+			}
+			if(isset($this->status->FreakaZoneDevice->useModul->Window2) &&
+				$this->status->FreakaZoneDevice->useModul->Window2) {
+				$this->setWindow2();
+			}
+			if(isset($this->status->FreakaZoneDevice->useModul->Window3) &&
+				$this->status->FreakaZoneDevice->useModul->Window3) {
+				$this->setWindow3();
 			}
 			if($this->status->FreakaZoneDevice->useModul->Relais ||
 					$this->status->FreakaZoneDevice->useModul->RelaisShield) {
@@ -205,11 +213,25 @@ class d1mini {
 		echo "saved: 'Bewegung'<br />";
 	}
 	private function setWindow() {
-		$id_mqtttopic = $this->insertTopic('Window');
+		$id_mqtttopic = $this->insertTopic('Window1');
 		$id_dp = $this->mergeDP($id_mqtttopic, 'Window', 'Fenster', '0:geschlossen;1:offen;');
 		$this->mergeAlarm($id_dp, 'Window', 'Fenster offen', alarmtype::Meldung, AlarmCondition::gleich, 1);
 		$this->mergeTrend($id_dp, 'Fenster', 0);
 		echo "saved: 'Fensterkontakt'<br />";
+	}
+	private function setWindow2() {
+		$id_mqtttopic = $this->insertTopic('Window2');
+		$id_dp = $this->mergeDP($id_mqtttopic, 'Window2', 'Fenster 2', '0:geschlossen;1:offen;');
+		$this->mergeAlarm($id_dp, 'Window2', 'Fenster 2 offen', alarmtype::Meldung, AlarmCondition::gleich, 1);
+		$this->mergeTrend($id_dp, 'Fenster 2', 0);
+		echo "saved: 'Fensterkontakt 2'<br />";
+	}
+	private function setWindow3() {
+		$id_mqtttopic = $this->insertTopic('Window3');
+		$id_dp = $this->mergeDP($id_mqtttopic, 'Window3', 'Fenster 3', '0:geschlossen;1:offen;');
+		$this->mergeAlarm($id_dp, 'Window3', 'Fenster 3 offen', alarmtype::Meldung, AlarmCondition::gleich, 1);
+		$this->mergeTrend($id_dp, 'Fenster 3', 0);
+		echo "saved: 'Fensterkontakt 3'<br />";
 	}
 	private function setAnalogOut() {
 		$id_mqtttopic = $this->insertTopic('AnalogOut/Output');
@@ -233,9 +255,10 @@ class d1mini {
 		$this->mergeAlarm($id_dp_handError, 'AnalogOutHandError', 'AnalogOut Hand Error', AlarmType::Handbetrieb);
 		echo "saved: 'AnalogOut Hand Error',";
 		if($this->status->FreakaZoneDevice->useModul->DHT11 ||
-			$this->status->FreakaZoneDevice->useModul->DHT22) {
+			$this->status->FreakaZoneDevice->useModul->DHT22 ||
+			isset($this->status->FreakaZoneDevice->AnalogOut->CalcCycle)) {
 				$id_mqtttopicKp = $this->insertTopic('settings/AnalogOut/Kp');
-				$id_dp = $this->mergeDP($id_mqtttopicKp, 'AnalogOutKp', 'Verstärkung', '', 0);
+				$id_dp = $this->mergeDP($id_mqtttopicKp, 'AnalogOutKp', 'Verstärkung', '', 1);
 				echo "saved: 'Verstärkung',";
 				$id_mqtttopicTv = $this->insertTopic('settings/AnalogOut/Tv');
 				$id_dp = $this->mergeDP($id_mqtttopicTv, 'AnalogOutTv', 'Verzögerung', 's', 2);
@@ -244,8 +267,15 @@ class d1mini {
 				$id_dp = $this->mergeDP($id_mqtttopicTn, 'AnalogOutTn', 'Nachstellzeit', 's', 2);
 				echo "saved: 'Nachstellzeit',";
 				$id_mqtttopicSetPoint = $this->insertTopic('settings/AnalogOut/SetPoint');
-				$id_dp = $this->mergeDP($id_mqtttopicSetPoint, 'AnalogOutSetPoint', 'Sollwert', '%rF', 0);
+				$uint = '°C';
+				$nks = 1;
+				if(isset($this->status->FreakaZoneDevice->AnalogOut->pidType) && $this->status->FreakaZoneDevice->AnalogOut->pidType == 'AirCondition') { $uint = '%rF'; $nks = 0; }
+				$id_dp = $this->mergeDP($id_mqtttopicSetPoint, 'AnalogOutSetPoint', 'Sollwert', $uint, $nks);
+				$this->mergeTrend($id_dp, 'AnalogOut SetPoint', 0);
 				echo "saved: 'SetPoint',";
+				$id_mqtttopicReadedTemp = $this->insertTopic('AnalogOut/ReadedTemp');
+				$id_dp = $this->mergeDP($id_mqtttopicReadedTemp, 'AnalogOutReadedTemp', 'Temperatur', '°C', 1);
+				$this->mergeTrend($id_dp, 'AnalogOut ReadedTemp', 0);
 		}
 		echo "saved: 'AnalogOut'<br />";
 	}

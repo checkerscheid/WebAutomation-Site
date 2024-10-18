@@ -9,13 +9,14 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 696                                                     $ #
+//# Revision     : $Rev:: 702                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: mudda.js 696 2024-10-06 19:11:29Z                        $ #
+//# File-ID      : $Id:: mudda.js 702 2024-10-18 23:16:21Z                        $ #
 //#                                                                                 #
 //###################################################################################
 ?> mudda */
 //<? require_once('system/websockets.js') ?>
+//<? require_once('script/system/wpAnalogOut.js') ?>
 ws.logEnabled = false;
 
 timezoneJS.timezone.zoneFileBasePath = 'system/tz';
@@ -23,6 +24,7 @@ timezoneJS.timezone.defaultZoneFile = ['europe.txt'];
 timezoneJS.timezone.init({async: true});
 
 p.page.load = function() {
+	wpAnalogOut.Init('mudda');
 	$('#mudda').on('click', '.pa-EinAus.bedienbar', function() {
 		var headline = $(this).attr('data-popup');
 		var id = $(this).attr('id');
@@ -31,6 +33,22 @@ p.page.load = function() {
 				title: 'Ventilbedienung', modal: true, width: '300px'
 			});
 			ws.register();
+		});
+	});
+	$('.page').on('click', '.writeTopic', function() {
+		const topic = $(this).attr('data-topic');
+		const value = $(this).attr('data-write');
+		$.post('mudda.writetopic.req', {topic:topic, value:value}, function(data) {
+			
+		});
+	});
+	$('#dialog').on('click', '.writeTopic', function() {
+		const topic = $(this).attr('data-topic');
+		const value = $(this).attr('data-write');
+		const text = $(this).text();
+		$.post('mudda.writetopic.req', {topic:topic, value:value}, function(data) {
+			$('[data-topic="' + topic + '"]').text(text);
+			$('#dialog').dialog('close');
 		});
 	});
 	$('#mudda').on('click', '.ps-param', function() {
@@ -66,6 +84,24 @@ p.page.load = function() {
 				getTrendDataMudda();
 			}
 		}, 'json');
+	});
+	$('.topic-slider').slider({
+		min: 0,
+		max: 100,
+		start: function() {
+			$(this).addClass('WriteOnly');
+			$(this).find('a').append('<span class="toleft"></span>');
+		},
+		slide: function(event, ui) {
+			var TheValue = ui.value;
+			var TheSpan = $(this).find('span.toleft');
+			$(TheSpan).text(TheValue);
+		},
+		stop: function(event, ui) {
+			const topic = $(this).attr('data-topic');
+			$.post('std.d1mini.writetopic.req', {topic:topic, value:ui.value});
+			$(this).removeClass('WriteOnly').find('a').text('');
+		}
 	});
 	getTrendDataMudda();
 	ws.connect();

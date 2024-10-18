@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 697                                                     $ #
+//# Revision     : $Rev:: 702                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.js 697 2024-10-07 21:21:44Z                       $ #
+//# File-ID      : $Id:: d1mini.js 702 2024-10-18 23:16:21Z                       $ #
 //#                                                                                 #
 //###################################################################################
 use system\std
@@ -19,10 +19,12 @@ use system\std
 //<? require_once('script/system/websockets.js') ?>
 //<? require_once('script/system/wpNeoPixel.js') ?>
 //<? require_once('script/system/wpCwWw.js') ?>
+//<? require_once('script/system/wpAnalogOut.js') ?>
 ws.logEnabled = true;
 p.page.load = function() {
 	wpNeoPixel.Init('std.d1mini');
 	wpCwWw.Init('std.d1mini');
+	wpAnalogOut.Init('std.d1mini');
 	// ?? warum war das? $.get('std.d1mini.getD1MiniSettings.<?=std::gets("param1")?>.req');
 	$('.buttonContainer').on('click', '.SetCmd', function() {
 		var ip = $('#storedIP').attr('data-ip');
@@ -81,7 +83,7 @@ p.page.load = function() {
 	$('.page').on('click', '.ps-param', function() {
 		const that = $(this)
 		const topic = $(this).attr('data-topic');
-		const unit = $(this).attr('data-unit');
+		const unit = $(this).attr('data-unit') ? $(this).attr('data-unit') : '';
 		const value = $(this).text().replace(' ' + unit, '').trim();
 		$.post('std.write.pop', {headline:topic, unit:unit, value:value}, function(data) {
 			$('#dialog').html(data).dialog({

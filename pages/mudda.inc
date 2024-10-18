@@ -9,15 +9,17 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 696                                                     $ #
+//# Revision     : $Rev:: 702                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: mudda.inc 696 2024-10-06 19:11:29Z                       $ #
+//# File-ID      : $Id:: mudda.inc 702 2024-10-18 23:16:21Z                       $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
 namespace pages;
 use system\Helper\wpa;
+use system\Helper\wpAnalogOut;
 require_once 'system/Helper/wpa.psys';
+require_once 'system/Helper/wpAnalogOut.psys';
 $points = array(
 	'EG_HZG_FB' => 'EG_HZG_FB'
 );
@@ -94,6 +96,9 @@ $bad->setHum('BA1_RU_Hum');
 
 $eingang = new mudda('Flur Eingang', 2, 3);
 $eingang->setHum('FL1_EI_RU_Hum');
+
+$schlafzimmer = new wpAnalogOut('172.17.44.110', 'SZ1_VT');
+$schlafzimmer->getStatus();
 ?>
 <div id="mudda" class="page">
 	<h1><? \system\html::getPageHeadline();?></h1>
@@ -228,6 +233,9 @@ $eingang->setHum('FL1_EI_RU_Hum');
 				</tbody>
 			</table>
 		</div>
+<?
+$schlafzimmer->getHtml(false, 'Schlafzimmer', 'Fenster links', 'Fenster rechts');
+?>
 	</div>
 	<div class="ps-container">
 		<h2>Temperaturen</h2>

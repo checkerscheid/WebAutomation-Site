@@ -1,0 +1,38 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 01.08.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 703                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: wpAnalogOut.psys 703 2024-10-18 23:17:50Z                $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\system;
+
+use system\std, system\WebCom;
+wpAnalogOut::$ip = std::posts('ip');
+class wpAnalogOut {
+	public static $ip;
+	const c_AnalogOutPidType = 'AnalogOutPidType';
+	public static function AnalogOutPidType() {
+		header(wpJSON_HEADER);
+		$cmd = 'PidType=' . std::posts('id');
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', wpAnalogOut::$ip . '%~%' . 'setAnalogOut?' . $cmd);
+	}
+}
+
+switch(std::gets('param1')) {
+		//###################################################################################
+	case wpAnalogOut::c_AnalogOutPidType:
+		wpAnalogOut::AnalogOutPidType();
+		break;
+}
+

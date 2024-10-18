@@ -9,17 +9,23 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.10.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 701                                                     $ #
+//# Revision     : $Rev:: 702                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: mudda.req 701 2024-10-14 00:14:32Z                       $ #
+//# File-ID      : $Id:: mudda.req 702 2024-10-18 23:16:21Z                       $ #
 //#                                                                                 #
 //###################################################################################
 namespace request;
 
-use system\std;
+use system\std, system\WebCom;
 use system\Helper\wpDatabase;
+require_once 'request/system/wpAnalogOut.psys';
 
 class mudda {
+	const c_writetopic = 'writetopic';
+	public static function writetopic() {
+		$WebCom = new WebCom();
+		echo $WebCom->send('publishTopic', std::posts('topic') . '%~%' . std::posts('value'));
+	}
 	const c_cleanMyTrends = 'cleanMyTrends';
 	public static function cleanMyTrends() {
 		$database = new wpDatabase();
@@ -31,7 +37,11 @@ class mudda {
 	}
 }
 switch(std::gets('param1')) {
-		//###################################################################################
+	//###################################################################################
+	case mudda::c_writetopic:
+		mudda::writetopic();
+		break;
+	//###################################################################################
 	case mudda::c_cleanMyTrends:
 		mudda::cleanMyTrends();
 		break;

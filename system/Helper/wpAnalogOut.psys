@@ -1,0 +1,192 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 01.08.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 703                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: wpAnalogOut.psys 703 2024-10-18 23:17:50Z                $ #
+//#                                                                                 #
+//###################################################################################
+namespace system\Helper;
+use system\WebCom;
+//use system\std;
+//use system\Helper\security;
+/**
+ * generiert die Oberfläche für die Neopixel erweiterung auf dem D1 Mini
+ * @author Checker
+ */
+class wpAnalogOut {
+	private $database, $status;
+	private $ip, $name;
+	public function __construct($ip, $name) {
+		$this->database = new wpDatabase();
+		$this->ip = $ip;
+		$this->name = $name;
+		//$this->getStatus();
+	}
+	public function getStatus() {
+		$WebCom = new WebCom();
+		$res = $WebCom->send('getD1MiniStatus', $this->ip);
+		$jsonres = \json_decode($res);
+		if(\json_last_error() != JSON_ERROR_NONE) {
+			echo \json_last_error_msg();
+			echo $res;
+		}
+		$this->status = $jsonres->FreakaZoneDevice;
+		//std::test_array($res, 'getStatus');
+	}
+	public function getStatusFromJson($json) {
+		$this->status = $json;
+		//std::test_array($this->status, 'getStatusFromJson');
+	}
+	public function getHtml($admin, $headline = 'AnalogOut', $fenster2 = 'Fenster 2', $fenster3 = 'Fenster 3') {
+?>
+		<div class="wpAnalogOut ps-container" data-ip="<?=$this->ip ?>">
+			<h3><?=$headline ?></h3>
+			<hr />
+			<table summary="">
+				<tr>
+					<td colspan="3">Analog Output:</td>
+					<td colspan="3">
+						<span class="ps-input" data-ws="<?=$this->name ?>_AnalogOut">undefined</span>
+					</td>
+				</tr>
+				<tr><td colspan="6"><hr /></td></tr>
+				<tr>
+					<td colspan="3">Modus:</td>
+					<td colspan="3">
+						<span class="ps-input <?=wpa::GreenYellow ?>" data-ws="<?=$this->name ?>_AnalogOutHandError">undefined</span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">Automatikwert:</td>
+					<td colspan="3">
+						<span class="ps-input" data-ws="<?=$this->name ?>_AnalogOutAuto">undefined</span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">Handwert:</td>
+					<td colspan="3">
+						<span class="ps-input" data-ws="<?=$this->name ?>_AnalogOutHand">undefined</span>
+					</td>
+				</tr>
+				<tr><td colspan="6"><hr /></td></tr>
+				<tr>
+					<td colspan="6"><h3>Bedienung</h3></td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						Hand / Auto
+					</td>
+					<td colspan="2">
+						<span class="ps-button writeTopic" data-topic="<?=$this->name ?>/settings/AnalogOut/SetHand" data-write="0">Automatik</span>
+					</td>
+					<td colspan="2">
+						<span class="ps-button writeTopic" data-topic="<?=$this->name ?>/settings/AnalogOut/SetHand" data-write="1">Hand</span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						Handwert
+					</td>
+					<td colspan="4"></td>
+				</tr>
+				<tr>
+					<td colspan="6">
+						<div class="topic-slider" data-ws="<?=$this->name ?>_AnalogOutHand" data-topic="<?=$this->name ?>/settings/AnalogOut/SetHandValue"></div>
+					</td>
+				</tr>
+			<? if($this->status->useModul->DHT11 ||
+				$this->status->useModul->DHT22 ||
+				isset($this->status->AnalogOut->CalcCycle)) { ?>
+				<tr><td colspan="6"><hr /></td></tr>
+				<? if($admin) { ?>
+				<tr>
+					<td colspan="3">Max Cycle:</td>
+					<td colspan="3">
+						<span class="ps-input ps-param"
+							data-topic="<?=$this->name ?>/settings/AnalogOut/CalcCycle"
+							data-unit="sec">
+							<?=$this->status->AnalogOut->CalcCycle ?> ms
+						</span>
+					</td>
+				</tr>
+				<tr><td colspan="6"><hr /></td></tr>
+				<? } ?>
+				<tr>
+					<td colspan="6"><h3>PID</h3></td>
+				</tr>
+				<? if($admin) { ?>
+				<tr>
+					<td colspan="3">PID Type:</td>
+					<td colspan="2">
+						<select class="ps-input AnalogOutPidType">
+							<option value="0">Heating</option>
+							<option value="1">Air Condition</option>
+						</select>
+					</td>
+					<td>
+						<span class="ps-button setAnalogOutPidType">OK</span>
+					</td>
+				</tr>
+				<? } ?>
+				<tr>
+					<td colspan="3">ReadedTemp:</td>
+					<td colspan="3">
+						<span class="ps-input" data-ws="<?=$this->name ?>_AnalogOutReadedTemp">undefined</span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">SetPoint:</td>
+					<td colspan="3">
+						<span class="ps-input ps-param" data-ws="<?=$this->name ?>_AnalogOutSetPoint" data-wswrite="<?=$this->name ?>_AnalogOutSetPoint" data-topic="<?=$this->name ?>/settings/AnalogOut/SetPoint">undefined</span>
+					</td>
+				</tr>
+				<? if($admin) { ?>
+				<tr>
+					<td colspan="3">Kp:</td>
+					<td colspan="3">
+						<span class="ps-input ps-param" data-ws="<?=$this->name ?>_AnalogOutKp" data-topic="<?=$this->name ?>/settings/AnalogOut/Kp">undefined</span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">Tv:</td>
+					<td colspan="3">
+						<span class="ps-input ps-param" data-ws="<?=$this->name ?>_AnalogOutTv" data-topic="<?=$this->name ?>/settings/AnalogOut/Tv">undefined</span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">Tn:</td>
+					<td colspan="3">
+						<span class="ps-input ps-param" data-ws="<?=$this->name ?>_AnalogOutTn" data-topic="<?=$this->name ?>/settings/AnalogOut/Tn">undefined</span>
+					</td>
+				</tr>
+				<? } ?>
+			<? } ?>
+			<? if(isset($this->status->useModul->Window2) &&
+				$this->status->useModul->Window2) { ?>
+				<tr>
+					<td colspan="3"><?=$fenster2 ?>:</td>
+					<td colspan="3"><span class="ps-input <?=wpa::GreyGreen ?>" data-ws="<?=$this->name ?>_Window2">undefined</span></td>
+				</tr>
+			<? } ?>
+			<? if(isset($this->status->useModul->Window3) &&
+				$this->status->useModul->Window3) { ?>
+				<tr>
+					<td colspan="3"><?=$fenster3 ?>:</td>
+					<td colspan="3"><span class="ps-input <?=wpa::GreyGreen ?>" data-ws="<?=$this->name ?>_Window3">undefined</span></td>
+				</tr>
+			<? } ?>
+			</table>
+		</div>
+<?
+	}
+}
+?>

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 700                                                     $ #
+//# Revision     : $Rev:: 702                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpNeoPixel.psys 700 2024-10-14 00:13:37Z                 $ #
+//# File-ID      : $Id:: wpNeoPixel.psys 702 2024-10-18 23:16:21Z                 $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -44,8 +44,13 @@ class wpNeoPixel {
 	}
 	private function getStatus() {
 		$WebCom = new WebCom();
-		$res = \json_decode($WebCom->send('getD1MiniStatus', $this->ip));
-		$this->status = $res->FreakaZoneDevice;
+		$res = $WebCom->send('getD1MiniStatus', $this->ip);
+		$jsonres = \json_decode($res);
+		if(\json_last_error() != JSON_ERROR_NONE) {
+			echo \json_last_error_msg();
+			echo $res;
+		}
+		$this->status = $jsonres->FreakaZoneDevice;
 		//std::test_array($this->status, 'getStatus');
 	}
 	public function getStatusFromJson($json) {

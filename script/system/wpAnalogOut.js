@@ -7,27 +7,31 @@
 //###################################################################################
 //#                                                                                 #
 //# Author       : Christian Scheid                                                 #
-//# Date         : 13.06.2024                                                       #
+//# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 702                                                     $ #
+//# Revision     : $Rev:: 703                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.css 702 2024-10-18 23:16:21Z                      $ #
+//# File-ID      : $Id:: wpAnalogOut.js 703 2024-10-18 23:17:50Z              $ #
 //#                                                                                 #
 //###################################################################################
-?> d1mini */
+?> wpCwWw */
 
-<? require_once 'style/system/wpNeoPixel.css'; ?>
-<? require_once 'style/system/wpCwWw.css'; ?>
-<? require_once 'style/system/wpAnalogOut.css'; ?>
-
-#d1mini h2, #d1mini p { text-align: center; }
-#d1mini table { margin:auto; }
-#d1mini .buttonContainer { text-align:center; }
-#dialog .newDpVal { width:auto; min-width:250px; }
-
-@media (orientation: portrait) {
-	#d1mini .ps-button { padding:25px 6px; }
-	#d1mini .ui-slider .ui-slider-handle { width:30px; height:30px; }
-	#d1mini .ui-slider-horizontal { height:20px; }
-}
-
+var wpAnalogOut = {
+	ip: null,
+	target:null,
+	Init: function(target) {
+		wpAnalogOut.ip = $('.wpAnalogOut').attr('data-ip');
+		wpAnalogOut.target = target;
+		wpAnalogOut.Register();
+	},
+	Register: function() {
+		$('.setAnalogOutPidType').on('click', function() {
+			const pidtype = {
+				ip: wpAnalogOut.ip,
+				id: $('.AnalogOutPidType').val()
+			};
+			$.post(wpAnalogOut.target + '.AnalogOutPidType.req', pidtype, function(data) {
+			}, 'json');
+		});
+	}
+};
