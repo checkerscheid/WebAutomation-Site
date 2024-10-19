@@ -122,7 +122,7 @@ switch(std::gets('param1')) {
 		}
 		while($erg = $database->fetch()) {
 			echo '<div class="tr" data-idtrend="'.$erg['id_trend'].'">';
-			echo '<div class="td"><span class="ps-checkbox tr-trendname">'.$erg['trendname'].'</span></div>';
+			echo '<div class="td"><span class="ps-checkbox tr-trendname" title="id: '.$erg['id_trend'].'">'.$erg['trendname'].'</span></div>';
 			echo '<div class="td"><span>'.$erg['name'].'</span></div>';
 			echo '<div class="td"><span class="tr-trendintervall">'.($erg['intervall'] == '0' ? 'onChange' : $erg['intervall'].' sec').'</div>';
 			echo '<div class="td"><span class="tr-trendactive'.($erg['active'] == '0' ? '">Nein' : ' ps-green">Ja').'</div>';

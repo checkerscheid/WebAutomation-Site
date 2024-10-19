@@ -63,7 +63,6 @@ class d1mini {
 			$this->setDevice();
 			$this->setRSSI();
 			$this->setOnline();
-			$this->setRest();
 			$this->setNewUpdate();
 			if($this->status->FreakaZoneDevice->useModul->DHT11 ||
 					$this->status->FreakaZoneDevice->useModul->DHT22) {
@@ -156,12 +155,6 @@ class d1mini {
 		$id_dp = $this->mergeDP($id_mqtttopic, 'Online', 'Online', '0:online;1:offline;');
 		$this->mergeAlarm($id_dp, 'Online', 'Online');
 		echo "saved: 'Online Error'<br />";
-	}
-	private function setRest() {
-		$id_mqtttopic = $this->insertTopic('ERROR/Rest');
-		$id_dp = $this->mergeDP($id_mqtttopic, 'ERROR_Rest', 'Rest Error', '0:Ok;1:Error;');
-		$this->mergeAlarm($id_dp, 'ERROR_Rest', 'Rest Error', 3);
-		echo "saved: 'Rest Error'<br />";
 	}
 	private function setNewUpdate() {
 		$id_mqtttopic = $this->insertTopic('ERROR/NewVersion');

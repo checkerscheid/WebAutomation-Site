@@ -62,7 +62,7 @@ class trend {
 		if(str_replace(',','.',$value) < $this->min || $this->min == null) {
 			$this->min = str_replace(',','.',$value);
 		}
-		if($this->isbool === null) {
+		if($this->isbool === null || $this->isbool) {
 			if(strtolower($value) == 'true' || strtolower($value) == 'false' ||
 				(($this->min == 0 || $this->min == 1) && ($this->max == 0 || $this->max == 1))) {
 				$this->isbool = true;
@@ -114,8 +114,8 @@ class trend {
 			$_max = 100;
 			if($this->min != null)
 				$_min = str_replace(',','.',strtolower($this->min));
-				if($this->max != null)
-					$_max = str_replace(',','.',strtolower($this->max));
+			if($this->max != null)
+			$_max = str_replace(',','.',strtolower($this->max));
 			return ', "minPoint": '.($_min==''?'0':$_min).', "maxPoint": '.($_max==''?'0':$_max);
 		}
 		return '';
@@ -207,10 +207,11 @@ if($ids != '' && count($ids) > 0) {
 	//********************
 	$trends = array();
 	$database = new wpDatabase();
-	$database->query('SELECT [t].[id_trend], [t].[name], [dp].[id_dp], [dp].[name] AS [filename], [dp].[min], [dp].[max], [dp].[unit], [dp].[nks] FROM [trend] [t]
+	$sql = 'SELECT [t].[id_trend], [t].[name], [dp].[id_dp], [dp].[name] AS [filename], [dp].[min], [dp].[max], [dp].[unit], [dp].[nks] FROM [trend] [t]
 		INNER JOIN [dp] ON [t].[id_dp] = [dp].[id_dp]
-		WHERE '.$sqlwhere.' ORDER BY [t].[name]');
-	//echo $sqlwheretime;
+		WHERE '.$sqlwhere.' ORDER BY [t].[name]';
+	//echo $sql;
+	$database->query($sql);
 	while($ergTrend = $database->fetch()) {
 		$trends[$ergTrend['id_trend']] = new trend($ergTrend['id_trend'], $ergTrend['name']);
 		$trends[$ergTrend['id_trend']]->setMinMaxUnit($ergTrend['min'], $ergTrend['max'], $ergTrend['unit'], $ergTrend['nks']);
@@ -255,6 +256,8 @@ function getyAxes($pointminmax) {
 	global $minmax, $yaxes;
 	$min = $pointminmax['min'];
 	$max = $pointminmax['max'];
+	if($min == '.00') $min = '0.00';
+	if($max == '.00') $max = '0.00';
 	$i = 0;
 	for($i = 0; $i < count($minmax); $i++) {
 		if($minmax[$i]['min'] == $min && $minmax[$i]['max'] == $max ) {
@@ -275,8 +278,8 @@ function getyAxes($pointminmax) {
 	if(isset($trends) && count($trends) > 0) {
 		$datahasbool = false;
 		$i = 0;
-		$minaxes = NULL;
-		$maxaxes = NULL;
+		$minaxes = null;
+		$maxaxes = null;
 		$AxesNumber = 2;
 		if($only1Axes) {
 			foreach($trends as $id => $object) {
@@ -290,6 +293,8 @@ function getyAxes($pointminmax) {
 					}
 				}
 			}
+			if($minaxes == '.00') $minaxes = '0.00';
+			if($maxaxes == '.00') $maxaxes = '0.00';
 			$yaxes .= ',{"min":'.$minaxes.',"max":'.$maxaxes.'}';
 		}
 		foreach($trends as $id => $object) {

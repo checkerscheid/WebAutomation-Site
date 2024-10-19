@@ -107,11 +107,25 @@ p.page.load = function() {
 	ws.connect();
 	p.getValues();
 };
+const WGT = 1120;
+const WGH = 1121;
+const KUT = 1551;
+const KUH = 1552;
+const WZT = 1554;
+const WZH = 1555;
+const EST = 1545;
+const ESH = 1546;
+const BAT = 1548;
+const BAH = 1549;
+const EIT = 1542;
+const EIH = 1543;
+const FL2T = 1123;
+const FL2H = 1124;
 function getTrendDataMudda() {
 	var objTemp = {
 		time: 'last24Hours',
 		choosen: 'timerange',
-		ids: [1096,1077,1079], //,1033
+		ids: [WGT, KUT, WZT, EST, BAT, EIT, FL2T],
 		useminmax: 'frompoint',
 		only1axes: 'True'
 	};
@@ -129,7 +143,7 @@ function getTrendDataMudda() {
 	var objHum = {
 		time: 'last24Hours',
 		choosen: 'timerange',
-		ids: [1095,1076,1078], //,1123
+		ids: [WGH, KUH, WZH, ESH, BAH, EIH, FL2H],
 		useminmax: 'frompoint',
 		only1axes: 'True'
 	};
