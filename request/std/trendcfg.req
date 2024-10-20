@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 15.05.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 608                                                     $ #
+//# Revision     : $Rev:: 704                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: trendcfg.req 608 2024-05-09 20:38:50Z                    $ #
+//# File-ID      : $Id:: trendcfg.req 704 2024-10-20 17:29:04Z                    $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;

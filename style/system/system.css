@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 702                                                     $ #
+//# Revision     : $Rev:: 704                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: system.css 702 2024-10-18 23:16:21Z                      $ #
+//# File-ID      : $Id:: system.css 704 2024-10-20 17:29:04Z                      $ #
 //#                                                                                 #
 //###################################################################################
 use system\wpInit
@@ -337,6 +337,7 @@ span.ps-input { cursor:default; }
 .ps-biginfo { display:block; width:32px; height:32px; float:left; margin-left:10px;
 	background:transparent url(images/layout/Comment32.png) no-repeat; }
 .ps-biginfo img { display:none; }
+#html .ps-pluginbutton { text-decoration:none; width:auto; min-width:auto; }
 
 span.ps-checkbox, label.ps-checkbox { display:inline-block; }
 .ps-checkbox { line-height:20px; padding-left:25px; cursor:pointer;

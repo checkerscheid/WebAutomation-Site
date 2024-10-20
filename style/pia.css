@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 27.07.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 700                                                     $ #
+//# Revision     : $Rev:: 704                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pia.css 700 2024-10-14 00:13:37Z                         $ #
+//# File-ID      : $Id:: pia.css 704 2024-10-20 17:29:04Z                         $ #
 //#                                                                                 #
 //###################################################################################
 ?> pia */
@@ -20,6 +20,10 @@
 <? require_once 'style/system/wpCwWw.css'; ?>
 <? require_once 'style/system/wpRGB.css'; ?>
 
+.pagecontent { background:transparent url(images/pia_breit.jpg) center center no-repeat; background-size:cover; }
+@media (orientation: portrait) {
+	.pagecontent { background:transparent url(images/pia_hoch.jpg) center center no-repeat; background-size:100% auto; }
+}
 #pia h2, #pia p,
 #pia .buttonContainer { text-align:center; }
 #pia .topic-slider { margin:10px 0; }

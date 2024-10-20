@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 15.05.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 700                                                     $ #
+//# Revision     : $Rev:: 704                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: calendarcfg.req 700 2024-10-14 00:13:37Z                 $ #
+//# File-ID      : $Id:: calendarcfg.req 704 2024-10-20 17:29:04Z                 $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -28,7 +28,9 @@ class calendarcfg {
 	const c_getaktiv = 'getaktiv';
 	const c_saveallgroup = 'saveallgroup';
 	const c_saveallaktiv = 'saveallaktiv';
+	const c_poponecalendar = 'poponecalendar';
 	const c_getonecalendar = 'getonecalendar';
+	const c_updateonecalendar = 'updateonecalendar';
 	const c_saveonecalendar = 'saveonecalendar';
 	const c_deleteonecalendar = 'deleteonecalendar';
 	const c_deleteall = 'deleteall';
@@ -141,7 +143,7 @@ switch(std::gets('param1')) {
 					WHERE [c].[id_calendargroup] = ' . std::posts('calendargroup') . ' ORDER BY [c].[name]');
 		}
 		while($erg = $database->fetch()) {
-			echo '<div class="tr" data-id="'.$erg['id_calendar'].'">';
+			echo '<div class="tr" data-idcalendar="'.$erg['id_calendar'].'">';
 			echo '<div class="td"><span class="ps-checkbox" title="id: '.$erg['id_calendar'].'">'.$erg['name'].'</span></div>';
 			echo '<div class="td"><span title="'.$erg['id_dp'].'">'.$erg['dpname'].'</span></div>';
 			echo '<div class="td"><span class="tr-calendaractive'.($erg['active'] == '0' ? '">Nein' : ' ps-green">Ja').'</div>';
@@ -203,7 +205,7 @@ switch(std::gets('param1')) {
 		}
 		break;
 //###################################################################################
-	case calendarcfg::c_getonecalendar:
+	case calendarcfg::c_poponecalendar:
 		$database = new wpDatabase();
 		$database->query("SELECT [c].[id_calendargroup], [c].[name], [c].[active]
 				FROM [calendar] [c]
@@ -231,6 +233,51 @@ switch(std::gets('param1')) {
 	</div>
 </div>
 <?
+		break;
+//###################################################################################
+	case calendarcfg::c_getonecalendar:
+			$database = new wpDatabase();
+			$database->query("SELECT [c].[id_calendargroup], [c].[name], [c].[active]
+						FROM [calendar] [c]
+						WHERE [c].[id_calendar] = '" . std::posts('id') . "'");
+			$erg = $database->fetch();
+?>
+<hr />
+<div class="table">
+	<div class="tr">
+		<div class="td">
+			<label for="c-description">Zeitprogrammname</label>
+			<input type="hidden" value="<?=std::posts('id')?>" />
+		</div>
+		<div class="td"><input type="text" id="c-description" value="<?=$erg['name']?>" class="ps-input" /></div>
+	</div>
+<?
+	getGroups($erg['id_calendargroup']);
+?>
+	<div class="tr">
+		<div class="td">
+		</div>
+		<div class="td">
+			<span id="c-active" class="ps-checkbox<?=($erg['active'] == '0' ? '' : ' checked')?>">Aktiv</span>
+		</div>
+	</div>
+</div>
+<?
+		break;
+//###################################################################################
+	case calendarcfg::c_updateonecalendar:
+		header(wpJSON_HEADER);
+		$database = new wpDatabase();
+		$database->query("UPDATE [calendar] SET
+			[id_calendargroup] = " . std::posts('group').",
+			[name] = '" . std::posts('description') . "',
+			[active] = '" . std::posts('active') . "'
+			WHERE [id_calendar] = '" . std::posts('id') . "'");
+
+		$TCP = new WebCom();
+		$TCP->send('CalendarRenew', std::posts('id'));
+		echo '{"erg":"S_OK","message":"saved calendar id ' . std::posts('id') . '"}';
+		//std::test_array($encode->getArray());
 		break;
 //###################################################################################
 	case calendarcfg::c_saveonecalendar:

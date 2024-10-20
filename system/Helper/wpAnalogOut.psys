@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 703                                                     $ #
+//# Revision     : $Rev:: 704                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpAnalogOut.psys 703 2024-10-18 23:17:50Z                $ #
+//# File-ID      : $Id:: wpAnalogOut.psys 704 2024-10-20 17:29:04Z                $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -24,11 +24,13 @@ use system\WebCom;
  */
 class wpAnalogOut {
 	private $database, $status;
-	private $ip, $name;
-	public function __construct($ip, $name) {
+	private $ip, $name, $trendid, $calid;
+	public function __construct($ip, $name, $trendid = 0, $calid = 0) {
 		$this->database = new wpDatabase();
 		$this->ip = $ip;
 		$this->name = $name;
+		$this->trendid = $trendid;
+		$this->calid = $calid;
 		//$this->getStatus();
 	}
 	public function getStatus() {
@@ -53,27 +55,27 @@ class wpAnalogOut {
 			<hr />
 			<table summary="">
 				<tr>
-					<td colspan="3">Analog Output:</td>
-					<td colspan="3">
+					<td colspan="4">Analog Output:</td>
+					<td colspan="2">
 						<span class="ps-input" data-ws="<?=$this->name ?>_AnalogOut">undefined</span>
 					</td>
 				</tr>
 				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
-					<td colspan="3">Modus:</td>
-					<td colspan="3">
+					<td colspan="4">Modus:</td>
+					<td colspan="2">
 						<span class="ps-input <?=wpa::GreenYellow ?>" data-ws="<?=$this->name ?>_AnalogOutHandError">undefined</span>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="3">Automatikwert:</td>
-					<td colspan="3">
+					<td colspan="4">Automatikwert:</td>
+					<td colspan="2">
 						<span class="ps-input" data-ws="<?=$this->name ?>_AnalogOutAuto">undefined</span>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="3">Handwert:</td>
-					<td colspan="3">
+					<td colspan="4">Handwert:</td>
+					<td colspan="2">
 						<span class="ps-input" data-ws="<?=$this->name ?>_AnalogOutHand">undefined</span>
 					</td>
 				</tr>
@@ -82,9 +84,7 @@ class wpAnalogOut {
 					<td colspan="6"><h3>Bedienung</h3></td>
 				</tr>
 				<tr>
-					<td colspan="2">
-						Hand / Auto
-					</td>
+					<td colspan="2">Hand / Auto</td>
 					<td colspan="2">
 						<span class="ps-button writeTopic" data-topic="<?=$this->name ?>/settings/AnalogOut/SetHand" data-write="0">Automatik</span>
 					</td>
@@ -93,9 +93,7 @@ class wpAnalogOut {
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2">
-						Handwert
-					</td>
+					<td colspan="2">Handwert</td>
 					<td colspan="4"></td>
 				</tr>
 				<tr>
@@ -109,8 +107,8 @@ class wpAnalogOut {
 				<tr><td colspan="6"><hr /></td></tr>
 				<? if($admin) { ?>
 				<tr>
-					<td colspan="3">Max Cycle:</td>
-					<td colspan="3">
+					<td colspan="4">Max Cycle:</td>
+					<td colspan="2">
 						<span class="ps-input ps-param"
 							data-topic="<?=$this->name ?>/settings/AnalogOut/CalcCycle"
 							data-unit="sec">
@@ -138,33 +136,46 @@ class wpAnalogOut {
 				</tr>
 				<? } ?>
 				<tr>
-					<td colspan="3">Readed:</td>
-					<td colspan="3">
+					<td colspan="4">Readed:</td>
+					<td colspan="2">
 						<span class="ps-input" data-ws="<?=$this->name ?>_AnalogOutReadedTemp">undefined</span>
+						<span class="<?=wpa::indikatorTempOut?>" data-ws="<?=$this->name ?>_AnalogOutReadedTemp"><?=wpHTML_EMPTY ?></span>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="3">SetPoint:</td>
-					<td colspan="3">
+					<td colspan="4">SetPoint:</td>
+					<td colspan="2">
 						<span class="ps-input ps-param" data-ws="<?=$this->name ?>_AnalogOutSetPoint" data-wswrite="<?=$this->name ?>_AnalogOutSetPoint" data-topic="<?=$this->name ?>/settings/AnalogOut/SetPoint">undefined</span>
 					</td>
 				</tr>
+				<? if($this->trendid > 0 || $this->calid > 0) { ?>
+				<tr>
+					<td colspan="6">
+						<? if($this->trendid > 0 || $this->calid > 0) { ?>
+						<a href="std.trendview.<?=$this->trendid ?>.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a>
+						<? } ?>
+						<? if($this->trendid > 0 || $this->calid > 0) { ?>
+						<a href="std.calendaredit.<?=$this->calid ?>.htm" class="ps-button ps-pluginbutton"><?=wpHTML_UHR ?></a>
+						<? } ?>
+					</td>
+				</tr>
+				<? } ?>
 				<? if($admin) { ?>
 				<tr>
-					<td colspan="3">Kp:</td>
-					<td colspan="3">
+					<td colspan="4">Kp:</td>
+					<td colspan="2">
 						<span class="ps-input ps-param" data-ws="<?=$this->name ?>_AnalogOutKp" data-topic="<?=$this->name ?>/settings/AnalogOut/Kp">undefined</span>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="3">Tv:</td>
-					<td colspan="3">
+					<td colspan="4">Tv:</td>
+					<td colspan="2">
 						<span class="ps-input ps-param" data-ws="<?=$this->name ?>_AnalogOutTv" data-topic="<?=$this->name ?>/settings/AnalogOut/Tv">undefined</span>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="3">Tn:</td>
-					<td colspan="3">
+					<td colspan="4">Tn:</td>
+					<td colspan="2">
 						<span class="ps-input ps-param" data-ws="<?=$this->name ?>_AnalogOutTn" data-topic="<?=$this->name ?>/settings/AnalogOut/Tn">undefined</span>
 					</td>
 				</tr>
@@ -173,15 +184,15 @@ class wpAnalogOut {
 			<? if(isset($this->status->useModul->Window2) &&
 				$this->status->useModul->Window2) { ?>
 				<tr>
-					<td colspan="3"><?=$fenster2 ?>:</td>
-					<td colspan="3"><span class="ps-input <?=wpa::GreenYellow ?>" data-ws="<?=$this->name ?>_Window2">undefined</span></td>
+					<td colspan="4"><?=$fenster2 ?>:</td>
+					<td colspan="2"><span class="ps-input <?=wpa::GreenYellow ?>" data-ws="<?=$this->name ?>_Window2">undefined</span></td>
 				</tr>
 			<? } ?>
 			<? if(isset($this->status->useModul->Window3) &&
 				$this->status->useModul->Window3) { ?>
 				<tr>
-					<td colspan="3"><?=$fenster3 ?>:</td>
-					<td colspan="3"><span class="ps-input <?=wpa::GreenYellow ?>" data-ws="<?=$this->name ?>_Window3">undefined</span></td>
+					<td colspan="4"><?=$fenster3 ?>:</td>
+					<td colspan="2"><span class="ps-input <?=wpa::GreenYellow ?>" data-ws="<?=$this->name ?>_Window3">undefined</span></td>
 				</tr>
 			<? } ?>
 			</table>

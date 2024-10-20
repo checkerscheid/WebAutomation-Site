@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 702                                                     $ #
+//# Revision     : $Rev:: 704                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: mudda.inc 702 2024-10-18 23:16:21Z                       $ #
+//# File-ID      : $Id:: mudda.inc 704 2024-10-20 17:29:04Z                       $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -29,10 +29,14 @@ class mudda {
 	private $valve;
 	private $temp;
 	private $hum;
-	public function __construct($headline, $group, $valve) {
+	private $trendid;
+	private $calid;
+	public function __construct($headline, $group, $valve, $trendid, $calid) {
 		$this->headline = $headline;
 		$this->group = $group;
 		$this->valve = $valve;
+		$this->trendid = $trendid;
+		$this->calid = $calid;
 	}
 	public function setHum($hum) {
 		$this->hum = $hum;
@@ -68,36 +72,36 @@ class mudda {
 				<span class="ps-input" data-ws="<?=$this->hum ?>">-</span>
 				<span class="<?=wpa::indikatorTemp?>" data-ws="<?=$this->hum ?>"><?=wpHTML_EMPTY ?></span>
 			</td>
-			<td>
-			</td>
-			<td>
+			<td colspan="2">
+				<a href="std.trendview.<?=$this->trendid ?>.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a>
+				<a href="std.calendaredit.<?=$this->calid ?>.htm" class="ps-button ps-pluginbutton"><?=wpHTML_UHR ?></a>
 			</td>
 		</tr>
 <?
 	}
 }
-$kueche = new mudda('Küche', 1, 1);
+$kueche = new mudda('Küche', 1, 1, 81, 1037);
 $kueche->setHum('KU1_RU_Hum');
 
-$wzmitte = new mudda('Wohnzimmer Mitte', 1, 2);
+$wzmitte = new mudda('Wohnzimmer Mitte', 1, 2, 84, 1038);
 $wzmitte->setHum('WZ1_RU_Hum');
 
-$wzfenster = new mudda('Wohnzimmer Fenster', 1, 3);
+$wzfenster = new mudda('Wohnzimmer Fenster', 1, 3, 82, 1039);
 $wzfenster->setHum('WZ1_RU_Hum');
 
-$wzkamin = new mudda('Wohnzimmer Kamin', 1, 4);
+$wzkamin = new mudda('Wohnzimmer Kamin', 1, 4, 83, 1040);
 $wzkamin->setHum('WZ1_RU_Hum');
 
-$essen = new mudda('Flur Essen', 2, 1);
+$essen = new mudda('Flur Essen', 2, 1, 78, 1041);
 $essen->setHum('FL1_ES_RU_Hum');
 
-$bad = new mudda('Bad WC', 2, 2);
+$bad = new mudda('Bad WC', 2, 2, 79, 1042);
 $bad->setHum('BA1_RU_Hum');
 
-$eingang = new mudda('Flur Eingang', 2, 3);
+$eingang = new mudda('Flur Eingang', 2, 3, 80, 1043);
 $eingang->setHum('FL1_EI_RU_Hum');
 
-$schlafzimmer = new wpAnalogOut('172.17.44.110', 'SZ1_VT');
+$schlafzimmer = new wpAnalogOut('172.17.44.110', 'SZ1_VT', 85, 1051);
 $schlafzimmer->getStatus();
 ?>
 <div id="mudda" class="page">

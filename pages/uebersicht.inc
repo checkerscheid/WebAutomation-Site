@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 700                                                     $ #
+//# Revision     : $Rev:: 704                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 700 2024-10-14 00:13:37Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 704 2024-10-20 17:29:04Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -90,6 +90,24 @@ $points = array(
 	'Wartung'			=> '_Wartung',
 	'RandomNumeric'		=> 'RandomNumeric'
 );
+
+$trendid = array(
+	'BA' => 89,
+	'BU' => 88,
+	'KZ' => 90,
+	'KU' => 21,
+	'WZ' => 86,
+	'SZ' => 87
+);
+$calid = array(
+	'BA' => 1,
+	'BU' => 2,
+	'KZ' => 1024,
+	'KU' => 4,
+	'WZ' => 6,
+	'SZ' => 5
+);
+
 const WZ_NP = '172.17.80.99';
 const WZ_LS_NP = '172.17.80.98';
 const WZ_PF_TE = '172.17.80.106';
@@ -263,8 +281,8 @@ class uebersicht {
 						<td colspan="2"><span class="ps-input twoColumns <?=wpa::GreenYellow ?>" data-ws="BU_RU_Manual">undefined</span></td>
 					</tr>
 					<tr>
-						<td><span class="ps-button RU_Auto" data-ip="<?=BU_RU ?>">Auto</span></td>
-						<td><span class="ps-button RU_Manual" data-ip="<?=BU_RU ?>">Manual</span></td>
+						<td class="ps-tal"><span class="ps-button RU_Auto" data-ip="<?=BU_RU ?>">Auto</span></td>
+						<td class="ps-tar"><span class="ps-button RU_Manual" data-ip="<?=BU_RU ?>">Manual</span></td>
 					</tr>
 				</tbody>
 			</table>
@@ -283,7 +301,7 @@ class uebersicht {
 					<tr><td colspan="2"><hr /></td></tr>
 					<?=uebersicht::tasterShellyDimmer('Flur', 'BU_FL')?>
 					<tr><td colspan="2"><hr /></td></tr>
-					<tr><td colspan="2"><a class="ps-button" href="std.d1mini.BA_Lue.htm"> Bad Lüfter</a></td></tr>
+					<tr><td colspan="2"><a class="ps-button twoColumns" href="std.d1mini.BA_Lue.htm"> Bad Lüfter</a></td></tr>
 					<?=uebersicht::tasterShellyDimmer('Bad', 'BA')?>
 					<?=uebersicht::tasterShelly('Bad <br class="showonportrait" />Spiegelschrank', 'BA_SP')?>
 					<tr><td colspan="2"><hr /></td></tr>
@@ -293,7 +311,7 @@ class uebersicht {
 					<?=uebersicht::tasterShelly('Kinderzimmer <br class="showonportrait" />Bett', 'KZ_BE')?>
 					<?=uebersicht::tasterShelly('Kinderzimmer <br class="showonportrait" />Nachtlicht', 'KZ_NL')?>
 					<tr><td colspan="2"><hr /></td></tr>
-					<tr><td colspan="2"><span class="ps-button wz-gemuetlich">Couch</span></td></tr>
+					<tr><td colspan="2"><span class="ps-button twoColumns wz-gemuetlich">Couch</span></td></tr>
 				</tbody>
 			</table>
 		</div>
@@ -347,7 +365,7 @@ class uebersicht {
 					<?=uebersicht::tasterShelly('Steckdose unten', 'AN_SD2')?>
 					<? */ ?>
 					<tr>
-						<td colspan="2"><span class="ps-button RenewShellyState">RenwShellyState</span></td>
+						<td colspan="2"><span class="ps-button twoColumns RenewShellyState">RenwShellyState</span></td>
 					</tr>
 				</tbody>
 			</table>
@@ -420,6 +438,10 @@ foreach($zimmer as $kurz => $name) {
 						<td>
 							<span class="ps-input" data-ws="<?=$dpHum ?>" title="UG <?=$name?> Feuchte">-</span>
 							<span class="<?=wpa::indikatorHum?>" data-ws="<?=$dpHum ?>"><?=wpHTML_EMPTY ?></span>
+						</td>
+						<td colspan="2">
+							<a href="std.trendview.<?=$trendid[$kurz] ?>.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a>
+							<a href="std.calendaredit.<?=$calid[$kurz] ?>.htm" class="ps-button ps-pluginbutton"><?=wpHTML_UHR ?></a>
 						</td>
 					</tr>
 <? } ?>

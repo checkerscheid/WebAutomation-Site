@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 696                                                     $ #
+//# Revision     : $Rev:: 704                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: system.psys 696 2024-10-06 19:11:29Z                     $ #
+//# File-ID      : $Id:: system.psys 704 2024-10-20 17:29:04Z                     $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $sdata */
@@ -37,6 +37,10 @@ define('ERROR_INVALID_IP', 'Ihre IP-Adresse ist nicht mehr die, mit der Sie sich
 define('ERROR_NO_SCRIPT', 'Diese Funktion ist nur mit aktivierten JavaScript verf&uuml;gbar.');
 /** HTML Sonderzeichen */
 define('wpHTML_EMPTY', '&nbsp;');
+/** HTML Sonderzeichen */
+define('wpHTML_UHR', '&#128337;');
+/** HTML Sonderzeichen */
+define('wpHTML_TREND', '&#128200;');
 /** HTML Sonderzeichen */
 define('wpJSON_HEADER', 'Content-Type: application/json');
 /**

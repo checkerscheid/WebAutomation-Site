@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 696                                                     $ #
+//# Revision     : $Rev:: 704                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: system.js 696 2024-10-06 19:11:29Z                       $ #
+//# File-ID      : $Id:: system.js 704 2024-10-20 17:29:04Z                       $ #
 //#                                                                                 #
 //###################################################################################
 use system\wpInit;
@@ -1124,7 +1124,7 @@ function getOnlineAlarms() {
 					$('#AlarmID' + alarmid).data('lastupdate', wpAlarm[Alarm][AlarmRowLastUpdate]);
 					$('#AlarmID' + alarmid).data('priority', wpAlarm[Alarm][AlarmRowPrio]);
 					if(wpAlarm[Alarm][AlarmRowPrio] > 32) {
-						alarmsound.play();
+						// alarmsound.play();
 					}
 				} else {
 					if(shownAlarms[alarmid]['lastUpdate'] != wpAlarm[Alarm][AlarmRowLastUpdate] ||

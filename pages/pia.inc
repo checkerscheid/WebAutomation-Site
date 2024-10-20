@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 27.07.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 700                                                     $ #
+//# Revision     : $Rev:: 704                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pia.inc 700 2024-10-14 00:13:37Z                         $ #
+//# File-ID      : $Id:: pia.inc 704 2024-10-20 17:29:04Z                         $ #
 //#                                                                                 #
 //###################################################################################
 /**
@@ -111,21 +111,27 @@ $points = array(
 					<th colspan="6">Pflanzen</th>
 				</tr>
 				<tr>
-					<td colspan="3">Pflanzi</td>
-					<td colspan="3">
+					<td colspan="2">Pflanzi</td>
+					<td colspan="2">
 						<div class="indikatoContainer">
 							<span data-ws="KZ_PF_PF_Moisture" class="ps-input">undefined</span>
 							<span data-ws="KZ_PF_PF_Moisture" class="<?=wpa::indikatorPfl?>"><?=wpHTML_EMPTY?></span>
 						</div>
 					</td>
+					<td colspan="2">
+						<a href="std.trendview.93.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a>
+					</td>
 				</tr>
 				<tr>
-					<td colspan="3">Buschi</td>
-					<td colspan="3">
+					<td colspan="2">Buschi</td>
+					<td colspan="2">
 						<div class="indikatoContainer">
 							<span data-ws="KZ_PF_BU_Moisture" class="ps-input">undefined</span>
 							<span data-ws="KZ_PF_BU_Moisture" class="<?=wpa::indikatorPfl?>"><?=wpHTML_EMPTY?></span>
 						</div>
+					</td>
+					<td colspan="2">
+						<a href="std.trendview.92.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a>
 					</td>
 				</tr>
 				<tr><td colspan="6"><hr /></td></tr>
@@ -151,6 +157,13 @@ $points = array(
 							<span id="KZ_VT" class="ps-input pa-Analog bedienbar" data-value="KZ_VT" data-popup="Ventil Heizung">-</span>
 							<span class="hand pa-hide" data-value="KZ_VT_Hand"></span>
 						</div>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="6">
+						<a href="std.trendview.90.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a>
+						<a href="std.calendaredit.1024.htm" class="ps-button ps-pluginbutton" title="Sollwert"><?=wpHTML_UHR ?></a>
+						<a href="std.calendaredit.1052.htm" class="ps-button ps-pluginbutton" title="Geräuchminimierung"><?=wpHTML_UHR ?></a>
 					</td>
 				</tr>
 			</table>

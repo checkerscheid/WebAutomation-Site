@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 09.05.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 570                                                     $ #
+//# Revision     : $Rev:: 704                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: calendaredit.css 570 2024-03-13 18:22:21Z                $ #
+//# File-ID      : $Id:: calendaredit.css 704 2024-10-20 17:29:04Z                $ #
 //#                                                                                 #
 //###################################################################################
 ?> calendaredit */
@@ -22,8 +22,8 @@
 .ps-operable { cursor:pointer; color:#004caf; }
 #aktvalue .ps-input { min-width:156px; }
 
-#fullcalendar { width:75%; float:left; }
-#calendartemplates { width:20%; float:right; }
+/* #fullcalendar { width:75%; float:left; } */
+/* #calendartemplates { width:20%; float:right; } */
 #calendartemplates li { margin:4px 10px; padding:4px 10px; border:1px solid #CCC; cursor:pointer; }
 #calendartemplates .ps-navi-button { float:left; }
 

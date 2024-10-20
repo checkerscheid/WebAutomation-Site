@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 22.07.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 582                                                     $ #
+//# Revision     : $Rev:: 704                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: calendarcfg.js 582 2024-04-10 06:45:45Z                  $ #
+//# File-ID      : $Id:: calendarcfg.js 704 2024-10-20 17:29:04Z                  $ #
 //#                                                                                 #
 //###################################################################################
 ?> scenecfg */
@@ -62,7 +62,7 @@ p.page.load = function() {
 		var names = [];
 		$(tr).find('[data-idcalendar]').each(function() {
 			if($(this).find('.ps-checkbox').hasClass('checked')) {
-				ids.push($(this).attr('data-id'));
+				ids.push($(this).attr('data-idcalendar'));
 				names.push($(this).find('.ps-checkbox').text());
 			}
 		});
@@ -206,7 +206,7 @@ p.page.load = function() {
 //###################################################################################
 	$('#erg').on('click', '.calendaredit', function() {
 		var tr = $(this).parents('div.tr:first');
-		var id = $(tr).attr('data-id');
+		var id = $(tr).attr('data-idcalendar');
 		var group = $(this).parents('ul.calendaringroup').attr('data-group');
 		$.post('std.calendarcfg.poponecalendar.req', {id:id}, function(data) {
 			$('#dialog').html(data).dialog({
@@ -230,8 +230,8 @@ p.page.load = function() {
 								p.page.alert('<span class="neg">' + data.message + '</span>', 5000);
 							}
 						});
-						$.post('std.calendarcfg.getcalendar.req', {group:group}, function(data) {
-							$('[data-calendar=' + group + ']').html(data);
+						$.post('std.calendarcfg.getcalendar.req', {group:TheObj.group}, function(data) {
+							$('[data-calendar=' + TheObj.group + ']').html(data);
 						});
 					}
 				},{

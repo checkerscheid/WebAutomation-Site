@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 702                                                     $ #
+//# Revision     : $Rev:: 704                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: mudda.js 702 2024-10-18 23:16:21Z                        $ #
+//# File-ID      : $Id:: mudda.js 704 2024-10-20 17:29:04Z                        $ #
 //#                                                                                 #
 //###################################################################################
 ?> mudda */
@@ -103,6 +103,24 @@ p.page.load = function() {
 			$(this).removeClass('WriteOnly').find('a').text('');
 		}
 	});
+	$('#ergTemp').on('click', '.legendLabel', function() {
+		var id = $(this).find('span').attr('data-id');
+		plotdataTemp.forEach((element, i) => {
+			if(element.id == id) {
+				plotdataTemp[i].lines.show = !plotdataTemp[i].lines.show;
+				printPlotDataTemp();
+			}
+		});
+	});
+	$('#ergHum').on('click', '.legendLabel', function() {
+		var id = $(this).find('span').attr('data-id');
+		plotdataHum.forEach((element, i) => {
+			if(element.id == id) {
+				plotdataHum[i].lines.show = !plotdataHum[i].lines.show;
+				printPlotDataHum();
+			}
+		});
+	});
 	getTrendDataMudda();
 	ws.connect();
 	p.getValues();
@@ -117,6 +135,8 @@ const EST = 1545;
 const ESH = 1546;
 const BAT = 1548;
 const BAH = 1549;
+const SZT = 1117;
+const SZH = 1118;
 const EIT = 1542;
 const EIH = 1543;
 const FL2T = 1123;
@@ -125,7 +145,7 @@ function getTrendDataMudda() {
 	var objTemp = {
 		time: 'last24Hours',
 		choosen: 'timerange',
-		ids: [WGT, KUT, WZT, EST, BAT, EIT, FL2T],
+		ids: [WGT, KUT, WZT, EST, BAT, SZT, EIT, FL2T],
 		useminmax: 'frompoint',
 		only1axes: 'True'
 	};
@@ -135,7 +155,11 @@ function getTrendDataMudda() {
 		data.plotoptions.legend = {
 			show:true,
 			backgroundColor: '#555',
-			backgroundOpacity: 0.8
+			backgroundOpacity: 0.8,
+			position: 'nw',
+			labelFormatter: function(label, series) {
+				return '<span data-id="' + series.id + '">' + label + '</span>';
+			}
 		};
 		plotoptionsTemp = data.plotoptions;
 		printPlotDataTemp();
@@ -143,7 +167,7 @@ function getTrendDataMudda() {
 	var objHum = {
 		time: 'last24Hours',
 		choosen: 'timerange',
-		ids: [WGH, KUH, WZH, ESH, BAH, EIH, FL2H],
+		ids: [WGH, KUH, WZH, ESH, BAH, SZH, EIH, FL2H],
 		useminmax: 'frompoint',
 		only1axes: 'True'
 	};
@@ -153,7 +177,11 @@ function getTrendDataMudda() {
 		data.plotoptions.legend = {
 			show:true,
 			backgroundColor: '#555',
-			backgroundOpacity: 0.8
+			backgroundOpacity: 0.8,
+			position: 'nw',
+			labelFormatter: function(label, series) {
+				return '<span data-id="' + series.id + '">' + label + '</span>';
+			}
 		};
 		plotoptionsHum = data.plotoptions;
 		printPlotDataHum();

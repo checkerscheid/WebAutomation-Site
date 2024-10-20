@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 700                                                     $ #
+//# Revision     : $Rev:: 704                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: trend.req 700 2024-10-14 00:13:37Z                       $ #
+//# File-ID      : $Id:: trend.req 704 2024-10-20 17:29:04Z                       $ #
 //#                                                                                 #
 //###################################################################################
 /**
@@ -44,7 +44,7 @@ class trend {
 	private $dataarray;
 	public function __construct($id, $name) {
 		$this->id = $id;
-		$this->name = $name.' =<br />- ';
+		$this->name = $name . ' =' . (std::posts('nobr') == 'true' ? ' ' : '<br />');
 		$this->data = '';
 		$this->dataarray = array();
 		$this->isbool = null;

@@ -7,27 +7,16 @@
 //###################################################################################
 //#                                                                                 #
 //# Author       : Christian Scheid                                                 #
-//# Date         : 13.04.2024                                                       #
+//# Date         : 20.10.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 704                                                     $ #
+//# Revision     : $Rev:: 705                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: mudda.css 704 2024-10-20 17:29:04Z                       $ #
+//# File-ID      : $Id:: trendview.css 705 2024-10-20 17:29:42Z                   $ #
 //#                                                                                 #
 //###################################################################################
-?> mudda */
+?> trendview */
 
-<? require_once 'style/system/wpAnalogOut.css'; ?>
-
-.pagecontent { background:transparent url(images/uebersicht_haus.png) center center no-repeat; background-size:100% auto; }
-@media (orientation: portrait) {
-	.pagecontent { background-size:auto 100%; }
-}
-#mudda table { margin:auto; }
-#ergTemp, #ergHum { display:block; width:100%; height:300px; }
-
-#mudda .forecast, #mudda .cleanMyTrends { min-width: 100px; width: auto; }
-#mudda .legend > div:first-child { padding:5px;border-radius:10px;
-	box-shadow:6px 6px 8px 0px #222; }
-#mudda .legend table { margin:5px; }
-#mudda .legendLabel { padding:2px 5px; text-align:left; cursor:pointer; }
-#mudda .legendLabel.ps-fontgrey { color:#555; }
+#TrendviewContainer { height:500px; width:100%; }
+#trendview .ps-button { width:auto; min-width:120px; }
+#trendview .legendLabel { white-space:nowrap; text-align:left; }
+#trendview h3 { text-align:center; }
