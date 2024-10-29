@@ -89,10 +89,10 @@ $points = array(
 				</tr>
 				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
-					<th colspan="6">Raumwohl</th>
+					<th colspan="6"><span>Raumwohl</span></th>
 				</tr>
 				<tr>
-					<td colspan="2">Schreibtisch</td>
+					<td colspan="2"><span>Schreibtisch</span></td>
 					<td colspan="2">
 						<div class="indikatoContainer">
 							<span class="ps-input" data-ws="KZ_HT3_Temp">-</span>
@@ -106,12 +106,21 @@ $points = array(
 						</div>
 					</td>
 				</tr>
+				<tr>
+					<td colspan="2"><span>Licht</span></td>
+					<td colspan="2">
+						<span class="ps-input" data-ws="KZ_RU_LDR">-</span>
+					</td>
+					<td colspan="2">
+						<a href="std.trendview.1254.1.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a>
+					</td>
+				</tr>
 				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
-					<th colspan="6">Pflanzen</th>
+					<th colspan="6"><span>Pflanzen</span></th>
 				</tr>
 				<tr>
-					<td colspan="2">Pflanzi</td>
+					<td colspan="2"><span>Pflanzi</span></td>
 					<td colspan="2">
 						<div class="indikatoContainer">
 							<span data-ws="KZ_PF_PF_Moisture" class="ps-input">undefined</span>
@@ -123,7 +132,7 @@ $points = array(
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2">Buschi</td>
+					<td colspan="2"><span>Buschi</span></td>
 					<td colspan="2">
 						<div class="indikatoContainer">
 							<span data-ws="KZ_PF_BU_Moisture" class="ps-input">undefined</span>
@@ -136,22 +145,22 @@ $points = array(
 				</tr>
 				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
-					<th colspan="6">Heizung</th>
+					<th colspan="6"><span>Heizung</span></th>
 				</tr>
 				<tr>
-					<td colspan="3">Temperatur</td>
+					<td colspan="3"><span>Temperatur</span></td>
 					<td colspan="3">
 						<span class="ps-input" data-ws="_KZ_RT">-</span>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="3">Sollwert</td>
+					<td colspan="3"><span>Sollwert</span></td>
 					<td colspan="3">
 						<span class="ps-input ps-operable zp" data-ws="_KZ_RT_SW" data-bm="KZ_ZP_RM" data-zp="KZ_ZP" title="bm: ZP aktiv">-</span>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="3">Ventil Heizung</td>
+					<td colspan="3"><span>Ventil Heizung</span></td>
 					<td colspan="3">
 						<div class="handContainer">
 							<span id="KZ_VT" class="ps-input pa-Analog bedienbar" data-value="KZ_VT" data-popup="Ventil Heizung">-</span>

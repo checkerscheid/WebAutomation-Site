@@ -17,6 +17,7 @@
 /** @var Type $points */
 namespace pages;
 use system\Helper\wpa;
+use system\Helper\security;
 use system\Helper\wpAnalogOut;
 require_once 'system/Helper/wpa.psys';
 require_once 'system/Helper/wpAnalogOut.psys';
@@ -50,8 +51,10 @@ class mudda {
 		</tr>
 		<tr>
 			<td>
-				<span class="ps-input" data-ws="EG_HZG_VTG<?=$this->group ?>_Underfloor<?=$this->valve ?>_ReadedTemp">-</span>
-				<span class="<?=wpa::indikatorTemp?>" data-ws="EG_HZG_VTG<?=$this->group ?>_Underfloor<?=$this->valve ?>_ReadedTemp"><?=wpHTML_EMPTY ?></span>
+				<div class="indiContainer">
+					<span class="ps-input" data-ws="EG_HZG_VTG<?=$this->group ?>_Underfloor<?=$this->valve ?>_ReadedTemp">-</span>
+					<span class="<?=wpa::indikatorTemp?>" data-ws="EG_HZG_VTG<?=$this->group ?>_Underfloor<?=$this->valve ?>_ReadedTemp"><?=wpHTML_EMPTY ?></span>
+				</div>
 			</td>
 			<td>
 				<span class="ps-input ps-param" data-ws="EG_HZG_VTG<?=$this->group ?>_Underfloor<?=$this->valve ?>_SetPoint"
@@ -69,8 +72,10 @@ class mudda {
 		</tr>
 		<tr>
 			<td>
-				<span class="ps-input" data-ws="<?=$this->hum ?>">-</span>
-				<span class="<?=wpa::indikatorTemp?>" data-ws="<?=$this->hum ?>"><?=wpHTML_EMPTY ?></span>
+				<div class="indiContainer">
+					<span class="ps-input" data-ws="<?=$this->hum ?>">-</span>
+					<span class="<?=wpa::indikatorTemp?>" data-ws="<?=$this->hum ?>"><?=wpHTML_EMPTY ?></span>
+				</div>
 			</td>
 			<td colspan="2">
 				<a href="std.trendview.<?=$this->trendid ?>.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a>
@@ -122,48 +127,64 @@ $schlafzimmer->getStatus();
 					<tr>
 						<td><span>Wintergarten:</span></td>
 						<td>
-							<span class="ps-input" data-ws="_WG1_RT_SH" title="EG Wintergarten Temperatur">-</span>
-							<span class="<?=wpa::indikatorTemp?>" data-ws="_WG1_RT_SH"><?=wpHTML_EMPTY ?></span>
+							<div class="indiContainer">
+								<span class="ps-input" data-ws="_WG1_RT_SH" title="EG Wintergarten Temperatur">-</span>
+								<span class="<?=wpa::indikatorTemp?>" data-ws="_WG1_RT_SH"><?=wpHTML_EMPTY ?></span>
+							</div>
 						</td>
 						<td>
-							<span class="ps-input" data-ws="_WG1_RF_SH" title="EG Wintergarten Feuchte">-</span>
-							<span class="<?=wpa::indikatorHum?>" data-ws="_WG1_RF_SH"><?=wpHTML_EMPTY ?></span>
+							<div class="indiContainer">
+								<span class="ps-input" data-ws="_WG1_RF_SH" title="EG Wintergarten Feuchte">-</span>
+								<span class="<?=wpa::indikatorHum?>" data-ws="_WG1_RF_SH"><?=wpHTML_EMPTY ?></span>
+							</div>
 						</td>
 						<td></td>
 					</tr>
 					<tr>
 						<td><span>Schlafzimmer:</span></td>
 						<td>
-							<span class="ps-input" data-ws="_SZ1_RT_SH" title="EG Schlafzimmer Temperatur">-</span>
-							<span class="<?=wpa::indikatorTemp?>" data-ws="_SZ1_RT_SH"><?=wpHTML_EMPTY ?></span>
+							<div class="indiContainer">
+								<span class="ps-input" data-ws="_SZ1_RT_SH" title="EG Schlafzimmer Temperatur">-</span>
+								<span class="<?=wpa::indikatorTemp?>" data-ws="_SZ1_RT_SH"><?=wpHTML_EMPTY ?></span>
+							</div>
 						</td>
 						<td>
-							<span class="ps-input" data-ws="_SZ1_RF_SH" title="EG Schlafzimmer Feuchte">-</span>
-							<span class="<?=wpa::indikatorHum?>" data-ws="_SZ1_RF_SH"><?=wpHTML_EMPTY ?></span>
+							<div class="indiContainer">
+								<span class="ps-input" data-ws="_SZ1_RF_SH" title="EG Schlafzimmer Feuchte">-</span>
+								<span class="<?=wpa::indikatorHum?>" data-ws="_SZ1_RF_SH"><?=wpHTML_EMPTY ?></span>
+							</div>
 						</td>
 						<td></td>
 					</tr>
 					<tr>
 						<td><span>Flur OG:</span></td>
 						<td>
-							<span class="ps-input" data-ws="_FL2_RT_SH" title="OG Flur Temperatur">-</span>
-							<span class="<?=wpa::indikatorTemp?>" data-ws="_FL2_RT_SH"><?=wpHTML_EMPTY ?></span>
+							<div class="indiContainer">
+								<span class="ps-input" data-ws="_FL2_RT_SH" title="OG Flur Temperatur">-</span>
+								<span class="<?=wpa::indikatorTemp?>" data-ws="_FL2_RT_SH"><?=wpHTML_EMPTY ?></span>
+							</div>
 						</td>
 						<td>
-							<span class="ps-input" data-ws="_FL2_RF_SH" title="OG Flur Feuchte">-</span>
-							<span class="<?=wpa::indikatorHum?>" data-ws="_FL2_RF_SH"><?=wpHTML_EMPTY ?></span>
+							<div class="indiContainer">
+								<span class="ps-input" data-ws="_FL2_RF_SH" title="OG Flur Feuchte">-</span>
+								<span class="<?=wpa::indikatorHum?>" data-ws="_FL2_RF_SH"><?=wpHTML_EMPTY ?></span>
+							</div>
 						</td>
 						<td></td>
 					</tr>
 					<tr>
 						<td><span>Gartenhaus:</span></td>
 						<td>
-							<span class="ps-input" data-ws="GA1_FS_Temp" title="Gartenhaus Temperatur">-</span>
-							<span class="<?=wpa::indikatorTempOut?>" data-ws="GA1_FS_Temp"><?=wpHTML_EMPTY ?></span>
+							<div class="indiContainer">
+								<span class="ps-input" data-ws="GA1_FS_Temp" title="Gartenhaus Temperatur">-</span>
+								<span class="<?=wpa::indikatorTempOut?>" data-ws="GA1_FS_Temp"><?=wpHTML_EMPTY ?></span>
+							</div>
 						</td>
 						<td>
-							<span class="ps-input" data-ws="GA1_FS_Hum" title="Gartenhaus Feuchte">-</span>
-							<span class="<?=wpa::indikatorHum?>" data-ws="GA1_FS_Hum"><?=wpHTML_EMPTY ?></span>
+							<div class="indiContainer">
+								<span class="ps-input" data-ws="GA1_FS_Hum" title="Gartenhaus Feuchte">-</span>
+								<span class="<?=wpa::indikatorHum?>" data-ws="GA1_FS_Hum"><?=wpHTML_EMPTY ?></span>
+							</div>
 						</td>
 						<td>
 							<span class="ps-input" data-ws="GA1_FS_Vol" title="Gartenhaus Füllstand">-</span>
@@ -172,12 +193,16 @@ $schlafzimmer->getStatus();
 					<tr>
 						<td><span>Wetter:</span></td>
 						<td>
-							<span class="ps-input" data-ws="_GA_RT" title="Wetter Nord Temperatur">-</span>
-							<span class="<?=wpa::indikatorTempOut?>" data-ws="_GA_RT"><?=wpHTML_EMPTY ?></span>
+							<div class="indiContainer">
+								<span class="ps-input" data-ws="_GA_RT" title="Wetter Nord Temperatur">-</span>
+								<span class="<?=wpa::indikatorTempOut?>" data-ws="_GA_RT"><?=wpHTML_EMPTY ?></span>
+							</div>
 						</td>
 						<td>
-							<span class="ps-input" data-ws="GA_WE_Sued_Hum" title="Wetter Süd Feuchte">-</span>
-							<span class="<?=wpa::indikatorHum?>" data-ws="GA_WE_Sued_Hum"><?=wpHTML_EMPTY ?></span>
+							<div class="indiContainer">
+								<span class="ps-input" data-ws="GA_WE_Sued_Hum" title="Wetter Süd Feuchte">-</span>
+								<span class="<?=wpa::indikatorHum?>" data-ws="GA_WE_Sued_Hum"><?=wpHTML_EMPTY ?></span>
+							</div>
 						</td>
 						<td>
 							<span class="ps-input" data-ws="GA_WE_Ost_Rain" title="Wetter Ost Regen">-</span>
@@ -187,8 +212,10 @@ $schlafzimmer->getStatus();
 						<td><span>Gaube:</span></td>
 						<td></td>
 						<td>
-							<span class="ps-input" data-ws="GA2_WE_Gaube_Hum" title="Wetter Gaube Feuchte">-</span>
-							<span class="<?=wpa::indikatorHum?>" data-ws="GA2_WE_Gaube_Hum"><?=wpHTML_EMPTY ?></span>
+							<div class="indiContainer">
+								<span class="ps-input" data-ws="GA2_WE_Gaube_Hum" title="Wetter Gaube Feuchte">-</span>
+								<span class="<?=wpa::indikatorHum?>" data-ws="GA2_WE_Gaube_Hum"><?=wpHTML_EMPTY ?></span>
+							</div>
 						</td>
 						<td>
 							<span class="ps-input" data-ws="GA2_WE_Gaube_Rain" title="Wetter Gaube Regen">-</span>
@@ -199,7 +226,7 @@ $schlafzimmer->getStatus();
 			<div>
 				<hr />
 				<a href="std.weather.htm" class="ps-button forecast">Wettervorhersage</a>
-				<a href="wetter.htm" class="ps-button"> Wetter</a>
+				<a href="wetter.htm" class="ps-button">Wetter</a>
 				<span class="ps-button cleanMyTrends">Trends aufräumen</span>
 			</div>
 		</div>
@@ -210,7 +237,7 @@ $schlafzimmer->getStatus();
 					<tr>
 						<td><span>Heizung:</span></td>
 						<td>
-							<span class="ps-button <?=wpa::GreyGreen ?> ShellyDirect" data-ws="EG_HZG_FB">undefined</span>
+							<span class="ps-button <?=wpa::YellowGreen ?> ShellyDirect" data-ws="EG_HZG_FB">undefined</span>
 						</td>
 						<td>
 							<span class="ps-input" data-ws="EG_HZG_FB_Power">undefined</span>
@@ -218,9 +245,9 @@ $schlafzimmer->getStatus();
 					</tr>
 					<tr><td colspan="3"><hr/></td></tr>
 					<tr>
-						<th>Messung</th>
-						<th>Sollwert</th>
-						<th>Ventil</th>
+						<th><span>Messung</span></th>
+						<th><span>Sollwert</span></th>
+						<th><span>Ventil</span></th>
 					</tr>
 					<tr><td colspan="3"><hr/></td></tr>
 				</thead>
@@ -238,7 +265,7 @@ $schlafzimmer->getStatus();
 			</table>
 		</div>
 <?
-$schlafzimmer->getHtml(false, 'Schlafzimmer', 'Fenster links', 'Fenster rechts');
+$schlafzimmer->getHtml(security::checkGroup(security::administrator), 'Schlafzimmer', 'Fenster links', 'Fenster rechts');
 ?>
 	</div>
 	<div class="ps-container">

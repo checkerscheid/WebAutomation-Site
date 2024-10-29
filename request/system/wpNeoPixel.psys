@@ -91,7 +91,7 @@ class wpNeoPixel {
 		echo $result;
 	}
 	const c_setNeoPixelOff = 'setNeoPixelOff';
-	public static function setNeoPixelOffBlender() {
+	public static function setNeoPixelOff() {
 		header(wpJSON_HEADER);
 		$WebCom = new WebCom();
 		echo $WebCom->send('SetD1MiniUrlCmd', wpNeoPixel::$ip . '%~%' . 'setNeoPixelOff');
@@ -180,7 +180,7 @@ switch(std::gets('param1')) {
 		break;
 		//###################################################################################
 	case wpNeoPixel::c_setNeoPixelOff:
-		wpNeoPixel::setNeoPixelOffBlender();
+		wpNeoPixel::setNeoPixelOff();
 		break;
 		//###################################################################################
 	case wpNeoPixel::c_setNeoPixelOffRunner:

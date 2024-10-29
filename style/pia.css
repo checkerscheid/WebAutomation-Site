@@ -24,6 +24,7 @@
 @media (orientation: portrait) {
 	.pagecontent { background:transparent url(images/pia_hoch.jpg) center center no-repeat; background-size:100% auto; }
 }
+#pia h1 a, #pia h1 span { font-size:22px; }
 #pia h2, #pia p,
 #pia .buttonContainer { text-align:center; }
 #pia .topic-slider { margin:10px 0; }
@@ -40,11 +41,14 @@
 .AllSleep .AllSleepUnit { display:inline-block; line-height:16px; padding:5px 0; overflow:auto; }
 
 @media (orientation: portrait) {
+	#pia span,
+	#pia a { font-size:18px; }
 	#pia .ps-button { padding:25px 6px; }
 	#pia .ps-button.pa-scene { padding:25px 25px; }
-	#pia .ui-slider .ui-slider-handle { width:30px; height:30px; }
+	#pia .ui-slider .ui-slider-handle { width:30px; height:30px; margin-left:-7px; }
 	#pia .ui-slider-horizontal { height:20px; }
 	#pia .ps-input { font-size:18px; padding:5px; }
+	#pia .ps-pluginbutton { font-size:40px; }
 	#pia span.hand.pa-hide { top:3px; }
 	#pia span.wpa-indikator { top:8px; }
 }

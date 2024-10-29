@@ -124,8 +124,8 @@ unset($_SESSION[SESSION_ID]['ActiveAlarms']);
 				</div>
 			</div>
 			<div class="pagemenu">
-				<div class="pagemenuleft"></div>
-				<div class="pagemenuright"></div>
+				<!--div class="pagemenuleft"></div-->
+				<!--div class="pagemenuright"></div-->
 				<div class="pagemenucontent">
 					<?=html::getMenu($system->getSrc())?>
 				</div>

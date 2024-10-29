@@ -153,13 +153,16 @@ if(wpInit::$PageName != '' || strtolower(std::arrays($_SESSION[SESSION_ID], 'USE
 	.ps-xxsm-hide { display:none; }
 }
 
-.pagemenu { height:50px; }
+#content .pagemenu { height:40px; padding-top:11px; }
+#footer .pagemenu { height: 50px; }
+/*
 .pagemenuleft { float:left; height:50px; width:15px;
-	background:transparent url(images/layout/Navi_links.png) no-repeat; }
+	background:transparent url(images/layout/Navi_links.png) top left no-repeat; }
 .pagemenuright { float:right; height:50px; width:15px;
-	background:transparent url(images/layout/Navi_rechts.png) no-repeat; }
-.pagemenucontent { height:39px; margin:0 15px; padding:11px 10px 0 10px;
-	background:transparent url(images/layout/Navi_mitte.png) repeat-x; }
+	background:transparent url(images/layout/Navi_rechts.png) top right no-repeat; }
+*/
+.pagemenucontent { height:39px; margin:0 10px; padding:0px 10px 0 10px;
+	/*background:transparent url(images/layout/Navi_mitte.png) repeat-x;*/ }
 .footermenucontent { height:50px;
 	background:transparent url(images/layout/Navi_footer_mitte.png) repeat-x; }
 .pagecontent { margin:0 11px; padding:5px 20px 20px 20px; }
@@ -303,7 +306,7 @@ div.ps-flex-container { display:flex; flex-wrap:wrap; justify-content:center; al
 	background-image:linear-gradient(#f5f5f5 25%, #888 100%);
 	box-shadow:inset 1px 1px 2px 1px #888; }
 span.ps-input { cursor:default; }
-.ps-input.ps-param, .ps-input.ps-parambool { cursor:pointer; color:#004caf; }
+.ps-input.ps-param, .ps-input.ps-parambool, .ps-input.ps-topicparam { cursor:pointer; color:#004caf; }
 .ps-input.ps-setpoint, .ps-input.ps-parambool, .ps-input.ps-bluefont { color:#004caf; }
 .ps-input.paramslider { cursor:pointer; color:#004caf; }
 .ps-input.paramnumpad { cursor:pointer; color:#004caf; }
@@ -410,7 +413,7 @@ span.ps-checkbox, label.ps-checkbox { display:inline-block; }
 .ps-image-status.calendar-ia { background-image:url(images/layout/mini_calendar_ia.png); }
 .ps-image-status.route-ia { background-image:url(images/layout/mini_route_ia.png); }
 
-.handContainer { width:122px; position:relative; margin:auto; }
+.handContainer, .indiContainer { width:122px; position:relative; margin:auto; }
 span.hand.pa-hide { display:inline-block; width:25px; height:25px;
 	position:absolute; right:4px; top:1px;
 	background:transparent url(images/visuelemente/hand.png) center center no-repeat; }
@@ -592,4 +595,5 @@ table.dataTable thead th.noborder { border:none; }
 #osk .column9, #oskquit .column9 { width:600px; }
 
 .ui-button:focus { outline:none; }
+
 

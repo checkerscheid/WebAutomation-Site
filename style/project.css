@@ -81,9 +81,14 @@ html.black { background:#606060 url(images/layout/black/main-border.png) repeat-
 .black .wpBalken .menudiv ul a:hover { border-color:#ececfb; }
 .black .menudiv h3 { color:#A91919; }
 .black .menuentry.active { color:#CCC; }
+
+.black #content .pagemenu { /*padding:10px 10px 0 10px;*/ background:#202020; }
+.black .pagemenucontent { background-image:linear-gradient(#424242, #000); border:1px solid #181818; border-radius:10px; }
+/*
 .black .pagemenuleft { background:transparent url(images/layout/black/navi-left.png) no-repeat; }
 .black .pagemenuright { background:transparent url(images/layout/black/navi-right.png) no-repeat; }
 .black .pagemenucontent { background:transparent url(images/layout/black/navi-center.png) repeat-x; }
+*/
 .black .footermenucontent { background:transparent url(images/layout/black/footer-center.png) 0px -15px repeat-x; }
 .black .ps-input, .black .ps-input * { color:#000; }
 .black .pos, .black .ps-fontgreen { color:#0F0; }
@@ -95,5 +100,19 @@ html.black { background:#606060 url(images/layout/black/main-border.png) repeat-
 /*html.black .ps-navi-button { color:#636363; } - für was war das*/
 .black .ps-container { background-image:linear-gradient(rgba(50,50,50,0.7) 25%, rgba(21,21,21,0.7) 100%); }
 .black .pagecontent table.dataTable td, .black .pagecontent table.dataTable td * { color:#4a4a4a; }
-.black .ps-input.ps-param, .black .ps-input.ps-parambool { cursor:pointer; color:#004caf; }
+.black .ps-input.ps-param, .black .ps-input.ps-parambool, .black .ps-input.ps-topicparam { cursor:pointer; color:#004caf; }
 .black .alarmsettingspopup { background:transparent linear-gradient(rgba(50,50,50,0.9) 25%, rgba(21,21,21,0.7) 100%); box-shadow: 6px 6px 8px 0px #222; border: 1px solid #CCC; }
+
+@media (orientation: portrait) {
+	#header, .Balken, .wpBalken { height:65px; }
+	.wpBalken .menudiv { top:80px; }
+	.wpBalken .dropdownmenu { padding:0px 0px 0px 5px; }
+	.wpBalken .menuentry,
+	.wpBalken .dropdownmenu,
+	.wpBalken .menudiv ul a { font-size:18px; height:58px; line-height:58px; }
+
+	.black #content .pagemenu { height:70px; }
+	.black .pagemenucontent { height:69px; }
+	.black .pagemenucontent a.menuentry { font-size:18px; line-height:58px; height:58px; }
+	.black .pagemenucontent a.menuentry span { font-size:18px; }
+}

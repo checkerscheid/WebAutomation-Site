@@ -70,7 +70,8 @@ $updateChanel = array (
 	0 => 'firmware',
 	1 => 'light',
 	2 => 'io',
-	3 => 'heating'
+	3 => 'heating',
+	4 => 'rfid'
 );
 foreach($updateChanel as $key => $value) {
 	echo '<option value="' . $key . '"' . ($d1Mini->FreakaZoneDevice->UpdateChanel == $value ? ' selected="selected"' : '') . '>' . $value . '</option>';
@@ -285,6 +286,44 @@ foreach($updateChanel as $key => $value) {
 				<tr>
 					<td>Fensterkontakt:</td>
 					<td><span class="ps-input <?=wpa::GreyGreen ?>" data-ws="<?=$erg['name'] ?>_Window3">undefined</span></td>
+				</tr>
+			</table>
+		</div>
+	<? } ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->Weight) { ?>
+		<div class="ps-container">
+			<h3>Weight</h3>
+			<table summary="">
+				<tr>
+					<td>Weight:</td>
+					<td><span class="ps-input" data-ws="<?=$erg['name'] ?>_Weight">undefined</span></td>
+				</tr>
+				<tr><td colspan="2"><hr /></td></tr>
+				<tr>
+					<td>Max Cycle:</td>
+					<td>
+						<span class="ps-input ps-param"
+							data-topic="<?=$erg['name'] ?>/settings/Weight/CalcCycle"
+							data-unit="sec">
+							<?=$d1Mini->FreakaZoneDevice->Weight->CalcCycle ?> ms
+						</span>
+					</td>
+				</tr>
+				<tr>
+					<td>use Avg:</td>
+					<td>
+						<span class="ps-input ps-parambool"
+							data-topic="<?=$erg['name'] ?>/settings/Weight/useAvg"
+							data-unit="0:Off;1:On;">
+							<?=($d1Mini->FreakaZoneDevice->Weight->useAvg ? 'On' : 'Off') ?>
+						</span>
+					</td>
+				</tr>
+				<tr>
+					<td>Tare:</td>
+					<td>
+						<span class="ps-button writeTopic" data-topic="<?=$erg['name'] ?>/settings/Weight/SetTare" data-write="1">Tare</span>
+					</td>
 				</tr>
 			</table>
 		</div>

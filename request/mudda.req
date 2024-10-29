@@ -45,6 +45,5 @@ switch(std::gets('param1')) {
 	case mudda::c_cleanMyTrends:
 		mudda::cleanMyTrends();
 		break;
-
 }
 ?>

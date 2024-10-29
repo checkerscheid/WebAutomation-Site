@@ -30,4 +30,14 @@
 	box-shadow:6px 6px 8px 0px #222; }
 #mudda .legend table { margin:5px; }
 #mudda .legendLabel { padding:2px 5px; text-align:left; cursor:pointer; }
-#mudda .legendLabel.ps-fontgrey { color:#555; }
+#mudda .legendLabel .ps-fontgrey { color:#888; }
+
+@media (orientation: portrait) {
+	#mudda span { font-size:18px; }
+	#mudda .ps-button { padding:25px 6px; }
+	#mudda .ui-slider .ui-slider-handle { width:30px; height:30px; margin-left:-7px; }
+	#mudda .ps-input { font-size:18px; padding:5px; }
+	#mudda .ps-pluginbutton { font-size:40px; }
+	#mudda span.hand.pa-hide { top:3px; }
+	#mudda span.wpa-indikator { top:8px; }
+}

@@ -16,6 +16,7 @@
 //###################################################################################
 ?> trendview */
 
+//<? require_once('script/system/websockets.js') ?>
 
 var plot = null;
 var plotdata;
@@ -71,6 +72,7 @@ p.page.load = function() {
 		zoomOut();
 	});
 	loadTrendData();
+	ws.connect();
 	// p.getValues();
 };
 

@@ -114,6 +114,7 @@ const WZ_PF_TE = '172.17.80.106';
 const KZ_NP = '172.17.80.169';
 const KU_CwWw = '172.17.80.142';
 const BU_RU = '172.17.80.125';
+const FL_RU = '172.17.80.128';
 //std::test_array($iplist);
 foreach($zimmer as $kurz => $name) {
 	if($kurz != 'KZ') {
@@ -263,6 +264,7 @@ class uebersicht {
 			<h2>Licht</h2>
 			<table>
 				<tbody>
+					<tr><td colspan="2"><span class="ps-button twoColumns AllesAus"> Alles aus</span></td></tr>
 					<tr><td colspan="2"><hr /></td></tr>
 					<?=uebersicht::NeoPixel(WZ_NP, 'WZ_NP', 'Wohnzimmer NeoPixel')?>
 					<?=uebersicht::tasterShellyDimmer('Wohnzimmer <br class="showonportrait" />Lautsprecher', 'WZ_LS')?>
@@ -273,6 +275,7 @@ class uebersicht {
 					<?=uebersicht::tasterShellyDimmer('Kamin', 'WZ_KA')?>
 					<?=uebersicht::tasterShellyDimmer('Wohnzimmer', 'WZ')?>
 					<?=uebersicht::tasterShelly('Wohnzimmer <br class="showonportrait" />Lichtleiste', 'WZ_LL')?>
+					<tr><td colspan="2"><span class="ps-button twoColumns wz-gemuetlich">Couch</span></td></tr>
 					<tr><td colspan="2"><hr /></td></tr>
 					<?=uebersicht::tasterShellyDimmer('Schlafzimmer', 'SZ')?>
 					<tr><td colspan="2"><hr /></td></tr>
@@ -292,26 +295,29 @@ class uebersicht {
 			<h2>Licht</h2>
 			<table>
 				<tbody>
-					<tr><td colspan="2"><span class="ps-button twoColumns AllesAus"> Alles aus</span></td></tr>
-					<tr><td colspan="2"><hr /></td></tr>
 					<?=uebersicht::tasterShelly('Küche', 'KU')?>
 					<?=uebersicht::CwWw(KU_CwWw, 'KU_CwWw', 'Küche White-LED')?>
 					<?=uebersicht::tasterShelly('Küche <br class="showonportrait" />Strahler', 'KU_ST')?>
 					<?=uebersicht::tasterShelly('Küche <br class="showonportrait" />Kaffee', 'KU_KA')?>
 					<tr><td colspan="2"><hr /></td></tr>
 					<?=uebersicht::tasterShellyDimmer('Flur', 'BU_FL')?>
+					<tr>
+						<td colspan="2"><span class="ps-input twoColumns <?=wpa::GreenYellow ?>" data-ws="FL_RU_Manual">undefined</span></td>
+					</tr>
+					<tr>
+						<td class="ps-tal"><span class="ps-button RU_Auto" data-ip="<?=FL_RU ?>">Auto</span></td>
+						<td class="ps-tar"><span class="ps-button RU_Manual" data-ip="<?=FL_RU ?>">Manual</span></td>
+					</tr>
 					<tr><td colspan="2"><hr /></td></tr>
-					<tr><td colspan="2"><a class="ps-button twoColumns" href="std.d1mini.BA_Lue.htm"> Bad Lüfter</a></td></tr>
 					<?=uebersicht::tasterShellyDimmer('Bad', 'BA')?>
 					<?=uebersicht::tasterShelly('Bad <br class="showonportrait" />Spiegelschrank', 'BA_SP')?>
+					<tr><td colspan="2"><a class="ps-button twoColumns" href="std.d1mini.BA_Lue.htm"> Bad Lüfter</a></td></tr>
 					<tr><td colspan="2"><hr /></td></tr>
 					<?=uebersicht::NeoPixel(KZ_NP, 'KZ_NP', 'Kinderzimmer NeoPixel')?>
 					<?=uebersicht::tasterShelly('Kinderzimmer', 'KZ')?>
 					<?=uebersicht::tasterShelly('Bilderrahmen', 'KZ_RGB')?>
 					<?=uebersicht::tasterShelly('Kinderzimmer <br class="showonportrait" />Bett', 'KZ_BE')?>
 					<?=uebersicht::tasterShelly('Kinderzimmer <br class="showonportrait" />Nachtlicht', 'KZ_NL')?>
-					<tr><td colspan="2"><hr /></td></tr>
-					<tr><td colspan="2"><span class="ps-button twoColumns wz-gemuetlich">Couch</span></td></tr>
 				</tbody>
 			</table>
 		</div>
@@ -378,10 +384,10 @@ class uebersicht {
 						<td colspan="4"><hr /></td>
 					</tr>
 					<tr>
-						<td>Temperatur</td>
-						<td>Sollwert</td>
-						<td>Ventil FB</td>
-						<td>Ventil HZG</td>
+						<td><span>Temperatur</span></td>
+						<td><span>Sollwert</span></td>
+						<td><span>Ventil FB</span></td>
+						<td><span>Ventil HZG</span></td>
 					</tr>
 					<tr>
 						<td colspan="4"><hr /></td>
@@ -403,14 +409,18 @@ foreach($zimmer as $kurz => $name) {
 						<td><span class="ps-input ps-operable zp" data-ws="_<?=$kurz?>_RT_SW" data-bm="<?=$kurz?>_ZP_RM" data-zp="<?=$kurz?>_ZP" title="bm: ZP aktiv">-</span></td>
 						<td>
 <?	if($kurz != 'KZ') { ?>
-						<div class="handContainer">
-							<span id="<?=$kurz?>_FB" class="ps-input pa-EinAus <?=wpa::GreyGreen?> bedienbar" data-ws="_DO_<?=$kurz?>_FB" data-popup="<?=$name?>">-</span>
-							<span class="hand pa-hide" data-value="<?=$kurz?>_FB_Hand"></span>
-						</div>
-						<?=($kurz == 'WZ') ? '<div class="handContainer"><span id="KA_FB" class="ps-input pa-EinAus ' . wpa::GreyGreen . ' bedienbar" data-ws="_DO_KA_FB" data-popup="Kaminzimmer" title="Kaminzimmer">-</span>
-							<span class="hand pa-hide" data-value="KA_FB_Hand"></span></div>' : '' ?>
+							<div class="handContainer">
+								<span id="<?=$kurz?>_FB" class="ps-input pa-EinAus <?=wpa::GreyGreen?> bedienbar" data-ws="_DO_<?=$kurz?>_FB" data-popup="<?=$name?>">-</span>
+								<span class="hand pa-hide" data-value="<?=$kurz?>_FB_Hand"></span>
+							</div>
+<? if($kurz == 'WZ') { ?>
+							<div class="handContainer">
+								<span id="KA_FB" class="ps-input pa-EinAus <?=wpa::GreyGreen ?> bedienbar" data-ws="_DO_KA_FB" data-popup="Kaminzimmer" title="Kaminzimmer">-</span>
+								<span class="hand pa-hide" data-value="KA_FB_Hand"></span>
+							</div>
+<? } ?>
 <? } else {?>
-						<span id="KZ_VT_MAX" class="ps-input ps-param" data-ws="_KZ_VT_MAX" data-popup="Ventilstellung Maximalwert">-</span>
+							<span id="KZ_VT_MAX" class="ps-input ps-param" data-ws="_KZ_VT_MAX" data-popup="Ventilstellung Maximalwert">-</span>
 <? } ?>
 						</td>
 						<td>
@@ -432,12 +442,16 @@ foreach($zimmer as $kurz => $name) {
 ?>
 					<tr>
 						<td>
-							<span class="ps-input" data-ws="<?=$dpTemp ?>" title="UG <?=$name?> Temperatur">-</span>
-							<span class="<?=wpa::indikatorTemp?>" data-ws="<?=$dpTemp ?>"><?=wpHTML_EMPTY ?></span>
+							<div class="indiContainer">
+								<span class="ps-input" data-ws="<?=$dpTemp ?>" title="UG <?=$name?> Temperatur">-</span>
+								<span class="<?=wpa::indikatorTemp?>" data-ws="<?=$dpTemp ?>"><?=wpHTML_EMPTY ?></span>
+							</div>
 						</td>
 						<td>
-							<span class="ps-input" data-ws="<?=$dpHum ?>" title="UG <?=$name?> Feuchte">-</span>
-							<span class="<?=wpa::indikatorHum?>" data-ws="<?=$dpHum ?>"><?=wpHTML_EMPTY ?></span>
+							<div class="indiContainer">
+								<span class="ps-input" data-ws="<?=$dpHum ?>" title="UG <?=$name?> Feuchte">-</span>
+								<span class="<?=wpa::indikatorHum?>" data-ws="<?=$dpHum ?>"><?=wpHTML_EMPTY ?></span>
+							</div>
 						</td>
 						<td colspan="2">
 							<a href="std.trendview.<?=$trendid[$kurz] ?>.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a>

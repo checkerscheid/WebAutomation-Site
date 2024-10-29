@@ -7,27 +7,14 @@
 //###################################################################################
 //#                                                                                 #
 //# Author       : Christian Scheid                                                 #
-//# Date         : 11.08.2024                                                       #
+//# Date         : 29.10.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 703                                                     $ #
+//# Revision     : $Rev:: 696                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpAnalogOut.css 703 2024-10-18 23:17:50Z                 $ #
+//# File-ID      : $Id:: pageadmin.req 696 2024-10-06 19:11:29Z                   $ #
 //#                                                                                 #
 //###################################################################################
-?> wpAnalogOut */
-
-.wpAnalogOut .topic-slider { margin:15px 0; }
-.wpAnalogOut .topic-slider a { text-decoration:none; outline:none; }
-.wpAnalogOut .topic-slider span.toleft {
-	position:relative; top:-25px; left:10px; background:#151515;
-	border:1px solid #888; border-radius:2px; padding:3px; }
-
-.pickerContainer { padding:5px; border:1px solid #CCC; border-radius:10px; box-shadow:6px 6px 8px 0px #222; }
-#RGBpicker { cursor:crosshair;
-	background:transparent url(images/layout/ColorWheelBG.png) center center no-repeat; }
-.colorPicker .ps-flex-container { margin:10px 0; }
-
-@media (orientation: portrait) {
-	.wpAnalogOut .ui-slider .ui-slider-handle { width:30px; height:30px; }
-}
-
+?> wprfidsec */
+p.page.load = function() {
+	// p.getValues();
+};

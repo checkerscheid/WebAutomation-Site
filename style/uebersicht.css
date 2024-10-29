@@ -23,7 +23,8 @@
 }
 #uebersicht .wartungmeldung { display:block; padding:4px; margin:5px; color:#FFBF00; border:1px solid #CCC; }
 #uebersicht .ps-container { margin:10px; padding:10px; float:left; }
-#uebersicht .ps-container .ps-input, #uebersicht .ps-container .ps-button { display:inline-block; width:100px; text-align:center; }
+#uebersicht .ps-container .ps-input,
+#uebersicht .ps-container .ps-button { display:inline-block; width:100px; text-align:center; }
 #uebersicht .ps-container a.ps-button { width:auto; /*display:block;*/ text-decoration:none; }
 #uebersicht .ps-container .twoColumns { width:auto; display:block; text-decoration:none; }
 #uebersicht .ps-container .RenewShellyState { min-width:100px; width:auto; }
@@ -31,45 +32,29 @@
 #uebersicht .ps-button { padding:8px 6px; }
 #uebersicht .ps-button.pa-scene { padding:8px 25px; }
 
-#uebersicht .shelly-dimmer, #uebersicht .brigthness-dimmer { margin:5px 0 10px 0; }
+#uebersicht .shelly-dimmer,
+#uebersicht .brigthness-dimmer { margin:5px 0 10px 0; }
 .black #uebersicht .ps-yellow { color:#111; }
 
-#uebersicht .clicklicht, #uebersicht .ps-operable { cursor:pointer; }
+#uebersicht .clicklicht,
+#uebersicht .ps-operable { cursor:pointer; }
 #uebersicht .description { padding-left:20px; text-align:left; }
 #uebersicht .loading .description { background:transparent url(images/layout/loader.gif) left center no-repeat; background-size:15px 5px; }
 #uebersicht .ps-hastimer .description { background:transparent url(images/layout/clock_icon.svg) left center no-repeat; background-size:14px 14px; }
 
-#uebersicht .condition, #uebersicht .forecast { border:1px solid #CCC; padding:10px; margin:30px auto;
-	border-radius:10px;
-	box-shadow:6px 6px 8px 0px #222;
-	background-image: linear-gradient(#606060 25%, #222 100%);
-}
-#uebersicht .condition { width:420px; }
-#uebersicht .forecast { width:390px; padding-left:40px; }
-
-#uebersicht .condition .big { font-size:40pt; font-weight:bold; padding-left:135px; padding-top:10px; float:left; text-shadow:-1px -1px 3px #000; }
-#uebersicht .condition .big sup { font-size:20pt; font-weight:bold; }
-#uebersicht .condition .location { font-size:15pt; font-weight:bold; padding-left:135px; float:left; text-shadow:-1px -1px 3px #000; }
-#uebersicht .condition .sonne { padding-left:20px; padding-top:20px; float:left; }
-#uebersicht .condition .sonne span { line-height:32px; height:32px; display:inline-block; padding-left:5px; }
-#uebersicht .condition .sonne .sunrise { background:transparent url(images/layout/sunrise.png) center top no-repeat; width:35px; height:32px;}
-#uebersicht .condition .sonne .sunset { background:transparent url(images/layout/sunset.png) center top no-repeat; width:35px; height:32px;}
-#uebersicht .condition .wind, #uebersicht .condition .atm { font-size:8pt; text-align:right; }
-#uebersicht .condition .lastbuild { font-size:8pt; text-align:right; }
-#uebersicht .condition .yahoo { background:transparent url(images/layout/yahoo.png); width:30px; height:18px; display:inline-block; margin-left:5px; }
-
-#uebersicht .forecast div.days { float:left; width:75px; }
-#uebersicht .forecast img { width:75px; }
-#uebersicht .forecast .high { font-size:12pt; color:#ffd5d5; }
-#uebersicht .forecast .low { font-size:12pt; color:#8a8aee; }
-
 #uebersicht .showonportrait { display:none; }
 @media (orientation: portrait) {
+	#uebersicht span,
+	#uebersicht a { font-size:18px; }
 	#uebersicht .ps-button { padding:25px 6px; }
 	#uebersicht .ps-button.pa-scene { padding:25px 25px; }
+	#uebersicht .ps-input { font-size:18px; padding:5px; }
+	#uebersicht .wpa-indikator { top:8px; }
+	#uebersicht .ps-pluginbutton { font-size:40px; }
 	#uebersicht .ui-slider .ui-slider-handle { width:30px; height:30px; }
 	#uebersicht .ui-slider-horizontal { height:20px; }
-	#uebersicht td.description, #uebersicht td.description * { font-size:17px; }
+	#uebersicht td.description,
+	#uebersicht td.description * { font-size:18px; }
 	#uebersicht .showonportrait { display:inline; }
 }
 .page .ps-zimmer-info span.hand { position:absolute; left:95px; }

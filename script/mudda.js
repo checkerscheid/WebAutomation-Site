@@ -30,7 +30,8 @@ p.page.load = function() {
 		var id = $(this).attr('id');
 		$.post('std.wstruefalse.pop', {elem:id, headline:headline, type:'AufZu'}, function(data) {
 			$('#dialog').html(data).dialog({
-				title: 'Ventilbedienung', modal: true, width: '300px'
+				title: 'Ventilbedienung', modal: true, width: '300px',
+				buttons: null
 			});
 			ws.register();
 		});
@@ -111,6 +112,13 @@ p.page.load = function() {
 				printPlotDataTemp();
 			}
 		});
+		plotdataTemp.forEach((element, i) => {
+			if(plotdataTemp[i].lines.show) {
+				$('#ergTemp span[data-id=' + element.id + ']').removeClass('ps-fontgrey');
+			} else {
+				$('#ergTemp span[data-id=' + element.id + ']').addClass('ps-fontgrey');
+			}
+		});
 	});
 	$('#ergHum').on('click', '.legendLabel', function() {
 		var id = $(this).find('span').attr('data-id');
@@ -118,6 +126,13 @@ p.page.load = function() {
 			if(element.id == id) {
 				plotdataHum[i].lines.show = !plotdataHum[i].lines.show;
 				printPlotDataHum();
+			}
+		});
+		plotdataHum.forEach((element, i) => {
+			if(plotdataHum[i].lines.show) {
+				$('#ergHum span[data-id=' + element.id + ']').removeClass('ps-fontgrey');
+			} else {
+				$('#ergHum span[data-id=' + element.id + ']').addClass('ps-fontgrey');
 			}
 		});
 	});

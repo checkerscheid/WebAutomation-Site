@@ -55,26 +55,26 @@ class wpAnalogOut {
 			<hr />
 			<table summary="">
 				<tr>
-					<td colspan="4">Analog Output:</td>
+					<td colspan="4"><span>Analog Output:</span></td>
 					<td colspan="2">
 						<span class="ps-input" data-ws="<?=$this->name ?>_AnalogOut">undefined</span>
 					</td>
 				</tr>
 				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
-					<td colspan="4">Modus:</td>
+					<td colspan="4"><span>Modus:</span></td>
 					<td colspan="2">
 						<span class="ps-input <?=wpa::GreenYellow ?>" data-ws="<?=$this->name ?>_AnalogOutHandError">undefined</span>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="4">Automatikwert:</td>
+					<td colspan="4"><span>Automatikwert:</span></td>
 					<td colspan="2">
 						<span class="ps-input" data-ws="<?=$this->name ?>_AnalogOutAuto">undefined</span>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="4">Handwert:</td>
+					<td colspan="4"><span>Handwert:</span></td>
 					<td colspan="2">
 						<span class="ps-input" data-ws="<?=$this->name ?>_AnalogOutHand">undefined</span>
 					</td>
@@ -84,7 +84,7 @@ class wpAnalogOut {
 					<td colspan="6"><h3>Bedienung</h3></td>
 				</tr>
 				<tr>
-					<td colspan="2">Hand / Auto</td>
+					<td colspan="2"><span>Hand / Auto</span></td>
 					<td colspan="2">
 						<span class="ps-button writeTopic" data-topic="<?=$this->name ?>/settings/AnalogOut/SetHand" data-write="0">Automatik</span>
 					</td>
@@ -93,7 +93,7 @@ class wpAnalogOut {
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2">Handwert</td>
+					<td colspan="2"><span>Handwert</span></td>
 					<td colspan="4"></td>
 				</tr>
 				<tr>
@@ -107,9 +107,9 @@ class wpAnalogOut {
 				<tr><td colspan="6"><hr /></td></tr>
 				<? if($admin) { ?>
 				<tr>
-					<td colspan="4">Max Cycle:</td>
+					<td colspan="4"><span>Max Cycle:</span></td>
 					<td colspan="2">
-						<span class="ps-input ps-param"
+						<span class="ps-input ps-topicparam"
 							data-topic="<?=$this->name ?>/settings/AnalogOut/CalcCycle"
 							data-unit="sec">
 							<?=$this->status->AnalogOut->CalcCycle ?> ms
@@ -119,15 +119,15 @@ class wpAnalogOut {
 				<tr><td colspan="6"><hr /></td></tr>
 				<? } ?>
 				<tr>
-					<td colspan="6"><h3>PID</h3></td>
+					<td colspan="6"><h3>Einstellungen</h3></td>
 				</tr>
 				<? if($admin) { ?>
 				<tr>
-					<td colspan="3">PID Type:</td>
+					<td colspan="3"><span>PID Type:</span></td>
 					<td colspan="2">
 						<select class="ps-input AnalogOutPidType">
-							<option value="0">Heating</option>
-							<option value="1">Air Condition</option>
+							<option value="0"<?=($this->status->AnalogOut->pidType == 'Heating' ? ' selected="selected"' : '') ?>>Heating</option>
+							<option value="1"<?=($this->status->AnalogOut->pidType == 'AirCondition' ? ' selected="selected"' : '') ?>>Air Condition</option>
 						</select>
 					</td>
 					<td>
@@ -136,14 +136,16 @@ class wpAnalogOut {
 				</tr>
 				<? } ?>
 				<tr>
-					<td colspan="4">Readed:</td>
+					<td colspan="4"><span>Regeltemperatur:</span></td>
 					<td colspan="2">
-						<span class="ps-input" data-ws="<?=$this->name ?>_AnalogOutReadedTemp">undefined</span>
-						<span class="<?=wpa::indikatorTempOut?>" data-ws="<?=$this->name ?>_AnalogOutReadedTemp"><?=wpHTML_EMPTY ?></span>
+						<div class="indiContainer">
+							<span class="ps-input" data-ws="<?=$this->name ?>_AnalogOutReadedTemp">undefined</span>
+							<span class="<?=wpa::indikatorTempOut?>" data-ws="<?=$this->name ?>_AnalogOutReadedTemp"><?=wpHTML_EMPTY ?></span>
+						</div>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="4">SetPoint:</td>
+					<td colspan="4"><span>Sollwert:</span></td>
 					<td colspan="2">
 						<span class="ps-input ps-param" data-ws="<?=$this->name ?>_AnalogOutSetPoint" data-wswrite="<?=$this->name ?>_AnalogOutSetPoint" data-topic="<?=$this->name ?>/settings/AnalogOut/SetPoint">undefined</span>
 					</td>
@@ -162,21 +164,21 @@ class wpAnalogOut {
 				<? } ?>
 				<? if($admin) { ?>
 				<tr>
-					<td colspan="4">Kp:</td>
+					<td colspan="4"><span>Kp:</span></td>
 					<td colspan="2">
-						<span class="ps-input ps-param" data-ws="<?=$this->name ?>_AnalogOutKp" data-topic="<?=$this->name ?>/settings/AnalogOut/Kp">undefined</span>
+						<span class="ps-input ps-topicparam" data-ws="<?=$this->name ?>_AnalogOutKp" data-topic="<?=$this->name ?>/settings/AnalogOut/Kp" data-popup="Regler Verstärkung (Kp)">undefined</span>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="4">Tv:</td>
+					<td colspan="4"><span>Tv:</span></td>
 					<td colspan="2">
-						<span class="ps-input ps-param" data-ws="<?=$this->name ?>_AnalogOutTv" data-topic="<?=$this->name ?>/settings/AnalogOut/Tv">undefined</span>
+						<span class="ps-input ps-topicparam" data-ws="<?=$this->name ?>_AnalogOutTv" data-topic="<?=$this->name ?>/settings/AnalogOut/Tv" data-popup="Regler Verzögerung (Tv)">undefined</span>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="4">Tn:</td>
+					<td colspan="4"><span>Tn:</span></td>
 					<td colspan="2">
-						<span class="ps-input ps-param" data-ws="<?=$this->name ?>_AnalogOutTn" data-topic="<?=$this->name ?>/settings/AnalogOut/Tn">undefined</span>
+						<span class="ps-input ps-topicparam" data-ws="<?=$this->name ?>_AnalogOutTn" data-topic="<?=$this->name ?>/settings/AnalogOut/Tn" data-popup="Regler Nachstellzeit (Tn)">undefined</span>
 					</td>
 				</tr>
 				<? } ?>
@@ -184,14 +186,14 @@ class wpAnalogOut {
 			<? if(isset($this->status->useModul->Window2) &&
 				$this->status->useModul->Window2) { ?>
 				<tr>
-					<td colspan="4"><?=$fenster2 ?>:</td>
+					<td colspan="4"><span><?=$fenster2 ?>:</span></td>
 					<td colspan="2"><span class="ps-input <?=wpa::GreenYellow ?>" data-ws="<?=$this->name ?>_Window2">undefined</span></td>
 				</tr>
 			<? } ?>
 			<? if(isset($this->status->useModul->Window3) &&
 				$this->status->useModul->Window3) { ?>
 				<tr>
-					<td colspan="4"><?=$fenster3 ?>:</td>
+					<td colspan="4"><span><?=$fenster3 ?>:</span></td>
 					<td colspan="2"><span class="ps-input <?=wpa::GreenYellow ?>" data-ws="<?=$this->name ?>_Window3">undefined</span></td>
 				</tr>
 			<? } ?>

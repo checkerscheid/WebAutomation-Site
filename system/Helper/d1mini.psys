@@ -88,6 +88,10 @@ class d1mini {
 				$this->status->FreakaZoneDevice->useModul->Window3) {
 				$this->setWindow3();
 			}
+			if(isset($this->status->FreakaZoneDevice->useModul->Weight) &&
+				$this->status->FreakaZoneDevice->useModul->Weight) {
+				$this->setWeight();
+			}
 			if($this->status->FreakaZoneDevice->useModul->Relais ||
 					$this->status->FreakaZoneDevice->useModul->RelaisShield) {
 				$this->setRelais($this->status->FreakaZoneDevice->useModul->Moisture);
@@ -225,6 +229,16 @@ class d1mini {
 		$this->mergeAlarm($id_dp, 'Window3', 'Fenster 3 offen', alarmtype::Meldung, AlarmCondition::gleich, 1);
 		$this->mergeTrend($id_dp, 'Fenster 3', 0);
 		echo "saved: 'Fensterkontakt 3'<br />";
+	}
+	private function setWeight() {
+		$id_mqtttopic = $this->insertTopic('Weight/Output');
+		$id_dp = $this->mergeDP($id_mqtttopic, 'Weight', 'Gewicht', 'mg', 0);
+		$this->mergeTrend($id_dp, 'Gewicht', 60);
+		echo "saved: 'Gewicht',";
+		$id_mqtttopic_err = $this->insertTopic('ERROR/Weight');
+		$id_dp_err = $this->mergeDP($id_mqtttopic_err, 'ERROR_Weight', 'Weight Sensor Error', '0:Ok;1:Error;');
+		$this->mergeAlarm($id_dp_err, 'ERROR_Weight', 'Weight Sensor Error');
+		echo "saved: 'Gewicht Sensor Error'<br />";
 	}
 	private function setAnalogOut() {
 		$id_mqtttopic = $this->insertTopic('AnalogOut/Output');

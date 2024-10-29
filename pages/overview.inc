@@ -322,6 +322,11 @@ class overview {
 					<td colspan="2"><span data-ws="SZ_RU_LDR" class="ps-input">undefined</span></td>
 					<td colspan="2"></td>
 				</tr>
+				<tr>
+					<td colspan="2">Kinderzimmer:</td>
+					<td colspan="2"><span data-ws="KZ_RU_LDR" class="ps-input">undefined</span></td>
+					<td colspan="2"></td>
+				</tr>
 				<tr><td colspan="6"><h2>Pflanzen</h2></td></tr>
 				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
