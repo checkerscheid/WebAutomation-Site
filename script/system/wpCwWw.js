@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 701                                                     $ #
+//# Revision     : $Rev:: 706                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpCwWw.js 701 2024-10-14 00:14:32Z                   $ #
+//# File-ID      : $Id:: wpCwWw.js 706 2024-11-04 15:08:34Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> wpCwWw */
@@ -68,7 +68,7 @@ var wpCwWw = {
 					$('.CwWwWW').text(ui.value);
 					const ww = {
 						ip: wpCwWw.ip,
-						ww: ui.value * 2.55
+						ww: ui.value
 					};
 					$.post(wpCwWw.target + '.CwWwWW.req', ww, function(data) {
 					}, 'json');
@@ -77,7 +77,7 @@ var wpCwWw = {
 					$('.CwWwCW').text(ui.value);
 					const cw = {
 						ip: wpCwWw.ip,
-						cw: ui.value * 2.55
+						cw: ui.value
 					};
 					$.post(wpCwWw.target + '.CwWwCW.req', cw, function(data) {
 					}, 'json');
@@ -114,6 +114,15 @@ var wpCwWw = {
 			ip: wpCwWw.ip
 		};
 		$.post(wpCwWw.target + '.CwWwOff.req', off, function(data) {
+			console.log(data);
+		}, 'json');
+	},
+	setBrightness: function(cw, ww) {
+		const cwww = {
+			ip: wpCwWw.ip,
+			cw: cw, ww: ww
+		};
+		$.post(wpCwWw.target + '.CwWwCWWW.req', cwww, function(data) {
 			console.log(data);
 		}, 'json');
 	},

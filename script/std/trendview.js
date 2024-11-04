@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.10.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 705                                                     $ #
+//# Revision     : $Rev:: 706                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: trendview.js 705 2024-10-20 17:29:42Z                    $ #
+//# File-ID      : $Id:: trendview.js 706 2024-11-04 15:08:34Z                    $ #
 //#                                                                                 #
 //###################################################################################
 ?> trendview */

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 703                                                     $ #
+//# Revision     : $Rev:: 706                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpAnalogOut.js 703 2024-10-18 23:17:50Z              $ #
+//# File-ID      : $Id:: wpAnalogOut.js 706 2024-11-04 15:08:34Z              $ #
 //#                                                                                 #
 //###################################################################################
 ?> wpCwWw */

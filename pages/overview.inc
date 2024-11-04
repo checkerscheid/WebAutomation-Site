@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 696                                                     $ #
+//# Revision     : $Rev:: 706                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: overview.inc 696 2024-10-06 19:11:29Z                  $ #
+//# File-ID      : $Id:: overview.inc 706 2024-11-04 15:08:34Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /**
@@ -61,17 +61,20 @@ class overview {
 		'FL2_HT'		=> 'OG Flur',
 		'GA2_WE_Gaube'	=> 'OG Wetterstation Gaube'
 	);
-	private static $Pflanze = array(
-		'WZ_PF_TI' => 'Pflanze auf\'m Tisch',
-		'WZ_PF_TE' => 'Pflanze zur Terrasse',
-		'WZ_PF_FE' => 'Pflanze am Fenster in der Ecke',
-		'WZ_PF_FE_LI' => 'Pflanze am Fenster, links',
-		'WZ_PF_FE_RE1' => 'Pflanze am Fenster, 1. rechts',
-		'WZ_PF_FE_RE2' => 'Pflanze am Fenster, 2. rechts',
-		'Melonie' => 'Melonie',
-		'KZ_PF_PF' => 'Pflanzi',
-		'KZ_PF_BU' => 'Buschi'
-	);
+	private static $Pflanze;
+	public static function setPflanze() {
+		self::$Pflanze = array(
+			'WZ_PF_TI' => new cPflanze('Pflanze auf\'m Tisch', 70),
+			'WZ_PF_TE' => new cPflanze('Pflanze zur Terrasse', 75),
+			'WZ_PF_FE' => new cPflanze('Pflanze am Fenster in der Ecke', 71),
+			'WZ_PF_FE_LI' => new cPflanze('Pflanze am Fenster, links', 72),
+			'WZ_PF_FE_RE1' => new cPflanze('Pflanze am Fenster, 1. rechts', 73),
+			'WZ_PF_FE_RE2' => new cPflanze('Pflanze am Fenster, 2. rechts', 74),
+			'Melonie' => new cPflanze('Melonie', 97),
+			'KZ_PF_PF' => new cPflanze('Pflanzi', 93),
+			'KZ_PF_BU' => new cPflanze('Buschi', 92)
+		);
+	}
 	public static function getD1HT() {
 		$returns = '';
 		foreach(overview::$HT as $dp => $name) {
@@ -110,13 +113,18 @@ class overview {
 	}
 	public static function getPflanze() {
 		$returns = '';
-		foreach(overview::$Pflanze as $name => $desc) {
+		foreach(overview::$Pflanze as $name => $p) {
 			$returns .= '
 				<tr>
-					<td colspan="3">' . $desc . '</td>
-					<td colspan="3">
-						<span data-ws="' . $name . '_Moisture" class="ps-input">undefined</span>
-						<span data-ws="' . $name . '_Moisture" class="' . wpa::indikatorPfl . '">' . wpHTML_EMPTY . '</span>
+					<td colspan="2">' . $p->getDescription() . '</td>
+					<td colspan="2">
+						<div class="indiContainer">
+							<span data-ws="' . $name . '_Moisture" class="ps-input">undefined</span>
+							<span data-ws="' . $name . '_Moisture" class="' . wpa::indikatorPfl . '">' . wpHTML_EMPTY . '</span>
+						</div>
+					</td>
+					<td colspan="2">
+						' . $p->getTrendButton() . '
 					</td>
 				</tr>';
 		}
@@ -167,6 +175,29 @@ class overview {
 		return $returns;
 	}
 }
+class cPflanze {
+	private $name, $description, $trendid;
+	public function __construct($description, $trendid) {
+		$this->description = $description;
+		$this->trendid = $trendid;
+	}
+	public function setName($name) {
+		$this->name = $name;
+	}
+	public function getName() {
+		return $this->name;
+	}
+	public function getDescription() {
+		return $this->description;
+	}
+	public function getTrendId() {
+		return $this->trendid;
+	}
+	public function getTrendButton() {
+		return '<a href="std.trendview.' . $this->trendid . '.htm" class="ps-button ps-pluginbutton">' . wpHTML_TREND . '</a>';
+	}
+}
+overview::setPflanze();
 ?>
 <div id="uebersicht" class="ps-flex-container page">
 	<div class="ps-container">
@@ -327,6 +358,12 @@ class overview {
 					<td colspan="2"><span data-ws="KZ_RU_LDR" class="ps-input">undefined</span></td>
 					<td colspan="2"></td>
 				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="ps-container">
+		<table id="SensorenII">
+			<tbody>
 				<tr><td colspan="6"><h2>Pflanzen</h2></td></tr>
 				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
@@ -343,8 +380,17 @@ class overview {
 						<span data-ws="WZ_PF_FE_Hum" class="<?=wpa::indikatorHum?>"><?=wpHTML_EMPTY?></span>
 					</td>
 				</tr>
+				<tr>
+					<td colspan="2">Wassergewicht</td>
+					<td colspan="2">
+						<span data-ws="WZ_PF_FE_LI_Weight" class="ps-input">undefined</span>
+					</td>
+					<td colspan="2">
+						<a href="std.trendview.94.htm" class="ps-button ps-pluginbutton"><?= wpHTML_TREND ?></a>
+					</td>
+				</tr>
 				<?=overview::getPflanze() ?>
-				<tr><td colspan="6"><h2>Test</h2></td></tr>
+				<!--tr><td colspan="6"><h2>Test</h2></td></tr>
 				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
 					<td colspan="3">Shelly ForceMqttUpdate:</td>
@@ -353,7 +399,7 @@ class overview {
 				<!--tr>
 					<td>BrowseMqtt:</td>
 					<td><span class="ps-button setBrowseMqtt">anfordern</span></td>
-				</tr-->
+				</tr>
 				<tr>
 					<td colspan="3">getBrowseMqtt:</td>
 					<td colspan="3"><span class="ps-button getBrowseMqtt">anfordern</span></td>
@@ -365,7 +411,7 @@ class overview {
 				<tr>
 					<td colspan="3">internal getShellyStatus:</td>
 					<td colspan="3"><span class="ps-button getShellyStatus">anfordern</span></td>
-				</tr>
+				</tr-->
 			</tbody>
 		</table>
 	</div>

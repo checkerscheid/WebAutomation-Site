@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 27.07.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 704                                                     $ #
+//# Revision     : $Rev:: 706                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pia.inc 704 2024-10-20 17:29:04Z                         $ #
+//# File-ID      : $Id:: pia.inc 706 2024-11-04 15:08:34Z                         $ #
 //#                                                                                 #
 //###################################################################################
 /**
@@ -63,6 +63,7 @@ $points = array(
 						<h3>Licht</h3>
 						<hr />
 						<span class="ps-button AllesAus">Alles Aus</span>
+						<span class="ps-button AllesSchlafen">Schlafen</span>
 					</td>
 				</tr>
 				<?=pia::tasterShelly('Kinderzimmer', 'KZ')?>
@@ -184,13 +185,13 @@ $points = array(
 	$neoPixel->getColorScenen('Lichtleiste');
 ?>
 <?
-	$rgb = new wpRGB('172.17.80.163', 'shellies/RGBW2');
-	$rgb->getColorPicker('Bilderrahmen');
-?>
-<?
 	$cwww = new wpCwWw('172.17.80.164', 'KZ_KE');
 	$cwww->getStatusFromJson($d1Mini->FreakaZoneDevice);
 	$cwww->getColorPicker('Halloween', 'schwebende Geister', 'Fensterschnee');
+?>
+<?
+	$rgb = new wpRGB('172.17.80.163', 'shellies/RGBW2');
+	$rgb->getColorPicker('Bilderrahmen');
 ?>
 	</div>
 </div>

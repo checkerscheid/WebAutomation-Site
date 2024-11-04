@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 703                                                     $ #
+//# Revision     : $Rev:: 706                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpCwWw.psys 703 2024-10-18 23:17:50Z                     $ #
+//# File-ID      : $Id:: wpCwWw.psys 706 2024-11-04 15:08:34Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -26,7 +26,9 @@ class wpCwWw {
 	private $database, $status;
 	private $ip, $name;
 	const modes = array(
-		4 => 'Smooth'
+		4 => 'Smooth',
+		5 => 'WW Pulse',
+		6 => 'CW Pulse'
 	);
 	public function __construct($ip, $name) {
 		$this->database = new wpDatabase();
@@ -61,10 +63,10 @@ class wpCwWw {
 			<h3><?=$headline ?></h3>
 			<hr />
 			<div class="colorPicker">
-				<h3><?=$ww ?> (<span class="CwWwWW wp-b-to-p" data-ws="<?=$this->name ?>_AnalogOut"><?=floor($this->status->AnalogOut->HandValue / 2.55) ?></span>)</h3>
-				<div class="CwWwSliderW CwWwSliderWW wpSlider-255" data-ws="<?=$this->name ?>_AnalogOut"></div>
-				<h3><?=$cw ?> (<span class="CwWwCW wp-b-to-p" data-ws="<?=$this->name ?>_AnalogOut2"><?=floor($this->status->AnalogOut2->HandValue / 2.55) ?></span>)</h3>
-				<div class="CwWwSliderW CwWwSliderCW wpSlider-255" data-ws="<?=$this->name ?>_AnalogOut2"></div>
+				<h3><?=$ww ?> (<span class="CwWwWW _wp-b-to-p" data-ws="<?=$this->name ?>_AnalogOut"><?=floor($this->status->AnalogOut->HandValue / 2.55) ?></span>)</h3>
+				<div class="CwWwSliderW CwWwSliderWW wpSlider" data-ws="<?=$this->name ?>_AnalogOut"></div>
+				<h3><?=$cw ?> (<span class="CwWwCW _wp-b-to-p" data-ws="<?=$this->name ?>_AnalogOut2"><?=floor($this->status->AnalogOut2->HandValue / 2.55) ?></span>)</h3>
+				<div class="CwWwSliderW CwWwSliderCW wpSlider" data-ws="<?=$this->name ?>_AnalogOut2"></div>
 			</div>
 			<h3>Scenen</h3>
 			<div class="sceneContainer">

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 26.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 704                                                     $ #
+//# Revision     : $Rev:: 706                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.psys 704 2024-10-20 17:29:04Z                     $ #
+//# File-ID      : $Id:: d1mini.psys 706 2024-11-04 15:08:34Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -273,11 +273,14 @@ class d1mini {
 				$id_mqtttopicTn = $this->insertTopic('settings/AnalogOut/Tn');
 				$id_dp = $this->mergeDP($id_mqtttopicTn, 'AnalogOutTn', 'Nachstellzeit', 's', 2);
 				echo "saved: 'Nachstellzeit',";
-				$id_mqtttopicSetPoint = $this->insertTopic('settings/AnalogOut/SetPoint');
+				$id_mqtttopicSetPoint = $this->insertTopic('AnalogOut/SetPoint');
+				$id_mqtttopicSetSetPoint = $this->insertTopic('settings/AnalogOut/SetPoint');
 				$uint = '°C';
 				$nks = 1;
-				if(isset($this->status->FreakaZoneDevice->AnalogOut->pidType) && $this->status->FreakaZoneDevice->AnalogOut->pidType == 'AirCondition') { $uint = '%rF'; $nks = 0; }
+				if(isset($this->status->FreakaZoneDevice->AnalogOut->pidType) &&
+					$this->status->FreakaZoneDevice->AnalogOut->pidType == 'AirCondition') { $uint = '%rF'; $nks = 0; }
 				$id_dp = $this->mergeDP($id_mqtttopicSetPoint, 'AnalogOutSetPoint', 'Sollwert', $uint, $nks);
+				$id_dp = $this->mergeDP($id_mqtttopicSetSetPoint, 'AnalogOutSetSetPoint', 'Sollwert', $uint, $nks);
 				$this->mergeTrend($id_dp, 'AnalogOut SetPoint', 0);
 				echo "saved: 'SetPoint',";
 				$id_mqtttopicReadedTemp = $this->insertTopic('AnalogOut/ReadedTemp');

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 27.07.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 700                                                     $ #
+//# Revision     : $Rev:: 706                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pia.js 700 2024-10-14 00:13:37Z                          $ #
+//# File-ID      : $Id:: pia.js 706 2024-11-04 15:08:34Z                          $ #
 //#                                                                                 #
 //###################################################################################
 use system\std
@@ -54,6 +54,19 @@ p.page.load = function() {
 	$('.AllesAus').click(function() {
 		wpNeoPixel.setOff();
 		wpCwWw.setOff();
+		wpRGB.setOff();
+		$.post('std.shellycom.set-relay.req', {ShellyIP: '172.17.80.160', turn: 'false'});
+		$.post('std.shellycom.set-relay.req', {ShellyIP: '172.17.80.161', turn: 'false'});
+		$.post('std.shellycom.set-relay.req', {ShellyIP: '172.17.80.162', turn: 'false'});
+	});
+	$('.AllesSchlafen').click(function() {
+		wpNeoPixel.setColorBrightness(254, 34, 0, 15);
+		wpCwWw.setBrightness(10, 0);
+		const h = 0;
+		const m = 30;
+		var sec = (h * 60 * 60) + (m * 60);
+		wpNeoPixel.setSleep(sec);
+		wpCwWw.setSleep(sec);
 		wpRGB.setOff();
 		$.post('std.shellycom.set-relay.req', {ShellyIP: '172.17.80.160', turn: 'false'});
 		$.post('std.shellycom.set-relay.req', {ShellyIP: '172.17.80.161', turn: 'false'});

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 10.12.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 704                                                     $ #
+//# Revision     : $Rev:: 706                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: trendselect.req 704 2024-10-20 17:29:04Z                 $ #
+//# File-ID      : $Id:: trendselect.req 706 2024-11-04 15:08:34Z                 $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -127,7 +127,7 @@ switch(std::gets('param1')) {
 <?
 		foreach($user as $name => $tinfo) {
 			echo '<li class="GroupHeadLine" data-time="'.$tinfo['time'].'" data-from="'.$tinfo['timefrom'].'" data-to="'.$tinfo['timeto'].'" data-day="'.$tinfo['timeday'].'" data-choosen="'.$tinfo['choosentime'].'" ';
-			echo 'data-useminmax="'.$tinfo['useminmax'].'" data-only1axes="'.$tinfo['only1axes'].'" data-child="'.$tinfo['idcfg'].'">';
+			echo 'data-useminmax="'.$tinfo['useminmax'].'" data-only1axes="'.$tinfo['only1axes'].'" data-child="'.$tinfo['idcfg'].'" title="'.$tinfo['idcfg'].'">';
 			echo '<span class="ps-tree-parent">'.wpHTML_EMPTY.'</span>';
 			echo '<span class="ps-bold">'.$name.'</span> <span>('.getTimeReadable($tinfo['time']).')</span>';
 			echo '<span class="ps-dpbutton ps-dpdelete ps-hover-noborder ps-displayright trenddeleteuser" title="entfernen">'.wpHTML_EMPTY.'</span>';

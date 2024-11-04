@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 702                                                     $ #
+//# Revision     : $Rev:: 706                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.inc 702 2024-10-18 23:16:21Z                      $ #
+//# File-ID      : $Id:: d1mini.inc 706 2024-11-04 15:08:34Z                      $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
@@ -290,7 +290,8 @@ foreach($updateChanel as $key => $value) {
 			</table>
 		</div>
 	<? } ?>
-	<? if($d1Mini->FreakaZoneDevice->useModul->Weight) { ?>
+	<? if(isset($d1Mini->FreakaZoneDevice->useModul->Weight) &&
+		$d1Mini->FreakaZoneDevice->useModul->Weight) { ?>
 		<div class="ps-container">
 			<h3>Weight</h3>
 			<table summary="">

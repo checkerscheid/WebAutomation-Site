@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 704                                                     $ #
+//# Revision     : $Rev:: 706                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpAnalogOut.psys 704 2024-10-20 17:29:04Z                $ #
+//# File-ID      : $Id:: wpAnalogOut.psys 706 2024-11-04 15:08:34Z                $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -103,7 +103,9 @@ class wpAnalogOut {
 				</tr>
 			<? if($this->status->useModul->DHT11 ||
 				$this->status->useModul->DHT22 ||
-				isset($this->status->AnalogOut->CalcCycle)) { ?>
+				isset($this->status->AnalogOut->CalcCycle)) {
+					$pidType = $this->status->AnalogOut->pidType;
+			?>
 				<tr><td colspan="6"><hr /></td></tr>
 				<? if($admin) { ?>
 				<tr>
@@ -126,8 +128,8 @@ class wpAnalogOut {
 					<td colspan="3"><span>PID Type:</span></td>
 					<td colspan="2">
 						<select class="ps-input AnalogOutPidType">
-							<option value="0"<?=($this->status->AnalogOut->pidType == 'Heating' ? ' selected="selected"' : '') ?>>Heating</option>
-							<option value="1"<?=($this->status->AnalogOut->pidType == 'AirCondition' ? ' selected="selected"' : '') ?>>Air Condition</option>
+							<option value="0"<?=($pidType == 'Heating' ? ' selected="selected"' : '') ?>>Heating</option>
+							<option value="1"<?=($pidType == 'AirCondition' ? ' selected="selected"' : '') ?>>Air Condition</option>
 						</select>
 					</td>
 					<td>
@@ -136,18 +138,18 @@ class wpAnalogOut {
 				</tr>
 				<? } ?>
 				<tr>
-					<td colspan="4"><span>Regeltemperatur:</span></td>
+					<td colspan="4"><span>Regelgröße:</span></td>
 					<td colspan="2">
 						<div class="indiContainer">
 							<span class="ps-input" data-ws="<?=$this->name ?>_AnalogOutReadedTemp">undefined</span>
-							<span class="<?=wpa::indikatorTempOut?>" data-ws="<?=$this->name ?>_AnalogOutReadedTemp"><?=wpHTML_EMPTY ?></span>
+							<span class="<?=($pidType == 'Heating' ? wpa::indikatorTemp : wpa::indikatorHum)?>" data-ws="<?=$this->name ?>_AnalogOutReadedTemp"><?=wpHTML_EMPTY ?></span>
 						</div>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="4"><span>Sollwert:</span></td>
 					<td colspan="2">
-						<span class="ps-input ps-param" data-ws="<?=$this->name ?>_AnalogOutSetPoint" data-wswrite="<?=$this->name ?>_AnalogOutSetPoint" data-topic="<?=$this->name ?>/settings/AnalogOut/SetPoint">undefined</span>
+						<span class="ps-input ps-param" data-ws="<?=$this->name ?>_AnalogOutSetPoint" data-wswrite="<?=$this->name ?>_AnalogOutSetSetPoint" data-topic="<?=$this->name ?>/settings/AnalogOut/SetPoint">undefined</span>
 					</td>
 				</tr>
 				<? if($this->trendid > 0 || $this->calid > 0) { ?>

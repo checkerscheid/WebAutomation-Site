@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 700                                                     $ #
+//# Revision     : $Rev:: 706                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.js 700 2024-10-14 00:13:37Z                   $ #
+//# File-ID      : $Id:: uebersicht.js 706 2024-11-04 15:08:34Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> uebersicht */
@@ -65,6 +65,7 @@ p.page.load = function() {
 			setShellyRelayOff('172.17.80.93', 'Wohnzimmer Stehlampe'),
 			setShellyDimmerOff('172.17.80.90', 'Wohnzimmer'),
 			setShellyRelayOff('172.17.80.91', 'Wohnzimmer Lichtleiste'),
+			setCwWwOff('172.17.80.97', 'Wohnzimmer Event Lichterkette'),
 			// Schlafzimmer
 			setShellyDimmerOff('172.17.80.110', 'Schlafzimmer'),
 			// Flur
@@ -81,6 +82,7 @@ p.page.load = function() {
 			setShellyRelayOff('172.17.80.160', 'Kinderzimmer'),
 			setShellyRelayOff('172.17.80.161', 'Kinderzimmer Bett'),
 			setShellyRelayOff('172.17.80.162', 'Kinderzimmer Nachtlicht'),
+			setCwWwOff('172.17.80.164', 'Kinderzimmer Ketten'),
 			setShellyRGBWOff('172.17.80.163', 'Kinderzimmer Bilderrahmen')
 		];
 		Promise.all(allesaus).then((responses) => {

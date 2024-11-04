@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 704                                                     $ #
+//# Revision     : $Rev:: 706                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 704 2024-10-20 17:29:04Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 706 2024-11-04 15:08:34Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -111,7 +111,9 @@ $calid = array(
 const WZ_NP = '172.17.80.99';
 const WZ_LS_NP = '172.17.80.98';
 const WZ_PF_TE = '172.17.80.106';
+const WZ_KE = '172.17.80.97';
 const KZ_NP = '172.17.80.169';
+const KZ_KE = '172.17.80.164';
 const KU_CwWw = '172.17.80.142';
 const BU_RU = '172.17.80.125';
 const FL_RU = '172.17.80.128';
@@ -231,7 +233,7 @@ class uebersicht {
 			</tr-->';
 		return $return;
 	}
-	public static function CwWw($ip, $name, $desc) {
+	public static function CwWwAuto($ip, $name, $desc) {
 		$return = '
 			<tr>
 				<td class="description">
@@ -252,6 +254,19 @@ class uebersicht {
 					<div class="brightness-slider" data-ws="' . $name . '_MaxPercent" data-ip="' . $ip . '"></div>
 				</td>
 			</tr-->';
+		return $return;
+	}
+	public static function CwWw($ip, $name, $desc) {
+		$return = '
+			<tr>
+				<td class="description">
+					<a href="std.d1mini.' . $name . '.htm">' . $desc . '</a>
+				</td>
+				<td>
+					<span class="ps-button setCwWwOff ' . wpa::GreyYellow . '" data-ws="' . $name . '_MaxPercent" data-ip="' . $ip . '"
+						data-True="Ein" data-False="Aus">undefined</span>
+				</td>
+			</tr>';
 		return $return;
 	}
 }
@@ -275,6 +290,7 @@ class uebersicht {
 					<?=uebersicht::tasterShellyDimmer('Kamin', 'WZ_KA')?>
 					<?=uebersicht::tasterShellyDimmer('Wohnzimmer', 'WZ')?>
 					<?=uebersicht::tasterShelly('Wohnzimmer <br class="showonportrait" />Lichtleiste', 'WZ_LL')?>
+					<?=uebersicht::CwWw(WZ_KE, 'WZ_KE', 'Wohnzimmer Event Lichterkette')?>
 					<tr><td colspan="2"><span class="ps-button twoColumns wz-gemuetlich">Couch</span></td></tr>
 					<tr><td colspan="2"><hr /></td></tr>
 					<?=uebersicht::tasterShellyDimmer('Schlafzimmer', 'SZ')?>
@@ -296,7 +312,7 @@ class uebersicht {
 			<table>
 				<tbody>
 					<?=uebersicht::tasterShelly('Küche', 'KU')?>
-					<?=uebersicht::CwWw(KU_CwWw, 'KU_CwWw', 'Küche White-LED')?>
+					<?=uebersicht::CwWwAuto(KU_CwWw, 'KU_CwWw', 'Küche White-LED')?>
 					<?=uebersicht::tasterShelly('Küche <br class="showonportrait" />Strahler', 'KU_ST')?>
 					<?=uebersicht::tasterShelly('Küche <br class="showonportrait" />Kaffee', 'KU_KA')?>
 					<tr><td colspan="2"><hr /></td></tr>
@@ -315,6 +331,7 @@ class uebersicht {
 					<tr><td colspan="2"><hr /></td></tr>
 					<?=uebersicht::NeoPixel(KZ_NP, 'KZ_NP', 'Kinderzimmer NeoPixel')?>
 					<?=uebersicht::tasterShelly('Kinderzimmer', 'KZ')?>
+					<?=uebersicht::CwWw(KZ_KE, 'KZ_KE', 'Kinderzimmer Lichterkette')?>
 					<?=uebersicht::tasterShelly('Bilderrahmen', 'KZ_RGB')?>
 					<?=uebersicht::tasterShelly('Kinderzimmer <br class="showonportrait" />Bett', 'KZ_BE')?>
 					<?=uebersicht::tasterShelly('Kinderzimmer <br class="showonportrait" />Nachtlicht', 'KZ_NL')?>
@@ -363,7 +380,7 @@ class uebersicht {
 					<tr><td colspan="2"><h2>Mudda</h2></td></tr>
 					<tr><td colspan="2"><hr /></td></tr>
 					<?=uebersicht::tasterShelly('Heizung', 'EG_HZG_FB')?>
-					<?=uebersicht::tasterShelly('WLAN', 'MU_WLAN')?>
+					<!--<?=uebersicht::tasterShelly('WLAN', 'MU_WLAN')?>-->
 					<? /* ?>
 					<tr><td colspan="2"><h2>Anette</h2></td></tr>
 					<tr><td colspan="2"><hr /></td></tr>
