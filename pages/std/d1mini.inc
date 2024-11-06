@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 706                                                     $ #
+//# Revision     : $Rev:: 708                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.inc 706 2024-11-04 15:08:34Z                      $ #
+//# File-ID      : $Id:: d1mini.inc 708 2024-11-06 08:11:34Z                      $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
@@ -47,7 +47,7 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 		<span class="ps-button SetCmd" data-cmd="ForceMqttUpdate" title="Force MQTT Update">Force MQTT Update</span>
 		<span class="ps-button SetCmd" data-cmd="UpdateHTTP" title="Setup Http">Setup Http</span>
 		<span class="ps-button SetCmd" data-cmd="RestartDevice" title="neu starten">neu starten</span>
-		<span class="ps-button SetSimpleCmd" data-cmd="Blink" title="Blink">Blink</span>
+		<span class="ps-button SetCmd" data-cmd="Blink" title="Blink">Blink</span>
 		<a class="ps-button" target="_blank" href="http://<?=$erg['ip'] ?>/print">Device Site</a>
 	</div>
 	<div class="ps-flex-container page">

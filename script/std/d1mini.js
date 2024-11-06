@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 702                                                     $ #
+//# Revision     : $Rev:: 708                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.js 702 2024-10-18 23:16:21Z                       $ #
+//# File-ID      : $Id:: d1mini.js 708 2024-11-06 08:11:34Z                       $ #
 //#                                                                                 #
 //###################################################################################
 use system\std
@@ -30,11 +30,6 @@ p.page.load = function() {
 		var ip = $('#storedIP').attr('data-ip');
 		var cmd = $(this).attr('data-cmd');
 		$.post('std.d1mini.setcmd.req', {ip:ip, cmd:cmd});
-	});
-	$('.buttonContainer').on('click', '.SetSimpleCmd', function() {
-		var ip = $('#storedIP').attr('data-ip');
-		var cmd = $(this).attr('data-cmd');
-		$.post('std.d1mini.setsimplecmd.req', {ip:ip, cmd:cmd});
 	});
 	$('#d1mini').on('click', '.SetName', function() {
 		var ip = $('#storedIP').attr('data-ip');

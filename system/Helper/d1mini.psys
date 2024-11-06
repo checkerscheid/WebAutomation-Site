@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 26.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 706                                                     $ #
+//# Revision     : $Rev:: 708                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.psys 706 2024-11-04 15:08:34Z                     $ #
+//# File-ID      : $Id:: d1mini.psys 708 2024-11-06 08:11:34Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -321,6 +321,7 @@ class d1mini {
 		$id_mqtttopicDemo = $this->insertTopic('NeoPixel/Demo');
 		$id_mqtttopicSleep = $this->insertTopic('NeoPixel/Sleep');
 		$id_mqtttopicBorder = $this->insertTopic('NeoPixel/Border');
+		$id_mqtttopicEffectSpeed = $this->insertTopic('NeoPixel/EffectSpeed');
 		$this->mergeDP($id_mqtttopicMaxPercent, 'MaxPercent', 'Max Percent', '', 0);
 		$this->mergeDP($id_mqtttopicR, 'R', 'R', '', 0);
 		$this->mergeDP($id_mqtttopicG, 'G', 'G', '', 0);
@@ -330,6 +331,7 @@ class d1mini {
 		$this->mergeDP($id_mqtttopicDemo, 'Demo', 'Demo', '0:inaktiv;1:aktiv;');
 		$this->mergeDP($id_mqtttopicSleep, 'Sleep', 'Sleep', 'sec', 0);
 		$this->mergeDP($id_mqtttopicBorder, 'Border', 'Border', '0:Aus;1:Ein;');
+		$this->mergeDP($id_mqtttopicEffectSpeed, 'EffectSpeed', 'Effect Speed');
 		echo "saved: 'NeoPixel'<br />";
 	}
 	private function setCwWw() {
