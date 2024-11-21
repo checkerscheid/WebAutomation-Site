@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 28.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 701                                                     $ #
+//# Revision     : $Rev:: 709                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.req 701 2024-10-14 00:14:32Z                  $ #
+//# File-ID      : $Id:: uebersicht.req 709 2024-11-21 13:08:04Z                  $ #
 //#                                                                                 #
 //###################################################################################
 namespace request;
@@ -29,6 +29,7 @@ class uebersicht {
 		$cmd = 'mode=auto';
 		$WebCom = new WebCom();
 		echo $WebCom->send('SetD1MiniUrlCmd', std::posts('ip') . '%~%' . 'setBM?' . $cmd);
+		file_get_contents('http://wpLicht:turner@' . std::posts('licht') . '/light/0?timer=60');
 	}
 	const c_SetManual = 'setManual';
 	public static function SetManual() {
@@ -36,6 +37,7 @@ class uebersicht {
 		$cmd = 'mode=manual';
 		$WebCom = new WebCom();
 		echo $WebCom->send('SetD1MiniUrlCmd', std::posts('ip') . '%~%' . 'setBM?' . $cmd);
+		file_get_contents('http://wpLicht:turner@' . std::posts('licht') . '/light/0?timer=0');
 	}
 }
 switch(std::gets('param1')) {

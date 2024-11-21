@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 696                                                     $ #
+//# Revision     : $Rev:: 709                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: conf.psys 696 2024-10-06 19:11:29Z                       $ #
+//# File-ID      : $Id:: conf.psys 709 2024-11-21 13:08:04Z                       $ #
 //#                                                                                 #
 //###################################################################################
 use system\wpInit;
@@ -22,7 +22,7 @@ wpInit::$db['database'] = 'WebAutomation';
 wpInit::$AutoLogin = false;
 wpInit::$StartseiteStd = false;
 wpInit::$PageName = 'Freaka<span class="fzz">Z</span>one';
-wpInit::$AlarmsToShow = 2;
+wpInit::$AlarmsToShow = 3;
 wpInit::$menuorder = array(
 	'pia', 'mudda', 'kamera'//, 'wohnzimmer','schlafzimmer', 'buero', 'kueche', 'bad', 'kinderzimmer'
 );

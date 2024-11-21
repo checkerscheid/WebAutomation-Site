@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 696                                                     $ #
+//# Revision     : $Rev:: 709                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpNeoPixel.css 696 2024-10-06 19:11:29Z                  $ #
+//# File-ID      : $Id:: wpNeoPixel.css 709 2024-11-21 13:08:04Z                  $ #
 //#                                                                                 #
 //###################################################################################
 ?> wpNeoPixel */
@@ -32,8 +32,10 @@
 	border:1px solid #888; border-radius:2px; padding:3px; }
 .colorPicker .NeoPixelSlider,
 .colorPicker .NeoPixelSliderW,
-.sceneContainer .NeoPixelSliderEffectSpeed { margin:15px 0; }
+.sceneContainer .NeoPixelSliderEffectSpeed { margin:15px 15px; }
 .colorPicker .ps-input { min-width:40px; max-width:40px; width:40px; }
+.colorPicker .ps-button { width:auto; min-width:100px; }
+.colorPicker .colorManagement { height:0px; overflow:hidden; }
 .colorPicker .NeoPixelSliderR .ui-slider-range { background: #ef2929; }
 .colorPicker .NeoPixelSliderR .ui-slider-handle { background: #ef2929; }
 .colorPicker .NeoPixelSliderG .ui-slider-range { background: #8ae234; }

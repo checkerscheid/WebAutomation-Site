@@ -1,0 +1,50 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 09.11.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 711                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: shopping.req 711 2024-11-21 13:09:32Z                    $ #
+//#                                                                                 #
+//###################################################################################
+namespace request;
+use system\std;
+use system\Helper\wpDatabase;
+class shopping {
+	const c_setListProductOk = 'setListProductOk';
+	public static function setListProductOk() {
+		header(wpJSON_HEADER);
+		$database = new wpDatabase();
+		$sql = 'UPDATE [shoppinglistproduct] SET [ok] = ' . (std::posts['ok'] == 'true' ? '1' : '0') . ' WHERE [id_list] = ' . std::posts['idlist'] . ' AND [id_product] = ' . std::posts['idproduct'];
+		$database->query($sql);
+	}
+	const c_setGroupProductOk = 'setGroupProductOk';
+	public static function setGroupProductOk() {
+		header(wpJSON_HEADER);
+		$database = new wpDatabase();
+		$sql = 'UPDATE [shoppinggroupproduct] SET [ok] = ' . (std::posts['ok'] == 'true' ? '1' : '0') . ' WHERE [id_list] = ' . std::posts['idlist'] . ' AND [id_group] = ' . std::posts['idgroup'] . ' AND [id_product] = ' . std::posts['idproduct'];
+		$database->query($sql);
+	}
+}
+switch(std::gets('param1')) {
+	//###################################################################################
+	case shopping::c_setListProductOk:
+		shopping::setListProductOk();
+		break;
+	//###################################################################################
+	case shopping::c_setGroupProductOk:
+		shopping::setGroupProductOk();
+		break;
+	//###################################################################################
+	default:
+		\system\html::default();
+		break;
+}
+?>

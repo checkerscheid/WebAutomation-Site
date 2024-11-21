@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 591                                                     $ #
+//# Revision     : $Rev:: 709                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: trendselect.inc 591 2024-04-24 20:57:52Z                 $ #
+//# File-ID      : $Id:: trendselect.inc 709 2024-11-21 13:08:04Z                 $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
@@ -67,10 +67,10 @@ $database->query('SELECT [id_trendgroup], [name] FROM [trendgroup] ORDER BY [nam
 			<hr />
 			<span class="description">Konfigurationsname:</span>
 			<input type="text" class="ps-input trendsavename" />
-			<span class="ps-button trendsaveuser">Trend <?=((security::checkGroup(security::administrator)) ? 'für angemeldeten Benutzer ' : '')?>speichern</span>
 			<? if(security::checkGroup(security::administrator)) { ?>
 			<span class="ps-button trendsaveadmin">Trend für alle Benutzer speichern</span>
 			<? } ?>
+			<span class="ps-button trendsaveuser">Trend <?=((security::checkGroup(security::administrator)) ? 'für angemeldeten Benutzer ' : '')?>speichern</span>
 			<hr />
 		</div>
 	</div>

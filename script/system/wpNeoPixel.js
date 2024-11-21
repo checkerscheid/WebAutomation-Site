@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 706                                                     $ #
+//# Revision     : $Rev:: 709                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpNeoPixel.js 706 2024-11-04 15:08:34Z                   $ #
+//# File-ID      : $Id:: wpNeoPixel.js 709 2024-11-21 13:08:04Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> wpNeoPixel */
@@ -81,6 +81,23 @@ var wpNeoPixel = {
 			$.post(wpNeoPixel.target + '.setNeoPixelBorder.req', border, function(data) {
 			}, 'json');
 		});
+		$('.MakeFavColor').click(function() {
+			const led = {
+				ip: wpNeoPixel.ip,
+				r: $('.NeoPixelR').val(),
+				g: $('.NeoPixelG').val(),
+				b: $('.NeoPixelB').val(),
+				fav: 'true'
+			};
+			$.post(wpNeoPixel.target + '.NeoPixelColor.req', led, function(data) {
+			}, 'json');
+			wpNeoPixel.getSavedColor();
+		});
+		$('.DeleteFavColor').click(function() {
+			$.get(wpNeoPixel.target + '.NeoPixelDeleteFavColor.req', function(data) {
+			}, 'json');
+			wpNeoPixel.getSavedColor();
+		});
 		$('.setNeoPixelSleep').on('click', function() {
 			var sec = ($('.NeoPixelSleepHour').text() * 60 * 60) + ($('.NeoPixelSleepMinute').text() * 60);
 			wpNeoPixel.setSleep(sec);
@@ -94,6 +111,9 @@ var wpNeoPixel = {
 				b: $('.NeoPixelB').val()
 			};
 			$(this).css('backgroundColor', 'rgb(' + led.r + ', ' + led.g + ', ' + led.b + ')');
+			$('.NeoPixelR').val(led.r);
+			$('.NeoPixelG').val(led.g);
+			$('.NeoPixelB').val(led.b);
 			$.post(wpNeoPixel.target + '.NeoPixel.req', led, function(data) {
 			}, 'json');
 		});
@@ -102,13 +122,24 @@ var wpNeoPixel = {
 				ip: wpNeoPixel.ip,
 				r: $(this).attr('data-r'),
 				g: $(this).attr('data-g'),
-				b: $(this).attr('data-b')
+				b: $(this).attr('data-b'),
+				fav: $(this).hasClass('myFav') ? 'true' : 'false'
 			};
 			//wpNeoPixel.changeColorSlider(led.r, led.g, led.b);
 			wpNeoPixel.changeColorPreview(led.r, led.g, led.b);
+			$('.NeoPixelR').val(led.r);
+			$('.NeoPixelG').val(led.g);
+			$('.NeoPixelB').val(led.b);
 			$.post(wpNeoPixel.target + '.NeoPixelColor.req', led, function(data) {
 			}, 'json');
 			wpNeoPixel.getSavedColor();
+		});
+		$('.NeoPixelColorManagement').on('click', function() {
+			if($('.wpNeoPixel .colorManagement').hasClass('open')) {
+				$('.wpNeoPixel .colorManagement').css({'height':'0px'}).removeClass('open');
+			} else {
+				$('.wpNeoPixel .colorManagement').css({'height':'auto'}).addClass('open');
+			}
 		});
 		$('#picker').mousemove(function(e) {
 			var canvasOffset = $(wpNeoPixel.canvas).offset();
@@ -212,7 +243,7 @@ var wpNeoPixel = {
 					$('.NeoPixelWW').text(ui.value);
 					const ww = {
 						ip: wpNeoPixel.ip,
-						ww: ui.value * 2.55
+						ww: ui.value
 					};
 					$.post(wpNeoPixel.target + '.NeoPixelWW.req', ww, function(data) {
 					}, 'json');
@@ -221,7 +252,7 @@ var wpNeoPixel = {
 					$('.NeoPixelCW').text(ui.value);
 					const cw = {
 						ip: wpNeoPixel.ip,
-						cw: ui.value * 2.55
+						cw: ui.value
 					};
 					$.post(wpNeoPixel.target + '.NeoPixelCW.req', cw, function(data) {
 					}, 'json');

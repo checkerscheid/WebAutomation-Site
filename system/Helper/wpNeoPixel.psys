@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 708                                                     $ #
+//# Revision     : $Rev:: 709                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpNeoPixel.psys 708 2024-11-06 08:11:34Z                 $ #
+//# File-ID      : $Id:: wpNeoPixel.psys 709 2024-11-21 13:08:04Z                 $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -42,7 +42,7 @@ class wpNeoPixel {
 		//$this->getStatus();
 		//$this->getPixelStatus();
 	}
-	private function getStatus() {
+	public function getStatus() {
 		$WebCom = new WebCom();
 		$res = $WebCom->send('getD1MiniStatus', $this->ip);
 		$jsonres = \json_decode($res);
@@ -72,6 +72,8 @@ class wpNeoPixel {
 			<hr />
 			<div class="colorPicker">
 				<span class="NeoPixelColorPreview" style="background-color:rgb(<?=$r ?>, <?=$g ?>, <?=$b ?>);"><?=wpHTML_EMPTY ?></span>
+				<span class="ps-button ps-pluginbutton MakeFavColor" title="als Favorit speichern">&#10004;</span>
+				<span class="ps-button ps-pluginbutton DeleteFavColor" title="Alle Favoriten löschen">&#10008;</span>
 				<div<?=(security::checkGroup(security::entwickler) ? '' : ' class="ps-hidden"') ?>>
 					<input type="text" class="ps-input NeoPixelColor NeoPixelR" placeholder="Red 0 - 255" value="<?=$r ?>" />
 					<input type="text" class="ps-input NeoPixelColor NeoPixelG" placeholder="Green 0 - 255" value="<?=$g ?>" />
@@ -81,46 +83,49 @@ class wpNeoPixel {
 				<div class="NeoPixelSavedColor ps-flex-container">
 				</div>
 				<hr />
-				<div class="NeoPixelSlider NeoPixelSliderR wpSlider" data-ws="<?=$this->name ?>_R"></div>
-				<div class="NeoPixelSlider NeoPixelSliderG wpSlider" data-ws="<?=$this->name ?>_G"></div>
-				<div class="NeoPixelSlider NeoPixelSliderB wpSlider" data-ws="<?=$this->name ?>_B"></div>
-				<hr />
 				<h3>Brightness (<span class="NeoPixelBr"><?=round($this->status->NeoPixel->Brightness / 2.55) ?></span> %)</h3>
 				<div class="NeoPixelSliderW NeoPixelSliderBr wpSlider-255" data-ws="<?=$this->name ?>_Brightness"></div>
 				<hr />
-				<div class="ps-flex-container">
-					<div class="pickerContainer">
-						<canvas id="picker" width="200" height="200"></canvas>
+				<span class="ps-button NeoPixelColorManagement">Color Management</span>
+				<span class="ps-button setNeoPixelOff">Aus</span>
+				<div class="colorManagement">
+					<div class="NeoPixelSlider NeoPixelSliderR wpSlider" data-ws="<?=$this->name ?>_R"></div>
+					<div class="NeoPixelSlider NeoPixelSliderG wpSlider" data-ws="<?=$this->name ?>_G"></div>
+					<div class="NeoPixelSlider NeoPixelSliderB wpSlider" data-ws="<?=$this->name ?>_B"></div>
+					<hr />
+					<div class="ps-flex-container">
+						<div class="pickerContainer">
+							<canvas id="picker" width="200" height="200"></canvas>
+						</div>
+						<div>
+							<span class="ps-button setNeoPixelOffRunner">Aus Runner</span><br />
+							<span class="ps-input <?=wpa::GreyGreen?>" data-ws="<?=$this->name ?>_Border">-</span><br />
+							<span class="ps-button setNeoPixelBorder">Border</span>
+						</div>
 					</div>
-					<div>
-						<span class="ps-button setNeoPixelOff">Aus</span><br />
-						<span class="ps-button setNeoPixelOffRunner">Aus Runner</span><br />
-						<span class="ps-input <?=wpa::GreyGreen?>" data-ws="<?=$this->name ?>_Border">-</span><br />
-						<span class="ps-button setNeoPixelBorder">Border</span>
-					</div>
-				</div>
-				<div class="ps-flex-container<?=(security::checkGroup(security::entwickler) ? '' : ' ps-hidden') ?>">
+					<div class="ps-flex-container<?=(security::checkGroup(security::entwickler) ? '' : ' ps-hidden') ?>">
 <?
 		for($i = 0; $i < $this->status->NeoPixel->PixelCount; $i++) {
 ?>
-					<div class="colorBorderContainer">
-						<div class="colorBorder" data-led="<?=($i)?>" title="<?=($i)?>"
-							style="background-color: rgb(<?=$this->pixelStatus['p' . $i]['r'] ?>, <?=$this->pixelStatus['p' . $i]['g'] ?>, <?=$this->pixelStatus['p' . $i]['b'] ?>);"></div>
-					</div>
+						<div class="colorBorderContainer">
+							<div class="colorBorder" data-led="<?=($i)?>" title="<?=($i)?>"
+								style="background-color: rgb(<?=$this->pixelStatus['p' . $i]['r'] ?>, <?=$this->pixelStatus['p' . $i]['g'] ?>, <?=$this->pixelStatus['p' . $i]['b'] ?>);"></div>
+						</div>
 <?
 		}
 ?>
+					</div>
 				</div>
 				<? if($this->status->useModul->AnalogOut ||
 					$this->status->useModul->AnalogOut2) { ?>
 				<hr />
 				<? if($this->status->useModul->AnalogOut) { ?>
 				<h3>Warmweiß (<span class="NeoPixelWW"><?=$this->status->AnalogOut->HandValue ?></span> %)</h3>
-				<div class="NeoPixelSliderW NeoPixelSliderWW wpSlider-255" data-ws="<?=$this->name ?>_AnalogOut"></div>
+				<div class="NeoPixelSliderW NeoPixelSliderWW wpSlider" data-ws="<?=$this->name ?>_AnalogOut"></div>
 				<? } ?>
 				<? if($this->status->useModul->AnalogOut2) { ?>
 				<h3>Kaltweiß (<span class="NeoPixelCW"><?=$this->status->AnalogOut2->HandValue ?></span> %)</h3>
-				<div class="NeoPixelSliderW NeoPixelSliderCW wpSlider-255" data-ws="<?=$this->name ?>_AnalogOut2"></div>
+				<div class="NeoPixelSliderW NeoPixelSliderCW wpSlider" data-ws="<?=$this->name ?>_AnalogOut2"></div>
 				<? } ?>
 				<? } ?>
 			</div>
@@ -168,7 +173,7 @@ class wpNeoPixel {
 		</div>
 <?
 	}
-	public static function saveColor($r, $g, $b) {
+	public static function saveColor($r, $g, $b, $fav = false) {
 		global $database;
 		if(!($database instanceof wpDatabase)) {
 			$database = new wpDatabase();
@@ -177,10 +182,10 @@ class wpNeoPixel {
 MERGE INTO [neopixel] AS [TARGET]
 	USING (
 		VALUES (
-			" . $r . "," . $g . "," . $b . ", " . security::getIdFromUser() . "
+			" . $r . "," . $g . "," . $b . ", " . security::getIdFromUser() . ", " . ($fav ? 1 : 0) . "
 		)
 	) AS [SOURCE] (
-			[r], [g], [b], [id_user]
+			[r], [g], [b], [id_user], [fav]
 	) ON
 		[TARGET].[r] = [SOURCE].[r] AND
 		[TARGET].[g] = [SOURCE].[g] AND
@@ -188,17 +193,33 @@ MERGE INTO [neopixel] AS [TARGET]
 		[TARGET].[id_user] = [SOURCE].[id_user]
 	WHEN MATCHED THEN
 		UPDATE SET
+			[TARGET].[fav] = [SOURCE].[fav],
 			[TARGET].[saved] = GETDATE()
 	WHEN NOT MATCHED THEN
 		INSERT (
-			[r], [g], [b], [id_user]
+			[r], [g], [b], [id_user], [fav]
 		)
 		VALUES (
-			[SOURCE].[r], [SOURCE].[g], [SOURCE].[b], [SOURCE].[id_user]
+			[SOURCE].[r], [SOURCE].[g], [SOURCE].[b], [SOURCE].[id_user], [SOURCE].[fav]
 		)
-	OUTPUT [INSERTED].[id_neopixel] AS [ID];";
+	OUTPUT [INSERTED].[id_neopixel] AS [ID];
+	DELETE * FROM [neopixel] WHERE [id_user] = " . security::getIdFromUser() . " AND [saved] NOT IN (SELECT TOP 10 [saved] FROM [neopixel] WHERE [id_user] = " . security::getIdFromUser() . " ORDER BY [saved]);";
 		$database->query($sql);
 		//echo 'saved';
+	}
+	public static function deleteFavColor() {
+		global $database;
+		if(!($database instanceof wpDatabase)) {
+			$database = new wpDatabase();
+		}
+		$sql = "UPDATE [neopixel] SET [fav] = 0 WHERE [id_user] = " . security::getIdFromUser() . ";" .
+		"DELETE T
+FROM (
+	SELECT *, DupRank = ROW_NUMBER() OVER (
+		PARTITION BY [r], [g], [b] ORDER BY (SELECT NULL)
+	) FROM [neopixel]
+) AS T WHERE DupRank > 1;";
+		$database->query($sql);
 	}
 }
 ?>

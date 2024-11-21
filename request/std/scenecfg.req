@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 22.07.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 582                                                     $ #
+//# Revision     : $Rev:: 709                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: scenecfg.req 582 2024-04-10 06:45:45Z                    $ #
+//# File-ID      : $Id:: scenecfg.req 709 2024-11-21 13:08:04Z                    $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $m */
@@ -193,17 +193,17 @@ switch(std::gets('param1')) {
 //###################################################################################
 	case scenecfg::c_getnewscene:
 		$database = new wpDatabase();
-		$database->query('SELECT [d].[id_opcdatapoint], [d].[name]
-				FROM [opcdatapoint] [d]
-				LEFT OUTER JOIN [scene] [s] ON [d].[id_opcdatapoint] = [s].[id_opcdatapoint]
+		$database->query('SELECT [dp].[id_dp], [dp].[name]
+				FROM [dp]
+				LEFT OUTER JOIN [scene] [s] ON [dp].[id_dp] = [s].[id_dp]
 				WHERE [s].[id_scene] IS NULL AND [d].[id_opcgroup] = '.std::posts('group').'
-				ORDER BY [d].[name]');
+				ORDER BY [dp].[name]');
 		echo '<ul class="SelectNewScene">';
 		if($database->hasRows() == 0) {
 			echo '<li>Es sind keine Items mehr zum hinzufügen übrig</li>';
 		} else {
 			while($erg = $database->fetch()) {
-				echo '<li class="ps-checkbox" data-value="'.$erg['id_opcdatapoint'].'">'.$erg['name']. '</li>';
+				echo '<li class="ps-checkbox" data-value="'.$erg['id_dp'].'">'.$erg['name']. '</li>';
 			}
 		}
 		echo '</ul>';
@@ -291,22 +291,22 @@ switch(std::gets('param1')) {
 		$idfrom = std::posts('idfrom');
 		$idto = std::posts('idto');
 		$database = new wpDatabase();
-		$database->query("SELECT [id_opcdatapoint] FROM [scenevalue] WHERE [id_scene] = " . $idfrom);
+		$database->query("SELECT [id_dp] FROM [scenevalue] WHERE [id_scene] = " . $idfrom);
 
 		$database2 = new wpDatabase();
 		while($erg = $database->fetch()) {
-			$id_opcdatapoint = $erg['id_opcdatapoint'];
+			$id_dp = $erg['id_dp'];
 			$sql = "
 			MERGE INTO [scenevalue] AS [TARGET]
 				USING
 					(SELECT
-						$id_opcdatapoint AS [id_opcdatapoint],
+						$id_dp AS [id_dp],
 						$idto AS [id_scene]
-					) AS [SOURCE] ([id_opcdatapoint], [id_scene])
-				ON ([TARGET].[id_opcdatapoint] = [SOURCE].[id_opcdatapoint]
+					) AS [SOURCE] ([id_dp], [id_scene])
+				ON ([TARGET].[id_dp] = [SOURCE].[id_dp]
 					AND [TARGET].[id_scene] = [SOURCE].[id_scene])
 				WHEN NOT MATCHED THEN
-					INSERT ([id_opcdatapoint], [id_scene]) VALUES ($id_opcdatapoint, $idto);";
+					INSERT ([id_dp], [id_scene]) VALUES ($id_dp, $idto);";
 			$database2->query($sql);
 		}
 		echo 'S_OK';

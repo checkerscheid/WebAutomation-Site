@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 706                                                     $ #
+//# Revision     : $Rev:: 709                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.js 706 2024-11-04 15:08:34Z                   $ #
+//# File-ID      : $Id:: uebersicht.js 709 2024-11-21 13:08:04Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> uebersicht */
@@ -69,6 +69,7 @@ p.page.load = function() {
 			// Schlafzimmer
 			setShellyDimmerOff('172.17.80.110', 'Schlafzimmer'),
 			// Flur
+			setNeoPixelOff('172.17.80.122', 'Büro / Flur NeoPixel Lichtleiste'),
 			setFLRUAuto('172.17.80.125', 'Flur set Auto'),
 			setShellyDimmerOff('172.17.80.120', 'Flur'),
 			// Küche
@@ -162,13 +163,15 @@ p.page.load = function() {
 	});
 	$('#uebersicht').on('click', '.RU_Auto', function() {
 		const setAuto = {
-			ip: $(this).attr('data-ip')
+			ip: $(this).attr('data-ip'),
+			licht: $(this).attr('data-lichtip')
 		};
 		$.post('uebersicht.setAuto.req', setAuto, null, 'json');
 	});
 	$('#uebersicht').on('click', '.RU_Manual', function() {
 		const setManual = {
-			ip: $(this).attr('data-ip')
+			ip: $(this).attr('data-ip'),
+			licht: $(this).attr('data-lichtip')
 		};
 		$.post('uebersicht.setManual.req', setManual, null, 'json');
 	});

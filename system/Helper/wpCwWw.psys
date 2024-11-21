@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 706                                                     $ #
+//# Revision     : $Rev:: 709                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpCwWw.psys 706 2024-11-04 15:08:34Z                     $ #
+//# File-ID      : $Id:: wpCwWw.psys 709 2024-11-21 13:08:04Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -37,7 +37,7 @@ class wpCwWw {
 		//$this->getStatus();
 		$this->getPixelStatus();
 	}
-	private function getStatus() {
+	public function getStatus() {
 		$WebCom = new WebCom();
 		$res = $WebCom->send('getD1MiniStatus', $this->ip);
 		$jsonres = \json_decode($res);

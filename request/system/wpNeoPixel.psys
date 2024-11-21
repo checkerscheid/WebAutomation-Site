@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 706                                                     $ #
+//# Revision     : $Rev:: 709                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpNeoPixel.psys 706 2024-11-04 15:08:34Z                 $ #
+//# File-ID      : $Id:: wpNeoPixel.psys 709 2024-11-21 13:08:04Z                 $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\system;
@@ -38,7 +38,12 @@ class wpNeoPixel {
 		$cmd = 'r=' . std::posts('r') . '&g=' . std::posts('g') . '&b=' . std::posts('b');
 		$WebCom = new WebCom();
 		echo $WebCom->send('SetD1MiniUrlCmd', wpNeoPixel::$ip . '%~%' . 'setNeoPixelColor?' . $cmd);
-		wpNP::saveColor(std::posts('r'), std::posts('g'), std::posts('b'));
+		$fav = std::posts('fav') == 'true' ? true : false;
+		wpNP::saveColor(std::posts('r'), std::posts('g'), std::posts('b'), $fav);
+	}
+	const c_NeoPixelDeleteFavColor = 'NeoPixelDeleteFavColor';
+	public static function NeoPixelDeleteFavColor() {
+		wpNP::deleteFavColor();
 	}
 	const c_NeoPixelEffect = 'NeoPixelEffect';
 	public static function NeoPixelEffect() {
@@ -153,6 +158,10 @@ switch(std::gets('param1')) {
 		//###################################################################################
 	case wpNeoPixel::c_NeoPixelColor:
 		wpNeoPixel::NeoPixelColor();
+		break;
+		//###################################################################################
+	case wpNeoPixel::c_NeoPixelDeleteFavColor:
+		wpNeoPixel::NeoPixelDeleteFavColor();
 		break;
 		//###################################################################################
 	case wpNeoPixel::c_NeoPixelSleep:

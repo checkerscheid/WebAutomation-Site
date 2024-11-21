@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 11.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 702                                                     $ #
+//# Revision     : $Rev:: 709                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpRGB.psys 702 2024-10-18 23:16:21Z                      $ #
+//# File-ID      : $Id:: wpRGB.psys 709 2024-11-21 13:08:04Z                      $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -58,21 +58,24 @@ class wpRGB {
 				<div class="RGBSavedColor ps-flex-container">
 				</div>
 				<hr />
-				<div class="RGBSlider RGBSliderR"></div>
-				<div class="RGBSlider RGBSliderG"></div>
-				<div class="RGBSlider RGBSliderB"></div>
-				<hr />
 				<h3>Brightness (<span class="RGBColorBr"><?=$br ?></span> %)</h3>
 				<div class="RGBSlider RGBSliderBr"></div>
 				<hr />
-				<div class="ps-flex-container">
-					<div class="pickerContainer">
-						<canvas id="RGBpicker" width="200" height="200"></canvas>
-					</div>
-					<div>
-						<span class="ps-button setRGBColor">Color</span><br />
-						<span class="ps-button setRGBOn">Ein</span><br />
-						<span class="ps-button setRGBOff">Aus</span>
+				<span class="ps-button RGBColorManagement">Color Management</span>
+				<span class="ps-button setRGBOff">Aus</span>
+				<div class="colorManagement">
+					<div class="RGBSlider RGBSliderR"></div>
+					<div class="RGBSlider RGBSliderG"></div>
+					<div class="RGBSlider RGBSliderB"></div>
+					<hr />
+					<div class="ps-flex-container">
+						<div class="pickerContainer">
+							<canvas id="RGBpicker" width="200" height="200"></canvas>
+						</div>
+						<div>
+							<span class="ps-button setRGBColor">Color</span><br />
+							<span class="ps-button setRGBOn">Ein</span>
+						</div>
 					</div>
 				</div>
 			</div>

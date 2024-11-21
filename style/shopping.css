@@ -1,0 +1,34 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 08.11.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 711                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: shopping.css 711 2024-11-21 13:09:32Z                    $ #
+//#                                                                                 #
+//###################################################################################
+?> shopping */
+
+#shopping ul {text-align:left; }
+#shopping .list { padding-left:15px; }
+#shopping .group, #shopping .product { padding:5px 15px; margin:5px 30px; }
+#shopping .product { border:1px solid #ccc; border-radius:5px; }
+#shopping .group.product { padding-left:15px; margin-left:60px; }
+#shopping .ps-checkbox.checked { text-decoration:line-through; }
+
+@media (orientation: portrait) {
+	#shopping span,
+	#shopping a { font-size:25px; }
+	#shopping .ps-button { padding:25px 6px; }
+	#shopping .ps-input { font-size:18px; padding:5px; }
+	#shopping .ps-pluginbutton { font-size:40px; }
+	#shopping .ps-checkbox { padding:25px; }
+	#shopping .ps-checkbox.checked { color:#4B4; }
+}

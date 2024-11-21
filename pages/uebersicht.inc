@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 706                                                     $ #
+//# Revision     : $Rev:: 709                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 706 2024-11-04 15:08:34Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 709 2024-11-21 13:08:04Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -117,6 +117,7 @@ const KZ_KE = '172.17.80.164';
 const KU_CwWw = '172.17.80.142';
 const BU_RU = '172.17.80.125';
 const FL_RU = '172.17.80.128';
+const BU_NP = '172.17.80.122';
 //std::test_array($iplist);
 foreach($zimmer as $kurz => $name) {
 	if($kurz != 'KZ') {
@@ -281,6 +282,7 @@ class uebersicht {
 				<tbody>
 					<tr><td colspan="2"><span class="ps-button twoColumns AllesAus"> Alles aus</span></td></tr>
 					<tr><td colspan="2"><hr /></td></tr>
+					<tr><td colspan="2"><span class="ps-button twoColumns wz-gemuetlich">Couch</span></td></tr>
 					<?=uebersicht::NeoPixel(WZ_NP, 'WZ_NP', 'Wohnzimmer NeoPixel')?>
 					<?=uebersicht::tasterShellyDimmer('Wohnzimmer <br class="showonportrait" />Lautsprecher', 'WZ_LS')?>
 					<?=uebersicht::NeoPixel(WZ_LS_NP, 'WZ_LS_NP', 'Lautsprecher Farbe')?>
@@ -291,17 +293,17 @@ class uebersicht {
 					<?=uebersicht::tasterShellyDimmer('Wohnzimmer', 'WZ')?>
 					<?=uebersicht::tasterShelly('Wohnzimmer <br class="showonportrait" />Lichtleiste', 'WZ_LL')?>
 					<?=uebersicht::CwWw(WZ_KE, 'WZ_KE', 'Wohnzimmer Event Lichterkette')?>
-					<tr><td colspan="2"><span class="ps-button twoColumns wz-gemuetlich">Couch</span></td></tr>
 					<tr><td colspan="2"><hr /></td></tr>
 					<?=uebersicht::tasterShellyDimmer('Schlafzimmer', 'SZ')?>
 					<tr><td colspan="2"><hr /></td></tr>
+					<?=uebersicht::NeoPixel(BU_NP, 'BU_NP', 'Büro / Flur NeoPixel')?>
 					<?=uebersicht::tasterShellyDimmer('Büro', 'BU')?>
 					<tr>
 						<td colspan="2"><span class="ps-input twoColumns <?=wpa::GreenYellow ?>" data-ws="BU_RU_Manual">undefined</span></td>
 					</tr>
 					<tr>
-						<td class="ps-tal"><span class="ps-button RU_Auto" data-ip="<?=BU_RU ?>">Auto</span></td>
-						<td class="ps-tar"><span class="ps-button RU_Manual" data-ip="<?=BU_RU ?>">Manual</span></td>
+						<td class="ps-tal"><span class="ps-button RU_Auto" data-ip="<?=BU_RU ?>" data-lichtip="172.17.80.120">Auto</span></td>
+						<td class="ps-tar"><span class="ps-button RU_Manual" data-ip="<?=BU_RU ?>" data-lichtip="172.17.80.120">Manual</span></td>
 					</tr>
 				</tbody>
 			</table>

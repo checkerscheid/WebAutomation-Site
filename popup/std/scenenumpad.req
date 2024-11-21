@@ -9,16 +9,16 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 550                                                     $ #
+//# Revision     : $Rev:: 709                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: scenenumpad.req 550 2023-12-25 03:02:54Z                 $ #
+//# File-ID      : $Id:: scenenumpad.req 709 2024-11-21 13:08:04Z                 $ #
 //#                                                                                 #
 //###################################################################################
 namespace popup\std;
 use system\Helper\wpDatabase;
 use system\std;
 $database = new wpDatabase();
-$database->query("SELECT [unit] FROM [opcdatapoint] WHERE name = '".std::posts('id')."'");
+$database->query("SELECT [unit] FROM [dp] WHERE [name] = '".std::posts('id')."'");
 $erg = $database->fetch();
 
 $minmax = '';

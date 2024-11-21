@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 701                                                     $ #
+//# Revision     : $Rev:: 709                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpCwWw.css 701 2024-10-14 00:14:32Z                      $ #
+//# File-ID      : $Id:: wpCwWw.css 709 2024-11-21 13:08:04Z                      $ #
 //#                                                                                 #
 //###################################################################################
 ?> wpCwWw */
@@ -29,7 +29,7 @@
 	position:relative; top:-25px; left:10px; background:#151515;
 	border:1px solid #888; border-radius:2px; padding:3px; }
 .colorPicker .CwWwSlider,
-.colorPicker .CwWwSliderW { margin:15px 0; }
+.colorPicker .CwWwSliderW { margin:15px 15px; }
 .colorPicker .ps-input { min-width:40px; max-width:40px; width:40px; }
 .colorPicker .CwWwColorPreview,
 .colorPicker .colorBorder { border:1px solid #CCC;

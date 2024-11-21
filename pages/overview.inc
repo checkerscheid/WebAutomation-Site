@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 706                                                     $ #
+//# Revision     : $Rev:: 709                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: overview.inc 706 2024-11-04 15:08:34Z                  $ #
+//# File-ID      : $Id:: overview.inc 709 2024-11-21 13:08:04Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /**
@@ -64,7 +64,7 @@ class overview {
 	private static $Pflanze;
 	public static function setPflanze() {
 		self::$Pflanze = array(
-			'WZ_PF_TI' => new cPflanze('Pflanze auf\'m Tisch', 70),
+			'WZ_PF_TI' => new cPflanze('Pflanze auf\'m Tisch', 98),
 			'WZ_PF_TE' => new cPflanze('Pflanze zur Terrasse', 75),
 			'WZ_PF_FE' => new cPflanze('Pflanze am Fenster in der Ecke', 71),
 			'WZ_PF_FE_LI' => new cPflanze('Pflanze am Fenster, links', 72),

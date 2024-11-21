@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 22.07.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 570                                                     $ #
+//# Revision     : $Rev:: 709                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: scenecfg.js 570 2024-03-13 18:22:21Z                     $ #
+//# File-ID      : $Id:: scenecfg.js 709 2024-11-21 13:08:04Z                     $ #
 //#                                                                                 #
 //###################################################################################
 ?> scenecfg */
@@ -475,7 +475,7 @@ p.page.load = function() {
 		}
 	});
 //###################################################################################
-	getValues();
+	p.getValues();
 };
 function getValues() {
 	$.get('std.request.activedpextended.req', function(data) {

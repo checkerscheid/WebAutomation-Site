@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 11.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 700                                                     $ #
+//# Revision     : $Rev:: 709                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpRGB.js 700 2024-10-14 00:13:37Z                        $ #
+//# File-ID      : $Id:: wpRGB.js 709 2024-11-21 13:08:04Z                        $ #
 //#                                                                                 #
 //###################################################################################
 ?> wpRGB */
@@ -80,6 +80,13 @@ var wpRGB = {
 			$.post(wpRGB.target + '.RGBColor.req', led, function(data) {
 			}, 'json');
 			wpRGB.getSavedColor();
+		});
+		$('.RGBColorManagement').on('click', function() {
+			if($('.wpRGB .colorManagement').hasClass('open')) {
+				$('.wpRGB .colorManagement').css({'height':'0px'}).removeClass('open');
+			} else {
+				$('.wpRGB .colorManagement').css({'height':'auto'}).addClass('open');
+			}
 		});
 		$('#RGBpicker').mousemove(function(e) {
 			var canvasOffset = $(wpRGB.canvas).offset();

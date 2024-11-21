@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 27.07.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 706                                                     $ #
+//# Revision     : $Rev:: 709                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pia.inc 706 2024-11-04 15:08:34Z                         $ #
+//# File-ID      : $Id:: pia.inc 709 2024-11-21 13:08:04Z                         $ #
 //#                                                                                 #
 //###################################################################################
 /**
@@ -20,7 +20,6 @@
 */
 namespace pages;
 use system\std;
-use system\WebCom;
 use system\html;
 use system\Helper\wpa;
 use system\Helper\wpDatabase;
@@ -33,12 +32,6 @@ require_once 'system/Helper/wpa.psys';
 require_once 'system/Helper/wpNeoPixel.psys';
 require_once 'system/Helper/wpCwWw.psys';
 require_once 'system/Helper/wpRGB.psys';
-
-$database->query("SELECT [id_d1mini], [name], [description], [ip], [mac] FROM [d1mini] WHERE [name] = 'KZ_NP'");
-$erg = $database->fetch();
-
-$WebCom = new WebCom();
-$d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 
 $points = array(
 	'KZ_VT'				=> '_KZ_VT',
@@ -179,14 +172,14 @@ $points = array(
 			</table>
 		</div>
 <?
-	$neoPixel = new wpNeoPixel($erg['ip'], $erg['name']);
-	$neoPixel->getStatusFromJson($d1Mini->FreakaZoneDevice);
+	$neoPixel = new wpNeoPixel('172.17.80.169', 'KZ_NP');
+	$neoPixel->getStatus();
 	$neoPixel->getColorPicker('Lichtleiste');
 	$neoPixel->getColorScenen('Lichtleiste');
 ?>
 <?
 	$cwww = new wpCwWw('172.17.80.164', 'KZ_KE');
-	$cwww->getStatusFromJson($d1Mini->FreakaZoneDevice);
+	$cwww->getStatus();
 	$cwww->getColorPicker('Halloween', 'schwebende Geister', 'Fensterschnee');
 ?>
 <?
