@@ -26,9 +26,12 @@ class wpCwWw {
 	private $database, $status;
 	private $ip, $name;
 	const modes = array(
-		4 => 'Smooth',
+		4 => 'Pulse',
 		5 => 'WW Pulse',
-		6 => 'CW Pulse'
+		6 => 'CW Pulse',
+		7 => 'Smooth',
+		8 => 'WW Smooth',
+		9 => 'CW Smooth'
 	);
 	public function __construct($ip, $name) {
 		$this->database = new wpDatabase();
@@ -77,7 +80,9 @@ class wpCwWw {
 				<hr />
 				<div>
 					<span class="ps-button setCwWwOn">Ein</span><br />
-					<span class="ps-button setCwWwOff">Aus &amp; Auto</span><br />
+					<span class="ps-button setCwWwOff">Aus &amp; Auto</span>
+					<h3>Effect Speed</h3>
+					<div class="CwWwSliderEffectSpeed wpSlider" data-ws="<?=$this->name ?>_EffectSpeed"></div>
 <?
 		foreach(self::modes as $id => $name) {
 ?>

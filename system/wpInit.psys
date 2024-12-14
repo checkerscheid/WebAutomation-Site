@@ -55,6 +55,8 @@ class wpInit {
 	public static $CS_server = '127.0.0.1';
 	/** Port des CS - Servers */
 	public static $CS_port = 51345;
+	/** Port des CS - Servers */
+	public static $Tv_port = 5139;
 	/** lokales Netzwerk verfuegt ueber einen DNS Server und loest die IP Adressen in Hostnamen auf <b>[ true | false ]</b> */
 	public static $useDns = false;
 	/** Macht nur Sinn auf True zu setzen, wenn die Lizenz auf dem Server ist <b>[ true | false ]</b> */

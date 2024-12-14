@@ -43,15 +43,20 @@ class wpNeoPixel {
 		//$this->getPixelStatus();
 	}
 	public function getStatus() {
+		$returns = true;
 		$WebCom = new WebCom();
 		$res = $WebCom->send('getD1MiniStatus', $this->ip);
 		$jsonres = \json_decode($res);
 		if(\json_last_error() != JSON_ERROR_NONE) {
-			echo \json_last_error_msg();
+			echo '<!-- Json Error: ' . \json_last_error_msg() . '-->';
 			echo $res;
+			$returns = false;
 		}
-		$this->status = $jsonres->FreakaZoneDevice;
+		if(isset($jsonres->FreakaZoneDevice)) {
+			$this->status = $jsonres->FreakaZoneDevice;
+		}
 		//std::test_array($this->status, 'getStatus');
+		return $returns;
 	}
 	public function getStatusFromJson($json) {
 		$this->status = $json;
@@ -63,11 +68,18 @@ class wpNeoPixel {
 		//std::test_array($this->pixelStatus, 'getPixelStatus');
 	}
 	public function getColorPicker($headline = 'NeoPixel') {
-		$r = $this->status->NeoPixel->ValueR;
-		$g = $this->status->NeoPixel->ValueG;
-		$b = $this->status->NeoPixel->ValueB;
+		$r = $this->status->NeoPixel->ValueR ?? 0;
+		$g = $this->status->NeoPixel->ValueG ?? 0;
+		$b = $this->status->NeoPixel->ValueB ?? 0;
+		//$br = $this->status->NeoPixel->Brightness ?? 0;
+		$pc = $this->status->NeoPixel->PixelCount ?? 0;
 ?>
 		<div class="wpNeoPixel ps-container" data-ip="<?=$this->ip ?>">
+<?
+		if(!isset($this->status)) {
+			echo '<h1 class="ps-fontred">--- OFFLINE ---</h1><hr />';
+		}
+?>
 			<h3><?=$headline ?> Farben</h3>
 			<hr />
 			<div class="colorPicker">
@@ -82,9 +94,9 @@ class wpNeoPixel {
 				<hr />
 				<div class="NeoPixelSavedColor ps-flex-container">
 				</div>
-				<hr />
-				<h3>Brightness (<span class="NeoPixelBr"><?=round($this->status->NeoPixel->Brightness / 2.55) ?></span> %)</h3>
-				<div class="NeoPixelSliderW NeoPixelSliderBr wpSlider-255" data-ws="<?=$this->name ?>_Brightness"></div>
+				<!--hr />
+				<h3>Brightness (<span class="NeoPixelBr"><?/*=round($br / 2.55)*/ ?></span> %)</h3>
+				<div class="NeoPixelSliderW NeoPixelSliderBr wpSlider-255" data-ws="<?/*=$this->name*/ ?>_Brightness"></div-->
 				<hr />
 				<span class="ps-button NeoPixelColorManagement">Color Management</span>
 				<span class="ps-button setNeoPixelOff">Aus</span>
@@ -105,7 +117,7 @@ class wpNeoPixel {
 					</div>
 					<div class="ps-flex-container<?=(security::checkGroup(security::entwickler) ? '' : ' ps-hidden') ?>">
 <?
-		for($i = 0; $i < $this->status->NeoPixel->PixelCount; $i++) {
+		for($i = 0; $i < $pc; $i++) {
 ?>
 						<div class="colorBorderContainer">
 							<div class="colorBorder" data-led="<?=($i)?>" title="<?=($i)?>"
@@ -116,18 +128,23 @@ class wpNeoPixel {
 ?>
 					</div>
 				</div>
-				<? if($this->status->useModul->AnalogOut ||
-					$this->status->useModul->AnalogOut2) { ?>
+<?
+			$ao = $this->status->useModul->AnalogOut ?? false;
+			$ao2 = $this->status->useModul->AnalogOut2 ?? false;
+			if($ao || $ao2) {
+?>
 				<hr />
-				<? if($this->status->useModul->AnalogOut) { ?>
+				<? if($ao) { ?>
 				<h3>Warmweiß (<span class="NeoPixelWW"><?=$this->status->AnalogOut->HandValue ?></span> %)</h3>
 				<div class="NeoPixelSliderW NeoPixelSliderWW wpSlider" data-ws="<?=$this->name ?>_AnalogOut"></div>
 				<? } ?>
-				<? if($this->status->useModul->AnalogOut2) { ?>
+				<? if($ao2) { ?>
 				<h3>Kaltweiß (<span class="NeoPixelCW"><?=$this->status->AnalogOut2->HandValue ?></span> %)</h3>
 				<div class="NeoPixelSliderW NeoPixelSliderCW wpSlider" data-ws="<?=$this->name ?>_AnalogOut2"></div>
 				<? } ?>
-				<? } ?>
+<?
+			}
+?>
 			</div>
 		</div>
 <?
@@ -135,6 +152,11 @@ class wpNeoPixel {
 	public function getColorScenen($headline = 'NeoPixel') {
 ?>
 		<div class="wpNeoPixel ps-container" data-ip="<?=$this->ip ?>">
+<?
+		if(!isset($this->status)) {
+			echo '<h1 class="ps-fontred">--- OFFLINE ---</h1><hr />';
+		}
+?>
 			<h3><?=$headline ?> Scenen</h3>
 			<hr />
 			<div class="sceneContainer">

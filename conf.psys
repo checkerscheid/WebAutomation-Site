@@ -19,7 +19,7 @@ wpInit::$wpDebug = false;
 wpInit::$OneLine = false;
 wpInit::$db['server'] = '.';
 wpInit::$db['database'] = 'WebAutomation';
-wpInit::$AutoLogin = false;
+wpInit::$AutoLogin = true;
 wpInit::$StartseiteStd = false;
 wpInit::$PageName = 'Freaka<span class="fzz">Z</span>one';
 wpInit::$AlarmsToShow = 3;

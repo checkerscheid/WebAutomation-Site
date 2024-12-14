@@ -22,7 +22,7 @@ use system\std;
 use system\Helper\wpa;
 require_once 'system/Helper/wpa.psys';
 
-$useWeihnachten = false;
+$useWeihnachten = true;
 $showEnergy = false;
 $showWindow = false;
 
@@ -305,6 +305,7 @@ class uebersicht {
 						<td class="ps-tal"><span class="ps-button RU_Auto" data-ip="<?=BU_RU ?>" data-lichtip="172.17.80.120">Auto</span></td>
 						<td class="ps-tar"><span class="ps-button RU_Manual" data-ip="<?=BU_RU ?>" data-lichtip="172.17.80.120">Manual</span></td>
 					</tr>
+					<?=uebersicht::CwWw(WZ_KE, 'BU_KE', 'Büro Event Lichterkette')?>
 				</tbody>
 			</table>
 		</div>

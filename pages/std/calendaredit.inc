@@ -20,7 +20,7 @@
  */
 namespace pages\std;
 use \system\std;
-$database->query('SELECT TOP 1 [c].[name], [dp].[name] AS [dpname], [c].[id_scenegroup], [gs].[id_gsync]
+$database->query('SELECT TOP 1 [c].[name], [dp].[name] AS [dpname], [c].[id_scenegroup], [c].[id_d1mini], [gs].[id_gsync]
 	FROM [calendar] [c]
 	LEFT JOIN [dp] ON [c].[id_dp] = [dp].[id_dp]
 	LEFT JOIN [gsync] [gs] ON [c].[id_calendar] = [gs].[id_calendar]

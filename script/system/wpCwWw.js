@@ -85,6 +85,29 @@ var wpCwWw = {
 				$(this).removeClass('WriteOnly').find('a').text('');
 			}
 		});
+		$('.CwWwSliderEffectSpeed').slider({
+			min: 1,
+			max: 9,
+			range: 'min',
+			start: function() {
+				$(this).addClass('WriteOnly').find('a').append('<span class="toleft"></span>');
+			},
+			slide: function(event, ui) {
+				var TheValue = ui.value;
+				var TheSpan = $(this).find('span.toleft');
+				$(TheSpan).text(TheValue);
+			},
+			stop: function(event, ui) {
+				const effectSpeed = {
+					ip: wpCwWw.ip,
+					effectSpeed: ui.value
+				};
+				$.post(wpCwWw.target + '.CwWwEffectSpeed.req', effectSpeed, function(data) {
+				}, 'json');
+				$(this).removeClass('WriteOnly');
+				$(this).find('a').html('');
+			}
+		});
 		$('.CwWwSleepHourSlider').slider({
 			min: 0,
 			max: 2,

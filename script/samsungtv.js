@@ -1,0 +1,24 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 08.12.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 696                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: pageadmin.req 696 2024-10-06 19:11:29Z                   $ #
+//#                                                                                 #
+//###################################################################################
+?> samsungtv */
+p.page.load = function() {
+	// p.getValues();
+	$('#samsungtv').on('click', '.sendremote', function() {
+		const selectedtv = $('.selectedtv').val();
+		$.post('samsungtv.' + selectedtv + '.req', {button: $(this).text()});
+	});
+};

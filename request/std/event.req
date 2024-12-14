@@ -423,10 +423,10 @@ switch(std::gets('param1')) {
 				WHERE [dtend] < [dtstart] AND DATEPART([HH], [dtstart]) < 23 AND [id_calendar] = " . std::posts('id_calendar'));
 
 		$database->query("SELECT
-			[ce].[id_calendarevent], [ce].[dtstart], [ce].[vstart], [ce].[dtend], [ce].[vend], [ce].[sstart], [ce].[send],
+			[ce].[id_calendarevent], [ce].[dtstart], [ce].[vstart], [ce].[dtend], [ce].[vend], [ce].[sstart], [ce].[send], [ce].[rstart], [ce].[rend],
 			[ce].[summary],
 			[cr].[id_calendarrrule], [cr].[freq], [cr].[intervall], [cr].[until], [cr].[count], [cr].[byday],
-			[c].[id_scenegroup], [c].[id_dp]
+			[c].[id_scenegroup], [c].[id_dp], [c].[id_d1mini]
 			FROM [calendarevent] [ce]
 			INNER JOIN [calendar] [c] ON [c].[id_calendar] = [ce].[id_calendar]
 			LEFT OUTER JOIN [calendarrrule] [cr] ON [ce].[id_calendarevent] = [cr].[id_calendarevent]
@@ -446,6 +446,7 @@ switch(std::gets('param1')) {
 		while($erg = $database->fetch()) {
 			$idSceneGroup = $erg['id_scenegroup'];
 			$idDp = $erg['id_dp'];
+			$idD1Mini = $erg['id_d1mini'];
 
 			if ($idDp != '') {
 				$useUnitFromDB = false;
@@ -482,6 +483,22 @@ switch(std::gets('param1')) {
 					}
 				}
 			}
+			if ($idD1Mini != '') {
+				$startScene = '';
+				if($erg['rstart'] != '') {
+					$database2->query('SELECT ISNULL([description], [target]) AS [name] FROM [resturl] WHERE [id_resturl] = ' . $erg['rstart']);
+					while($erg2 = $database2->fetch()) {
+						$startScene = $erg2['name'];
+					}
+				}
+				$endScene = '';
+				if($erg['rend'] != '') {
+					$database2->query('SELECT ISNULL([description], [target]) AS [name] FROM [resturl] WHERE [id_resturl] = ' . $erg['rend']);
+					while($erg2 = $database2->fetch()) {
+						$endScene = $erg2['name'];
+					}
+				}
+			}
 
 			$exdatetime = array();
 			if($erg['id_calendarrrule'] != '') {
@@ -503,7 +520,7 @@ switch(std::gets('param1')) {
 					$sb .= '"title": "' . $summary . '",';
 				} else {
 					if ($erg['id_calendarrrule'] == '') {
-						if ($idSceneGroup != '') {
+						if ($idSceneGroup != '' || $idD1Mini != '') {
 							$sb .= '"title": "(Einzelereignis)' . $summary .
 							(($startScene != '') ? '<br />Einschaltwert: ' . $startScene : '') .
 							(($endScene != '') ? '<br />Ausschaltwert: ' . $endScene : '') . '",';
@@ -519,7 +536,7 @@ switch(std::gets('param1')) {
 							}
 						}
 					} else {
-						if ($idSceneGroup != '') {
+						if ($idSceneGroup != '' || $idD1Mini != '') {
 							$sb .= '"title": "(Ereignisserie)' . $summary .
 							(($startScene != '') ? '<br />Einschaltwert: ' . $startScene : '') .
 							(($endScene != '') ? '<br />Ausschaltwert: ' . $endScene : '') . '",';
@@ -554,7 +571,7 @@ switch(std::gets('param1')) {
 				foreach($rule->getDates() as $date) {
 					$summary = ($erg['summary'] == '') ? '' : $erg['summary'] . '<br />';
 					$sb .= '{';
-					if ($idSceneGroup != '') {
+					if ($idSceneGroup != '' || $idD1Mini != '') {
 						$sb .= '"title": "' . $summary .
 						(($startScene != '') ? 'Einschaltwert: ' . $startScene : '') .
 						(($endScene != '') ? '<br />Ausschaltwert: ' . $endScene : '') . '",';

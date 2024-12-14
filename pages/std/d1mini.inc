@@ -36,13 +36,28 @@ $database->query("SELECT [id_d1mini], [name], [description], [ip], [mac] FROM [d
 $erg = $database->fetch();
 
 $WebCom = new WebCom();
-$d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
+$res = $WebCom->send('getD1MiniStatus', $erg['ip']);
+$d1Mini = \json_decode($res);
+if(\json_last_error() != JSON_ERROR_NONE) {
+	echo '<!-- Json Error: ' . \json_last_error_msg() . '-->';
+	echo $res;
+}
 //std::test_array($d1Mini);
 ?>
 <div id="d1mini">
 	<h1><?=$headline['name']?> <?=$erg['name'] ?></h1>
 	<h2><?=$erg['description'] ?></h2>
+<?
+$online = true;
+if(!isset($d1Mini->FreakaZoneDevice)) {
+	echo '<h1 class="ps-fontred">--- OFFLINE ---</h1>';
+	$online = false;
+}
+?>
 	<p id="storedIP" data-ip="<?=$erg['ip'] ?>">(<?=$erg['ip'] ?>, <?=$erg['mac'] ?>)</p>
+<?
+if($online) {
+?>
 	<div class="buttonContainer">
 		<span class="ps-button SetCmd" data-cmd="ForceMqttUpdate" title="Force MQTT Update">Force MQTT Update</span>
 		<span class="ps-button SetCmd" data-cmd="UpdateHTTP" title="Setup Http">Setup Http</span>
@@ -50,13 +65,16 @@ $d1Mini = \json_decode($WebCom->send('getD1MiniStatus', $erg['ip']));
 		<span class="ps-button SetCmd" data-cmd="Blink" title="Blink">Blink</span>
 		<a class="ps-button" target="_blank" href="http://<?=$erg['ip'] ?>/print">Device Site</a>
 	</div>
+<? } ?>
 	<div class="ps-flex-container page">
 		<div class="ps-container">
 			<table summary="">
 				<tr>
 					<td><span>newName:</span></td>
 					<td><input class="ps-input newName" type="text" value="<?=$erg['name'] ?>" /></td>
+					<? if($online) { ?>
 					<td><span class="ps-button SetName">speichern</span></td>
+					<? } ?>
 				</tr>
 				<tr>
 					<td colspan="3"><hr /></td>
@@ -74,22 +92,26 @@ $updateChanel = array (
 	4 => 'rfid'
 );
 foreach($updateChanel as $key => $value) {
-	echo '<option value="' . $key . '"' . ($d1Mini->FreakaZoneDevice->UpdateChanel == $value ? ' selected="selected"' : '') . '>' . $value . '</option>';
+	echo '<option value="' . $key . '"' . (($d1Mini->FreakaZoneDevice->UpdateChanel ?? '') == $value ? ' selected="selected"' : '') . '>' . $value . '</option>';
 }
 ?>
 						</select>
 					</td>
+					<? if($online) { ?>
 					<td><span class="ps-button SetChanel">speichern</span></td>
+					<? } ?>
 				</tr>
 				<tr>
 					<td><span>Boot Counter</span></td>
-					<td><span class="ps-input"><?=$d1Mini->FreakaZoneDevice->BootCounter ?></span></td>
+					<td><span class="ps-input"><?=($d1Mini->FreakaZoneDevice->BootCounter ?? '&#8734;') ?></span></td>
+					<? if($online) { ?>
 					<td class="buttonContainer"><span class="ps-button SetCmd" data-cmd="ResetBootCounter">reset</span></td>
+					<? } ?>
 				</tr>
 			</table>
 		</div>
-	<? if($d1Mini->FreakaZoneDevice->useModul->DHT11 ||
-			$d1Mini->FreakaZoneDevice->useModul->DHT22) { ?>
+	<? if(($d1Mini->FreakaZoneDevice->useModul->DHT11 ?? false) ||
+			($d1Mini->FreakaZoneDevice->useModul->DHT22 ?? false)) { ?>
 		<div class="ps-container">
 			<h3>DHT</h3>
 			<table summary="">
@@ -135,7 +157,7 @@ foreach($updateChanel as $key => $value) {
 			</table>
 		</div>
 	<? } ?>
-	<? if($d1Mini->FreakaZoneDevice->useModul->LDR) { ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->LDR ?? false) { ?>
 		<div class="ps-container">
 			<h3>LDR</h3>
 			<table summary="">
@@ -177,7 +199,7 @@ foreach($updateChanel as $key => $value) {
 			</table>
 		</div>
 	<? } ?>
-	<? if($d1Mini->FreakaZoneDevice->useModul->Light) { ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->Light ?? false) { ?>
 		<div class="ps-container">
 			<h3>Light</h3>
 			<table summary="">
@@ -219,7 +241,7 @@ foreach($updateChanel as $key => $value) {
 			</table>
 		</div>
 	<? } ?>
-	<? if($d1Mini->FreakaZoneDevice->useModul->BM) { ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->BM ?? false) { ?>
 		<div class="ps-container">
 			<h3>BM</h3>
 			<table summary="">
@@ -228,7 +250,7 @@ foreach($updateChanel as $key => $value) {
 					<td><span class="ps-input <?=wpa::GreyGreen ?>" data-ws="<?=$erg['name'] ?>_BM">undefined</span></td>
 				</tr>
 				<tr><td colspan="2"><hr /></td></tr>
-		<? if($d1Mini->FreakaZoneDevice->useModul->LDR) { ?>
+		<? if($d1Mini->FreakaZoneDevice->useModul->LDR ?? false) { ?>
 				<tr>
 					<td colspan="2"><h3>LDR</h3></td>
 				</tr>
@@ -255,7 +277,7 @@ foreach($updateChanel as $key => $value) {
 			</table>
 		</div>
 	<? } ?>
-	<? if($d1Mini->FreakaZoneDevice->useModul->Window) { ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->Window ?? false) { ?>
 		<div class="ps-container">
 			<h3>Fenster</h3>
 			<table summary="">
@@ -266,8 +288,7 @@ foreach($updateChanel as $key => $value) {
 			</table>
 		</div>
 	<? } ?>
-	<? if(isset($d1Mini->FreakaZoneDevice->useModul->Window2) &&
-		$d1Mini->FreakaZoneDevice->useModul->Window2) { ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->Window2 ?? false) { ?>
 		<div class="ps-container">
 			<h3>Fenster 2</h3>
 			<table summary="">
@@ -278,8 +299,7 @@ foreach($updateChanel as $key => $value) {
 			</table>
 		</div>
 	<? } ?>
-	<? if(isset($d1Mini->FreakaZoneDevice->useModul->Window3) &&
-		$d1Mini->FreakaZoneDevice->useModul->Window3) { ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->Window3 ?? false) { ?>
 		<div class="ps-container">
 			<h3>Fenster3</h3>
 			<table summary="">
@@ -290,8 +310,7 @@ foreach($updateChanel as $key => $value) {
 			</table>
 		</div>
 	<? } ?>
-	<? if(isset($d1Mini->FreakaZoneDevice->useModul->Weight) &&
-		$d1Mini->FreakaZoneDevice->useModul->Weight) { ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->Weight ?? false) { ?>
 		<div class="ps-container">
 			<h3>Weight</h3>
 			<table summary="">
@@ -330,27 +349,27 @@ foreach($updateChanel as $key => $value) {
 		</div>
 	<? } ?>
 <?
-if($d1Mini->FreakaZoneDevice->useModul->NeoPixel) {
+if($d1Mini->FreakaZoneDevice->useModul->NeoPixel ?? false) {
 	$neoPixel = new wpNeoPixel($erg['ip'], $erg['name']);
 	$neoPixel->getStatusFromJson($d1Mini->FreakaZoneDevice);
 	$neoPixel->getColorPicker();
 	$neoPixel->getColorScenen();
 }
-if($d1Mini->FreakaZoneDevice->useModul->CwWw) {
+if($d1Mini->FreakaZoneDevice->useModul->CwWw ?? false) {
 	$cwww = new wpCwWw($erg['ip'], $erg['name']);
 	$cwww->getStatusFromJson($d1Mini->FreakaZoneDevice);
 	$cwww->getColorPicker();
 }
-if($d1Mini->FreakaZoneDevice->useModul->AnalogOut &&
-	!$d1Mini->FreakaZoneDevice->useModul->NeoPixel &&
-	!$d1Mini->FreakaZoneDevice->useModul->CwWw) {
+if(($d1Mini->FreakaZoneDevice->useModul->AnalogOut ?? false) &&
+	(!$d1Mini->FreakaZoneDevice->useModul->NeoPixel ?? false) &&
+	(!$d1Mini->FreakaZoneDevice->useModul->CwWw ?? false)) {
 	$analogOut = new wpAnalogOut($erg['ip'], $erg['name']);
 	$analogOut->getStatusFromJson($d1Mini->FreakaZoneDevice);
 	$analogOut->getHtml(true);
 }
-if($d1Mini->FreakaZoneDevice->useModul->AnalogOut2 &&
-	!$d1Mini->FreakaZoneDevice->useModul->NeoPixel &&
-	!$d1Mini->FreakaZoneDevice->useModul->CwWw) { ?>
+if(($d1Mini->FreakaZoneDevice->useModul->AnalogOut2 ?? false) &&
+	(!$d1Mini->FreakaZoneDevice->useModul->NeoPixel ?? false) &&
+	(!$d1Mini->FreakaZoneDevice->useModul->CwWw ?? false)) { ?>
 		<div class="ps-container">
 			<h3>AnalogOut2</h3>
 			<table summary="">
@@ -407,40 +426,36 @@ if($d1Mini->FreakaZoneDevice->useModul->AnalogOut2 &&
 			</table>
 		</div>
 	<? } ?>
-	<? if(isset($d1Mini->FreakaZoneDevice->useModul->Underfloor1) &&
-		$d1Mini->FreakaZoneDevice->useModul->Underfloor1) { ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->Underfloor1 ?? false) { ?>
 <?
 	$underfloor1 = new wpUnderfloor($erg['ip'], $erg['name'], 1);
 	$underfloor1->getStatusFromJson($d1Mini->FreakaZoneDevice);
 	$underfloor1->getUnderfloor();
 ?>
 	<? } ?>
-	<? if(isset($d1Mini->FreakaZoneDevice->useModul->Underfloor2) &&
-		$d1Mini->FreakaZoneDevice->useModul->Underfloor2) { ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->Underfloor2 ?? false) { ?>
 <?
 	$underfloor2 = new wpUnderfloor($erg['ip'], $erg['name'], 2);
 	$underfloor2->getStatusFromJson($d1Mini->FreakaZoneDevice);
 	$underfloor2->getUnderfloor();
 ?>
 	<? } ?>
-	<? if(isset($d1Mini->FreakaZoneDevice->useModul->Underfloor3) &&
-		$d1Mini->FreakaZoneDevice->useModul->Underfloor3) { ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->Underfloor3 ?? false) { ?>
 <?
 	$underfloor3 = new wpUnderfloor($erg['ip'], $erg['name'], 3);
 	$underfloor3->getStatusFromJson($d1Mini->FreakaZoneDevice);
 	$underfloor3->getUnderfloor();
 ?>
 	<? } ?>
-	<? if(isset($d1Mini->FreakaZoneDevice->useModul->Underfloor4) &&
-		$d1Mini->FreakaZoneDevice->useModul->Underfloor4) { ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->Underfloor4 ?? false) { ?>
 <?
 	$underfloor4 = new wpUnderfloor($erg['ip'], $erg['name'], 4);
 	$underfloor4->getStatusFromJson($d1Mini->FreakaZoneDevice);
 	$underfloor4->getUnderfloor();
 ?>
 	<? } ?>
-	<? if($d1Mini->FreakaZoneDevice->useModul->Relais ||
-			$d1Mini->FreakaZoneDevice->useModul->RelaisShield) { ?>
+	<? if(($d1Mini->FreakaZoneDevice->useModul->Relais ?? false) ||
+		($d1Mini->FreakaZoneDevice->useModul->RelaisShield ?? false)) { ?>
 		<div class="ps-container">
 			<h3>Relais</h3>
 			<table summary="">
@@ -495,7 +510,7 @@ if($d1Mini->FreakaZoneDevice->useModul->AnalogOut2 &&
 						<span class="ps-button writeTopic" data-topic="<?=$erg['name'] ?>/settings/Relais/SetHandValue" data-write="1">Ein</span>
 					</td>
 				</tr>
-	<? if($d1Mini->FreakaZoneDevice->useModul->Moisture) { ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->Moisture ?? false) { ?>
 				<tr>
 					<td colspan="6"><h3>Moisture</h3></td>
 				</tr>
@@ -543,7 +558,7 @@ if($d1Mini->FreakaZoneDevice->useModul->AnalogOut2 &&
 			</table>
 		</div>
 	<? } ?>
-	<? if($d1Mini->FreakaZoneDevice->useModul->Rain) { ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->Rain ?? false) { ?>
 		<div class="ps-container">
 			<h3>Rain</h3>
 			<table summary="">
@@ -582,7 +597,7 @@ if($d1Mini->FreakaZoneDevice->useModul->AnalogOut2 &&
 			</table>
 		</div>
 	<? } ?>
-	<? if($d1Mini->FreakaZoneDevice->useModul->Moisture) { ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->Moisture ?? false) { ?>
 		<div class="ps-container">
 			<h3>Moisture</h3>
 			<table summary="">
@@ -641,7 +656,7 @@ if($d1Mini->FreakaZoneDevice->useModul->AnalogOut2 &&
 			</table>
 		</div>
 	<? } ?>
-	<? if($d1Mini->FreakaZoneDevice->useModul->Distance) { ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->Distance ?? false) { ?>
 		<div class="ps-container">
 			<h3>Distance</h3>
 			<table summary="">
@@ -693,8 +708,7 @@ if($d1Mini->FreakaZoneDevice->useModul->AnalogOut2 &&
 			</table>
 		</div>
 	<? } ?>
-	<? if(isset($d1Mini->FreakaZoneDevice->useModul->ImpulseCounter) &&
-		$d1Mini->FreakaZoneDevice->useModul->ImpulseCounter) { ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->ImpulseCounter ?? false) { ?>
 		<div class="ps-container">
 			<h3>ImpulseCounter</h3>
 			<table summary="">

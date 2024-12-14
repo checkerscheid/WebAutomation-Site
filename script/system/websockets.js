@@ -227,11 +227,15 @@ var ws = {
 								$(this).html(parseInt(that.value / 2.55) + ' ' + that.unit);
 							} else if($(this).hasClass('topic-slider') || $(this).hasClass('wpSlider')) {
 								if(!$(this).hasClass('WriteOnly')) {
-									$(this).slider('option', 'value', parseInt(that.value));
+									var slidervalue = parseInt(that.value);
+									if(isNaN(slidervalue)) slidervalue = 0;
+									$(this).slider('option', 'value', slidervalue);
 								}
 							} else if($(this).hasClass('wpSlider-255')) {
 								if(!$(this).hasClass('WriteOnly')) {
-									$(this).slider('option', 'value', parseInt(that.value) / 2.55);
+									var slidervalue = parseInt(that.value);
+									if(isNaN(slidervalue)) slidervalue = 0;
+									$(this).slider('option', 'value', slidervalue / 2.55);
 								}
 							} else if($(this).hasClass('wpNoAction')) {
 								// do nothing

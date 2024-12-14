@@ -141,6 +141,10 @@ class d1mini {
 				$this->status->FreakaZoneDevice->useModul->Underfloor4) {
 				$this->setUnderfloor(4);
 			}
+			if(isset($this->status->FreakaZoneDevice->useModul->DS18B20) &&
+				$this->status->FreakaZoneDevice->useModul->DS18B20) {
+				$this->setDS18B20();
+			}
 			return $this->id;
 		}
 		return 0;
@@ -413,6 +417,15 @@ class d1mini {
 		$this->mergeDP($id_mqtttopicSetTempURL, 'Underfloor' . $i . '_SetTempURL', 'Ventil ' . $i . ' SetTempURL');
 		echo "saved: 'Ventil" . $i . " SetTempURL',";
 		echo "saved: 'Underfloor" . $i . "'<br />";
+	}
+	private function setDS18B20() {
+		$count = $this->status->FreakaZoneDevice->DS18B20->Count;
+		for($i = 0; $i < $count; $i++) {
+			$id_mqtttopic_temp = $this->insertTopic('DS18B20/deviceOneWire' . ($i + 1) . '/Temperature');
+			$id_dp_temp = $this->mergeDP($id_mqtttopic_temp, 'Temp' . ($i + 1), 'Temperatur ' . ($i + 1), '°C', 1, -50);
+			$this->mergeTrend($id_dp_temp, 'Temperatur ' . ($i + 1));
+			echo "saved: 'Temperatur " . $i . "', ";
+		}
 	}
 	private function setRain() {
 		$id_mqtttopic = $this->insertTopic('Rain');
