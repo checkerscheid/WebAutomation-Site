@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 09.05.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 704                                                     $ #
+//# Revision     : $Rev:: 713                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: calendaredit.inc 704 2024-10-20 17:29:04Z                $ #
+//# File-ID      : $Id:: calendaredit.inc 713 2024-12-14 16:26:31Z                $ #
 //#                                                                                 #
 //###################################################################################
 /**

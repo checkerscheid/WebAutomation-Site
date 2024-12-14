@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.12.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 696                                                     $ #
+//# Revision     : $Rev:: 714                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pageadmin.req 696 2024-10-06 19:11:29Z                   $ #
+//# File-ID      : $Id:: alexaskill.inc 714 2024-12-14 16:27:22Z                  $ #
 //#                                                                                 #
 //###################################################################################
 namespace pages;
