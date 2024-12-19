@@ -202,7 +202,11 @@ p.page.load = function() {
 	});
 	$('#erg').on('click', '.D1MiniDevice .restartdevice', function() {
 		var name = $(this).parents('tr.D1MiniDevice').attr('data-name');
-		$.post('std.d1minicfg.setcmd.req', {name:name,cmd:'RestartDevice'});
+		$.post('std.d1minicfg.setcmd.req', {name:name, cmd:'RestartDevice'});
+	});
+	$('#erg').on('click', '.D1MiniDevice .getAndSave', function() {
+		var ip = $(this).attr('data-ip');
+		$.post('std.d1minicfg.getAndSaveStatus.req', {ip:ip, cmd:'getAndSaveD1MiniStatus'});
 	});
 //###################################################################################
 	$('#erg').on('click', '.allHttpUpdate', function() {

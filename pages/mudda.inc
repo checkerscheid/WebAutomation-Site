@@ -29,6 +29,9 @@ class mudda {
 	private $group;
 	private $valve;
 	private $temp;
+	private $isRealTemp = false;
+	private $realTemp;
+	private $isHum = false;
 	private $hum;
 	private $trendid;
 	private $calid;
@@ -39,7 +42,12 @@ class mudda {
 		$this->trendid = $trendid;
 		$this->calid = $calid;
 	}
+	public function setTemp($temp) {
+		$this->isRealTemp = true;
+		$this->realTemp = $temp;
+	}
 	public function setHum($hum) {
+		$this->isHum = true;
 		$this->hum = $hum;
 	}
 	public function print() {
@@ -72,12 +80,22 @@ class mudda {
 		</tr>
 		<tr>
 			<td>
+				<? if($this->isRealTemp) { ?>
+				<div class="indiContainer">
+					<span class="ps-input" data-ws="<?=$this->realTemp ?>">-</span>
+					<span class="<?=wpa::indikatorTemp?>" data-ws="<?=$this->realTemp ?>"><?=wpHTML_EMPTY ?></span>
+				</div>
+				<? } ?>
+			</td>
+			<td>
+				<? if($this->isHum) { ?>
 				<div class="indiContainer">
 					<span class="ps-input" data-ws="<?=$this->hum ?>">-</span>
-					<span class="<?=wpa::indikatorTemp?>" data-ws="<?=$this->hum ?>"><?=wpHTML_EMPTY ?></span>
+					<span class="<?=wpa::indikatorHum?>" data-ws="<?=$this->hum ?>"><?=wpHTML_EMPTY ?></span>
 				</div>
+				<? } ?>
 			</td>
-			<td colspan="2">
+			<td>
 				<a href="std.trendview.<?=$this->trendid ?>.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a>
 				<a href="std.calendaredit.<?=$this->calid ?>.htm" class="ps-button ps-pluginbutton"><?=wpHTML_UHR ?></a>
 			</td>
@@ -87,24 +105,31 @@ class mudda {
 }
 $kueche = new mudda('Küche', 1, 1, 81, 1037);
 $kueche->setHum('KU1_RU_Hum');
+if(security::checkGroup(security::entwickler)) $kueche->setTemp('KU1_RU_Temp');
 
 $wzmitte = new mudda('Wohnzimmer Mitte', 1, 2, 84, 1038);
 $wzmitte->setHum('WZ1_RU_Hum');
+if(security::checkGroup(security::entwickler)) $wzmitte->setTemp('WZ1_RU_Temp');
 
 $wzfenster = new mudda('Wohnzimmer Fenster', 1, 3, 82, 1039);
 $wzfenster->setHum('WZ1_RU_Hum');
+if(security::checkGroup(security::entwickler)) $wzfenster->setTemp('WZ1_RU_Temp');
 
 $wzkamin = new mudda('Wohnzimmer Kamin', 1, 4, 83, 1040);
 $wzkamin->setHum('WZ1_RU_Hum');
+if(security::checkGroup(security::entwickler)) $wzkamin->setTemp('WZ1_RU_Temp');
 
 $essen = new mudda('Flur Essen', 2, 1, 78, 1041);
 $essen->setHum('FL1_ES_RU_Hum');
+if(security::checkGroup(security::entwickler)) $essen->setTemp('FL1_ES_RU_Temp');
 
 $bad = new mudda('Bad WC', 2, 2, 79, 1042);
 $bad->setHum('BA1_RU_Hum');
+if(security::checkGroup(security::entwickler)) $bad->setTemp('BA1_RU_Temp');
 
 $eingang = new mudda('Flur Eingang', 2, 3, 80, 1043);
 $eingang->setHum('FL1_EI_RU_Hum');
+if(security::checkGroup(security::entwickler)) $eingang->setTemp('FL1_EI_RU_Temp');
 
 $schlafzimmer = new wpAnalogOut('172.17.44.110', 'SZ1_VT', 85, 1051);
 $schlafzimmer->getStatus();

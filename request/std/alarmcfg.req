@@ -320,7 +320,7 @@ switch(std::gets('param1')) {
 //###################################################################################
 	case alarmcfg::c_getnewalarms:
 		$database = new wpDatabase();
-		$database->query('SELECT [dp].[id_dp], [dp].[name]
+		$database->query('SELECT [dp].[id_dp], [dp].[name], [dp].[description]
 				FROM [dp]
 				LEFT OUTER JOIN [alarm] [a] ON [dp].[id_dp] = [a].[id_dp]
 				WHERE [a].[id_alarm] IS NULL AND [id_dpgroup] = '.std::posts('group').'
@@ -330,7 +330,7 @@ switch(std::gets('param1')) {
 			echo '<li>Es sind keine Items mehr zum hinzufügen übrig</li>';
 		} else {
 			while($erg = $database->fetch()) {
-				echo '<li class="ps-checkbox" data-value="'.$erg['id_dp'].'">'.$erg['name']. '</li>';
+				echo '<li class="ps-checkbox" data-value="'.$erg['id_dp'].'">'.$erg['description'].' ('.$erg['name']. ')</li>';
 			}
 		}
 		echo '</ul>';

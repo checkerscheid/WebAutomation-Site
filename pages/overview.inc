@@ -64,15 +64,15 @@ class overview {
 	private static $Pflanze;
 	public static function setPflanze() {
 		self::$Pflanze = array(
-			'WZ_PF_TI' => new cPflanze('Pflanze auf\'m Tisch', 98),
-			'WZ_PF_TE' => new cPflanze('Pflanze zur Terrasse', 75),
-			'WZ_PF_FE' => new cPflanze('Pflanze am Fenster in der Ecke', 71),
-			'WZ_PF_FE_LI' => new cPflanze('Pflanze am Fenster, links', 72),
-			'WZ_PF_FE_RE1' => new cPflanze('Pflanze am Fenster, 1. rechts', 73),
-			'WZ_PF_FE_RE2' => new cPflanze('Pflanze am Fenster, 2. rechts', 74),
-			'Melonie' => new cPflanze('Melonie', 97),
-			'KZ_PF_PF' => new cPflanze('Pflanzi', 93),
-			'KZ_PF_BU' => new cPflanze('Buschi', 92)
+			'WZ_PF_TI' => new cPflanze('Pflanze auf\'m Tisch', '172.17.80.107', 98),
+			'WZ_PF_TE' => new cPflanze('Pflanze zur Terrasse', '172.17.80.106', 75),
+			'WZ_PF_FE' => new cPflanze('Pflanze am Fenster in der Ecke', '172.17.80.102', 71),
+			'WZ_PF_FE_LI' => new cPflanze('Pflanze am Fenster, links', '172.17.80.103', 72),
+			'WZ_PF_FE_RE1' => new cPflanze('Pflanze am Fenster, 1. rechts', '172.17.80.104', 73),
+			'WZ_PF_FE_RE2' => new cPflanze('Pflanze am Fenster, 2. rechts', '172.17.80.105', 74),
+			'Melonie' => new cPflanze('Melonie', '172.17.80.109', 97),
+			'KZ_PF_PF' => new cPflanze('Pflanzi', '172.17.80.168', 93),
+			'KZ_PF_BU' => new cPflanze('Buschi', '172.17.80.167', 92)
 		);
 	}
 	public static function getD1HT() {
@@ -116,7 +116,7 @@ class overview {
 		foreach(overview::$Pflanze as $name => $p) {
 			$returns .= '
 				<tr>
-					<td colspan="2">' . $p->getDescription() . '</td>
+					<td colspan="2"><a href="http://' . $p->getIpAddress() . '/print" target="_blank">' . $p->getDescription() . '</a></td>
 					<td colspan="2">
 						<div class="indiContainer">
 							<span data-ws="' . $name . '_Moisture" class="ps-input">undefined</span>
@@ -176,9 +176,10 @@ class overview {
 	}
 }
 class cPflanze {
-	private $name, $description, $trendid;
-	public function __construct($description, $trendid) {
+	private $name, $description, $ipAddress, $trendid;
+	public function __construct($description, $ipAddress, $trendid) {
 		$this->description = $description;
+		$this->ipAddress = $ipAddress;
 		$this->trendid = $trendid;
 	}
 	public function setName($name) {
@@ -189,6 +190,9 @@ class cPflanze {
 	}
 	public function getDescription() {
 		return $this->description;
+	}
+	public function getIpAddress() {
+		return $this->ipAddress;
 	}
 	public function getTrendId() {
 		return $this->trendid;

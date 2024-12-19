@@ -28,6 +28,8 @@ class uebersicht_parameter {
 class weihnachten {
 	const Fenster = '172.17.80.133';
 	const Kamin = '172.17.1.60';
+	const Aussen = '172.17.44.100';
+	const Herz = '172.17.80.95';
 	const Baum = '172.17.1.61';
 	const Pia = '172.17.80.162';
 }
@@ -42,7 +44,11 @@ switch(std::gets('param1')) {
 		// Fenster
 		$http .= file_get_contents('http://wpLicht:turner@' . weihnachten::Fenster . '/settings/relay/0/?index=0&schedule=true&schedule_rules=0030bss-0123456-on,0030-0123456-off,0530-0123456-on,0030asr-0123456-off') . ',';
 		// Kamin
-		$http .= file_get_contents('http://wpLicht:turner@' . weihnachten::Kamin . '/settings/relay/0/?index=0&schedule=true&schedule_rules=0030bss-0123456-on,0030-0123456-off,0530-0123456-on,0030asr-0123456-off');
+		$http .= file_get_contents('http://wpLicht:turner@' . weihnachten::Kamin . '/settings/relay/0/?index=0&schedule=true&schedule_rules=0030bss-0123456-on,0030-0123456-off,0530-0123456-on,0030asr-0123456-off') . ',';
+		// Aussen
+		$http .= file_get_contents('http://wpLicht:turner@' . weihnachten::Aussen . '/settings/relay/0/?index=0&schedule=true&schedule_rules=0030bss-0123456-on,0030-0123456-off,0530-0123456-on,0030asr-0123456-off') . ',';
+		// Herz
+		$http .= file_get_contents('http://wpLicht:turner@' . weihnachten::Herz . '/settings/relay/0/?index=0&schedule=true&schedule_rules=0030bss-0123456-on,0030-0123456-off,0530-0123456-on,0030asr-0123456-off');
 		echo $http . ']}';
 		break;
 	//###################################################################################
@@ -52,7 +58,11 @@ switch(std::gets('param1')) {
 		// Fenster
 		$http .= file_get_contents('http://wpLicht:turner@' . weihnachten::Fenster . '/settings/relay/0/?index=0&schedule=false') . ',';
 		// Kamin
-		$http .= file_get_contents('http://wpLicht:turner@' . weihnachten::Kamin . '/settings/relay/0/?index=0&schedule=false');
+		$http .= file_get_contents('http://wpLicht:turner@' . weihnachten::Kamin . '/settings/relay/0/?index=0&schedule=false') . ',';
+		// Aussen
+		$http .= file_get_contents('http://wpLicht:turner@' . weihnachten::Aussen . '/settings/relay/0/?index=0&schedule=false') . ',';
+		// Herz
+		$http .= file_get_contents('http://wpLicht:turner@' . weihnachten::Herz . '/settings/relay/0/?index=0&schedule=false');
 		echo $http . ']}';
 		break;
 	//###################################################################################

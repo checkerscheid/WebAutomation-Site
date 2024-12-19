@@ -69,8 +69,8 @@ switch(std::gets('param1')) {
 	case alarmpointcfg::c_savenewalarm:
 		if(std::posts('newAlarm') != '') {
 			$database = new wpDatabase();
-			$database->query('INSERT INTO [alarm] ([id_dp], [name], [text])
-					SELECT TOP 1 '.std::posts('newAlarm').', [dp].[name], ISNULL([description], [name]) AS [text]
+			$database->query('INSERT INTO [alarm] ([id_dp], [text])
+					SELECT TOP 1 '.std::posts('newAlarm').', ISNULL([description], [name]) AS [text]
 					FROM [dp] WHERE [dp].[id_dp] = '.std::posts('newAlarm').'
 			');
 			echo $database->lastid('alarm');
@@ -82,8 +82,8 @@ switch(std::gets('param1')) {
 			if(count(std::posts('newAlarms')) > 0) {
 				$database = new wpDatabase();
 				foreach(std::posts('newAlarms') as $newAlarm) {
-					$database->query('INSERT INTO [alarm] ([id_dp], [name], [text])
-							SELECT TOP 1 '.$newAlarm.', [dp].[name], ISNULL([description], [name]) AS [text]
+					$database->query('INSERT INTO [alarm] ([id_dp], [text])
+							SELECT TOP 1 '.$newAlarm.', ISNULL([description], [name]) AS [text]
 							FROM [dp] WHERE [dp].[id_dp] = '.$newAlarm.'
 					');
 				}

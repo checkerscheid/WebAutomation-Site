@@ -225,7 +225,7 @@ MERGE INTO [neopixel] AS [TARGET]
 			[SOURCE].[r], [SOURCE].[g], [SOURCE].[b], [SOURCE].[id_user], [SOURCE].[fav]
 		)
 	OUTPUT [INSERTED].[id_neopixel] AS [ID];
-	DELETE * FROM [neopixel] WHERE [id_user] = " . security::getIdFromUser() . " AND [saved] NOT IN (SELECT TOP 10 [saved] FROM [neopixel] WHERE [id_user] = " . security::getIdFromUser() . " ORDER BY [saved]);";
+	--DELETE FROM [neopixel] WHERE [id_user] = " . security::getIdFromUser() . " AND [saved] NOT IN (SELECT TOP 10 [saved] FROM [neopixel] WHERE [id_user] = " . security::getIdFromUser() . " ORDER BY [saved]);";
 		$database->query($sql);
 		//echo 'saved';
 	}

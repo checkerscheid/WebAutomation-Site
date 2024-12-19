@@ -345,6 +345,7 @@ class d1minicfg {
 							<!--span class="ps-hover-noborder ps-image-button ps-import setupmode" title="Set FW Update Mode On"></span-->
 							<span class="ps-hover-noborder ps-image-button ps-import setuphttp" data-ip="' . $erg['ip'] . '" title="Setup Http"></span>
 							<span class="ps-hover-noborder ps-image-button ps-refresh restartdevice" title="neu starten"></span>
+							<span class="ps-hover-noborder ps-image-button ps-export getAndSave" data-ip="' . $erg['ip'] . '" title="Get And Save Status"></span>
 						</div>
 					</td>
 				</tr>
@@ -386,6 +387,12 @@ class d1minicfg {
 	public static function setcmd($name, $cmd) {
 		$WebCom = new WebCom();
 		echo $WebCom->send('SetD1MiniCmd', "$name%~%$cmd");
+	}
+	const c_getAndSaveStatus = 'getAndSaveStatus';
+	public static function getAndSaveStatus($ip) {
+		header(wpJSON_HEADER);
+		$WebCom = new WebCom();
+		echo $WebCom->send('getAndSaveD1MiniStatus', $ip);
 	}
 	const c_starthttpupdate = 'starthttpupdate';
 	public static function starthttpupdate($ip) {
@@ -546,6 +553,10 @@ switch(std::gets('param1')) {
 		//###################################################################################
 	case d1minicfg::c_setcmd:
 		d1minicfg::setcmd(std::posts('name'), std::posts('cmd'));
+		break;
+		//###################################################################################
+	case d1minicfg::c_getAndSaveStatus:
+		d1minicfg::getAndSaveStatus(std::posts('ip'));
 		break;
 		//###################################################################################
 	case d1minicfg::c_starthttpupdate:

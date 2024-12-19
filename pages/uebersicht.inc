@@ -76,6 +76,7 @@ $points = array(
 	'LI_BM_WB_FE'		=> '_WB_BM_LI_FE',
 	'LI_BM_WB_KA'		=> '_WB_BM_LI_KA',
 	'LI_BM_WB_WB'		=> '_WB_BM_LI_WB',
+	'LI_BM_WB_AU'		=> '_WB_BM_LI_AU',
 	'LI_BM_SY_DI'		=> '_SY_BM_LI_DI',
 	'DO_SS_Led'			=> '_DO_SS_Led',
 	'SS_TA_Led'			=> '_SS_TA_Led',
@@ -350,6 +351,7 @@ class uebersicht {
 					<? if($useWeihnachten) { ?>
 					<?=uebersicht::tasterShelly('Fenster', 'WB_FE')?>
 					<?=uebersicht::tasterShelly('Kamin', 'WB_KA')?>
+					<?=uebersicht::tasterShelly('Aussen', 'WB_AU')?>
 					<?=uebersicht::tasterShelly('Weihnachtsbaum', 'WB_WB')?>
 					<? } ?>
 					<?=uebersicht::tasterShelly('Testboard', 'SY_DI')?>
