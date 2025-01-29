@@ -101,6 +101,7 @@ class wpNeoPixel {
 				<span class="ps-button NeoPixelColorManagement">Color Management</span>
 				<span class="ps-button setNeoPixelOff">Aus</span>
 				<div class="colorManagement">
+					<h4>Color Management</h4>
 					<div class="NeoPixelSlider NeoPixelSliderR wpSlider" data-ws="<?=$this->name ?>_R"></div>
 					<div class="NeoPixelSlider NeoPixelSliderG wpSlider" data-ws="<?=$this->name ?>_G"></div>
 					<div class="NeoPixelSlider NeoPixelSliderB wpSlider" data-ws="<?=$this->name ?>_B"></div>

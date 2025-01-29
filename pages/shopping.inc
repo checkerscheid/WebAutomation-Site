@@ -17,60 +17,81 @@
 /** @var wpDatabase $database */
 namespace pages;
 use system\html;
+use system\Helper\wpDatabase;
 ?>
 <div id="shopping">
 	<h1><? html::getPageHeadline();?></h1>
-	<div class="ps-flex-container page">
-		<div class="ps-container">
-			<ul>
+	<div class="page">
 <?
-	$list = '';
-	$group = '';
-	$database->query("SELECT
-[sl].[id_list], [sl].[name] AS [list],
+$sqlList = "SELECT [id_list], [name] FROM [shoppinglist]";
+$database->query($sqlList);
+while($ergList = $database->fetch()) {
+?>
+		<div data-idList="<?=$ergList['id_list'] ?>">
+			<div class="ps-tacenter">
+				<h2><?=$ergList['name'] ?></h2>
+				<span class="ps-checkbox gekaufte" data-idList="<?=$ergList['id_list'] ?>">gekaufte ausblenden</span>
+			</div>
+			<div class="ps-flex-container">
+				<ul class="ps-container ulProducts">
+<?
+	$databaseProduct = new wpDatabase();
+	$sql = "SELECT
+[sp].[id_product], [sp].[name] AS [product], [slp].[ok]
+FROM [shoppinglistproduct] [slp]
+INNER JOIN [shoppingproduct] [sp] ON [slp].[id_product] = [sp].[id_product]
+WHERE [slp].[id_list] = " . $ergList['id_list'] . "
+ORDER BY [product]";
+	$databaseProduct->query($sql);
+	while($erg = $databaseProduct->fetch()) {
+?>
+					<li class="product liproduct">
+						<span class="ps-checkbox<?=($erg['ok'] == 1 ? ' checked' : '')?>" data-idList="<?=$ergList['id_list'] ?>" data-idProduct="<?=$erg['id_product'] ?>"><?=$erg['product'] ?></span>
+					</li>
+<?
+	}
+?>
+				</ul>
+<?
+	$databaseList = new wpDatabase();
+	$sql = "SELECT
 [sg].[id_group], [sg].[name] AS [group],
 [sp].[id_product], [sp].[name] AS [product], [sgp].[ok]
-FROM [shoppinglist] [sl]
-INNER JOIN [shoppinglistgroup] [slg] ON [sl].[id_list] = [slg].[id_list]
+FROM [shoppinglistgroup] [slg]
 INNER JOIN [shoppinggroup] [sg] ON [slg].[id_group] = [sg].[id_group]
 INNER JOIN [shoppinggroupproduct] [sgp] ON [sg].[id_group] = [sgp].[id_group]
 INNER JOIN [shoppingproduct] [sp] ON [sgp].[id_product] = [sp].[id_product]
-ORDER BY [list], [group], [sgp].[ok], [product]");
-	while($erg = $database->fetch()) {
-		if($list != $erg['list']) {
-			$list = $erg['list'];
-			echo '<li class="list"><h2>' . $list . '</h2"></li>';
-		}
-		if($group != $erg['group']) {
-			$group = $erg['group'];
-			echo '<li><hr /></li><li class="group"><h3>' . $group . '</h3"></li>';
-		}
+WHERE [slg].[id_list] = " . $ergList['id_list'] . "
+ORDER BY [group], [sgp].[ok], [product]";
+	$showTitle = "";
+	$databaseList->query($sql);
+	while($erg = $databaseList->fetch()) {
+		if($showTitle != $erg['group']) {
+			if($showTitle != "") {
 ?>
-				<li class="group product">
-					<span class="ps-checkbox<?=($erg['ok'] == 1 ? ' checked' : '')?>" data-idlist="<?=$erg['id_list'] ?>" data-idgroup="<?=$erg['id_group'] ?>" data-idproduct="<?=$erg['id_product'] ?>"><?=$erg['product'] ?></span>
-				</li>
+				</ul>
 <?
-	}
-	$group = '';
-	$database->query("SELECT
-[sl].[id_list], [sl].[name] AS [list],
-[sp].[id_product], [sp].[name] AS [product], [slp].[ok]
-FROM [shoppinglist] [sl]
-INNER JOIN [shoppinglistproduct] [slp] ON [sl].[id_list] = [slp].[id_list]
-INNER JOIN [shoppingproduct] [sp] ON [slp].[id_product] = [sp].[id_product]");
-	while($erg = $database->fetch()) {
-		if($group != 'einzelne Produkte') {
-			$group = 'einzelne Produkte';
-			echo '<li><hr /></li>';
+			}
+			$showTitle = $erg['group'];
+?>
+				<ul class="ps-container ulGroups">
+					<li class="groupname">
+						<h3><?=$erg['group'] ?></h3">
+					</li>
+<?
 		}
 ?>
-				<li class="product">
-					<span class="ps-checkbox<?=($erg['ok'] == 1 ? ' checked' : '')?>" data-idlist="<?=$erg['id_list'] ?>" data-idproduct="<?=$erg['id_product'] ?>"><?=$erg['product'] ?></span>
-				</li>
+					<li class="groupproduct liproduct">
+						<span class="ps-checkbox<?=($erg['ok'] == 1 ? ' checked' : '')?>" data-idList="<?=$ergList['id_list'] ?>" data-idGroup="<?=$erg['id_group'] ?>" data-idProduct="<?=$erg['id_product'] ?>"><?=$erg['product'] ?></span>
+					</li>
 <?
 	}
 ?>
-			</ul>
+				</ul>
+			</div>
 		</div>
+<?
+}
+?>
 	</div>
 </div>

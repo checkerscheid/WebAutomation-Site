@@ -277,7 +277,7 @@ class uebersicht {
 <div id="uebersicht" class="page">
 	<h3 class="pa-hide ps-tacenter ps-roundborder ps-shadow wartungmeldung" data-value="Wartung">Wartung aktiv</h3>
 	<div class="ps-flex-container">
-		<div class="ps-container ps-flex-item">
+		<div class="ps-container">
 			<h2>Licht</h2>
 			<table>
 				<tbody>
@@ -311,7 +311,7 @@ class uebersicht {
 			</table>
 		</div>
 
-		<div class="ps-container ps-flex-item">
+		<div class="ps-container">
 			<h2>Licht</h2>
 			<table>
 				<tbody>
@@ -343,7 +343,7 @@ class uebersicht {
 			</table>
 		</div>
 
-		<div class="ps-container ps-flex-item">
+		<div class="ps-container">
 			<h2><?=($useWeihnachten ? 'Weihnachten' : 'Licht')?></h2>
 			<table>
 				<tbody>
@@ -398,7 +398,7 @@ class uebersicht {
 				</tbody>
 			</table>
 		</div>
-		<div class="ps-container ps-flex-item">
+		<div class="ps-container">
 			<h2>Heizung</h2>
 			<table>
 				<tbody>
@@ -428,7 +428,12 @@ foreach($zimmer as $kurz => $name) {
 							<span class="ps-input" data-ws="_<?=$kurz?>_RT">-</span>
 <? } ?>
 						</td>
-						<td><span class="ps-input ps-operable zp" data-ws="_<?=$kurz?>_RT_SW" data-bm="<?=$kurz?>_ZP_RM" data-zp="<?=$kurz?>_ZP" title="bm: ZP aktiv">-</span></td>
+						<td>
+							<span class="ps-input ps-operable zp" data-ws="_<?=$kurz?>_RT_SW" data-bm="<?=$kurz?>_ZP_RM" data-zp="<?=$kurz?>_ZP" title="bm: ZP aktiv">-</span>
+<? if($kurz == 'WZ') { ?>
+							<br /><span class="ps-input ps-operable zp" data-ws="_KA_RT_SW" data-bm="<?=$kurz?>_ZP_RM" data-zp="<?=$kurz?>_ZP" title="bm: ZP aktiv">-</span>
+<? } ?>
+						</td>
 						<td>
 <?	if($kurz != 'KZ') { ?>
 							<div class="handContainer">

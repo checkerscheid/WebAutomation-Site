@@ -114,11 +114,12 @@ p.page.load = function() {
 			});
 		}
 	});
-	$('#browse').on('click', '.additems', function() {
+	$('#opcbrowse').on('click', '.additems', function() {
 		var newtext = new Array();
-		$('#forItems li').each(function() {
+		$('.forItems li').each(function() {
 			if($(this).hasClass('checked')) newtext.push($(this).attr('data-item'));
 		});
+		console.log(newtext);
 		if(selgroup != null && newtext.length > 0) {
 			$.post('std.opcbrowse.additemspopup.req', {clsid:selserver.clsid, progid:selserver.progid, remote:(selserver.remote == null) ? 'false' : selserver.remote, group:selgroup, items:newtext}, function(data) {
 				$('#dialog').html(data).dialog({

@@ -21,6 +21,8 @@
 namespace request\std;
 use system\Helper\wpDatabase;
 use system\std, system\WebCom, system\TCPencode;
+use system\Helper\wpConvert;
+
 class opcbrowse {
 	const c_opcserver = 'opcserver';
 	const c_opcgroup = 'opcgroup';
@@ -178,7 +180,7 @@ switch(std::gets('param1')) {
 				$WebCom = new WebCom();
 				$WebCom->send('ActivateServer', $idserver);
 			}
-			$TheGroup = cleanName(std::posts('group'));
+			$TheGroup = wpConvert::cleanName(std::posts('group'));
 			if($TheGroup != '') {
 				$database->query("SELECT [id_opcgroup] FROM [opcgroup]
 					WHERE [name] = '".$TheGroup."' AND [id_opcserver] = ".$idserver);
@@ -197,7 +199,7 @@ switch(std::gets('param1')) {
 					$sqlbuilder = 'INSERT INTO [opcdatapoint]
 						([id_opcgroup], [active], [name], [opcname]) VALUES ';
 					foreach($_POST['items'] as $opcname => $item) {
-						$TheItem = cleanName($item);
+						$TheItem = wpConvert::cleanName($item);
 						$TheOPC = preg_replace('/\(/', '[', preg_replace('/\)/', ']', $opcname));
 						if($TheItem != '') $sqlbuilder .= "($idgroup, 1, '$TheItem', '$TheOPC'),";
 					}
@@ -222,7 +224,7 @@ switch(std::gets('param1')) {
 			$option .= '<option value="'.$erg['name'].'">'.$erg['name'].'</option>';
 		}
 
-		$cleangroup = cleanName(std::posts('group'));
+		$cleangroup = wpConvert::cleanName(std::posts('group'));
 		echo '
 <table>
 	<thead>
@@ -247,7 +249,7 @@ switch(std::gets('param1')) {
 		</tr>';
 		$items = std::posts('items');
 		for($i = 0; $i < count($items); $i++) {
-			$cleanitem = cleanName($items[$i]);
+			$cleanitem = wpConvert::cleanName($items[$i]);
 			echo '
 		<tr>
 			<td><label for="id'.$i.'">'.$items[$i].'</label></td>

@@ -60,7 +60,7 @@ p.page.load = function() {
 		$.post('std.shellycom.set-relay.req', {ShellyIP: '172.17.80.162', turn: 'false'});
 	});
 	$('.AllesSchlafen').click(function() {
-		wpNeoPixel.setColorBrightness(254, 34, 0, 15);
+		wpNeoPixel.setColor(75, 5, 0);
 		wpCwWw.setBrightness(10, 0);
 		const h = 0;
 		const m = 30;

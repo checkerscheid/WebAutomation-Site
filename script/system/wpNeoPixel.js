@@ -329,19 +329,12 @@ var wpNeoPixel = {
 			$('.NeoPixelSavedColor').html(data);
 		});
 	},
-	setColorBrightness: function(r, g, b, br) {
+	setColor: function(r, g, b) {
 		const color = {
 			ip: wpNeoPixel.ip,
 			r: r, g: g, b: b
 		};
 		$.post(wpNeoPixel.target + '.NeoPixelColor.req', color, function(data) {
-			console.log(data);
-		}, 'json');
-		const brightness = {
-			ip: wpNeoPixel.ip,
-			brightness: br
-		};
-		$.post(wpNeoPixel.target + '.NeoPixelBrightness.req', brightness, function(data) {
 			console.log(data);
 		}, 'json');
 	},

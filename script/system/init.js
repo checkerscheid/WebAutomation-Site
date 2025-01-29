@@ -31,6 +31,10 @@ var p = {
 				}, zeit);
 			});
 		},
+		message:function(meldung, zeit, callback) {
+			meldung = '<span class="pos">' + meldung + '</span>';
+			p.page.alert(meldung, zeit, callback);
+		},
 		alertred:function(meldung, zeit, callback) {
 			meldung = '<span class="neg">' + meldung + '</span>';
 			if(typeof(zeit) == 'undefined' || isNaN(zeit)) zeit = 3000;
@@ -80,35 +84,35 @@ var p = {
 		save: function(target, obj) {
 			if(typeof(obj) == 'undefined') {
 				$.get(target, function(data) {
-					if(data == 'S_OK') p.page.alert('<span class="pos">gespeichert</span>');
-					else p.page.alert('<span class="neg">' + data + '</span>', 3000);
-				});
+					if(data.erg == 'S_OK') p.page.alert('<span class="pos">gespeichert</span>');
+					else p.page.alert('<span class="neg">' + data.message + '</span>', 3000);
+				}, 'json');
 			} else {
 				$.post(target, obj, function(data) {
-					if(data == 'S_OK') p.page.alert('<span class="pos">gespeichert</span>');
-					else p.page.alert('<span class="neg">' + data + '</span>', 3000);
-				});
+					if(data.erg == 'S_OK') p.page.alert('<span class="pos">gespeichert</span>');
+					else p.page.alert('<span class="neg">' + data.message + '</span>', 3000);
+				}, 'json');
 			}
 		},
 		savedialog: function(target, obj) {
 			if(typeof(obj) == 'undefined') {
 				$.get(target, function(data) {
-					if(data == 'S_OK') {
+					if(data.erg == 'S_OK') {
 						p.page.alert('<span class="pos">gespeichert</span>');
 						$('#dialog').dialog('close');
 					} else {
-						p.page.alert('<span class="neg">' + data + '</span>', 3000);
+						p.page.alert('<span class="neg">' + data.message + '</span>', 3000);
 					}
-				});
+				}, 'json');
 			} else {
 				$.post(target, obj, function(data) {
-					if(data == 'S_OK') {
+					if(data.erg == 'S_OK') {
 						p.page.alert('<span class="pos">gespeichert</span>');
 						$('#dialog').dialog('close');
 					} else {
-						p.page.alert('<span class="neg">' + data + '</span>', 3000);
+						p.page.alert('<span class="neg">' + data.message + '</span>', 3000);
 					}
-				});
+				}, 'json');
 			}
 		},
 		setAlarms: function(wpAlarm) {
@@ -226,13 +230,13 @@ var p = {
 				dokuparam = 'False';
 			}
 			$.post('std.request.writedp.req', {item:point, value:value, doku:dokuparam}, function(data) {
-				if(data != 'S_OK') p.page.alert(data);
-			});
+				if(data.erg != 'S_OK') p.page.alert(data);
+			}, 'json');
 		},
 		wswrite: function(point, value) {
 			$.post('std.request.wswritedp.req', {item:point, value:value}, function(data) {
-				if(data != 'S_OK') p.page.alert(data);
-			});
+				if(data.erg != 'S_OK') p.page.alert(data);
+			}, 'json');
 		},
 		writeMulti: function(point, value, doku) {
 			var dokuparam = 'True';
@@ -242,8 +246,8 @@ var p = {
 				dokuparam = 'False';
 			}
 			$.post('std.request.writemultidp.req', {item:point, value:value, doku:dokuparam}, function(data) {
-				if(data != 'S_OK') p.page.alert(data);
-			});
+				if(data.erg != 'S_OK') p.page.alert(data);
+			}, 'json');
 		},
 		checkDP: function(result) {
 			if(typeof(wpResult[result]) == 'undefined') {

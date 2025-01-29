@@ -17,11 +17,15 @@
 ?> shopping */
 
 #shopping ul {text-align:left; }
+#shopping ul ul { margin-left:50px; }
 #shopping .list { padding-left:15px; }
-#shopping .group, #shopping .product { padding:5px 15px; margin:5px 30px; }
-#shopping .product { border:1px solid #ccc; border-radius:5px; }
-#shopping .group.product { padding-left:15px; margin-left:60px; }
+#shopping .groupproduct,
+#shopping .product { padding:5px 15px; margin:5px 30px; border:1px solid #ccc; border-radius:5px; }
+#shopping .groupproduct { padding-left:15px; margin-left:60px; }
 #shopping .ps-checkbox.checked { text-decoration:line-through; }
+#shopping .ps-image-button { display:inline-block; }
+#shopping .product-row  { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:stretch; }
+#shopping li { clear:both; }
 
 @media (orientation: portrait) {
 	#shopping span,

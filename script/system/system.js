@@ -1265,7 +1265,7 @@ function oskquitok() {
 		alert('Der Quittext ist erforderlich.');
 	} else {
 		$.post('std.alarmtable.quitall.req', {toquit:toquit, text:quittext}, function(data) {
-			switch(data) {
+			switch(data.erg) {
 				case 'S_OK':
 					p.page.alert('<span class="pos">quittiert</span>');
 					$('#dialog').dialog('close');
@@ -1275,9 +1275,9 @@ function oskquitok() {
 					$('#dialog').dialog('close');
 					break;
 				default:
-					p.page.alert('<span class="neg">Fehler: ' + data + '</span>', 2000);
+					p.page.alert('<span class="neg">Fehler: ' + data.message + '</span>', 2000);
 					break;
 			}
-		});
+		}, 'json');
 	}
 }

@@ -77,6 +77,13 @@ if($online) {
 					<? } ?>
 				</tr>
 				<tr>
+					<td><span>newDescrption:</span></td>
+					<td><input class="ps-input newDescrption" type="text" value="<?=$erg['description'] ?>" /></td>
+					<? if($online) { ?>
+					<td><span class="ps-button SetDescrption">speichern</span></td>
+					<? } ?>
+				</tr>
+				<tr>
 					<td colspan="3"><hr /></td>
 				</tr>
 				<tr>
@@ -85,6 +92,7 @@ if($online) {
 						<select class="ps-input newChanel">
 <?
 $updateChanel = array (
+	99 => 'clean',
 	0 => 'firmware',
 	1 => 'light',
 	2 => 'io',
@@ -99,6 +107,13 @@ foreach($updateChanel as $key => $value) {
 					</td>
 					<? if($online) { ?>
 					<td><span class="ps-button SetChanel">speichern</span></td>
+					<? } ?>
+				</tr>
+				<tr>
+					<td><span>Last Boot Reason</span></td>
+					<td><span class="ps-input" title="<?=($d1Mini->FreakaZoneDevice->RestartReason ?? '&#129668;') ?>"><?=($d1Mini->FreakaZoneDevice->RestartReason ?? '&#129668;') ?></span></td>
+					<? if($online) { ?>
+					<td></td>
 					<? } ?>
 				</tr>
 				<tr>

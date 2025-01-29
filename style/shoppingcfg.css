@@ -1,0 +1,49 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 08.11.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 711                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: shopping.css 711 2024-11-21 13:09:32Z                    $ #
+//#                                                                                 #
+//###################################################################################
+?> shoppingcfg */
+
+#shoppingcfg ul {text-align:left; }
+#shoppingcfg ul ul { margin-left:50px; }
+#shoppingcfg .list { padding-left:15px; }
+#shoppingcfg .groupproduct { padding-left:15px; margin-left:10px; }
+#shoppingcfg .ps-checkbox.checked { text-decoration:line-through; }
+#shoppingcfg .ps-image-button { display:inline-block; }
+#shoppingcfg .product-row  { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:stretch; }
+#shoppingcfg li { clear:both; }
+#shoppingcfg .ps-input { width:200px; }
+#shoppingcfg .moveProduct,
+#shoppingcfg .moveGroup { line-height:30px; padding:0 3px; cursor:grab; }
+#shoppingcfg .dragging * { cursor:grabbing; }
+#shoppingcfg .productingroup { line-height:30px; }
+#shoppingcfg .dropProduct,
+#shoppingcfg .dropGroupToList,
+#shoppingcfg .dropProductToList { margin:4px 0; border:1px solid #888; border-radius:5px; }
+#shoppingcfg .dropProduct div,
+#shoppingcfg .dropGroupToList div,
+#shoppingcfg .dropProductToList div { padding:4px 2px 4px 10px; }
+#shoppingcfg .dropBorder { border-color:#a81919; }
+#shoppingcfg .dropHoverBorder { border-color:#0F0; }
+
+@media (orientation: portrait) {
+	#shoppingcfg span,
+	#shoppingcfg a { font-size:25px; }
+	#shoppingcfg .ps-button { padding:25px 6px; }
+	#shoppingcfg .ps-input { font-size:18px; padding:5px; }
+	#shoppingcfg .ps-pluginbutton { font-size:40px; }
+	#shoppingcfg .ps-checkbox { padding:25px; }
+	#shoppingcfg .ps-checkbox.checked { color:#4B4; }
+}

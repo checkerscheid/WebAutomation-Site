@@ -230,6 +230,7 @@ class d1minicfg {
 					<th>UpdateChanel</th>
 					<th>aktiv</th>
 					<th>compiledWith</th>
+					<th>Debug</th>
 					<th></th>
 				</tr>
 			</thead>
@@ -337,6 +338,11 @@ class d1minicfg {
 							<div class="buttonContainer">
 								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice" title="von D1 Mini übernehmen"></span>
 							</div>
+						</div>
+					</td>
+					<td data-column="tdDebug">
+						<div>
+							<span class="debugModules"></span>
 						</div>
 					</td>
 					<td class="buttonbox">

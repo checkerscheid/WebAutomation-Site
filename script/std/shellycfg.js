@@ -298,7 +298,7 @@ p.page.load = function() {
 		});
 	});
 	$('#erg').on('click', '#shellyedit .ps-active', function() {
-		var id = $(this).parents('div[data-id]').attr('data-id');
+		var id = $(this).parents('tr[data-id]:first').attr('data-id');
 		$.post('std.shellycfg.shellyactive.req', {id:id}, function(data) {
 			p.page.alert(data, 5000);
 		}, 'json');

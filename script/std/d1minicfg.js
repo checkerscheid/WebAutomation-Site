@@ -206,7 +206,10 @@ p.page.load = function() {
 	});
 	$('#erg').on('click', '.D1MiniDevice .getAndSave', function() {
 		var ip = $(this).attr('data-ip');
-		$.post('std.d1minicfg.getAndSaveStatus.req', {ip:ip, cmd:'getAndSaveD1MiniStatus'});
+		$.post('std.d1minicfg.getAndSaveStatus.req', {ip:ip, cmd:'getAndSaveD1MiniStatus'}, function(data) {
+			if(data.erg == 'S_ERROR') p.page.alert('Leider nicht gespeichert');
+			else p.page.message('gespeichert');
+		}, 'json');
 	});
 //###################################################################################
 	$('#erg').on('click', '.allHttpUpdate', function() {
@@ -462,6 +465,11 @@ function setD1MiniInfo(data) {
 		}
 	}
 	setTextIfNotStored(name, 'compiledwith', (compiledWith.length > 2 ? compiledWith.slice(0, -2) : compiledWith));
+	var debugModule = '';
+	for( const [key, value] of Object.entries(values.Debug)) {
+		debugModule += `<span class="ps-checkbox ps-disabled${(value ? ' checked' : '')}" title="${key}">&nbsp;</span>`;
+	}
+	$(`tr[data-name=${name}] td[data-column=tdDebug]`).find('.debugModules').html(debugModule);
 	var td = $(`tr[data-json=${name}] td.json`);
 	$(td).html('<div class="showJsonContainer">' +
 		'<div>' +

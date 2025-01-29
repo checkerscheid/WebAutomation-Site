@@ -87,7 +87,7 @@ class wpInit {
 			'Aktivitäten'				=> array( 'userhistorics', 'alarmhistorics', 'emailhistorics', 'visitors' ),
 			'Plug Ins'					=> array( 'trendselect', 'calendar', 'scene', 'calendarscene', 'opcrouter' ),
 			'Alarmierung' 				=> array( 'useralarming', 'contacts', 'alarming' ),
-			'Sonstiges'					=> array( 'weather', 'bsp-bedienung' )
+			'Sonstiges'					=> array( 'weather', 'bsp-bedienung', 'shopping' )
 		),
 		// Popup id
 		'projekt' => array(
@@ -95,7 +95,7 @@ class wpInit {
 			'name'						=> 'Projektierung',
 			// Headline => src
 			'Treiber Konfiguration'		=> array( 'dpactive', 'opcbrowse', 'opcactive', 'mqttactive', 'restactive', 'shellycfg', 'd1minicfg' ),
-			'Server Konfiguration'		=> array( 'alarmcfg', 'trendcfg', 'calendarcfg', 'scenecfg', 'calendarscenecfg' )
+			'Server Konfiguration'		=> array( 'alarmcfg', 'trendcfg', 'calendarcfg', 'scenecfg', 'calendarscenecfg', 'shoppingcfg' )
 		),
 		// Popup id
 		'website' => array(

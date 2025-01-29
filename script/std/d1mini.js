@@ -33,7 +33,20 @@ p.page.load = function() {
 	});
 	$('#d1mini').on('click', '.SetName', function() {
 		var ip = $('#storedIP').attr('data-ip');
-		var cmd = 'SetDeviceName&newName=' + $('.newName').val();
+		var cmd = 'SetDeviceName';
+		var newName = $('.newName').val();
+		if(typeof newName != 'undefined' && newName != '') {
+			cmd += '&newName=' + newName;
+		}
+		$.post('std.d1mini.setcmd.req', {ip:ip, cmd:cmd});
+	});
+	$('#d1mini').on('click', '.SetDescription', function() {
+		var ip = $('#storedIP').attr('data-ip');
+		var cmd = 'SetDeviceName';
+		var newDescription = $('.newDescription').val();
+		if(typeof newDescription != 'undefined' && newDescription != '') {
+			cmd += '&newDescription=' + newDescription;
+		}
 		$.post('std.d1mini.setcmd.req', {ip:ip, cmd:cmd});
 	});
 	$('#d1mini').on('click', '.SetChanel', function() {

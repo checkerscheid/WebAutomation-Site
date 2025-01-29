@@ -27,10 +27,10 @@ wpInit::$menuorder = array(
 	'pia', 'mudda', 'kamera'//, 'wohnzimmer','schlafzimmer', 'buero', 'kueche', 'bad', 'kinderzimmer'
 );
 wpInit::$systemmenuorder['webvisucs']['Plug Ins'] = array( 'trendselect', 'calendar', 'calendarscene', 'opcrouter' );
-wpInit::$systemmenuorder['webvisucs']['Sonstiges'] = array('wetter', 'weather', 'betriebsstunden', 'kamera');
+wpInit::$systemmenuorder['webvisucs']['Sonstiges'] = array('wetter', 'weather', 'betriebsstunden', 'kamera', 'shopping');
 wpInit::$systemmenuorder['system']['Systeminformationen'] = array('sys_codesys');
 wpInit::$systemmenuorder['system']['Entwicklung'] = array('websockets');
-wpInit::$noStdPageInSystem = array('wetter', 'betriebsstunden', 'websockets', 'kamera');
+wpInit::$noStdPageInSystem = array('wetter', 'betriebsstunden', 'websockets', 'kamera', 'shopping', 'shoppingcfg');
 wpInit::$stdpoints = array('AT' => '_GA_RT');
 wpInit::$showATinFooter = '_GA_RT';
 wpInit::$weathercode = '2804554';

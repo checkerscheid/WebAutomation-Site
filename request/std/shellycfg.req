@@ -216,7 +216,7 @@ switch(std::gets('param1')) {
 	//###################################################################################
 	case shellycfg::c_shellyactive:
 		$database = new wpDatabase();
-		if($database->query("UPDATE [shelly] SET [active] = 1 WHERE [id_shelly] = " . trim(std::posts('id'))))
+		if($database->query("UPDATE [shelly] SET [active] = ~ [active] WHERE [id_shelly] = " . trim(std::posts('id'))))
 			echo 'S_OK';
 		break;
 	//###################################################################################

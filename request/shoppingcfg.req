@@ -1,0 +1,360 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 09.11.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 711                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: shopping.req 711 2024-11-21 13:09:32Z                    $ #
+//#                                                                                 #
+//###################################################################################
+namespace request;
+use system\std;
+use system\Helper\wpDatabase;
+class shoppingcfg {
+	const c_setListName = 'setListName';
+	public static function setListName() {
+		header(wpJSON_HEADER);
+		$database = new wpDatabase();
+		if(std::posts('id') == '0') {
+			$sql = "INSERT INTO [shoppinglist] ([name]) VALUES ('" . std::posts('name') . "')";
+		} else {
+			$sql = "UPDATE [shoppinglist] SET [name] = '" . std::posts('name') . "' WHERE [id_list] = " . std::posts('id');
+		}
+		if(std::posts('name') != '' && $database->query($sql)) {
+			echo S_OK;
+		} else {
+			echo '{"erg":"S_ERROR", "msg":"' . $sql . '"}';
+		}
+	}
+	const c_setGroupName = 'setGroupName';
+	public static function setGroupName() {
+		header(wpJSON_HEADER);
+		$database = new wpDatabase();
+		if(std::posts('id') == '0') {
+			$sql = "INSERT INTO [shoppinggroup] ([name]) VALUES ('" . std::posts('name') . "')";
+		} else {
+			$sql = "UPDATE [shoppinggroup] SET [name] = '" . std::posts('name') . "' WHERE [id_group] = " . std::posts('id');
+		}
+		if(std::posts('name') != '' && $database->query($sql)) {
+			echo S_OK;
+		} else {
+			echo '{"erg":"S_ERROR", "msg":"' . $sql . '"}';
+		}
+	}
+	const c_setProductName = 'setProductName';
+	public static function setProductName() {
+		header(wpJSON_HEADER);
+		$database = new wpDatabase();
+		if(std::posts('id') == '0') {
+			$sql = "INSERT INTO [shoppingproduct] ([name]) VALUES ('" . std::posts('name') . "')";
+		} else {
+			$sql = "UPDATE [shoppingproduct] SET [name] = '" . std::posts('name') . "' WHERE [id_product] = " . std::posts('id');
+		}
+		if(std::posts('name') != '' && $database->query($sql)) {
+			echo S_OK;
+		} else {
+			echo '{"erg":"S_ERROR", "msg":"' . $sql . '"}';
+		}
+	}
+	const c_addProductToGroup = 'addProductToGroup';
+	public static function addProductToGroup() {
+		header(wpJSON_HEADER);
+		$database = new wpDatabase();
+		$sql = "INSERT INTO [shoppinggroupproduct] ([id_group], [id_product]) VALUES (" . std::posts('idGroup') . ", " . std::posts('idProduct') . ")";
+		if($database->query($sql)) {
+			echo S_OK;
+		} else {
+			echo '{"erg":"S_ERROR", "msg":"' . $sql . '"}';
+		}
+	}
+	const c_deleteGroupFromList = 'deleteGroupFromList';
+	public static function deleteGroupFromList() {
+		header(wpJSON_HEADER);
+		$database = new wpDatabase();
+		$sql = "DELETE FROM [shoppinglistgroup] WHERE [id_list] = " . std::posts('idList') . " AND [id_group] = " . std::posts('idGroup');
+		if($database->query($sql)) {
+			echo S_OK;
+		} else {
+			echo '{"erg":"S_ERROR", "msg":"' . $sql . '"}';
+		}
+	}
+	const c_deleteProductFromList = 'deleteProductFromList';
+	public static function deleteProductFromList() {
+		header(wpJSON_HEADER);
+		$database = new wpDatabase();
+		$sql = "DELETE FROM [shoppinglistproduct] WHERE [id_list] = " . std::posts('idList') . " AND [id_product] = " . std::posts('idProduct');
+		if($database->query($sql)) {
+			echo S_OK;
+		} else {
+			echo '{"erg":"S_ERROR", "msg":"' . $sql . '"}';
+		}
+	}
+	const c_deleteProductFromGroup = 'deleteProductFromGroup';
+	public static function deleteProductFromGroup() {
+		header(wpJSON_HEADER);
+		$database = new wpDatabase();
+		$sql = "DELETE FROM [shoppinggroupproduct] WHERE [id_group] = " . std::posts('idGroup') . " AND [id_product] = " . std::posts('idProduct');
+		if($database->query($sql)) {
+			echo S_OK;
+		} else {
+			echo '{"erg":"S_ERROR", "msg":"' . $sql . '"}';
+		}
+	}
+	const c_addGroupToList = 'addGroupToList';
+	public static function addGroupToList() {
+		header(wpJSON_HEADER);
+		$database = new wpDatabase();
+		$sql = "INSERT INTO [shoppinglistgroup] ([id_list], [id_group]) VALUES (" . std::posts('idList') . ", " . std::posts('idGroup') . ")";
+		if($database->query($sql)) {
+			echo S_OK;
+		} else {
+			echo '{"erg":"S_ERROR", "msg":"' . $sql . '"}';
+		}
+	}
+	const c_addProductToList = 'addProductToList';
+	public static function addProductToList() {
+		header(wpJSON_HEADER);
+		$database = new wpDatabase();
+		$sql = "INSERT INTO [shoppinglistproduct] ([id_list], [id_product]) VALUES (" . std::posts('idList') . ", " . std::posts('idProduct') . ")";
+		if($database->query($sql)) {
+			echo S_OK;
+		} else {
+			echo '{"erg":"S_ERROR", "msg":"' . $sql . '"}';
+		}
+	}
+	//###################################################################################
+	const c_getHtmlLists = 'getHtmlLists';
+	public static function getHtmlLists() {
+		$database = new wpDatabase();
+?>
+		<ul>
+<?
+		$sql = "SELECT
+[sp].[id_product], [sp].[name] AS [product], [slp].[ok]
+FROM [shoppinglistproduct] [slp]
+INNER JOIN [shoppingproduct] [sp] ON [slp].[id_product] = [sp].[id_product]
+WHERE [slp].[id_list] = " . std::posts('idList') . "
+ORDER BY [product]";
+		$database->query($sql);
+		while($erg = $database->fetch()) {
+?>
+			<li class="product liproduct">
+				<div class="product-row" data-idList="<?=std::posts('idList') ?>" data-idProduct="<?=$erg['id_product'] ?>">
+					<span class="productinlist"><?=$erg['product'] ?></span>
+					<span class="ps-image-button ps-delete"></span>
+				</div>
+			</li>
+<?
+		}
+?>
+			<li class="dropProductToList" data-idList="<?=std::posts('idList') ?>">
+				<div>
+					<span>add Products here</span>
+				</div>
+			</li>
+<?
+		$sql = "SELECT
+[sg].[id_group], [sg].[name] AS [group],
+[sp].[id_product], [sp].[name] AS [product], [sgp].[ok]
+FROM [shoppinglistgroup] [slg]
+INNER JOIN [shoppinggroup] [sg] ON [slg].[id_group] = [sg].[id_group]
+INNER JOIN [shoppinggroupproduct] [sgp] ON [sg].[id_group] = [sgp].[id_group]
+INNER JOIN [shoppingproduct] [sp] ON [sgp].[id_product] = [sp].[id_product]
+WHERE [slg].[id_list] = " . std::posts('idList') . "
+ORDER BY [group], [sgp].[ok], [product]";
+		$showTitle = "";
+		$database->query($sql);
+		while($erg = $database->fetch()) {
+			if($showTitle != $erg['group']) {
+				$showTitle = $erg['group'];
+?>
+			<li><hr /></li>
+			<li class="groupname">
+				<div class="product-row" data-idList="<?=std::posts('idList') ?>" data-idGroup="<?=$erg['id_group'] ?>">
+					<h4 class="groupinlist"><?=$erg['group'] ?></h4>
+					<span class="ps-image-button ps-delete"></span>
+				</div>
+			</li>
+<?
+			}
+?>
+			<li class="groupproduct liproduct">
+				<span><?=$erg['product'] ?></span>
+			</li>
+<?
+		}
+?>
+			<li class="dropGroupToList" data-idList="<?=std::posts('idList') ?>">
+				<div>
+					<span>add Groups here</span>
+				</div>
+			</li>
+		</ul>
+<?
+	}
+	const c_getHtmlGroups = 'getHtmlGroups';
+	public static function getHtmlGroups() {
+		$database = new wpDatabase();
+		$sql = "SELECT [id_group], [name] FROM [shoppinggroup] ORDER BY [name]";
+		$database->query($sql);
+?>
+		<ul>
+			<li data-idGroup="0">
+				<h4>Filter / Neue Gruppe</h4>
+				<div class="product-row">
+					<input type="text" class="ps-input name searchGroup" />
+					<span class="ps-image-button ps-add"></span>
+				</div>
+			</li>
+			<li><hr /></li>
+<?
+		while($erg = $database->fetch()) {
+?>
+			<li class="groupHeader dragGroup" data-idGroup="<?=$erg['id_group'] ?>">
+				<div class="product-row">
+					<span class="moveGroup">&#10303;</span>
+					<input type="text" class="ps-input name" value="<?=$erg['name'] ?>" />
+					<span class="ps-image-button ps-export"></span>
+				</div>
+			</li>
+			<li>
+				<ul data-idGroupEntries="<?=$erg['id_group']?>">
+					<li class="dropProduct" data-idGroup="<?=$erg['id_group']?>">
+						<div>
+							<span>add Products here</span>
+						</div>
+					</li>
+				</ul>
+			</li>
+<?
+		}
+?>
+		</ul>
+<?
+	}
+	const c_getHtmlGroupEntries = 'getHtmlGroupEntries';
+	public static function getHtmlGroupEntries() {
+		$database = new wpDatabase();
+		$sql = "SELECT
+			[sp].[id_product], [sp].[name]
+			FROM [shoppingproduct] [sp]
+			INNER JOIN [shoppinggroupproduct] [sgp] ON [sp].[id_product] = [sgp].[id_product]
+			WHERE [sgp].[id_group] = " . std::posts('id') . "
+			ORDER BY [sp].[name]";
+		$database->query($sql);
+?>
+			<li class="dropProduct" data-idGroup="<?=std::posts('id') ?>">
+				<div>
+					<span>add Products here</span>
+				</div>
+			</li>
+<?
+		while($erg = $database->fetch()) {
+?>
+			<li data-idProduct="<?=$erg['id_product'] ?>" data-idGroup="<?=std::posts('id') ?>">
+				<div class="product-row">
+					<span class="productingroup"><?=$erg['name'] ?></span>
+					<span class="ps-image-button ps-delete"></span>
+				</div>
+			</li>
+<?
+		}
+	}
+	const c_getHtmlProducts = 'getHtmlProducts';
+	public static function getHtmlProducts() {
+		$database = new wpDatabase();
+?>
+		<ul>
+			<li data-idProduct="0">
+				<h4>Filter / Neues Produkt:</h4>
+				<div class="product-row">
+					<input class="ps-input name searchProduct" />
+					<span class="ps-image-button ps-add"></span>
+				</div>
+			</li>
+			<li><hr /></li>
+<?
+		$sql = "SELECT [id_product], [name] FROM [shoppingproduct] ORDER BY [name]";
+		$database->query($sql);
+		while($erg = $database->fetch()) {
+?>
+			<li class="dragProduct productHeader" data-idProduct="<?=$erg['id_product'] ?>">
+				<div class="product-row">
+					<span class="moveProduct">&#10303;</span>
+					<input type="text" class="ps-input name" value="<?=$erg['name'] ?>" />
+					<span class="ps-image-button ps-export"></span>
+				</div>
+			</li>
+<?
+}
+?>
+		</ul>
+<?
+	}
+}
+switch(std::gets('param1')) {
+	//###################################################################################
+	case shoppingcfg::c_setListName:
+		shoppingcfg::setListName();
+		break;
+	//###################################################################################
+	case shoppingcfg::c_setGroupName:
+		shoppingcfg::setGroupName();
+		break;
+	//###################################################################################
+	case shoppingcfg::c_setProductName:
+		shoppingcfg::setProductName();
+		break;
+	//###################################################################################
+	case shoppingcfg::c_addGroupToList:
+		shoppingcfg::addGroupToList();
+		break;
+	//###################################################################################
+	case shoppingcfg::c_addProductToGroup:
+		shoppingcfg::addProductToGroup();
+		break;
+	//###################################################################################
+	case shoppingcfg::c_deleteGroupFromList:
+		shoppingcfg::deleteGroupFromList();
+		break;
+	//###################################################################################
+	case shoppingcfg::c_deleteProductFromList:
+		shoppingcfg::deleteProductFromList();
+		break;
+	//###################################################################################
+	case shoppingcfg::c_deleteProductFromGroup:
+		shoppingcfg::deleteProductFromGroup();
+		break;
+	//###################################################################################
+	case shoppingcfg::c_addProductToList:
+		shoppingcfg::addProductToList();
+		break;
+	//###################################################################################
+	case shoppingcfg::c_getHtmlLists:
+		shoppingcfg::getHtmlLists();
+		break;
+	//###################################################################################
+	case shoppingcfg::c_getHtmlGroups:
+		shoppingcfg::getHtmlGroups();
+		break;
+	//###################################################################################
+	case shoppingcfg::c_getHtmlGroupEntries:
+		shoppingcfg::getHtmlGroupEntries();
+		break;
+	//###################################################################################
+	case shoppingcfg::c_getHtmlProducts:
+		shoppingcfg::getHtmlProducts();
+		break;
+	//###################################################################################
+	default:
+		\system\html::default();
+		break;
+}
+?>

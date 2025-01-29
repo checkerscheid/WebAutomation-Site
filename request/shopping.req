@@ -18,29 +18,37 @@ namespace request;
 use system\std;
 use system\Helper\wpDatabase;
 class shopping {
-	const c_setListProductOk = 'setListProductOk';
-	public static function setListProductOk() {
+	const c_setGroupProductChecked = 'setGroupProductChecked';
+	public static function setGroupProductChecked() {
 		header(wpJSON_HEADER);
 		$database = new wpDatabase();
-		$sql = 'UPDATE [shoppinglistproduct] SET [ok] = ' . (std::posts['ok'] == 'true' ? '1' : '0') . ' WHERE [id_list] = ' . std::posts['idlist'] . ' AND [id_product] = ' . std::posts['idproduct'];
-		$database->query($sql);
+		$sql = "UPDATE [shoppinggroupproduct] SET [ok] = " . (std::posts('checked') == 'true' ? '1' : '0') . " WHERE [id_group] = " . std::posts('idGroup') . " AND [id_product] = " . std::posts('idProduct');
+		if($database->query($sql)) {
+			echo S_OK;
+		} else {
+			echo '{"erg":"S_ERROR", "msg":"' . $sql . '"}';
+		}
 	}
-	const c_setGroupProductOk = 'setGroupProductOk';
-	public static function setGroupProductOk() {
+	const c_setProductChecked = 'setProductChecked';
+	public static function setProductChecked() {
 		header(wpJSON_HEADER);
 		$database = new wpDatabase();
-		$sql = 'UPDATE [shoppinggroupproduct] SET [ok] = ' . (std::posts['ok'] == 'true' ? '1' : '0') . ' WHERE [id_list] = ' . std::posts['idlist'] . ' AND [id_group] = ' . std::posts['idgroup'] . ' AND [id_product] = ' . std::posts['idproduct'];
-		$database->query($sql);
+		$sql = "UPDATE [shoppinglistproduct] SET [ok] = " . (std::posts('checked') == 'true' ? '1' : '0') . " WHERE [id_list] = " . std::posts('idList') . " AND [id_product] = " . std::posts('idProduct');
+		if($database->query($sql)) {
+			echo S_OK;
+		} else {
+			echo '{"erg":"S_ERROR", "msg":"' . $sql . '"}';
+		}
 	}
 }
 switch(std::gets('param1')) {
 	//###################################################################################
-	case shopping::c_setListProductOk:
-		shopping::setListProductOk();
+	case shopping::c_setGroupProductChecked:
+		shopping::setGroupProductChecked();
 		break;
 	//###################################################################################
-	case shopping::c_setGroupProductOk:
-		shopping::setGroupProductOk();
+	case shopping::c_setProductChecked:
+		shopping::setProductChecked();
 		break;
 	//###################################################################################
 	default:

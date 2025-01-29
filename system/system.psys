@@ -43,6 +43,10 @@ define('wpHTML_UHR', '&#128337;');
 define('wpHTML_TREND', '&#128200;');
 /** HTML Sonderzeichen */
 define('wpJSON_HEADER', 'Content-Type: application/json');
+/** JSON formed OK Message */
+define('S_OK', '{"erg":"S_OK"}');
+/** JSON formed ERROR Message */
+define('S_ERROR', '{"erg":"S_ERROR"}');
 /**
  * Klasse fuer Allgemeine Funktionen
  * @author ScheidC

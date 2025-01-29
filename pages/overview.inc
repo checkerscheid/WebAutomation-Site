@@ -116,7 +116,8 @@ class overview {
 		foreach(overview::$Pflanze as $name => $p) {
 			$returns .= '
 				<tr>
-					<td colspan="2"><a href="http://' . $p->getIpAddress() . '/print" target="_blank">' . $p->getDescription() . '</a></td>
+					<!--td colspan="2"><a href="http://' . $p->getIpAddress() . '/print" target="_blank">' . $p->getDescription() . '</a></td-->
+					<td coslpan="2"><a href="std.d1mini.' . $name . '.htm">' . $p->getDescription() . '</a></td>
 					<td colspan="2">
 						<div class="indiContainer">
 							<span data-ws="' . $name . '_Moisture" class="ps-input">undefined</span>
@@ -149,7 +150,8 @@ class overview {
 		while($erg = $database->fetch()) {
 			$returns .= '
 				<tr>
-					<td colspan="2"><a href="http://' . $erg['ip'] . '/print" target="_blank">' . $erg['description'] . '</a>:</td>
+					<!--td colspan="2"><a href="http://' . $erg['ip'] . '/print" target="_blank">' . $erg['description'] . '</a>:</td-->
+					<td colspan="2"><a href="std.d1mini.' . $erg['name'] . '.htm">' . $erg['description'] . '</a>:</td>
 					<td colspan="2"><span data-ws="' . $erg['name']. '_Rssi" class="' . wpa::rssi . '">-</span></td>
 					<td colspan="2">
 						<span data-ws="' . $erg['name'] . '_Online" class="ps-input ' . wpa::GreenRed . '">-</span>
