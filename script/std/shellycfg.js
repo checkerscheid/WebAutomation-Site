@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 16.12.2019                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 677                                                     $ #
+//# Revision     : $Rev:: 715                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: shellycfg.js 677 2024-07-15 13:51:59Z                    $ #
+//# File-ID      : $Id:: shellycfg.js 715 2025-01-29 18:35:26Z                    $ #
 //#                                                                                 #
 //###################################################################################
 ?> scenecfg */

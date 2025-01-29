@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 03.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 697                                                     $ #
+//# Revision     : $Rev:: 715                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.js 697 2024-10-07 21:21:44Z                    $ #
+//# File-ID      : $Id:: d1minicfg.js 715 2025-01-29 18:35:26Z                    $ #
 //#                                                                                 #
 //###################################################################################
 ?> d1minicfg */
