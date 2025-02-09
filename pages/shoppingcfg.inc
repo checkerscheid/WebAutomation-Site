@@ -48,22 +48,12 @@ use system\Helper\wpDatabase;
 		</div>
 		<div class="ps-container">
 			<h2>Gruppen</h2>
-			<!--hr />
-			<div>
-				<input type="text" class="ps-input searchGroup" placeholder="filter" />
-			</div>
-			<hr /-->
 			<div class="newGroups">
 
 			</div>
 		</div>
 		<div class="ps-container">
 			<h2>Produkte</h2>
-			<!--hr />
-			<div>
-				<input type="text" class="ps-input searchProduct" placeholder="filter" />
-			</div>
-			<hr /-->
 			<div class="newProducts">
 
 			</div>

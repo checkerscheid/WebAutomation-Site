@@ -135,6 +135,11 @@ class shoppingcfg {
 		$database = new wpDatabase();
 ?>
 		<ul>
+			<li class="dropProductToList" data-idList="<?=std::posts('idList') ?>">
+				<div>
+					<span>add Products here</span>
+				</div>
+			</li>
 <?
 		$sql = "SELECT
 [sp].[id_product], [sp].[name] AS [product], [slp].[ok]
@@ -154,9 +159,9 @@ ORDER BY [product]";
 <?
 		}
 ?>
-			<li class="dropProductToList" data-idList="<?=std::posts('idList') ?>">
+			<li class="dropGroupToList" data-idList="<?=std::posts('idList') ?>">
 				<div>
-					<span>add Products here</span>
+					<span>add Groups here</span>
 				</div>
 			</li>
 <?
@@ -191,11 +196,6 @@ ORDER BY [group], [sgp].[ok], [product]";
 <?
 		}
 ?>
-			<li class="dropGroupToList" data-idList="<?=std::posts('idList') ?>">
-				<div>
-					<span>add Groups here</span>
-				</div>
-			</li>
 		</ul>
 <?
 	}
@@ -207,6 +207,7 @@ ORDER BY [group], [sgp].[ok], [product]";
 ?>
 		<ul>
 			<li data-idGroup="0">
+				<hr />
 				<h4>Filter / Neue Gruppe</h4>
 				<div class="product-row">
 					<input type="text" class="ps-input name searchGroup" />
@@ -273,6 +274,7 @@ ORDER BY [group], [sgp].[ok], [product]";
 ?>
 		<ul>
 			<li data-idProduct="0">
+				<hr />
 				<h4>Filter / Neues Produkt:</h4>
 				<div class="product-row">
 					<input class="ps-input name searchProduct" />

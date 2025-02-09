@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 04.03.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 715                                                     $ #
+//# Revision     : $Rev:: 716                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.req 715 2025-01-29 18:35:26Z                   $ #
+//# File-ID      : $Id:: d1minicfg.req 716 2025-02-09 09:35:20Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -150,10 +150,18 @@ class d1minicfg {
 				std::posts('id_alarmgroups5'), std::posts('id_alarmgroups4'), std::posts('id_alarmgroups3'), std::posts('id_alarmgroups2'), std::posts('id_alarmgroups1'));
 		if($newID > 0) {
 			$WebCom = new WebCom();
-			echo '","erg":"';
-			echo $WebCom->send('AddD1Mini', $newID);
+			echo '","erg":';
+			$json = \json_decode($WebCom->send('AddD1Mini', $newID));
+			if(\json_last_error() == JSON_ERROR_NONE) {
+				if($json->erg == 'S_OK') {
+					echo '"S_OK"';
+				}
+				if($json->erg == 'S_ERROR') {
+					echo '"S_ERROR","msg":"' . $json->msg . '"';
+				}
+			}
 		}
-		echo '"}';
+		echo '}';
 	}
 	const c_renewDevice = 'renewDevice';
 	public static function renewDevice() {
@@ -163,9 +171,17 @@ class d1minicfg {
 		$newID = $d1m->insertDevice(std::posts('id_d1minigroup'), std::posts('id_mqttgroup'), std::posts('id_dpgroup'), std::posts('id_trendgroup'),
 				std::posts('id_alarmgroups5'), std::posts('id_alarmgroups4'), std::posts('id_alarmgroups3'), std::posts('id_alarmgroups2'), std::posts('id_alarmgroups1'));
 		$WebCom = new WebCom();
-		echo '","erg":"';
-		echo $WebCom->send('AddD1Mini', $newID);
-		echo '"}';
+		echo '","erg":';
+		$json = \json_decode($WebCom->send('AddD1Mini', $newID));
+		if(\json_last_error() == JSON_ERROR_NONE) {
+			if($json->erg == 'S_OK') {
+				echo '"S_OK"';
+			}
+			if($json->erg == 'S_ERROR') {
+				echo '"S_ERROR","errormsg":"' . $json->msg . '"';
+			}
+		}
+		echo '}';
 	}
 	const c_getd1minis = 'getd1minis';
 	public static function getd1minis() {

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 709                                                     $ #
+//# Revision     : $Rev:: 716                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.js 709 2024-11-21 13:08:04Z                   $ #
+//# File-ID      : $Id:: uebersicht.js 716 2025-02-09 09:35:20Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> uebersicht */
@@ -95,36 +95,25 @@ p.page.load = function() {
 		});
 	});
 	$('#uebersicht').on('click', '.wz-gemuetlich', function() {
-		const promiseLautsprecher = new Promise((resolve) => {
-			$.post('std.shellycom.set-dimmer.req', {ShellyIP:lautsprecher, turn:'true', brightness:35},
-				function(data) {
-					resolve('Lautsprecher ist ' + (data.ison ? 'an' : 'aus') + ', (' + data.brightness + ' %)');
-				},
-			'json'); // Lautsprecher
-		});
-		const promiseKamin = new Promise((resolve) =>{
-			$.post('std.shellycom.set-dimmer.req', {ShellyIP:kamin, turn:'true', brightness:20},
-				function(data) {
-					resolve('Kamin ist ' + (data.ison ? 'an' : 'aus') + ', (' + data.brightness + ' %)')
-				},
-			'json'); // Kamin
-		});
-		//$.post('std.shellycom.set-relay.req', {ShellyIP:herz, turn:'true'}); // Herz
-		const promiseBuero = new Promise((resolve) =>{
-			$.post('std.shellycom.set-dimmer.req', {ShellyIP:buero, turn:'true', brightness:20},
-				function(data) {
-					resolve('Büro ist ' + (data.ison ? 'an' : 'aus') + ', (' + data.brightness + ' %)')
-				},
-			'json'); // Büro
-		});
-		const promiseFeuer = new Promise((resolve) =>{
-			$.post('std.shellycom.set-rgbw.req', {ShellyIP:feuer, turn:'true', gain:20, red:255, green:75, blue:0},
-				function(data) {
-					resolve('Feuer ist ' + (data.ison ? 'an' : 'aus') + ', (' + data.gain + ' %)')
-				},
-			'json'); //Feuer
-		});
-		Promise.all([promiseLautsprecher, promiseKamin, promiseBuero, promiseFeuer]).then((responses) => {
+		const allesaus = [
+			new Promise((resolve) => {
+				$.post('std.shellycom.set-dimmer.req', {ShellyIP:lautsprecher, turn:'true'},
+					function(data) {
+						resolve('Lautsprecher ist ' + (data.ison ? 'an' : 'aus') + ', (' + data.brightness + ' %)');
+					},
+					'json'); // Lautsprecher
+				}
+			),
+			new Promise((resolve) => {
+				$.post('std.shellycom.set-dimmer.req', {ShellyIP:kamin, turn:'true', brightness:20},
+					function(data) {
+						resolve('Kamin ist ' + (data.ison ? 'an' : 'aus') + ', (' + data.brightness + ' %)')
+					},
+					'json'); // Kamin
+				}
+			)
+		];
+		Promise.all(allesaus).then((responses) => {
 			var msg = 'Wohnzimmer gemütlich:<br />';
 			for(const response of responses) {
 				msg += response + '<br />';

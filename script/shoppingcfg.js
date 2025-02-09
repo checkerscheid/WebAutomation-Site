@@ -72,21 +72,6 @@ p.page.load = function() {
 			}
 		}), 'json';
 	});
-	$('#shoppingcfg .newProducts').on('click', '.ps-export, .ps-add', function() {
-		const product = {
-			id: $(this).parents('li:first').attr('data-idProduct'),
-			name: $(this).parents('li:first').find('.name').val()
-		};
-		$.post('shoppingcfg.setProductName.req', product, function(data) {
-			if(data.erg == 'S_ERROR') {
-				p.page.alertError('ERROR: ' + data.msg, 5000);
-			}
-			if(data.erg == 'S_OK') {
-				p.page.message('Productname changed');
-				shoppingcfg.loadProducts();
-			}
-		}), 'json';
-	});
 	$('#shoppingcfg .newGroups').on('click', '.ps-export, .ps-add', function() {
 		const group = {
 			id: $(this).parents('li:first').attr('data-idGroup'),
@@ -99,6 +84,21 @@ p.page.load = function() {
 			if(data.erg == 'S_OK') {
 				p.page.message('Groupname changed');
 				shoppingcfg.loadGroups(true);
+			}
+		}), 'json';
+	});
+	$('#shoppingcfg .newProducts').on('click', '.ps-export, .ps-add', function() {
+		const product = {
+			id: $(this).parents('li:first').attr('data-idProduct'),
+			name: $(this).parents('li:first').find('.name').val()
+		};
+		$.post('shoppingcfg.setProductName.req', product, function(data) {
+			if(data.erg == 'S_ERROR') {
+				p.page.alertError('ERROR: ' + data.msg, 5000);
+			}
+			if(data.erg == 'S_OK') {
+				p.page.message('Productname changed');
+				shoppingcfg.loadProducts();
 			}
 		}), 'json';
 	});

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 706                                                     $ #
+//# Revision     : $Rev:: 716                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: system.css 706 2024-11-04 15:08:34Z                      $ #
+//# File-ID      : $Id:: system.css 716 2025-02-09 09:35:20Z                      $ #
 //#                                                                                 #
 //###################################################################################
 use system\wpInit
@@ -414,7 +414,8 @@ span.ps-checkbox, label.ps-checkbox { display:inline-block; }
 .ps-image-status.route-ia { background-image:url(images/layout/mini_route_ia.png); }
 
 .handContainer, .indiContainer { width:122px; position:relative; margin:auto; }
-span.hand.pa-hide { display:inline-block; width:25px; height:25px;
+span.hand.pa-hide,
+.wpa-hand.pa-hide { display:inline-block; width:25px; height:25px;
 	position:absolute; right:4px; top:1px;
 	background:transparent url(images/visuelemente/hand.png) center center no-repeat; }
 
@@ -435,6 +436,7 @@ td:has(.wpa-indikator) { position:relative; }
 .indi-p { background-position:-0px -19px; }
 .indi-0 { background-position:-0px -38px; }
 .indi-m { background-position:-0px -57px; }
+.indiContainer .wpa-hand.pa-hide { position:absolute; right:-10px; top:1px; }
 
 a.inWork { color:#CCC; box-shadow:none; }
 

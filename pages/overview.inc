@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 715                                                     $ #
+//# Revision     : $Rev:: 716                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: overview.inc 715 2025-01-29 18:35:26Z                  $ #
+//# File-ID      : $Id:: overview.inc 716 2025-02-09 09:35:20Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /**
@@ -41,25 +41,28 @@ class overview {
 		'SY_KS'			=> 'Kühlschrank'
 	);
 	private static $HT = array(
-		'WZ_HT3'		=> 'Wohnzimmer',
-		//'WZ_PF_FE'		=> 'Pflanze am Fenster',
-		'SZ_RU'			=> 'Schlafzimmer',
-		'BU_RU'			=> 'Büro',
-		'KU_RU'			=> 'Küche',
-		'FL_RU'			=> 'Flur',
-		'BA_RU'			=> 'Bad',
-		'KZ_HT3'		=> 'Kinderzimmer',
-		'WZ_PF_FE'		=> 'Wohnzimmer Pflanze',
-		'BA_Lue'		=> 'Bad Lüfter',
-		'KE'			=> 'Keller',
-		'GA_WE_Ost'		=> 'Wetterstation Ost',
-		'GA_WE_Sued'	=> 'Wetterstation Süd',
-		//'BasisTest'		=> 'Breadboard',
-		'WG1_HTp'		=> 'EG Wintergarten',
-		'SZ1_HT'		=> 'EG Schlafzimmer',
-		'GA1_FS'		=> 'EG Gartenhaus',
-		'FL2_HT'		=> 'OG Flur',
-		'GA2_WE_Gaube'	=> 'OG Wetterstation Gaube'
+		'UG' => array(
+			'WZ_HT3'		=> 'Wohnzimmer',
+			//'WZ_PF_FE'		=> 'Pflanze am Fenster',
+			'SZ_RU'			=> 'Schlafzimmer',
+			'BU_RU'			=> 'Büro',
+			'KU_RU'			=> 'Küche',
+			'FL_RU'			=> 'Flur',
+			'BA_RU'			=> 'Bad',
+			'KZ_HT3'		=> 'Kinderzimmer',
+			'WZ_PF_FE'		=> 'Wohnzimmer Pflanze',
+			'BA_Lue'		=> 'Bad Lüfter',
+			'KE'			=> 'Keller'),
+		'Wetterstation' => array(
+			'GA_WE_Ost'		=> 'Ost',
+			'GA_WE_Sued'	=> 'Süd',
+			'GA2_WE_Gaube'	=> 'Gaube'),
+		'EG' => array(
+			'WG1_HTp'		=> 'EG Wintergarten',
+			'SZ1_HT'		=> 'EG Schlafzimmer',
+			'GA1_FS'		=> 'EG Gartenhaus'),
+		'OG' => array(
+			'FL2_HT'		=> 'OG Flur')
 	);
 	private static $Pflanze;
 	public static function setPflanze() {
@@ -77,19 +80,25 @@ class overview {
 	}
 	public static function getD1HT() {
 		$returns = '';
-		foreach(overview::$HT as $dp => $name) {
+		foreach(overview::$HT as $groupname => $group) {
 			$returns .= '
 				<tr>
-					<td colspan="2">' . $name . ':</td>
-					<td colspan="2">
-						<span data-ws="' . $dp . '_Temp" class="ps-input">undefined</span>
-						<span data-ws="' . $dp . '_Temp" class="' . wpa::indikatorTemp . '">' . wpHTML_EMPTY . '</span>
-					</td>
-					<td colspan="2">
-						<span data-ws="' . $dp . '_Hum" class="ps-input">undefined</span>
-						<span data-ws="' . $dp . '_Hum" class="' . wpa::indikatorHum . '">' . wpHTML_EMPTY . '</span>
-					</td>
+					<td colspan="6"><h4>' . $groupname . '</h4></td>
 				</tr>';
+			foreach($group as $dp => $name) {
+				$returns .= '
+					<tr>
+						<td class="ps-taleft" colspan="2">' . $name . ':</td>
+						<td colspan="2">
+							<span data-ws="' . $dp . '_Temp" class="ps-input">undefined</span>
+							<span data-ws="' . $dp . '_Temp" class="' . wpa::indikatorTemp . '">' . wpHTML_EMPTY . '</span>
+						</td>
+						<td colspan="2">
+							<span data-ws="' . $dp . '_Hum" class="ps-input">undefined</span>
+							<span data-ws="' . $dp . '_Hum" class="' . wpa::indikatorHum . '">' . wpHTML_EMPTY . '</span>
+						</td>
+					</tr>';
+			}
 		}
 		return $returns;
 	}
@@ -98,14 +107,14 @@ class overview {
 		foreach(overview::$Licht as $dp => $name) {
 			$returns .= '
 				<tr>
-					<td colspan="3">' . $name . ':</td>
+					<td class="ps-taleft" colspan="3">' . $name . ':</td>
 					<td colspan="3"><span data-ws="' . $dp . '" class="ps-input ' . wpa::GreyYellow . '">undefined</span></td>
 				</tr>';
 		}
 		foreach(overview::$SystemRelay as $dp => $name) {
 			$returns .= '
 				<tr>
-					<td colspan="3">' . $name . ':</td>
+					<td class="ps-taleft" colspan="3">' . $name . ':</td>
 					<td colspan="3"><span data-ws="' . $dp . '" class="ps-input ' . wpa::RedGreen . '">undefined</span></td>
 				</tr>';
 		}
@@ -117,11 +126,12 @@ class overview {
 			$returns .= '
 				<tr>
 					<!--td colspan="2"><a href="http://' . $p->getIpAddress() . '/print" target="_blank">' . $p->getDescription() . '</a></td-->
-					<td coslpan="2"><a href="std.d1mini.' . $name . '.htm">' . $p->getDescription() . '</a></td>
+					<td class="ps-taleft" coslpan="2"><a href="std.d1mini.' . $name . '.htm">' . $p->getDescription() . '</a></td>
 					<td colspan="2">
 						<div class="indiContainer">
 							<span data-ws="' . $name . '_Moisture" class="ps-input">undefined</span>
 							<span data-ws="' . $name . '_Moisture" class="' . wpa::indikatorPfl . '">' . wpHTML_EMPTY . '</span>
+							<span data-ws="' . $name . '_PumpeHandError" class="wpa-hand pa-hide">' . wpHTML_EMPTY . '</span>
 						</div>
 					</td>
 					<td colspan="2">
@@ -137,7 +147,7 @@ class overview {
 		foreach($all as $dp => $name) {
 			$returns .= '
 				<tr>
-					<td colspan="3">' . $name . ':</td>
+					<td class="ps-taleft" colspan="3">' . $name . ':</td>
 					<td colspan="3"><span data-ws="' . $dp . '_Power" class="ps-input">undefined</span></td>
 				</tr>';
 		}
@@ -146,15 +156,22 @@ class overview {
 	public static function getD1Mini() {
 		GLOBAL $database;
 		$returns = '';
-		$database->query("SELECT [name], [description], [ip] FROM [d1mini] ORDER BY [name]");
+		$database->query("SELECT [name], [description], [ip], [active] FROM [d1mini] ORDER BY [name]");
 		while($erg = $database->fetch()) {
 			$returns .= '
 				<tr>
 					<!--td colspan="2"><a href="http://' . $erg['ip'] . '/print" target="_blank">' . $erg['description'] . '</a>:</td-->
-					<td colspan="2"><a href="std.d1mini.' . $erg['name'] . '.htm">' . $erg['description'] . '</a>:</td>
+					<td class="ps-taleft" colspan="2"><a href="std.d1mini.' . $erg['name'] . '.htm">' . $erg['description'] . '</a>:</td>
 					<td colspan="2"><span data-ws="' . $erg['name']. '_Rssi" class="' . wpa::rssi . '">-</span></td>
-					<td colspan="2">
-						<span data-ws="' . $erg['name'] . '_Online" class="ps-input ' . wpa::GreenRed . '">-</span>
+					<td colspan="2">';
+			if($erg['active'] == 1) {
+				$returns .= '
+						<span data-ws="' . $erg['name'] . '_Online" class="ps-input ' . wpa::GreenRed . '">-</span>';
+			} else {
+				$returns .= '
+						<span class="ps-input">deactivated</span>';;
+			}
+			$returns .= '
 					</td>
 				</tr>';
 		}
@@ -168,7 +185,7 @@ class overview {
 			if(shelly::isGen2($erg['type'])) {
 				$returns .= '
 					<tr>
-						<td colspan="2">' . $erg['name'] . ':</td>
+						<td class="ps-taleft" colspan="2">' . $erg['name'] . ':</td>
 						<td colspan="2"><span data-ws="' . $erg['mqtt_id']. '_Rssi" class="' . wpa::rssi . '">-</span></td>
 						<td colspan="2"></td>
 					</tr>';
@@ -229,32 +246,32 @@ overview::setPflanze();
 					<td colspan="2">Server</td>
 				</tr>
 				<tr>
-					<td colspan="2">Leistung:</td>
+					<td class="ps-taleft" colspan="2">Leistung:</td>
 					<td colspan="2"><span data-ws="SY_EZ_power" class="ps-input">undefined</span></td>
 					<td colspan="2"><span data-ws="SY_SRV_power" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
-					<td colspan="2">Blindleistung:</td>
+					<td class="ps-taleft" colspan="2">Blindleistung:</td>
 					<td colspan="2"><span data-ws="SY_EZ_reactive_power" class="ps-input">undefined</span></td>
 					<td colspan="2"><span data-ws="SY_SRV_reactive_power" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
-					<td colspan="2">cos &phi;:</td>
+					<td class="ps-taleft" colspan="2">cos &phi;:</td>
 					<td colspan="2"><span data-ws="SY_EZ_pf" class="ps-input">undefined</span></td>
 					<td colspan="2"><span data-ws="SY_SRV_pf" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
-					<td colspan="2">Energie:</td>
+					<td class="ps-taleft" colspan="2">Energie:</td>
 					<td colspan="2"><span data-ws="SY_EZ_energy" class="ps-input">undefined</span></td>
 					<td colspan="2"><span data-ws="SY_SRV_energy" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
-					<td colspan="2">erzeugte Energie:</td>
+					<td class="ps-taleft" colspan="2">erzeugte Energie:</td>
 					<td colspan="2"><span data-ws="SY_EZ_returned_energy" class="ps-input">undefined</span></td>
 					<td colspan="2"><span data-ws="SY_SRV_returned_energy" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
-					<td colspan="2">Spannung:</td>
+					<td class="ps-taleft" colspan="2">Spannung:</td>
 					<td colspan="2"><span data-ws="SY_EZ_voltage" class="ps-input">undefined</span></td>
 					<td colspan="2"><span data-ws="SY_SRV_voltage" class="ps-input">undefined</span></td>
 				</tr>
@@ -275,17 +292,17 @@ overview::setPflanze();
 				</tr>
 				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
-					<td colspan="2">Osten:</td>
+					<td class="ps-taleft" colspan="2">Osten:</td>
 					<td colspan="2"><span data-ws="GA_WE_Ost_Light" class="ps-input">undefined</span></td>
 					<td colspan="2"><span data-ws="GA_WE_Ost_Rain" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
-					<td colspan="2">Süden:</td>
+					<td class="ps-taleft" colspan="2">Süden:</td>
 					<td colspan="2"><span data-ws="GA_WE_Sued_Light" class="ps-input">undefined</span></td>
 					<td colspan="2"></td>
 				</tr>
 				<tr>
-					<td colspan="2">Gaube:</td>
+					<td class="ps-taleft" colspan="2">Gaube:</td>
 					<td colspan="2"></td>
 					<td colspan="2"><span data-ws="GA2_WE_Gaube_Rain" class="ps-input">undefined</span></td>
 				</tr>
@@ -297,15 +314,15 @@ overview::setPflanze();
 				<tr><td colspan="6"><h2>Wetter</h2></td></tr>
 				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
-					<td colspan="3">Sonne:</td>
+					<td class="ps-taleft" colspan="3">Sonne:</td>
 					<td colspan="3"><span data-ws="Sonne" class="ps-input <?=wpa::BlueYellow ?>">undefined</span></td>
 				</tr>
 				<tr>
-					<td colspan="3">Aufgang:</td>
+					<td class="ps-taleft" colspan="3">Aufgang:</td>
 					<td colspan="3"><span data-ws="Sonnenaufgang" class="ps-input <?=wpa::formattime ?>">undefined</span></td>
 				</tr>
 				<tr>
-					<td colspan="3">Untergang:</td>
+					<td class="ps-taleft" colspan="3">Untergang:</td>
 					<td colspan="3"><span data-ws="Sonnenuntergang" class="ps-input <?=wpa::formattime ?>">undefined</span></td>
 				</tr>
 			</tbody>
@@ -317,15 +334,15 @@ overview::setPflanze();
 				<tr><td colspan="6"><h2>Gartenhaus</h2></td></tr>
 				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
-					<td colspan="3">Füllstand:</td>
+					<td class="ps-taleft" colspan="3">Füllstand:</td>
 					<td colspan="3"><span data-ws="GA1_FS_Vol" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
-					<td colspan="3">Füllstand Höhe (RAW):</td>
+					<td class="ps-taleft" colspan="3">Füllstand Höhe (RAW):</td>
 					<td colspan="3"><span data-ws="GA1_FS_Raw" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
-					<td colspan="3">Füllstand Höhe (AVG):</td>
+					<td class="ps-taleft" colspan="3">Füllstand Höhe (AVG):</td>
 					<td colspan="3"><span data-ws="GA1_FS_Avg" class="ps-input">undefined</span></td>
 				</tr>
 				<tr>
@@ -335,32 +352,32 @@ overview::setPflanze();
 				</tr>
 				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
-					<td colspan="2">Büro:</td>
+					<td class="ps-taleft" colspan="2">Büro:</td>
 					<td colspan="2"><span data-ws="BU_RU_LDR" class="ps-input">undefined</span></td>
 					<td colspan="2"><span data-ws="BU_RU_BM" class="ps-input <?=wpa::GreyGreen ?>">undefined</span></td>
 				</tr>
 				<tr>
-					<td colspan="2">Küche:</td>
+					<td class="ps-taleft" colspan="2">Küche:</td>
 					<td colspan="2"><span data-ws="KU_RU_LDR" class="ps-input">undefined</span></td>
 					<td colspan="2"><span data-ws="KU_RU_BM" class="ps-input <?=wpa::GreyGreen ?>">undefined</span></td>
 				</tr>
 				<tr>
-					<td colspan="2">Flur:</td>
+					<td class="ps-taleft" colspan="2">Flur:</td>
 					<td colspan="2"><span data-ws="FL_RU_LDR" class="ps-input">undefined</span></td>
 					<td colspan="2"><span data-ws="FL_RU_BM" class="ps-input <?=wpa::GreyGreen ?>">undefined</span></td>
 				</tr>
 				<tr>
-					<td colspan="2">Bad:</td>
+					<td class="ps-taleft" colspan="2">Bad:</td>
 					<td colspan="2"><span data-ws="BA_RU_LDR" class="ps-input">undefined</span></td>
 					<td colspan="2"><span data-ws="BA_RU_BM" class="ps-input <?=wpa::GreyGreen ?>">undefined</span></td>
 				</tr>
 				<tr>
-					<td colspan="2">Schlafzimmer:</td>
+					<td class="ps-taleft" colspan="2">Schlafzimmer:</td>
 					<td colspan="2"><span data-ws="SZ_RU_LDR" class="ps-input">undefined</span></td>
 					<td colspan="2"></td>
 				</tr>
 				<tr>
-					<td colspan="2">Kinderzimmer:</td>
+					<td class="ps-taleft" colspan="2">Kinderzimmer:</td>
 					<td colspan="2"><span data-ws="KZ_RU_LDR" class="ps-input">undefined</span></td>
 					<td colspan="2"></td>
 				</tr>
@@ -373,21 +390,21 @@ overview::setPflanze();
 				<tr><td colspan="6"><h2>Pflanzen</h2></td></tr>
 				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
-					<td colspan="3">Referenztemperatur</td>
+					<td class="ps-taleft" colspan="3">Referenztemperatur</td>
 					<td colspan="3">
 						<span data-ws="WZ_PF_FE_Temp" class="ps-input">undefined</span>
 						<span data-ws="WZ_PF_FE_Temp" class="<?=wpa::indikatorTemp?>"><?=wpHTML_EMPTY?></span>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="3">Referenzfeuchte</td>
+					<td class="ps-taleft" colspan="3">Referenzfeuchte</td>
 					<td colspan="3">
 						<span data-ws="WZ_PF_FE_Hum" class="ps-input">undefined</span>
 						<span data-ws="WZ_PF_FE_Hum" class="<?=wpa::indikatorHum?>"><?=wpHTML_EMPTY?></span>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2">Wassergewicht</td>
+					<td class="ps-taleft" colspan="2">Wassergewicht</td>
 					<td colspan="2">
 						<span data-ws="WZ_PF_FE_LI_Weight" class="ps-input">undefined</span>
 					</td>

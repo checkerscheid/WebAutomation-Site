@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 715                                                     $ #
+//# Revision     : $Rev:: 716                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 715 2025-01-29 18:35:26Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 716 2025-02-09 09:35:20Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -418,7 +418,7 @@ class uebersicht {
 foreach($zimmer as $kurz => $name) {
 ?>
 					<tr>
-						<td colspan="4"><span><?=$name?></span></td>
+						<td class="ps-taleft" colspan="4"><h4><?=$name?></h4></td>
 					</tr>
 					<tr>
 						<td>
@@ -497,6 +497,10 @@ foreach($zimmer as $kurz => $name) {
 						<td colspan="4"><hr /></td>
 					</tr>
 					<tr>
+						<td class="ps-taleft" colspan="2"><span>Keller</span></td>
+						<td class="ps-taleft" colspan="2"><span>Wintergarten</span></td>
+					</tr>
+					<tr>
 						<td>
 							<span class="ps-input" data-ws="KE_Temp" title="Keller Temperatur">-</span>
 							<span class="<?=wpa::indikatorTemp?>" data-ws="KE_Temp"><?=wpHTML_EMPTY ?></span>
@@ -513,6 +517,10 @@ foreach($zimmer as $kurz => $name) {
 							<span class="ps-input" data-ws="WG1_HTp_Hum" title="EG Wintergarten Feuchte">-</span>
 							<span class="<?=wpa::indikatorHum?>" data-ws="WG1_HTp_Hum"><?=wpHTML_EMPTY ?></span>
 						</td>
+					</tr>
+					<tr>
+						<td class="ps-taleft" colspan="2"><span>Wetterstation Ost</span></td>
+						<td class="ps-taleft" colspan="2"><span>Schlafzimmer</span></td>
 					</tr>
 					<tr>
 						<td>
@@ -533,6 +541,10 @@ foreach($zimmer as $kurz => $name) {
 						</td>
 					</tr>
 					<tr>
+						<td class="ps-taleft" colspan="2"><span>Wetterstation Süd</span></td>
+						<td class="ps-taleft" colspan="2"><span>OG Flur</span></td>
+					</tr>
+					<tr>
 						<td>
 							<span class="ps-input" data-ws="GA_WE_Sued_Temp" title="Wetterstation Süd Temperatur">-</span>
 							<span class="<?=wpa::indikatorTemp?>" data-ws="GA_WE_Sued_Temp"><?=wpHTML_EMPTY ?></span>
@@ -549,6 +561,10 @@ foreach($zimmer as $kurz => $name) {
 							<span class="ps-input" data-ws="FL2_HT_Hum" title="OG Flur Feuchte">-</span>
 							<span class="<?=wpa::indikatorHum?>" data-ws="FL2_HT_Hum"><?=wpHTML_EMPTY ?></span>
 						</td>
+					</tr>
+					<tr>
+						<td class="ps-taleft" colspan="2"><span>Gartenhaus</span></td>
+						<td class="ps-taleft" colspan="2"><span></span></td>
 					</tr>
 					<tr>
 						<td>
