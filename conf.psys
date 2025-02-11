@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 715                                                     $ #
+//# Revision     : $Rev:: 717                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: conf.psys 715 2025-01-29 18:35:26Z                       $ #
+//# File-ID      : $Id:: conf.psys 717 2025-02-11 05:56:26Z                       $ #
 //#                                                                                 #
 //###################################################################################
 use system\wpInit;
@@ -27,10 +27,10 @@ wpInit::$menuorder = array(
 	'pia', 'mudda', 'kamera'//, 'wohnzimmer','schlafzimmer', 'buero', 'kueche', 'bad', 'kinderzimmer'
 );
 wpInit::$systemmenuorder['webvisucs']['Plug Ins'] = array( 'trendselect', 'calendar', 'calendarscene', 'opcrouter' );
-wpInit::$systemmenuorder['webvisucs']['Sonstiges'] = array('wetter', 'weather', 'betriebsstunden', 'kamera', 'shopping');
+wpInit::$systemmenuorder['webvisucs']['Sonstiges'] = array('wetter', 'weather', 'betriebsstunden', 'kamera', 'shopping', 'tvremote');
 wpInit::$systemmenuorder['system']['Systeminformationen'] = array('sys_codesys');
 wpInit::$systemmenuorder['system']['Entwicklung'] = array('websockets');
-wpInit::$noStdPageInSystem = array('wetter', 'betriebsstunden', 'websockets', 'kamera', 'shopping', 'shoppingcfg');
+wpInit::$noStdPageInSystem = array('wetter', 'betriebsstunden', 'websockets', 'kamera', 'shopping', 'shoppingcfg', 'tvremote');
 wpInit::$stdpoints = array('AT' => '_GA_RT');
 wpInit::$showATinFooter = '_GA_RT';
 wpInit::$weathercode = '2804554';

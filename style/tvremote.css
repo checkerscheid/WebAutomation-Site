@@ -1,0 +1,43 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 10.02.2025                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 718                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: tvremote.css 718 2025-02-11 05:57:26Z                    $ #
+//#                                                                                 #
+//###################################################################################
+?> tvremote */
+
+#tvremote .tvbutton,
+#tvremote .tvrichtung { min-width:70px; text-align:center; }
+#tvremote .tvdienst { min-width:160px; text-align:center; }
+#tvremote .border { margin:0 15px; line-height:30px; border-left:1px solid #CCC; border-right:1px solid #CCC; }
+#tvremote .bg-poweroff { background-image: url('images/layout/PowerOff.png'); background-size:cover; background-repeat: no-repeat; }
+#tvremote .border-corner { height:30px; }
+#tvremote .border-corner.corner1 { background: radial-gradient(circle at 120% 200%, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, #CCC 51%, rgba(0, 0, 0, 0) 52%); }
+#tvremote .border-corner.corner2 { background: radial-gradient(circle at -20% 200%, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, #CCC 51%, rgba(0, 0, 0, 0) 52%); }
+#tvremote .border-corner.corner3 { background: radial-gradient(circle at -20% -100%, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, #CCC 51%, rgba(0, 0, 0, 0) 52%); }
+#tvremote .border-corner.corner4 { background: radial-gradient(circle at 120% -100%, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, #CCC 51%, rgba(0, 0, 0, 0) 52%); }
+@media (orientation: portrait) {
+	#tvremote span,
+	#tvremote a,
+	#tvremote select.ps-input { font-size:25px; }
+	#tvremote .ps-input { font-size:18px; padding:5px; }
+	#tvremote .ps-button { padding:50px 16px; }
+	#tvremote select.ps-input { padding:20px 16px; }
+	#tvremote .ps-button { border-radius:20px; }
+	#tvremote .border { line-height:90px; border-left-width:2px; border-right-width:2px; }
+	#tvremote .border-corner { height:120px; }
+	#tvremote .border-corner.corner1 { background: radial-gradient(circle at 120% 120%, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, #CCC 51%, rgba(0, 0, 0, 0) 52%); }
+	#tvremote .border-corner.corner2 { background: radial-gradient(circle at -20% 120%, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, #CCC 51%, rgba(0, 0, 0, 0) 52%); }
+	#tvremote .border-corner.corner3 { background: radial-gradient(circle at -20% -20%, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, #CCC 51%, rgba(0, 0, 0, 0) 52%); }
+	#tvremote .border-corner.corner4 { background: radial-gradient(circle at 120% -20%, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, #CCC 51%, rgba(0, 0, 0, 0) 52%); }
+}

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 716                                                     $ #
+//# Revision     : $Rev:: 717                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.js 716 2025-02-09 09:35:20Z                   $ #
+//# File-ID      : $Id:: uebersicht.js 717 2025-02-11 05:56:26Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> uebersicht */
@@ -84,7 +84,16 @@ p.page.load = function() {
 			setShellyRelayOff('172.17.80.161', 'Kinderzimmer Bett'),
 			setShellyRelayOff('172.17.80.162', 'Kinderzimmer Nachtlicht'),
 			setCwWwOff('172.17.80.164', 'Kinderzimmer Ketten'),
-			setShellyRGBWOff('172.17.80.163', 'Kinderzimmer Bilderrahmen')
+			setShellyRGBWOff('172.17.80.163', 'Kinderzimmer Bilderrahmen'),
+			new Promise((resolve) => {
+				const params = {
+					name: 'wohnzimmer',
+					button: 'aus'
+				}
+				$.post('tvremote.button.req', params, function(data) {
+					resolve(data.message);
+				}, 'json');
+			})
 		];
 		Promise.all(allesaus).then((responses) => {
 			var msg = 'Alles aus:<br />';
@@ -100,18 +109,24 @@ p.page.load = function() {
 				$.post('std.shellycom.set-dimmer.req', {ShellyIP:lautsprecher, turn:'true'},
 					function(data) {
 						resolve('Lautsprecher ist ' + (data.ison ? 'an' : 'aus') + ', (' + data.brightness + ' %)');
-					},
-					'json'); // Lautsprecher
+					}, 'json'); // Lautsprecher
 				}
 			),
 			new Promise((resolve) => {
 				$.post('std.shellycom.set-dimmer.req', {ShellyIP:kamin, turn:'true', brightness:20},
 					function(data) {
 						resolve('Kamin ist ' + (data.ison ? 'an' : 'aus') + ', (' + data.brightness + ' %)')
-					},
-					'json'); // Kamin
+					}, 'json'); // Kamin
 				}
-			)
+			),
+			new Promise((resolve) => {
+				const params = {
+					name: 'wohnzimmer'
+				}
+				$.post('tvremote.onoff.req', params, function(data) {
+					resolve(data.message);
+				}, 'json');
+			})
 		];
 		Promise.all(allesaus).then((responses) => {
 			var msg = 'Wohnzimmer gemütlich:<br />';

@@ -1,0 +1,85 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 10.02.2025                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 718                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: tvremote.req 718 2025-02-11 05:57:26Z                    $ #
+//#                                                                                 #
+//###################################################################################
+namespace request;
+use system\std;
+use system\WebCom;
+
+class tvremote {
+	const c_onoff = 'onoff';
+	public static function onoff() {
+		header(wpJSON_HEADER);
+		$WebCom = new WebCom();
+		echo $WebCom->send('RemoteControl', std::posts('name') .
+			'%~%Ein' .
+			'%~%' .
+			'%~%' .
+			'%~%');
+	}
+	const c_button = 'button';
+	public static function button() {
+		header(wpJSON_HEADER);
+		$WebCom = new WebCom();
+		echo $WebCom->send('RemoteControl', std::posts('name') .
+			'%~%' .
+			'%~%' . std::posts('button') .
+			'%~%' .
+			'%~%');
+	}
+	const c_dienst = 'dienst';
+	public static function dienst() {
+		header(wpJSON_HEADER);
+		$WebCom = new WebCom();
+		echo $WebCom->send('RemoteControl', std::posts('name') .
+			'%~%' .
+			'%~%' .
+			'%~%' . std::posts('button') .
+			'%~%');
+	}
+	const c_richtung = 'richtung';
+	public static function richtung() {
+		header(wpJSON_HEADER);
+		$WebCom = new WebCom();
+		echo $WebCom->send('RemoteControl', std::posts('name') .
+			'%~%' .
+			'%~%' .
+			'%~%' .
+			'%~%' . std::posts('button'));
+	}
+}
+switch(std::gets('param1')) {
+	//###################################################################################
+	case tvremote::c_onoff:
+		tvremote::onoff();
+		break;
+	//###################################################################################
+	case tvremote::c_button:
+		tvremote::button();
+		break;
+	//###################################################################################
+	case tvremote::c_dienst:
+		tvremote::dienst();
+		break;
+	//###################################################################################
+	case tvremote::c_richtung:
+		tvremote::richtung();
+		break;
+	//###################################################################################
+	default:
+		\system\html::default();
+		break;
+}
+?>
