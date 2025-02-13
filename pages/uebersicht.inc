@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 716                                                     $ #
+//# Revision     : $Rev:: 719                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 716 2025-02-09 09:35:20Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 719 2025-02-13 12:27:37Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -284,6 +284,7 @@ class uebersicht {
 					<tr><td colspan="2"><span class="ps-button twoColumns AllesAus"> Alles aus</span></td></tr>
 					<tr><td colspan="2"><hr /></td></tr>
 					<tr><td colspan="2"><span class="ps-button twoColumns wz-gemuetlich">Couch</span></td></tr>
+					<tr><td colspan="2"><a class="ps-button twoColumns" href="tvremote.wohnzimmer.htm">Fernbedienung</a></td></tr>
 					<?=uebersicht::NeoPixel(WZ_NP, 'WZ_NP', 'Wohnzimmer NeoPixel')?>
 					<?=uebersicht::tasterShellyDimmer('Wohnzimmer <br class="showonportrait" />Lautsprecher', 'WZ_LS')?>
 					<?=uebersicht::NeoPixel(WZ_LS_NP, 'WZ_LS_NP', 'Lautsprecher Farbe')?>

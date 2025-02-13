@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 10.02.2025                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 718                                                     $ #
+//# Revision     : $Rev:: 719                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: tvremote.req 718 2025-02-11 05:57:26Z                    $ #
+//# File-ID      : $Id:: tvremote.req 719 2025-02-13 12:27:37Z                    $ #
 //#                                                                                 #
 //###################################################################################
 namespace request;
@@ -23,11 +23,19 @@ class tvremote {
 	public static function onoff() {
 		header(wpJSON_HEADER);
 		$WebCom = new WebCom();
-		echo $WebCom->send('RemoteControl', std::posts('name') .
-			'%~%Ein' .
-			'%~%' .
-			'%~%' .
-			'%~%');
+		if(std::posts('button') == 'ein') {
+			echo $WebCom->send('RemoteControl', std::posts('name') .
+				'%~%' . std::posts('button') .
+				'%~%' .
+				'%~%' .
+				'%~%');
+		} else {
+			echo $WebCom->send('RemoteControl', std::posts('name') .
+				'%~%' . 
+				'%~%' . std::posts('button') .
+				'%~%' .
+				'%~%');
+		}
 	}
 	const c_button = 'button';
 	public static function button() {

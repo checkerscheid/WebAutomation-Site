@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 08.11.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 718                                                     $ #
+//# Revision     : $Rev:: 719                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: shoppingcfg.js 718 2025-02-11 05:57:26Z                  $ #
+//# File-ID      : $Id:: shoppingcfg.js 719 2025-02-13 12:27:37Z                  $ #
 //#                                                                                 #
 //###################################################################################
 ?> shoppingcfg */
@@ -44,18 +44,7 @@ p.page.load = function() {
 	});
 	$('.newProducts').on('keyup', '.searchProduct', function() {
 		const search = $(this).val().toLowerCase();
-		if(search == '') {
-			$('.newProducts li.productHeader[data-idProduct]').removeClass('ps-hidden');
-		} else {
-			$('.newProducts li.productHeader[data-idProduct]').addClass('ps-hidden');
-			$.each($('.newProducts li.productHeader[data-idProduct]'), function() {
-				const id = $(this).attr('data-idProduct');
-				const name = $(this).find('.name').val().toLowerCase();
-				if(id > 0 && name.indexOf(search) >= 0) {
-					$(this).removeClass('ps-hidden');
-				}
-			});
-		}
+		shoppingcfg.searchProduct(search);
 	});
 	$('#shoppingcfg .newLists').on('click', '.ps-export, .ps-add', function() {
 		const list = {
@@ -98,7 +87,7 @@ p.page.load = function() {
 			}
 			if(data.erg == 'S_OK') {
 				p.page.message('Productname changed');
-				shoppingcfg.loadProducts();
+				shoppingcfg.loadProducts(product.name);
 			}
 		}), 'json';
 	});
@@ -291,7 +280,7 @@ var shoppingcfg = {
 			});
 		});
 	},
-	loadProducts: function () {
+	loadProducts: function (search = "") {
 		$.get('shoppingcfg.getHtmlProducts.req', function(data) {
 			$('#shoppingcfg .newProducts').html(data);
 			$('.dragProduct').draggable({
@@ -302,6 +291,25 @@ var shoppingcfg = {
 					$(ui.helper).addClass('dragging');
 				}
 			});
+			if(search != "") {
+				shoppingcfg.searchProduct(search);
+				$('.newProducts').find('.searchProduct').val(search);
+			}
 		});
+	},
+	searchProduct: function(search) {
+		search = search.toLowerCase();
+		if(search == '') {
+			$('.newProducts li.productHeader[data-idProduct]').removeClass('ps-hidden');
+		} else {
+			$('.newProducts li.productHeader[data-idProduct]').addClass('ps-hidden');
+			$.each($('.newProducts li.productHeader[data-idProduct]'), function() {
+				const id = $(this).attr('data-idProduct');
+				const name = $(this).find('.name').val().toLowerCase();
+				if(id > 0 && name.indexOf(search) >= 0) {
+					$(this).removeClass('ps-hidden');
+				}
+			});
+		}
 	}
 }

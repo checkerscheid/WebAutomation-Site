@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 717                                                     $ #
+//# Revision     : $Rev:: 719                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.js 717 2025-02-11 05:56:26Z                   $ #
+//# File-ID      : $Id:: uebersicht.js 719 2025-02-13 12:27:37Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> uebersicht */
@@ -88,6 +88,15 @@ p.page.load = function() {
 			new Promise((resolve) => {
 				const params = {
 					name: 'wohnzimmer',
+					button: 'aus'
+				}
+				$.post('tvremote.button.req', params, function(data) {
+					resolve(data.message);
+				}, 'json');
+			}),
+			new Promise((resolve) => {
+				const params = {
+					name: 'kinderzimmer',
 					button: 'aus'
 				}
 				$.post('tvremote.button.req', params, function(data) {

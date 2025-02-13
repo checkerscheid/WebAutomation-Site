@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 04.03.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 716                                                     $ #
+//# Revision     : $Rev:: 719                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.req 716 2025-02-09 09:35:20Z                   $ #
+//# File-ID      : $Id:: d1minicfg.req 719 2025-02-13 12:27:37Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -221,7 +221,12 @@ class d1minicfg {
 					<span class="ps-button allRestart" title="Restart Device">Restart Device</span>
 					<span class="ps-button allgroup" title="in Gruppe verschieben">Gruppe</span>
 					<span class="ps-button allaktiv" title="aktivieren / deaktivieren">Aktiv</span>
-					<span class="ps-button alldelete">l&ouml;schen</span>
+					<span class="ps-button alldelete">l&ouml;schen</span>';
+		if(std::posts('d1minigroup') == 'ALL') {
+			$html .= '
+					<input type="text" class="ps-input D1MiniFilter" placeholder="filter" />';
+		}
+		$html.= '
 				</div>
 			</div>
 		</div>

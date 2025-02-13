@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 27.07.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 715                                                     $ #
+//# Revision     : $Rev:: 719                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pia.js 715 2025-01-29 18:35:26Z                          $ #
+//# File-ID      : $Id:: pia.js 719 2025-02-13 12:27:37Z                          $ #
 //#                                                                                 #
 //###################################################################################
 use system\std
@@ -58,6 +58,13 @@ p.page.load = function() {
 		$.post('std.shellycom.set-relay.req', {ShellyIP: '172.17.80.160', turn: 'false'});
 		$.post('std.shellycom.set-relay.req', {ShellyIP: '172.17.80.161', turn: 'false'});
 		$.post('std.shellycom.set-relay.req', {ShellyIP: '172.17.80.162', turn: 'false'});
+		const params = {
+			name: 'kinderzimmer',
+			button: 'aus'
+		}
+		$.post('tvremote.button.req', params, function(data) {
+			console.log(data.message);
+		}, 'json');
 	});
 	$('.AllesSchlafen').click(function() {
 		wpNeoPixel.setColor(75, 5, 0);

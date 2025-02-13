@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 10.02.2025                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 718                                                     $ #
+//# Revision     : $Rev:: 719                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: tvremote.css 718 2025-02-11 05:57:26Z                    $ #
+//# File-ID      : $Id:: tvremote.css 719 2025-02-13 12:27:37Z                    $ #
 //#                                                                                 #
 //###################################################################################
 ?> tvremote */
@@ -29,7 +29,7 @@
 @media (orientation: portrait) {
 	#tvremote span,
 	#tvremote a,
-	#tvremote select.ps-input { font-size:25px; }
+	#tvremote select.ps-input { font-size:35px; }
 	#tvremote .ps-input { font-size:18px; padding:5px; }
 	#tvremote .ps-button { padding:50px 16px; }
 	#tvremote select.ps-input { padding:20px 16px; }

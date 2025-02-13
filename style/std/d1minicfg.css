@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 03.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 619                                                     $ #
+//# Revision     : $Rev:: 719                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.css 619 2024-05-26 02:22:52Z                   $ #
+//# File-ID      : $Id:: d1minicfg.css 719 2025-02-13 12:27:37Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> d1miniactive */
@@ -37,4 +37,5 @@ div.divupdate div, div.divinsert { border:1px solid #CCC; padding:3px 5px; margi
 #d1miniactive .versionContainer span { padding:5px 10px; border:1px solid #CCC; border-radius:3px; }
 #d1miniactive [data-column="name"] .stored { cursor:pointer; }
 #d1miniactive .showJson.closed { height:0px; overflow:hidden; }
+#d1miniactive .border-red { box-shadow:0 0 10px 5px #A91919; }
 #dialog select.ps-input { min-width:300px; padding:2px 5px }
