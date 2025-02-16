@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 03.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 719                                                     $ #
+//# Revision     : $Rev:: 720                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.js 719 2025-02-13 12:27:37Z                    $ #
+//# File-ID      : $Id:: d1minicfg.js 720 2025-02-16 01:24:20Z                    $ #
 //#                                                                                 #
 //###################################################################################
 ?> d1minicfg */
@@ -176,6 +176,16 @@ p.page.load = function() {
 			}
 			$(that).addClass('ps-hidden');
 			$(td).find('.smallfont').addClass('ps-hidden');
+		});
+	});
+	$('#erg').on('click', '.setActive', function() {
+		const setActive = {
+			id: $(this).parents('tr:first').attr('data-id')
+		};
+		$.post('std.d1minicfg.setActive.req', setActive, function(data) {
+			if(data == 'S_OK') {
+				D1MiniRenew(d1minigroup);
+			}
 		});
 	});
 	$('#erg').on('click', '.D1MiniDevice .forceupdate', function() {

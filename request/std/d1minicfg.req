@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 04.03.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 719                                                     $ #
+//# Revision     : $Rev:: 720                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.req 719 2025-02-13 12:27:37Z                   $ #
+//# File-ID      : $Id:: d1minicfg.req 720 2025-02-16 01:24:20Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -348,7 +348,13 @@ class d1minicfg {
 						</div>
 					</td>
 					<td>
-						' . ($erg['active'] == 1 ? '<span class="ps-fontgreen">aktiv</span>' : '<span class="ps-fontyellow">deaktiviert</span>') . '
+						<div class="tdActive">
+							<div class="buttonContainer">
+								' . ($erg['active'] == 1 ?
+									'<span class="ps-hover-noborder ps-image-button setActive ps-fontgreen">aktiv</span>' :
+									'<span class="ps-hover-noborder ps-image-button setActive ps-fontyellow">deaktiviert</span>') . '
+							</div>
+						</div>
 					</td>
 					<td data-column="compiledwith">
 						<div class="tdButton">
@@ -432,6 +438,14 @@ class d1minicfg {
 		header(wpJSON_HEADER);
 		$WebCom = new WebCom();
 		echo $WebCom->send('SetD1MiniUrlCmd', $ip . '%~%' . 'setCmd?cmd=RestartDevice');
+	}
+	const c_setActive = 'setActive';
+	public static function setActive() {
+		header(wpJSON_HEADER);
+		$database = new wpDatabase();
+		$database->query("UPDATE [d1mini] SET [active] = ~[active] WHERE [id_d1mini] = " . std::posts(id));
+		$WebCom = new WebCom();
+		echo $WebCom->send('RenewD1MiniActiveState');
 	}
 	const c_allGroup = 'allGroup';
 	public static function allGroup() {

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 620                                                     $ #
+//# Revision     : $Rev:: 720                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: security.psys 620 2024-05-29 01:27:42Z                   $ #
+//# File-ID      : $Id:: security.psys 720 2025-02-16 01:24:20Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -325,7 +325,7 @@ class security {
 				self::renewCookie('wps');
 				self::setCookieLogin();
 				$system->checkSrc(std::gets('src'), std::gets('path'));
-				if($erg['startpage'] == '') std::href($system->getLinkedSrc());
+				if($_SERVER['REQUEST_URI'] != '/' || $erg['startpage'] == '') std::href($system->getLinkedSrc());
 				else std::href($erg['startpage']);
 			}
 		}
