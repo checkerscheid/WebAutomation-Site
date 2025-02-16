@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 03.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 715                                                     $ #
+//# Revision     : $Rev:: 720                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.js 715 2025-01-29 18:35:26Z                    $ #
+//# File-ID      : $Id:: d1minicfg.js 720 2025-02-16 01:24:20Z                    $ #
 //#                                                                                 #
 //###################################################################################
 ?> d1minicfg */
@@ -176,6 +176,16 @@ p.page.load = function() {
 			}
 			$(that).addClass('ps-hidden');
 			$(td).find('.smallfont').addClass('ps-hidden');
+		});
+	});
+	$('#erg').on('click', '.setActive', function() {
+		const setActive = {
+			id: $(this).parents('tr:first').attr('data-id')
+		};
+		$.post('std.d1minicfg.setActive.req', setActive, function(data) {
+			if(data == 'S_OK') {
+				D1MiniRenew(d1minigroup);
+			}
 		});
 	});
 	$('#erg').on('click', '.D1MiniDevice .forceupdate', function() {
@@ -367,6 +377,27 @@ p.page.load = function() {
 			});
 		} else {
 			p.page.alert('Keine Trends ausgewählt');
+		}
+	});
+//###################################################################################
+	$('#erg').on('keyup', '.D1MiniFilter', function() {
+		const search = $(this).val().toLowerCase();
+		if(search == '') {
+			$(this).removeClass('border-red');
+			$('.D1MiniDeviceList tr').removeClass('ps-hidden');
+			$('.D1MiniDeviceList tr .buttonbox .ps-checkbox').removeClass('ps-disabled checked');
+		} else {
+			$(this).addClass('border-red');
+			$('.D1MiniDeviceList tr').addClass('ps-hidden');
+			$('.D1MiniDeviceList tr .buttonbox .ps-checkbox').addClass('ps-disabled').removeClass('checked');
+			$.each($('.D1MiniDeviceList tr'), function() {
+				const row = $(this);
+				const comp = $(row).find('td[data-column=compiledwith] .stored').text().toLowerCase();
+				if(comp.indexOf(search) >= 0) {
+					$(row).removeClass('ps-hidden');
+					$(row).find('.buttonbox .ps-checkbox').removeClass('ps-disabled');
+				}
+			});
 		}
 	});
 //###################################################################################

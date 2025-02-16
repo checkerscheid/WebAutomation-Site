@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 27.07.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 709                                                     $ #
+//# Revision     : $Rev:: 719                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pia.inc 709 2024-11-21 13:08:04Z                         $ #
+//# File-ID      : $Id:: pia.inc 719 2025-02-13 12:27:37Z                         $ #
 //#                                                                                 #
 //###################################################################################
 /**
@@ -62,6 +62,11 @@ $points = array(
 				<?=pia::tasterShelly('Kinderzimmer', 'KZ')?>
 				<?=pia::tasterShelly('Kinderzimmer <br class="showonportrait" />Bett', 'KZ_BE')?>
 				<?=pia::tasterShelly('Kinderzimmer <br class="showonportrait" />Nachtlicht', 'KZ_NL')?>
+				<tr><td colspan="6"><hr /></td></tr>
+				<tr>
+					<td colspan="3"><span>TV</span></td>
+					<td colspan="3"><a href="tvremote.kinderzimmer.htm" class="ps-button">Fernbedienung</a></td>
+				</tr>
 				<tr>
 					<td colspan="6">
 						<div>
