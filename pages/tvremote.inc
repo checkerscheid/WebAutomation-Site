@@ -25,8 +25,8 @@ use system\std;
 <? if(std::gets('param1') == '') { ?>
 		<select class="ps-input tvName">
 			<option value="wohnzimmer">Wohnzimmer</option>
-			<option value="schlafzimmer">schlafzimmer</option>
-			<option value="kinderzimmer">kinderzimmer</option>
+			<option value="schlafzimmer">Schlafzimmer</option>
+			<option value="kinderzimmer">Kinderzimmer</option>
 		</select>
 <? } else { ?>
 		<h2><?=std::gets('param1') ?> TV</h2>

@@ -48,6 +48,10 @@ $points = array(
 					<td>Sonne:</td>
 					<td><span data-value="SonneScheint" class="ps-input pa-EinAus" data-True="scheint" data-False="untergegangen">undefined</span></td>
 				</tr>
+				<tr>
+					<td>Insert Dummy</td>
+					<td><span class="ps-button insertDummy">InsertDummy</span></td>
+				</tr>
 			</tbody>
 		</table>
 	</div>

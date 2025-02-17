@@ -16,7 +16,7 @@
 //###################################################################################
 namespace request\std;
 use system\helper\wpDatabase;
-use system\std;
+use system\std, system\WebCom;
 
 class shellycfg {
 	// Menüeinträge
@@ -209,6 +209,7 @@ switch(std::gets('param1')) {
 		break;
 	//###################################################################################
 	case shellycfg::c_deleteshelly:
+		$
 		$database = new wpDatabase();
 		if($database->query("DELETE FROM [shelly] WHERE [id_shelly] = " . trim(std::posts('id'))))
 			echo 'S_OK';
@@ -462,12 +463,20 @@ switch(std::gets('param1')) {
 		break;
 	//###################################################################################
 	case shellycfg::c_savedelete:
-		$database = new wpDatabase();
-		$where = '[id_shelly] = ' . implode(' OR [id_shelly] = ', std::posts('ids'));
-		$sql = "DELETE FROM [shelly] where " . $where;
-		$check = $database->query($sql);
-		if($check) echo 'S_OK';
-		else echo $check;
+		header(wpJSON_HEADER);
+		$fortcp = '';
+		foreach(std::posts('ids') as $ids) {
+			$fortcp .= $ids.'%~%';
+		}
+		$WebCom = new WebCom();
+		echo $WebCom->send('DeleteShelly', substr($fortcp, 0, -3));
+
+		// $database = new wpDatabase();
+		// $where = '[id_shelly] = ' . implode(' OR [id_shelly] = ', std::posts('ids'));
+		// $sql = "DELETE FROM [shelly] where " . $where;
+		// $check = $database->query($sql);
+		// if($check) echo 'S_OK';
+		// else echo $check;
 		break;
 	//###################################################################################
 	default:

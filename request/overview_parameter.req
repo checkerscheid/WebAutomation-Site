@@ -15,8 +15,9 @@
 //#                                                                                 #
 //###################################################################################
 namespace request;
-use system\std;
+use system\std, system\WebCom;
 class overview_parameter {
+	const c_insertDummy = 'insertDummy';
 	const c_set_wz = 'set_wz';
 	const c_unset_wz = 'unset_wz';
 	const c_set_wb = 'set_wb';
@@ -29,6 +30,11 @@ class overview_parameter {
 // "2200-45-on","0000bsr-0123456-off"
 // http://192.168.80.180/settings/relay/0/?index=0&schedule_rules=0000ass-0123456-on,0000bsr-0123456-off
 switch(std::gets('param1')) {
+	case overview_parameter::c_insertDummy:
+		header(wpJSON_HEADER);
+		$WebCom = new WebCom();
+		echo $WebCom->send('InsertDummy');
+		break;
 	//###################################################################################
 	case overview_parameter::c_set_wz:
 		header('Content-Type: application/json');

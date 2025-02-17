@@ -21,6 +21,9 @@
 //<? require_once('system/websockets.js') ?>
 
 p.page.load = function() {
+	$('#uebersicht_parameter').on('click', '.insertDummy', function() {
+		$.get('overview_parameter.insertDummy.req', function(data) { console.log(data); }, 'json');
+	});
 	$('#uebersicht_parameter').on('click', '.pa-EinAus.ps-parambool', function() {
 		var headline = $(this).attr('data-popup');
 		$.post('std.truefalseohnehandauto.pop', {elem:$(this).attr('data-value'), type:'EinAus', headline:headline, dataTrue:'Sommerbetrieb', dataFalse:'Heizbetrieb'}, function(data) {
