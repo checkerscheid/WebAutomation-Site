@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 719                                                     $ #
+//# Revision     : $Rev:: 722                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 719 2025-02-13 12:27:37Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 722 2025-02-18 19:42:31Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -119,6 +119,7 @@ const KU_CwWw = '172.17.80.142';
 const BU_RU = '172.17.80.125';
 const FL_RU = '172.17.80.128';
 const BU_NP = '172.17.80.122';
+const BU_KE = '172.17.80.129';
 //std::test_array($iplist);
 foreach($zimmer as $kurz => $name) {
 	if($kurz != 'KZ') {
@@ -307,7 +308,7 @@ class uebersicht {
 						<td class="ps-tal"><span class="ps-button RU_Auto" data-ip="<?=BU_RU ?>" data-lichtip="172.17.80.120">Auto</span></td>
 						<td class="ps-tar"><span class="ps-button RU_Manual" data-ip="<?=BU_RU ?>" data-lichtip="172.17.80.120">Manual</span></td>
 					</tr>
-					<?=uebersicht::CwWw(WZ_KE, 'BU_KE', 'Büro Event Lichterkette')?>
+					<?=uebersicht::CwWw(BU_KE, 'BU_KE', 'Büro Event Lichterkette')?>
 				</tbody>
 			</table>
 		</div>

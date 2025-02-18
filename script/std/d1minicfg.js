@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 03.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 720                                                     $ #
+//# Revision     : $Rev:: 722                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.js 720 2025-02-16 01:24:20Z                    $ #
+//# File-ID      : $Id:: d1minicfg.js 722 2025-02-18 19:42:31Z                    $ #
 //#                                                                                 #
 //###################################################################################
 ?> d1minicfg */
@@ -161,8 +161,6 @@ p.page.load = function() {
 	});
 //###################################################################################
 	$('#erg').on('click', '.D1MiniDevice .saveFromDevice', function() {
-		const wpFreakaZoneLibVersion = $('#wpFreakaZoneLibVersion').text();
-		const BasisEmptyVersion = $('#BasisEmptyVersion').text();
 		var that = $(this);
 		var tr = $(this).parents('tr:first');
 		var td = $(this).parents('td:first');
@@ -171,8 +169,20 @@ p.page.load = function() {
 		var value = $(td).find('.smallfont.' + column).text();
 		$.post('std.d1minicfg.updateColumn.req', {id:id, column:column, value:value}, function() {
 			$(td).find('.stored').text(value);
-			if(wpFreakaZoneLibVersion == value || BasisEmptyVersion == value) {
-				$(td).find('.stored').removeClass('ps-fontyellow').addClass('ps-fontgreen');
+			console.log(column);
+			if(column == 'version') {
+				var versions = {};
+				$('.versionContainer .D1MiniVersion').each(function() {
+					versions[$(this).attr('data-channel')] = $(this).attr('data-version');
+				});
+				const channel = $(tr).find('[data-column=updatechanel] .stored').text();
+				console.log(channel);
+				console.log(value);
+				if(versions[channel] == value) {
+					$(td).find('.stored').removeClass('ps-fontyellow').addClass('ps-fontgreen');
+				} else {
+					$(td).find('.stored').removeClass('ps-fontgreen').addClass('ps-fontyellow');
+				}
 			}
 			$(that).addClass('ps-hidden');
 			$(td).find('.smallfont').addClass('ps-hidden');
@@ -224,8 +234,8 @@ p.page.load = function() {
 //###################################################################################
 	$('#erg').on('click', '.allHttpUpdate', function() {
 		var tr = $(this).parents('ul.d1miniingroup:first');
-		$(tr).find('[data-id]').each(function() {
-			if($(this).find('.ps-checkbox').hasClass('checked')) {
+		$(tr).find('tr[data-id]').each(function() {
+			if($(this).find('.ps-checkbox.checkboxactive').hasClass('checked')) {
 				var ip = $(this).find('[data-column="ip"] .stored').text();
 				$.post('std.d1minicfg.starthttpupdate.req', {ip:ip});
 			}
@@ -233,8 +243,8 @@ p.page.load = function() {
 	});
 	$('#erg').on('click', '.allForceMqttUpdate', function() {
 		var tr = $(this).parents('ul.d1miniingroup:first');
-		$(tr).find('[data-id]').each(function() {
-			if($(this).find('.ps-checkbox').hasClass('checked')) {
+		$(tr).find('tr[data-id]').each(function() {
+			if($(this).find('.ps-checkbox.checkboxactive').hasClass('checked')) {
 				var name = $(this).find('[data-column="name"] .stored').text();
 				$.post('std.d1minicfg.setcmd.req', {name:name,cmd:'ForceMqttUpdate'});
 			}
@@ -242,8 +252,8 @@ p.page.load = function() {
 	});
 	$('#erg').on('click', '.allRestart', function() {
 		var tr = $(this).parents('ul.d1miniingroup:first');
-		$(tr).find('[data-id]').each(function() {
-			if($(this).find('.ps-checkbox').hasClass('checked')) {
+		$(tr).find('tr[data-id]').each(function() {
+			if($(this).find('.ps-checkbox.checkboxactive').hasClass('checked')) {
 				var ip = $(this).find('[data-column="ip"] .stored').text();
 				$.post('std.d1minicfg.restartdevice.req', {ip:ip});
 			}
@@ -253,8 +263,8 @@ p.page.load = function() {
 		var tr = $(this).parents('ul.d1miniingroup:first');
 		var ids = [];
 		var names = [];
-		$(tr).find('[data-id]').each(function() {
-			if($(this).find('.ps-checkbox').hasClass('checked')) {
+		$(tr).find('tr[data-id]').each(function() {
+			if($(this).find('.ps-checkbox.checkboxactive').hasClass('checked')) {
 				ids.push($(this).attr('data-id'));
 				names.push($(this).find('[data-column="name"] .stored').text());
 			}
@@ -292,8 +302,8 @@ p.page.load = function() {
 		var tr = $(this).parents('ul.d1miniingroup:first');
 		var ids = [];
 		var names = [];
-		$(tr).find('[data-id]').each(function() {
-			if($(this).find('.ps-checkbox').hasClass('checked')) {
+		$(tr).find('tr[data-id]').each(function() {
+			if($(this).find('.ps-checkbox.checkboxactive').hasClass('checked')) {
 				ids.push($(this).attr('data-id'));
 				names.push($(this).find('[data-column="name"] .stored').text());
 			}
@@ -343,8 +353,8 @@ p.page.load = function() {
 		var tr = $(this).parents('ul.d1miniingroup:first');
 		var ids = [];
 		var names = [];
-		$(tr).find('[data-id]').each(function() {
-			if($(this).find('.ps-checkbox').hasClass('checked')) {
+		$(tr).find('tr[data-id]').each(function() {
+			if($(this).find('.ps-checkbox.checkboxactive').hasClass('checked')) {
 				ids.push($(this).attr('data-id'));
 				names.push($(this).find('[data-column="name"] .stored').text());
 			}
@@ -380,22 +390,68 @@ p.page.load = function() {
 		}
 	});
 //###################################################################################
-	$('#erg').on('keyup', '.D1MiniFilter', function() {
+	$('#erg').on('click', '.D1MiniUpdateFilter', function() {
+		const checked = $(this).hasClass('checked');
+		if(checked) {
+			$(this).removeClass('border-red');
+			$('.D1MiniDeviceList tr').removeClass('ps-hidden');
+			$('.D1MiniDeviceList tr .ps-checkbox.checkboxactive').removeClass('ps-disabled checked');
+		} else {
+			$('.D1MiniCompiledFilter').val('').removeClass('border-red');
+			$('.D1MiniChannelFilter').val('all').removeClass('border-red');
+			$(this).addClass('border-red');
+			$('.D1MiniDeviceList tr').addClass('ps-hidden');
+			$('.D1MiniDeviceList tr .ps-checkbox.checkboxactive').addClass('ps-disabled').removeClass('checked');
+			$.each($('.D1MiniDeviceList tr'), function() {
+				const row = $(this);
+				const comp = $(row).find('td[data-column=version] .stored').hasClass('ps-fontyellow');
+				if(comp) {
+					$(row).removeClass('ps-hidden');
+					$(row).find('.ps-checkbox.checkboxactive').removeClass('ps-disabled');
+				}
+			});
+		}
+	});
+	$('#erg').on('change', '.D1MiniChannelFilter', function() {
+		const val = $(this).val();
+		if(val == 'all') {
+			$(this).removeClass('border-red');
+			$('.D1MiniDeviceList tr').removeClass('ps-hidden');
+			$('.D1MiniDeviceList tr .ps-checkbox.checkboxactive').removeClass('ps-disabled checked');
+		} else {
+			$('.D1MiniUpdateFilter').removeClass('checked border-red');
+			$('.D1MiniCompiledFilter').val('').removeClass('border-red');
+			$(this).addClass('border-red');
+			$('.D1MiniDeviceList tr').addClass('ps-hidden');
+			$('.D1MiniDeviceList tr .ps-checkbox.checkboxactive').addClass('ps-disabled').removeClass('checked');
+			$.each($('.D1MiniDeviceList tr'), function() {
+				const row = $(this);
+				const channel = $(row).find('td[data-column=updatechanel] .stored').text();
+				if(channel.indexOf(val) >= 0) {
+					$(row).removeClass('ps-hidden');
+					$(row).find('.ps-checkbox.checkboxactive').removeClass('ps-disabled');
+				}
+			});
+		}
+	});
+	$('#erg').on('keyup', '.D1MiniCompiledFilter', function() {
 		const search = $(this).val().toLowerCase();
 		if(search == '') {
 			$(this).removeClass('border-red');
 			$('.D1MiniDeviceList tr').removeClass('ps-hidden');
-			$('.D1MiniDeviceList tr .buttonbox .ps-checkbox').removeClass('ps-disabled checked');
+			$('.D1MiniDeviceList tr .ps-checkbox.checkboxactive').removeClass('ps-disabled checked');
 		} else {
+			$('.D1MiniUpdateFilter').removeClass('checked border-red');
+			$('.D1MiniChannelFilter').val('all').removeClass('border-red');
 			$(this).addClass('border-red');
 			$('.D1MiniDeviceList tr').addClass('ps-hidden');
-			$('.D1MiniDeviceList tr .buttonbox .ps-checkbox').addClass('ps-disabled').removeClass('checked');
+			$('.D1MiniDeviceList tr .ps-checkbox.checkboxactive').addClass('ps-disabled').removeClass('checked');
 			$.each($('.D1MiniDeviceList tr'), function() {
 				const row = $(this);
 				const comp = $(row).find('td[data-column=compiledwith] .stored').text().toLowerCase();
 				if(comp.indexOf(search) >= 0) {
 					$(row).removeClass('ps-hidden');
-					$(row).find('.buttonbox .ps-checkbox').removeClass('ps-disabled');
+					$(row).find('.ps-checkbox.checkboxactive').removeClass('ps-disabled');
 				}
 			});
 		}

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 04.03.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 720                                                     $ #
+//# Revision     : $Rev:: 722                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.req 720 2025-02-16 01:24:20Z                   $ #
+//# File-ID      : $Id:: d1minicfg.req 722 2025-02-18 19:42:31Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -26,6 +26,7 @@ require_once 'system/Helper/d1mini.psys';
 class d1minicfg {
 	static $maxFreakaZoneVersion;
 	static $maxVersion;
+	static $VersionArray;
 	const c_menusearchd1mini = 'menusearchd1mini';
 	public static function menusearchd1mini() {
 		echo '
@@ -42,10 +43,17 @@ class d1minicfg {
 		$wpDatabase->query('SELECT TOP 1 [version] FROM [D1Mini] ORDER BY [version] DESC');
 		$erg = $wpDatabase->fetch();
 		self::$maxVersion = $erg['version'];
+		$s = \json_decode(file_get_contents('http://d1miniupdate.freakazone.com/'), true);
 		$html = '
 			<h1>D1 Mini Details</h1>
 			<div class="versionContainer">
-				<span id="BasisEmptyVersion">' . self::$maxVersion . '</span>
+				<span class="D1MiniVersion maxVersion" data-channel="maxversion" data-version="' . self::$maxVersion . '">Max installed Version: ' . self::$maxVersion . '</span>';
+		foreach($s['wpFreakaZone'] as $name => $versionArray) {
+			self::$VersionArray[$name] = $versionArray['VersionName'];
+			$html .= '
+				<span class="D1MiniVersion" data-channel="' . $name . '" data-version="' . $versionArray['VersionName'] . '">' . $name . ': ' . $versionArray['VersionName'] . '</span>';
+		}
+		$html .= '
 			</div>
 			<hr />
 			<ul>';
@@ -224,7 +232,16 @@ class d1minicfg {
 					<span class="ps-button alldelete">l&ouml;schen</span>';
 		if(std::posts('d1minigroup') == 'ALL') {
 			$html .= '
-					<input type="text" class="ps-input D1MiniFilter" placeholder="filter" />';
+					<span class="ps-checkbox D1MiniUpdateFilter">nur mit Update</span>
+					<select class="ps-input D1MiniChannelFilter">
+						<option value="all">All</option>
+						<option value="firmware">firmware</option>
+						<option value="light">light</option>
+						<option value="io">io</option>
+						<option value="heating">heating</option>
+						<option value="rfid">rfid</option>
+					</select>
+					<input type="text" class="ps-input D1MiniCompiledFilter" placeholder="CompiledWith filter" />';
 		}
 		$html.= '
 				</div>
@@ -256,15 +273,19 @@ class d1minicfg {
 				</tr>
 			</thead>
 			<tbody class="D1MiniDeviceList">';
+		$s = \json_decode(file_get_contents('http://d1miniupdate.freakazone.com/'), true);
+		foreach($s['wpFreakaZone'] as $name => $versionArray) {
+			self::$VersionArray[$name] = $versionArray['VersionName'];
+		}
 		while($erg = $wpDatabase->fetch()) {
 			$update = 'ps-fontyellow';
-			if(d1minicfg::$maxVersion == $erg['version'] ) {
+			if(self::$VersionArray[$erg['updatechanel']] == $erg['version'] ) {
 				$update = 'ps-fontgreen';
 			}
 			$html .= '
 				<tr class="D1MiniDevice" data-id="' . $erg['id_d1mini'] . '" data-name="' . $erg['name'] . '">
 					<td class="buttonbox">
-						<span class="ps-checkbox">'.wpHTML_EMPTY.'</span>
+						<span class="ps-checkbox checkboxactive">'.wpHTML_EMPTY.'</span>
 					</td>
 					<td data-column="name">
 						<div class="tdButton">

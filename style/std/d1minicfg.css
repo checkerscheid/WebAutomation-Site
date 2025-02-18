@@ -9,12 +9,12 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 03.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 719                                                     $ #
+//# Revision     : $Rev:: 722                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.css 719 2025-02-13 12:27:37Z                   $ #
+//# File-ID      : $Id:: d1minicfg.css 722 2025-02-18 19:42:31Z                   $ #
 //#                                                                                 #
 //###################################################################################
-?> d1miniactive */
+?> d1minicfg */
 
 #submenu { height:20px; padding:0 0 5px 50px; }
 #submenu li { float:left; }
