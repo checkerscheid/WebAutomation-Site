@@ -1,0 +1,1 @@
+DELETE FROM [trendvalue] WHERE ([id_trend] = 1096 OR [id_trend] = 1077 OR [id_trend] = 1079 OR [id_trend] = 1095 OR [id_trend] = 1076 OR [id_trend] = 1078) AND [value] = '0'

@@ -9,15 +9,16 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 29.11.2023                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 722                                                     $ #
+//# Revision     : $Rev:: 723                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: overview_parameter.req 722 2025-02-18 19:42:31Z          $ #
+//# File-ID      : $Id:: overview_parameter.req 723 2025-02-27 14:24:23Z          $ #
 //#                                                                                 #
 //###################################################################################
 namespace request;
 use system\std, system\WebCom;
 class overview_parameter {
 	const c_insertDummy = 'insertDummy';
+	const c_selectScene = 'selectScene';
 	const c_set_wz = 'set_wz';
 	const c_unset_wz = 'unset_wz';
 	const c_set_wb = 'set_wb';
@@ -34,6 +35,12 @@ switch(std::gets('param1')) {
 		header(wpJSON_HEADER);
 		$WebCom = new WebCom();
 		echo $WebCom->send('InsertDummy');
+		break;
+	//###################################################################################
+	case overview_parameter::c_selectScene:
+		header(wpJSON_HEADER);
+		$WebCom = new WebCom();
+		echo $WebCom->send('SelectScene');
 		break;
 	//###################################################################################
 	case overview_parameter::c_set_wz:

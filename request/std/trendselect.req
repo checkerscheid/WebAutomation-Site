@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 10.12.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 706                                                     $ #
+//# Revision     : $Rev:: 723                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: trendselect.req 706 2024-11-04 15:08:34Z                 $ #
+//# File-ID      : $Id:: trendselect.req 723 2025-02-27 14:24:23Z                 $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -19,6 +19,8 @@ use system\std;
 use system\Helper\wpDatabase;
 use system\Helper\security;
 use system\Helper\wpDateTime;
+
+include 'system/Helper/wpDateTime.psys';
 class trendselect {
 	const c_gettrendsingroup = 'gettrendsingroup';
 	const c_getusertrends = 'getusertrends';
@@ -29,6 +31,7 @@ class trendselect {
 	const c_deletetrendadmin = 'deletetrendadmin';
 	const c_renametrenduser = 'renametrenduser';
 	const c_renametrendadmin = 'renametrendadmin';
+	const c_propdeletetrendvalue = 'propdeletetrendvalue';
 }
 
 switch(std::gets('param1')) {
@@ -145,10 +148,17 @@ switch(std::gets('param1')) {
 		break;
 	//###################################################################################
 	case trendselect::c_deletetrendvalue:
+		$database = new wpDatabase();
 		$date = new \DateTime();
 		$date->setTimestamp(std::posts('time') / 1000);
-		$sql = "SELECT * FROM [trendvalue] WHERE [id_trend] = " . std::posts('id_trend') . " AND [time] = CAST('" . $date->format(wpDateTime::forDB) . "' AS DATETIME) AND [value] = '" . std::posts('value') . "'";
-		echo $sql;
+		$sql = "DELETE FROM [trendvalue] WHERE
+		[id_trend] = " . std::posts('id_trend') . " AND
+		CONVERT(VARCHAR, [time], 126) LIKE '" . $date->format(wpDateTime::forDB) . "%' AND
+		[value] LIKE '" . std::posts('value') . "%'";
+		if($database->query($sql))
+			echo S_OK;
+		else
+			echo S_ERROR;
 		break;
 	//###################################################################################
 	case trendselect::c_savetrenduser:
@@ -278,6 +288,37 @@ switch(std::gets('param1')) {
 		} else {
 			echo 'Sie haben nicht die erforderlichen Rechte';
 		}
+		break;
+//###################################################################################
+	case trendselect::c_propdeletetrendvalue:
+		$database = new wpDatabase();
+		$date = new \DateTime();
+		$date->setTimestamp(std::posts('time') / 1000);
+		$sql = "SELECT * FROM [trendvalue] WHERE
+		[id_trend] = " . std::posts('id_trend') . " AND
+		CONVERT(VARCHAR, [time], 126) LIKE '" . $date->format(wpDateTime::forDB) . "%' AND
+		[value] LIKE '" . std::posts('value') . "%'";
+		echo $sql;
+		$database->query($sql);
+		echo '
+<table summary="">
+	<thead>
+		<td colspan="3">
+			Die folgenden Einträge löschen?
+		</td>
+	</thead>
+	<tbody>';
+		while($erg = $database->fetch()) {
+			echo '
+		<tr>
+			<td>' . $erg['id_trend'] . '</td>
+			<td>' . $erg['time']->format('d.m.Y, H:i:s') . '</td>
+			<td>' . $erg['value'] . '</td>
+		</tr>';
+		}
+		echo '
+	</tbody>
+</table>';
 		break;
 //###################################################################################
 	default:

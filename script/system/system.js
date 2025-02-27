@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 715                                                     $ #
+//# Revision     : $Rev:: 723                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: system.js 715 2025-01-29 18:35:26Z                       $ #
+//# File-ID      : $Id:: system.js 723 2025-02-27 14:24:23Z                       $ #
 //#                                                                                 #
 //###################################################################################
 use system\wpInit;
@@ -195,7 +195,8 @@ $(document).ready(function() {
 
 	if(fltgroupaktiv[0] == '') fltgroupaktiv.splice(0,fltgroupaktiv.length);
 	if(flttypeaktiv[0] == '') flttypeaktiv.splice(0,flttypeaktiv.length);
-
+	
+	console.log($(window).height(), $(window).width());
 	$(window).resize(function() {
 		if(showAlarm) {
 			$('.pagecontent').css({height:'0px'});
@@ -208,6 +209,7 @@ $(document).ready(function() {
 			$('.pagecontent').css({height:($(window).height() - HeightFooterHeader) + 'px'});
 			// p.log.write('newhight: ' + ($(window).height() - HeightFooterHeader) + 'px');
 		}
+		console.log($(window).height(), $(window).width());
 	});
 	$('.pageback').click(function() {
 		history.back();

@@ -9,25 +9,19 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 31.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 701                                                     $ #
+//# Revision     : $Rev:: 723                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: ug.inc 701 2024-10-14 00:14:32Z                          $ #
+//# File-ID      : $Id:: ug.inc 723 2025-02-27 14:24:23Z                          $ #
 //#                                                                                 #
 //###################################################################################
 namespace pages;
 use system\html;
 ?>
-<div id="ug">
+<div id="ug" class="page">
 	<h1><? html::getPageHeadline();?></h1>
-	<div class="center">
-		<div class="navigationImages">
-			<!--img src="images/background/jpg/[dateiname].jpg" alt="" usemap="#image-map" /-->
-			<map name="image-map">
-<?
-				//html::getAreaButton('[dateiname]', '123,456,789');
-?>
-			</map>
-		</div>
+	<div class="ps-flex-menu-container">
 		<? html::getUebersichtMenu();?>
+		<div class="ps-flex-page">
+		</div>
 	</div>
 </div>

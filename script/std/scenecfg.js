@@ -9,15 +9,16 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 22.07.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 709                                                     $ #
+//# Revision     : $Rev:: 723                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: scenecfg.js 709 2024-11-21 13:08:04Z                     $ #
+//# File-ID      : $Id:: scenecfg.js 723 2025-02-27 14:24:23Z                     $ #
 //#                                                                                 #
 //###################################################################################
 ?> scenecfg */
 
 // p.log.level = p.log.type.info;
 
+//<? require_once('script/system/websockets.js') ?>
 //<? require_once 'script/system/groups.js'; ?>
 
 groups.tablename = 'scenegroup';
@@ -25,6 +26,8 @@ groups.member = 'scene';
 groups.target = 'scenecfg';
 
 var isbig = false;
+
+ws.logEnabled = true;
 
 p.page.load = function() {
 	groups.init();
@@ -97,6 +100,7 @@ p.page.load = function() {
 		}
 		$.post('std.scenecfg.getscenedatapoints.req', {id:$(this).val()}, function(data) {
 			$('#onescenecfg').html(data);
+			//ws.register();
 		});
 	});
 	// Treeview
@@ -476,6 +480,7 @@ p.page.load = function() {
 	});
 //###################################################################################
 	p.getValues();
+	//ws.connect();
 };
 function getValues() {
 	$.get('std.request.activedpextended.req', function(data) {

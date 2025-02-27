@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 605                                                     $ #
+//# Revision     : $Rev:: 724                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: trendselect.js 605 2024-05-03 13:06:51Z                  $ #
+//# File-ID      : $Id:: trendselect.js 724 2025-02-27 14:52:17Z                  $ #
 //#                                                                                 #
 //###################################################################################
 ?> trendselect */
@@ -40,7 +40,7 @@ var autoloadtrenddatatimer = null;
 var autoloadtrenddatastarted = false;
 var autoloadtrenddataseconds = 0;
 
-timezoneJS.timezone.zoneFileBasePath = 'system/tz';
+timezoneJS.timezone.zoneFileBasePath = 'resources/tz';
 timezoneJS.timezone.defaultZoneFile = ['europe.txt'];
 timezoneJS.timezone.init({async: true});
 
@@ -112,8 +112,31 @@ p.page.load = function() {
 	});
 	$('#erg').on('plotclick', function(event, pos, item) {
 		if(item) {
-			$.post('std.trendselect.deletetrendvalue.req', {id_trend:item.series.id, time:item.datapoint[0], value:item.datapoint[1]}, function(data) {
-				if(data != 'S_OK') p.page.alert(data);
+			const props = {
+				id_trend: item.series.id,
+				time: item.datapoint[0],
+				value: item.datapoint[1]
+			};
+			$.post('std.trendselect.propdeletetrendvalue.req', props, function(data) {
+				$('#dialog').html(data).dialog({
+					title: 'Trendwert löschen',
+					modal: true,
+					width: p.popup.width.osk,
+					buttons: [{
+						text: 'löschen',
+						click: function() {
+							$.post('std.trendselect.deletetrendvalue.req', props, function(data) {
+								if(data.erg != 'S_OK') p.page.alert('Database Error');
+								$('#dialog').dialog('close');
+							}, 'json');
+						}
+					}, {
+						text: 'abbrechen',
+						click: function() {
+							$('#dialog').dialog('close');
+						}
+					}]
+				});
 			});
 			//console.log(item);
 		}

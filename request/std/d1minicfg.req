@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 04.03.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 722                                                     $ #
+//# Revision     : $Rev:: 723                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.req 722 2025-02-18 19:42:31Z                   $ #
+//# File-ID      : $Id:: d1minicfg.req 723 2025-02-27 14:24:23Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -229,9 +229,7 @@ class d1minicfg {
 					<span class="ps-button allRestart" title="Restart Device">Restart Device</span>
 					<span class="ps-button allgroup" title="in Gruppe verschieben">Gruppe</span>
 					<span class="ps-button allaktiv" title="aktivieren / deaktivieren">Aktiv</span>
-					<span class="ps-button alldelete">l&ouml;schen</span>';
-		if(std::posts('d1minigroup') == 'ALL') {
-			$html .= '
+					<span class="ps-button alldelete">l&ouml;schen</span>
 					<span class="ps-checkbox D1MiniUpdateFilter">nur mit Update</span>
 					<select class="ps-input D1MiniChannelFilter">
 						<option value="all">All</option>
@@ -241,9 +239,7 @@ class d1minicfg {
 						<option value="heating">heating</option>
 						<option value="rfid">rfid</option>
 					</select>
-					<input type="text" class="ps-input D1MiniCompiledFilter" placeholder="CompiledWith filter" />';
-		}
-		$html.= '
+					<input type="text" class="ps-input D1MiniCompiledFilter" placeholder="CompiledWith filter" />
 				</div>
 			</div>
 		</div>

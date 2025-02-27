@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 23.07.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 552                                                     $ #
+//# Revision     : $Rev:: 723                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: calendarscene.req 552 2024-01-06 13:56:24Z               $ #
+//# File-ID      : $Id:: calendarscene.req 723 2025-02-27 14:24:23Z               $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -57,10 +57,10 @@ switch(std::gets('param1')) {
 			echo '</tr>';
 			$database = new wpDatabase();
 			$database->query('SELECT
-					[v].[id_scenevalue], [og].[name] AS [group], ISNULL([d].[description], [d].[name]) AS [description], [d].[name], [d].[unit], [v].[value]
-					FROM [opcdatapoint] [d]
-					INNER JOIN [opcgroup] [og] ON [d].[id_opcgroup] = [og].[id_opcgroup]
-					LEFT JOIN [scenevalue] [v] ON [v].[id_opcdatapoint] = [d].[id_opcdatapoint]
+					[v].[id_scenevalue], [dpg].[name] AS [group], ISNULL([dp].[description], [dp].[name]) AS [description], [dp].[name], [dp].[unit], [v].[value]
+					FROM [dp]
+					INNER JOIN [dpgroup] [dpg] ON [dp].[id_dpgroup] = [dpg].[id_dpgroup]
+					LEFT JOIN [scenevalue] [v] ON [v].[id_dp] = [dp].[id_dp]
 					WHERE [v].[id_scene] = '.std::posts('id'));
 			$points = array();
 			while($erg = $database->fetch()) {

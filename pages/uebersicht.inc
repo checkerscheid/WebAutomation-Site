@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 722                                                     $ #
+//# Revision     : $Rev:: 723                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 722 2025-02-18 19:42:31Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 723 2025-02-27 14:24:23Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -20,6 +20,7 @@ use system\Helper\security;
 use system\Helper\wpdatabase;
 use system\std;
 use system\Helper\wpa;
+use system\html;
 require_once 'system/Helper/wpa.psys';
 
 $useWeihnachten = true;
@@ -278,6 +279,12 @@ class uebersicht {
 <div id="uebersicht" class="page">
 	<h3 class="pa-hide ps-tacenter ps-roundborder ps-shadow wartungmeldung" data-value="Wartung">Wartung aktiv</h3>
 	<div class="ps-flex-container">
+		<div class="ps-container">
+			<h2>Navigation</h2>
+<?
+		html::getUebersichtMenu();
+?>
+		</div>
 		<div class="ps-container">
 			<h2>Licht</h2>
 			<table>

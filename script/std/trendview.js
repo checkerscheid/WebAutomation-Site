@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.10.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 706                                                     $ #
+//# Revision     : $Rev:: 724                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: trendview.js 706 2024-11-04 15:08:34Z                    $ #
+//# File-ID      : $Id:: trendview.js 724 2025-02-27 14:52:17Z                    $ #
 //#                                                                                 #
 //###################################################################################
 ?> trendview */
@@ -40,7 +40,7 @@ var autoloadtrenddatatimer = null;
 var autoloadtrenddatastarted = false;
 var autoloadtrenddataseconds = 0;
 
-timezoneJS.timezone.zoneFileBasePath = 'system/tz';
+timezoneJS.timezone.zoneFileBasePath = 'resources/tz';
 timezoneJS.timezone.defaultZoneFile = ['europe.txt'];
 timezoneJS.timezone.init({async: true});
 

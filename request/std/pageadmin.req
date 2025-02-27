@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 696                                                     $ #
+//# Revision     : $Rev:: 723                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pageadmin.req 696 2024-10-06 19:11:29Z                   $ #
+//# File-ID      : $Id:: pageadmin.req 723 2025-02-27 14:24:23Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -80,26 +80,20 @@ switch(std::gets('param1')) {
 //# Author       : ' . $username . '#
 //# Date         : ' . date('d.m.Y') . '                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 696                                                     $ #
+//# Revision     : $Rev:: 723                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pageadmin.req 696 2024-10-06 19:11:29Z                   $ #
+//# File-ID      : $Id:: pageadmin.req 723 2025-02-27 14:24:23Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace pages;
 use system\html;
 ?>
-<div id="' . $src . '">
+<div id="' . $src . '" class="page">
 	<h1><? html::getPageHeadline();?></h1>
-	<div class="center">
-		<div class="navigationImages">
-			<!--img src="images/background/jpg/[dateiname].jpg" alt="" usemap="#image-map" /-->
-			<map name="image-map">
-<?
-				//html::getAreaButton(\'[dateiname]\', \'123,456,789\');
-?>
-			</map>
-		</div>
+	<div class="ps-flex-menu-container">
 		<? html::getUebersichtMenu();?>
+		<div class="ps-flex-page">
+		</div>
 	</div>
 </div>
 ';
@@ -118,14 +112,13 @@ use system\html;
 //# Author       : ' . $username . '#
 //# Date         : ' . date('d.m.Y') . '                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 696                                                     $ #
+//# Revision     : $Rev:: 723                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pageadmin.req 696 2024-10-06 19:11:29Z                   $ #
+//# File-ID      : $Id:: pageadmin.req 723 2025-02-27 14:24:23Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> ' . $src . ' */
 p.page.load = function() {
-	p.menuStd.init();
 	// p.getValues();
 };
 ';
@@ -144,9 +137,9 @@ p.page.load = function() {
 //# Author       : ' . $username . '#
 //# Date         : ' . date('d.m.Y') . '                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 696                                                     $ #
+//# Revision     : $Rev:: 723                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pageadmin.req 696 2024-10-06 19:11:29Z                   $ #
+//# File-ID      : $Id:: pageadmin.req 723 2025-02-27 14:24:23Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> ' . $src . ' */
@@ -180,9 +173,9 @@ p.page.load = function() {
 //# Author       : ' . $username . '#
 //# Date         : ' . date('d.m.Y') . '                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 696                                                     $ #
+//# Revision     : $Rev:: 723                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pageadmin.req 696 2024-10-06 19:11:29Z                   $ #
+//# File-ID      : $Id:: pageadmin.req 723 2025-02-27 14:24:23Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace pages;
@@ -209,9 +202,9 @@ use system\html;
 //# Author       : ' . $username . '#
 //# Date         : ' . date('d.m.Y') . '                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 696                                                     $ #
+//# Revision     : $Rev:: 723                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pageadmin.req 696 2024-10-06 19:11:29Z                   $ #
+//# File-ID      : $Id:: pageadmin.req 723 2025-02-27 14:24:23Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> ' . $src . ' */
@@ -234,9 +227,9 @@ p.page.load = function() {
 //# Author       : ' . $username . '#
 //# Date         : ' . date('d.m.Y') . '                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 696                                                     $ #
+//# Revision     : $Rev:: 723                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pageadmin.req 696 2024-10-06 19:11:29Z                   $ #
+//# File-ID      : $Id:: pageadmin.req 723 2025-02-27 14:24:23Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> ' . $src . ' */

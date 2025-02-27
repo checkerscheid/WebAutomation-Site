@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 715                                                     $ #
+//# Revision     : $Rev:: 723                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.inc 715 2025-01-29 18:35:26Z                      $ #
+//# File-ID      : $Id:: d1mini.inc 723 2025-02-27 14:24:23Z                      $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
@@ -47,6 +47,7 @@ if(\json_last_error() != JSON_ERROR_NONE) {
 <div id="d1mini">
 	<h1><?=$headline['name']?> <?=$erg['name'] ?></h1>
 	<h2><?=$erg['description'] ?></h2>
+	<h3><?=($d1Mini->FreakaZoneDevice->Version ?? '--') ?></h3>
 <?
 $online = true;
 if(!isset($d1Mini->FreakaZoneDevice)) {
@@ -60,7 +61,7 @@ if($online) {
 ?>
 	<div class="buttonContainer">
 		<span class="ps-button SetCmd" data-cmd="ForceMqttUpdate" title="Force MQTT Update">Force MQTT Update</span>
-		<span class="ps-button SetCmd" data-cmd="UpdateHTTP" title="Setup Http">Setup Http</span>
+		<span class="ps-button SetCmd" data-cmd="UpdateHTTP" title="Update">Update</span>
 		<span class="ps-button SetCmd" data-cmd="RestartDevice" title="neu starten">neu starten</span>
 		<span class="ps-button SetCmd" data-cmd="Blink" title="Blink">Blink</span>
 		<a class="ps-button" target="_blank" href="http://<?=$erg['ip'] ?>/print">Device Site</a>
@@ -121,6 +122,34 @@ foreach($updateChanel as $key => $value) {
 					<td><span class="ps-input"><?=($d1Mini->FreakaZoneDevice->BootCounter ?? '&#8734;') ?></span></td>
 					<? if($online) { ?>
 					<td class="buttonContainer"><span class="ps-button SetCmd" data-cmd="ResetBootCounter">reset</span></td>
+					<? } ?>
+				</tr>
+				<tr>
+					<td><span>Online Since</span></td>
+					<td><span><?=$d1Mini->FreakaZoneDevice->OnSince ?? '--' ?></span></td>
+					<? if($online) { ?>
+					<td></td>
+					<? } ?>
+				</tr>
+				<tr>
+					<td><span>Online Duration</span></td>
+					<td><span><?=$d1Mini->FreakaZoneDevice->OnDuration ?? '--' ?></span></td>
+					<? if($online) { ?>
+					<td></td>
+					<? } ?>
+				</tr>
+				<tr>
+					<td><span>WiFi Since</span></td>
+					<td><span><?=$d1Mini->FreakaZoneDevice->WiFiSince ?? '--' ?></span></td>
+					<? if($online) { ?>
+					<td></td>
+					<? } ?>
+				</tr>
+				<tr>
+					<td><span>MQTT Since</span></td>
+					<td><span><?=$d1Mini->FreakaZoneDevice->MQTTSince ?? '--' ?></span></td>
+					<? if($online) { ?>
+					<td></td>
 					<? } ?>
 				</tr>
 			</table>
@@ -773,4 +802,4 @@ if(($d1Mini->FreakaZoneDevice->useModul->AnalogOut2 ?? false) &&
 		</div>
 	<? } ?>
 	</div>
-</div>
+</di>

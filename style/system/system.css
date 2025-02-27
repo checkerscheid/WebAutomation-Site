@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 716                                                     $ #
+//# Revision     : $Rev:: 723                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: system.css 716 2025-02-09 09:35:20Z                      $ #
+//# File-ID      : $Id:: system.css 723 2025-02-27 14:24:23Z                      $ #
 //#                                                                                 #
 //###################################################################################
 use system\wpInit
@@ -54,6 +54,13 @@ body.touch .pagecontent * { font-size:15px; font-weight:bold; }
 /* background:transparent url(images/layout/Header_mitte.png) repeat-x left top; */ }
 .wpBalken { height:100px; padding-left:230px;
 	background:transparent url(images/layout/Header_Logo_.png) no-repeat center top; }
+	
+/* won't work
+@media screen and (max-height:800px) {
+	#footerLinks { margin-top:-75px; }
+	#content { padding-bottom:75px; }
+}
+*/
 
 .wpBalken.Alarm { background-image:url(images/layout/Header_Logo_Alarm.png); }
 .wpBalken.BMS { background-image:url(images/layout/Header_Logo_BMS.png); }
@@ -173,11 +180,6 @@ if(wpInit::$PageName != '' || strtolower(std::arrays($_SESSION[SESSION_ID], 'USE
 .pagemenucontent a.menuentry.image:hover { text-decoration:none; }
 .pagemenucontent a.menuentry.paramsite { float:right; }
 
-.ps-uebersicht-navi *, .ps-uebersicht-navi1 *, .ps-uebersicht-navi2 *, .ps-uebersicht-navi3 * { position:static; }
-.ps-uebersicht-navi, .ps-uebersicht-navi1, .ps-uebersicht-navi2, .ps-uebersicht-navi3 { float:left; width:185px; }
-.navigationImages, .navigationImages *, #ps-uebersicht-navi-container { position:absolute; }
-#ps-uebersicht-navi-container { clear:both; }
-
 .btn { padding:3px 10px; margin:1px; text-align:center; border:1px solid #888; cursor:pointer;
 	background-color:#FFF; color:#555; white-space:nowrap; border-radius:4px; box-shadow:0px 0px 4px 0px #888; }
 .btn:hover { border-color:#000; }
@@ -254,6 +256,9 @@ div.ps-center-container { clear:left; float:left; left:50%; position:relative; }
 div.ps-center-element { float:left; right:50%; position:relative; }
 
 div.ps-flex-container { display:flex; flex-wrap:wrap; justify-content:center; align-items:stretch; }
+div.ps-flex-menu-container { display:flex; flex-wrap:wrap; justify-content:start; align-items:stretch; }
+.ps-flex-menu { display:flex; flex-direction:column; }
+div.ps-flex-page { flex-grow:1; }
 .ps-flex-item { flex-grow:1; }
 .ps-flex-item * { margin:auto; }
 .ps-loading { min-height:50px;
@@ -373,13 +378,12 @@ span.ps-checkbox, label.ps-checkbox { display:inline-block; }
 .ps-hover-noborder:hover { border:1px solid #888; }
 .ps-hover-noborder:active { box-shadow:inset 0px 0px 3px #CCC; }
 
-.ps-navi-button { padding:5px 5px; margin:2px 5px; background-color:#555; color:#FFF;
-	background-image:linear-gradient(#606060 25%, #222 100%);
-	width:155px; min-height:60px; line-height:20px; font-size:16px; font-weight:bold;
-	border:1px solid #888; border-radius:4px;
-	cursor:pointer; display:inline-block; text-align:left; text-decoration:none;
-	box-shadow:0px 0px 2px 0px #888;
-}
+
+.ps-navi-button { padding:7px; margin:2px 5px; min-width: 150px; width:auto; background-color:#555; color:#FFF;
+	border:1px solid #888; cursor:pointer; display:inline-block;
+	font-size:13px; line-height:16px; font-weight:bold;
+	white-space:nowrap; border-radius:4px; box-shadow:0px 0px 2px 0px #888;
+	background-image:linear-gradient(#606060 25%, #222 100%); }
 .ps-navi-button:hover, .ps-navi-button-jshover { border-color:#AAA; }
 .ps-navi-button:active { border-color:#555; box-shadow:inset 2px 2px 5px 0px #222; color:#888; }
 
@@ -598,4 +602,12 @@ table.dataTable thead th.noborder { border:none; }
 
 .ui-button:focus { outline:none; }
 
-
+@media (orientation: portrait) {
+	.pagecontent span,
+	.pagecontent a { font-size:18px; }
+	.pagecontent .ps-button,
+	.pagecontent .ps-navi-button { padding:25px 6px; }
+	.pagecontent .ps-input { font-size:18px; padding:5px; }
+	.pagecontent .ui-slider .ui-slider-handle { width:30px; height:30px; }
+	.pagecontent .ui-slider-horizontal { height:20px; }
+}

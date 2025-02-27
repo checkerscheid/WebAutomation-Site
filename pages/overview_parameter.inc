@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 722                                                     $ #
+//# Revision     : $Rev:: 723                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: overview_parameter.inc 722 2025-02-18 19:42:31Z          $ #
+//# File-ID      : $Id:: overview_parameter.inc 723 2025-02-27 14:24:23Z          $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -51,6 +51,10 @@ $points = array(
 				<tr>
 					<td>Insert Dummy</td>
 					<td><span class="ps-button insertDummy">InsertDummy</span></td>
+				</tr>
+				<tr>
+					<td>Select Scene</td>
+					<td><span class="ps-button selectScene">SelectScene</span></td>
 				</tr>
 			</tbody>
 		</table>

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 702                                                     $ #
+//# Revision     : $Rev:: 723                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.css 702 2024-10-18 23:16:21Z                      $ #
+//# File-ID      : $Id:: d1mini.css 723 2025-02-27 14:24:23Z                      $ #
 //#                                                                                 #
 //###################################################################################
 ?> d1mini */
@@ -20,7 +20,7 @@
 <? require_once 'style/system/wpCwWw.css'; ?>
 <? require_once 'style/system/wpAnalogOut.css'; ?>
 
-#d1mini h2, #d1mini p { text-align: center; }
+#d1mini h2, #d1mini h3, #d1mini p { text-align: center; }
 #d1mini table { margin:auto; }
 #d1mini .buttonContainer { text-align:center; }
 #dialog .newDpVal { width:auto; min-width:250px; }

@@ -10,9 +10,9 @@ header('Content-Type: text/html; charset=utf-8');
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 706                                                     $ #
+//# Revision     : $Rev:: 726                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: index.php 706 2024-11-04 15:08:34Z                       $ #
+//# File-ID      : $Id:: index.php 726 2025-02-27 14:55:29Z                       $ #
 //#                                                                                 #
 //###################################################################################
 /** @var array $points */
@@ -92,7 +92,7 @@ unset($_SESSION[SESSION_ID]['ActiveAlarms']);
 	<link rel="shortcut icon" type="image/vnd.microsoft.icon" href="favicon.ico" />
 </head>
 <body class="<?=(isset($sdata->TOUCH) && $sdata->TOUCH == '1' ? 'touch' : '')?> <?=(isset($sdata->MARK) && $sdata->MARK == '1' ? '' : 'nomark')?>">
-	<audio src="system/S_Opener.mp3" id="alarmsound"></audio>
+	<audio src="resources/S_Opener.mp3" id="alarmsound"></audio>
 	<div id="contentAll">
 		<div id="content">
 			<? if(security::checkGroup(security::entwickler)) { ?>

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 14.01.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 722                                                     $ #
+//# Revision     : $Rev:: 723                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: overview_parameter.js 722 2025-02-18 19:42:31Z           $ #
+//# File-ID      : $Id:: overview_parameter.js 723 2025-02-27 14:24:23Z           $ #
 //#                                                                                 #
 //###################################################################################
 ?> uebersicht_parameter */
@@ -23,6 +23,9 @@
 p.page.load = function() {
 	$('#uebersicht_parameter').on('click', '.insertDummy', function() {
 		$.get('overview_parameter.insertDummy.req', function(data) { console.log(data); }, 'json');
+	});
+	$('#uebersicht_parameter').on('click', '.selectScene', function() {
+		$.get('overview_parameter.selectScene.req', function(data) { console.log(data); }, 'json');
 	});
 	$('#uebersicht_parameter').on('click', '.pa-EinAus.ps-parambool', function() {
 		var headline = $(this).attr('data-popup');
