@@ -1,0 +1,21 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 27.02.2025                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 729                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: sys_shelly.css 729 2025-02-27 22:40:52Z                  $ #
+//#                                                                                 #
+//###################################################################################
+?> shelly */
+
+#shelly h1, #shelly h2, #shelly h3 { text-align:center; }
+#shelly td { padding:5px 10px; border:1px solid #CCC; }
+#shelly .serverinfo { position:fixed; top:85px; right:25px; color:#FFF; font-size:7pt; }

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 721                                                     $ #
+//# Revision     : $Rev:: 728                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: conf.psys 721 2025-02-17 00:57:52Z                       $ #
+//# File-ID      : $Id:: conf.psys 728 2025-02-27 22:40:10Z                       $ #
 //#                                                                                 #
 //###################################################################################
 use system\wpInit;
@@ -28,7 +28,7 @@ wpInit::$menuorder = array(
 );
 wpInit::$systemmenuorder['webvisucs']['Plug Ins'] = array( 'trendselect', 'calendar', 'calendarscene', 'opcrouter' );
 wpInit::$systemmenuorder['webvisucs']['Sonstiges'] = array('wetter', 'weather', 'betriebsstunden', 'kamera', 'shopping', 'tvremote');
-wpInit::$systemmenuorder['system']['Systeminformationen'] = array('sys_codesys');
+wpInit::$systemmenuorder['system']['Systeminformationen'] = array('sys_codesys', 'sys_d1mini', 'sys_shelly');
 wpInit::$systemmenuorder['system']['Entwicklung'] = array('websockets');
 wpInit::$noStdPageInSystem = array('wetter', 'betriebsstunden', 'websockets', 'kamera', 'shopping', 'shoppingcfg', 'tvremote');
 wpInit::$stdpoints = array('AT' => '_GA_RT');

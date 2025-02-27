@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 08.06.2021                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 713                                                     $ #
+//# Revision     : $Rev:: 728                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: websockets.js 713 2024-12-14 16:26:31Z                   $ #
+//# File-ID      : $Id:: websockets.js 728 2025-02-27 22:40:10Z                   $ #
 //#                                                                                 #
 //###################################################################################
 use system\Helper\wpa;
@@ -52,6 +52,9 @@ var ws = {
 				//ws.connect();
 			}
 		}, 2000);
+		ws.registerNoAlive();
+	},
+	registerNoAlive: function() {
 		$.each($('[data-ws]'), function() {
 			if($(this).attr('data-ws') != null && $(this).attr('data-ws') != '' &&
 				!ws.registered.includes($(this).attr('data-ws'))) {
@@ -67,6 +70,7 @@ var ws = {
 	onopen: function(e) {
 		ws.register();
 		ws.log(e);
+		if(typeof(wsInit) == 'function') wsInit();
 	},
 	onmessage: function(e) {
 		ws.alive = 0;

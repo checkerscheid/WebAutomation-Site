@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 03.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 722                                                     $ #
+//# Revision     : $Rev:: 728                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.js 722 2025-02-18 19:42:31Z                    $ #
+//# File-ID      : $Id:: d1minicfg.js 728 2025-02-27 22:40:10Z                    $ #
 //#                                                                                 #
 //###################################################################################
 ?> d1minicfg */
@@ -67,6 +67,7 @@ p.page.load = function() {
 						'data': ip
 					};
 					ws.send(question);
+					ws.registerNoAlive();
 				});
 				//D1MiniRenew(d1minigroup);
 			});

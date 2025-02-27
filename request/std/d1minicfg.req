@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 04.03.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 723                                                     $ #
+//# Revision     : $Rev:: 728                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.req 723 2025-02-27 14:24:23Z                   $ #
+//# File-ID      : $Id:: d1minicfg.req 728 2025-02-27 22:40:10Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -19,9 +19,11 @@ namespace request\std;
 use system\Helper\wpDatabase;
 use system\std, system\WebCom;
 use system\Helper\d1mini;
+use system\Helper\wpa;
 
 require_once 'request/system/groups.psys';
 require_once 'system/Helper/d1mini.psys';
+require_once 'system/Helper/wpa.psys';
 
 class d1minicfg {
 	static $maxFreakaZoneVersion;
@@ -257,6 +259,7 @@ class d1minicfg {
 			}
 			$html .= '
 					<th>IP</th>
+					<th>Signal</th>
 					<th>MAC</th>
 					<th>Version</th>
 					<th>MQTT</th>
@@ -324,6 +327,9 @@ class d1minicfg {
 								<a href="http://' . $erg['ip'] . '/status" target="_blank" class="ps-hover-noborder ps-image-button ps-status" title="Status"></a>
 							</div>
 						</div>
+					</td>
+					<td>
+						<span data-ws="' . $erg['name']. '_Rssi" class="' . wpa::rssi . '">-</span>
 					</td>
 					<td data-column="mac">
 						<div class="tdButton">
