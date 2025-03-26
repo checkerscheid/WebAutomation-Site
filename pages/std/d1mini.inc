@@ -43,6 +43,12 @@ if(\json_last_error() != JSON_ERROR_NONE) {
 	echo $res;
 }
 //std::test_array($d1Mini);
+
+
+$points = array(
+	'Online'		=> $erg['name'] . '_Online',
+	'NewVersion'	=> $erg['name'] . '_NewVersion',
+);
 ?>
 <div id="d1mini">
 	<h1><?=$headline['name']?> <?=$erg['name'] ?></h1>
@@ -67,6 +73,15 @@ if($online) {
 		<a class="ps-button" target="_blank" href="http://<?=$erg['ip'] ?>/print">Device Site</a>
 	</div>
 <? } ?>
+	<div class="progressContainer ps-hidden">
+		<div class="ps-container">
+			<div class="progressBg">
+				<div class="progress">
+					<span class="progressVal">0</span>
+				</div>
+			</div>
+		</diV>
+	</div>
 	<div class="ps-flex-container page">
 		<div class="ps-container">
 			<table summary="">
@@ -155,7 +170,9 @@ foreach($updateChanel as $key => $value) {
 			</table>
 		</div>
 	<? if(($d1Mini->FreakaZoneDevice->useModul->DHT11 ?? false) ||
-			($d1Mini->FreakaZoneDevice->useModul->DHT22 ?? false)) { ?>
+			($d1Mini->FreakaZoneDevice->useModul->DHT22 ?? false)) {
+			$points['ERROR_HT'] = $erg['name'] . '_ERROR_HT';
+	?>
 		<div class="ps-container">
 			<h3>DHT</h3>
 			<table summary="">
@@ -201,7 +218,9 @@ foreach($updateChanel as $key => $value) {
 			</table>
 		</div>
 	<? } ?>
-	<? if($d1Mini->FreakaZoneDevice->useModul->LDR ?? false) { ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->LDR ?? false) {
+		$points['ERROR_LDR'] = $erg['name'] . '_ERROR_LDR';
+	?>
 		<div class="ps-container">
 			<h3>LDR</h3>
 			<table summary="">
@@ -243,7 +262,9 @@ foreach($updateChanel as $key => $value) {
 			</table>
 		</div>
 	<? } ?>
-	<? if($d1Mini->FreakaZoneDevice->useModul->Light ?? false) { ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->Light ?? false) {
+		$points['ERROR_Licht'] = $erg['name'] . '_ERROR_Licht';
+	?>
 		<div class="ps-container">
 			<h3>Light</h3>
 			<table summary="">
@@ -354,7 +375,9 @@ foreach($updateChanel as $key => $value) {
 			</table>
 		</div>
 	<? } ?>
-	<? if($d1Mini->FreakaZoneDevice->useModul->Weight ?? false) { ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->Weight ?? false) {
+		$points['ERROR_Weight'] = $erg['name'] . '_ERROR_Weight';
+	?>
 		<div class="ps-container">
 			<h3>Weight</h3>
 			<table summary="">
@@ -389,6 +412,12 @@ foreach($updateChanel as $key => $value) {
 						<span class="ps-button writeTopic" data-topic="<?=$erg['name'] ?>/settings/Weight/SetTare" data-write="1">Tare</span>
 					</td>
 				</tr>
+				<tr>
+					<td>Tare 1 kg:</td>
+					<td>
+						<span class="ps-button writeTopic" data-topic="<?=$erg['name'] ?>/settings/Weight/Set1kg" data-write="1">Tare 1 kg</span>
+					</td>
+				</tr>
 			</table>
 		</div>
 	<? } ?>
@@ -407,13 +436,16 @@ if($d1Mini->FreakaZoneDevice->useModul->CwWw ?? false) {
 if(($d1Mini->FreakaZoneDevice->useModul->AnalogOut ?? false) &&
 	(!$d1Mini->FreakaZoneDevice->useModul->NeoPixel ?? false) &&
 	(!$d1Mini->FreakaZoneDevice->useModul->CwWw ?? false)) {
+	$points['AnalogOutHandError'] = $erg['name'] . '_AnalogOutHandError';
 	$analogOut = new wpAnalogOut($erg['ip'], $erg['name']);
 	$analogOut->getStatusFromJson($d1Mini->FreakaZoneDevice);
 	$analogOut->getHtml(true);
 }
 if(($d1Mini->FreakaZoneDevice->useModul->AnalogOut2 ?? false) &&
 	(!$d1Mini->FreakaZoneDevice->useModul->NeoPixel ?? false) &&
-	(!$d1Mini->FreakaZoneDevice->useModul->CwWw ?? false)) { ?>
+	(!$d1Mini->FreakaZoneDevice->useModul->CwWw ?? false)) {
+	$points['AnalogOut2HandError'] = $erg['name'] . '_AnalogOut2HandError';
+?>
 		<div class="ps-container">
 			<h3>AnalogOut2</h3>
 			<table summary="">
@@ -475,6 +507,7 @@ if(($d1Mini->FreakaZoneDevice->useModul->AnalogOut2 ?? false) &&
 	$underfloor1 = new wpUnderfloor($erg['ip'], $erg['name'], 1);
 	$underfloor1->getStatusFromJson($d1Mini->FreakaZoneDevice);
 	$underfloor1->getUnderfloor();
+	$points['Underfloor1_HandError'] = $erg['name'] . '_Underfloor1_HandError';
 ?>
 	<? } ?>
 	<? if($d1Mini->FreakaZoneDevice->useModul->Underfloor2 ?? false) { ?>
@@ -482,6 +515,7 @@ if(($d1Mini->FreakaZoneDevice->useModul->AnalogOut2 ?? false) &&
 	$underfloor2 = new wpUnderfloor($erg['ip'], $erg['name'], 2);
 	$underfloor2->getStatusFromJson($d1Mini->FreakaZoneDevice);
 	$underfloor2->getUnderfloor();
+	$points['Underfloor2_HandError'] = $erg['name'] . '_Underfloor2_HandError';
 ?>
 	<? } ?>
 	<? if($d1Mini->FreakaZoneDevice->useModul->Underfloor3 ?? false) { ?>
@@ -489,6 +523,7 @@ if(($d1Mini->FreakaZoneDevice->useModul->AnalogOut2 ?? false) &&
 	$underfloor3 = new wpUnderfloor($erg['ip'], $erg['name'], 3);
 	$underfloor3->getStatusFromJson($d1Mini->FreakaZoneDevice);
 	$underfloor3->getUnderfloor();
+	$points['Underfloor3_HandError'] = $erg['name'] . '_Underfloor3_HandError';
 ?>
 	<? } ?>
 	<? if($d1Mini->FreakaZoneDevice->useModul->Underfloor4 ?? false) { ?>
@@ -496,10 +531,13 @@ if(($d1Mini->FreakaZoneDevice->useModul->AnalogOut2 ?? false) &&
 	$underfloor4 = new wpUnderfloor($erg['ip'], $erg['name'], 4);
 	$underfloor4->getStatusFromJson($d1Mini->FreakaZoneDevice);
 	$underfloor4->getUnderfloor();
+	$points['Underfloor4_HandError'] = $erg['name'] . '_Underfloor4_HandError';
 ?>
 	<? } ?>
 	<? if(($d1Mini->FreakaZoneDevice->useModul->Relais ?? false) ||
-		($d1Mini->FreakaZoneDevice->useModul->RelaisShield ?? false)) { ?>
+		($d1Mini->FreakaZoneDevice->useModul->RelaisShield ?? false)) {
+			$points['PumpeHandError'] = $erg['name'] . '_PumpeHandError';
+	?>
 		<div class="ps-container">
 			<h3>Relais</h3>
 			<table summary="">
@@ -554,7 +592,9 @@ if(($d1Mini->FreakaZoneDevice->useModul->AnalogOut2 ?? false) &&
 						<span class="ps-button writeTopic" data-topic="<?=$erg['name'] ?>/settings/Relais/SetHandValue" data-write="1">Ein</span>
 					</td>
 				</tr>
-	<? if($d1Mini->FreakaZoneDevice->useModul->Moisture ?? false) { ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->Moisture ?? false) {
+		$points['WaterEmpty'] = $erg['name'] . '_WaterEmpty';
+	?>
 				<tr>
 					<td colspan="6"><h3>Moisture</h3></td>
 				</tr>
@@ -602,7 +642,9 @@ if(($d1Mini->FreakaZoneDevice->useModul->AnalogOut2 ?? false) &&
 			</table>
 		</div>
 	<? } ?>
-	<? if($d1Mini->FreakaZoneDevice->useModul->Rain ?? false) { ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->Rain ?? false) {
+		$points['ERROR_Rain'] = $erg['name'] . '_ERROR_Rain';
+	?>
 		<div class="ps-container">
 			<h3>Rain</h3>
 			<table summary="">
@@ -641,7 +683,10 @@ if(($d1Mini->FreakaZoneDevice->useModul->AnalogOut2 ?? false) &&
 			</table>
 		</div>
 	<? } ?>
-	<? if($d1Mini->FreakaZoneDevice->useModul->Moisture ?? false) { ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->Moisture ?? false) {
+		$points['ERROR_Moisture'] = $erg['name'] . '_ERROR_Moisture';
+		$points['ERROR_MoistureMin'] = $erg['name'] . '_ERROR_MoistureMin';
+	?>
 		<div class="ps-container">
 			<h3>Moisture</h3>
 			<table summary="">
@@ -700,7 +745,9 @@ if(($d1Mini->FreakaZoneDevice->useModul->AnalogOut2 ?? false) &&
 			</table>
 		</div>
 	<? } ?>
-	<? if($d1Mini->FreakaZoneDevice->useModul->Distance ?? false) { ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->Distance ?? false) {
+		$points['ERROR_Distance'] = $erg['name'] . '_ERROR_Distance';
+	?>
 		<div class="ps-container">
 			<h3>Distance</h3>
 			<table summary="">
@@ -801,5 +848,11 @@ if(($d1Mini->FreakaZoneDevice->useModul->AnalogOut2 ?? false) &&
 			</table>
 		</div>
 	<? } ?>
+	</div>
+	<div class="ps-container logContainer ps-hidden">
+		<h3>Log</h3>
+		<pre class="d1MiniLog">
+
+		</pre>
 	</div>
 </di>
