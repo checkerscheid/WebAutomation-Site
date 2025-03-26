@@ -20,7 +20,62 @@ use system\std
 //<? require_once('script/system/wpNeoPixel.js') ?>
 //<? require_once('script/system/wpCwWw.js') ?>
 //<? require_once('script/system/wpAnalogOut.js') ?>
+
+
+var d1MiniWs = {
+	logEnabled: false,
+	connection: null,
+	connectionstring: null,
+	connect: function() {
+		d1MiniWs.connection = new WebSocket(d1MiniWs.connectionstring);
+		d1MiniWs.connection.onopen = function(e) { d1MiniWs.onopen(e) };
+		d1MiniWs.connection.onmessage = function(e) { d1MiniWs.onmessage(e); };
+		d1MiniWs.connection.onclose = function(e) { d1MiniWs.onclose(e); };
+		$(window).on('unload', function() {
+			d1MiniWs.connection.close(1000, '`unload` event fired');
+		});
+		$(window).on('beforeunload', function(){
+			d1MiniWs.connection.close(1000, '`beforeunload` event fired');
+		});
+	},
+	onopen: function(e) {
+		d1MiniWs.log('Connection opened', e);
+	},
+	onmessage: function(e) {
+		const d = d1MiniWs.tryParseJSONObject(e.data);
+		d1MiniWs.log('Message recieved', d);
+		if(typeof d.cmd != 'undefined') {
+			if(d.cmd == 'updateProgress') {
+				$('.progressContainer').removeClass('ps-hidden');
+				$('.progress').width(d.percent.replace(/\s/g, ''));
+				$('.progressVal').text(d.percent);
+			}
+		}
+		if(typeof d.msgheader != 'undefined') {
+			$('.logContainer').removeClass('ps-hidden');
+			$('.d1MiniLog').prepend('<p><span class="' + d.cssClass + '">' + d.msgheader + '</span><span>' + d.msgbody + '</span></p>');
+		}
+	},
+	onclose: function(e) {
+		d1MiniWs.log('Connection closed', e);
+	},
+	log: function(msg, e) {
+		if(d1MiniWs.logEnabled) console.log(msg, e);
+	},
+	tryParseJSONObject: function(jsonString) {
+		try {
+			var o = JSON.parse(jsonString);
+			if (o && typeof o === "object") {
+				return o;
+			}
+		}
+		catch (e) { }
+		return false;
+	}
+};
+
 ws.logEnabled = true;
+d1MiniWs.logEnabled = true;
 p.page.load = function() {
 	wpNeoPixel.Init('std.d1mini');
 	wpCwWw.Init('std.d1mini');
@@ -134,4 +189,8 @@ p.page.load = function() {
 		});
 	});
 	ws.connect();
+	
+	d1MiniWs.connectionstring = 'ws://' + $('#storedIP').attr('data-ip') + '/ws',
+	d1MiniWs.connect();
 };
+

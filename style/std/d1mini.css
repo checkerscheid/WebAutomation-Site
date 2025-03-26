@@ -31,3 +31,16 @@
 	#d1mini .ui-slider-horizontal { height:20px; }
 }
 
+#d1mini .progressBg { border:1px solid #555; border-radius: 5px; box-shadow: 2px 2px 3px #333 inset; }
+#d1mini .progress { background-color:#6060dd; height:25px; width:25%; text-align:left;
+	box-shadow: -1px -3px 5px #222 inset, 1px 1px 5px #ccc inset; border-radius: 5px; }
+#d1mini .progressVal { line-height:25px; padding-left: 10px; white-space:nowrap; }
+
+#d1mini .d1MiniLog { overflow:auto; }
+#d1mini .d1MiniLog p { text-align:left; }
+#d1mini .d1MiniLog * { font-family:Consolas, Verdana, Arial, sans-serif; font-size:12px; }
+#d1mini .d1MiniLog .color-debug { color:#aaa; text-shadow:0 0 3px #313131; }
+#d1mini .d1MiniLog .color-info { color:#ececfb; text-shadow:0 0 3px #000; }
+#d1mini .d1MiniLog .color-ok { color:#38C133; text-shadow:0 0 3px #313131; }
+#d1mini .d1MiniLog .color-warn { color:#cebd2f; text-shadow:0 0 3px #12130c; }
+#d1mini .d1MiniLog .color-error { color:#df0d0d; text-shadow:0 0 3px #1e1414; }
