@@ -17,7 +17,7 @@
 namespace pages;
 use system\Helper\wpa;
 require_once 'system/Helper/wpa.psys';
-class eg_hzg {
+class eghzg {
 	private $headline;
 	private $group;
 	private $valve;
@@ -79,35 +79,35 @@ class eg_hzg {
 <?
 	}
 }
-$kueche = new eg_hzg('Küche', 1, 1);
+$kueche = new eghzg('Küche', 1, 1);
 $kueche->setTemp('KU1_RU_Temp');
 $kueche->setHum('KU1_RU_Hum');
 
-$wzmitte = new eg_hzg('Wohnzimmer Mitte', 1, 2);
+$wzmitte = new eghzg('Wohnzimmer Mitte', 1, 2);
 $wzmitte->setTemp('WZ1_RU_Temp');
 $wzmitte->setHum('WZ1_RU_Hum');
 
-$wzfenster = new eg_hzg('Wohnzimmer Fenster', 1, 3);
+$wzfenster = new eghzg('Wohnzimmer Fenster', 1, 3);
 $wzfenster->setTemp('WZ1_RU_Temp');
 $wzfenster->setHum('WZ1_RU_Hum');
 
-$wzkamin = new eg_hzg('Wohnzimmer Kamin', 1, 4);
+$wzkamin = new eghzg('Wohnzimmer Kamin', 1, 4);
 $wzkamin->setTemp('WZ1_RU_Temp');
 $wzkamin->setHum('WZ1_RU_Hum');
 
-$essen = new eg_hzg('Flur Essen', 2, 1);
+$essen = new eghzg('Flur Essen', 2, 1);
 $essen->setTemp('ES1_RU_Temp');
 $essen->setHum('ES1_RU_Hum');
 
-$bad = new eg_hzg('Bad WC', 2, 2);
+$bad = new eghzg('Bad WC', 2, 2);
 $bad->setTemp('BA1_RU_Temp');
 $bad->setHum('BA1_RU_Hum');
 
-$eingang = new eg_hzg('Flur Eingang', 2, 3);
+$eingang = new eghzg('Flur Eingang', 2, 3);
 $eingang->setTemp('FL1_RU_Temp');
 $eingang->setHum('FL1_RU_Hum');
 ?>
-<div id="eg_hzg" class="page">
+<div id="eghzg" class="page">
 	<h1><? \system\html::getPageHeadline();?></h1>
 	<div class="ps-flex-container">
 <?

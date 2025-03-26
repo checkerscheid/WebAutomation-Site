@@ -118,7 +118,7 @@ switch(std::gets('param1')) {
 			echo '</li>';
 			echo '<li class="ps-tree-child ps-hidden" data-parent="'.$tinfo['idcfg'].'"><ul>';
 			foreach($tinfo['trends'] as $trendid => $trendinfo) {
-				echo '<li data-trendid="'.$trendid.'" data-trendgroup="'.$trendinfo['group'].'">'.$trendinfo['name'].'</li>';
+				echo '<li data-trendid="'.$trendid.'" data-trendgroup="'.$trendinfo['group'].'" title="' . $trendid . '">'.$trendinfo['name'].'</li>';
 			}
 			echo '</ul></li>';
 		}
@@ -138,7 +138,7 @@ switch(std::gets('param1')) {
 			echo '</li>';
 			echo '<li class="ps-tree-child ps-hidden" data-parent="'.$tinfo['idcfg'].'"><ul>';
 			foreach($tinfo['trends'] as $trendid => $trendinfo) {
-				echo '<li data-trendid="'.$trendid.'" data-trendgroup="'.$trendinfo['group'].'">'.$trendinfo['name'].'</li>';
+				echo '<li data-trendid="'.$trendid.'" data-trendgroup="'.$trendinfo['group'].'" title="' . $trendid . '">'.$trendinfo['name'].'</li>';
 			}
 			echo '</ul></li>';
 		}

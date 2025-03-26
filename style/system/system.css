@@ -548,6 +548,9 @@ table.dataTable thead th.noborder { border:none; }
 .alarmsettings:active { box-shadow:inset 0px 0px 3px #CCC; }
 .alarmup:active { box-shadow:inset 0px 0px 3px #CCC; }
 
+.SetAlarmLinkActive { float:right; margin:14px 5px 0 0; padding:2px; line-height:24px; display:block;
+	width:28px; height:24px; background:transparent url(images/layout/mini_route.png) no-repeat center center; }
+
 .alarmsettingspopup { position:absolute; bottom:160px; right:145px; width:0px; height:0px;
 	overflow:auto; background-color:#EEE; background:rgba(238, 238, 238, 0.85);
 	border:1px solid #888; padding:0px; z-index:1001; text-align:center;
@@ -602,12 +605,17 @@ table.dataTable thead th.noborder { border:none; }
 
 .ui-button:focus { outline:none; }
 
+.pagecontent .showonportrait { display:none; } /* for br */
 @media (orientation: portrait) {
 	.pagecontent span,
 	.pagecontent a { font-size:18px; }
 	.pagecontent .ps-button,
 	.pagecontent .ps-navi-button { padding:25px 6px; }
+	.pagecontent .ps-button.pa-scene { padding:25px 25px; }
+	.pagecontent .ps-pluginbutton { font-size:40px; }
 	.pagecontent .ps-input { font-size:18px; padding:5px; }
+	.pagecontent .wpa-indikator { top:8px; }
 	.pagecontent .ui-slider .ui-slider-handle { width:30px; height:30px; }
 	.pagecontent .ui-slider-horizontal { height:20px; }
+	.pagecontent .showonportrait { display:inline; } /* for br */
 }

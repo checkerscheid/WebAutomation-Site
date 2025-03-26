@@ -33,7 +33,7 @@ class wpNeoPixel {
 		4 => 'Rainbow Wheel',
 		5 => 'Theater Chase Rainbow',
 		6 => 'Runner',
-		7 => 'Random'
+		7 => 'Disco'
 	);
 	public function __construct($ip, $name) {
 		$this->database = new wpDatabase();

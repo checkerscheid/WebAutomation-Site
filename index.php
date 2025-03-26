@@ -146,11 +146,11 @@ new RegisterSignals($newpointarray);
 if(security::checkGroup(security::entwickler) && wpInit::$SetAlarmLink) {
 	$SetAlarmLinkWhere = array();
 	foreach(std::arrays($_SESSION[SESSION_ID], 'POINTS', array()) as $name) {
-		$SetAlarmLinkWhere[] = " [d].[name] = '" . $name->name . "'";
+		$SetAlarmLinkWhere[] = " [dp].[name] = '" . $name->Name . "'";
 	}
 	if(is_array($SetAlarmLinkWhere)) {
 		$s_where = implode(' OR', $SetAlarmLinkWhere);
-		$sql = "UPDATE [alarm] SET [link] = '".substr($_SERVER['REQUEST_URI'],1)."' WHERE [link] IS NULL AND [id_alarm] IN (SELECT [a].[id_alarm] FROM [opcdatapoint] [d] INNER JOIN [alarm] [a] ON [d].[id_opcdatapoint] = [a].[id_opcdatapoint] WHERE" . $s_where . ")";
+		$sql = "UPDATE [alarm] SET [link] = '".substr($_SERVER['REQUEST_URI'],1)."' WHERE ISNULL([link], '') = '' AND [id_alarm] IN (SELECT [a].[id_alarm] FROM [dp] INNER JOIN [alarm] [a] ON [dp].[id_dp] = [a].[id_dp] WHERE" . $s_where . ")";
 		//echo $sql;
 		$database->query($sql);
 	}
@@ -159,10 +159,6 @@ if(security::checkGroup(security::entwickler) && wpInit::$SetAlarmLink) {
 				<div id="presession">
 <?
 if(security::checkGroup(security::entwickler)) {
-	if(wpInit::$SetAlarmLink) {
-		echo '<hr />';
-		echo '<div><span class="ps-red">Automatischer Alarmlink Insert eingeschaltet!</span></div>';
-	}
 	if(wpInit::$wpDebug) {
 		echo '<hr />';
 		echo '<div><span class="ps-red">Debug Mode eingeschaltet!</span></div>';
@@ -223,6 +219,9 @@ if(security::checkGroup(security::entwickler)) {
 					<? } ?>
 					<? if(security::checkLevel(wpInit::$reqgroupwartung)) { ?>
 					<div id="wartungactive" class="ps-hidden" title="Wartung ist aktiv"></div>
+					<? } ?>
+					<? if(wpInit::$SetAlarmLink) { ?>
+					<span class="SetAlarmLinkActive" title="Automatischer Alarmlink Insert eingeschaltet!"></span>
 					<? } ?>
 					<? if(std::vars(wpInit::$showATinFooter) != '') { ?>
 					<span class="footertemp"><span class="ps-sm-hide">AT: </span><span data-ws="<?=wpInit::$showATinFooter?>" data-value="AT" class="atinfooter"><?=wpHTML_EMPTY?></span></span>

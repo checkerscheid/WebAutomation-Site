@@ -131,11 +131,11 @@ $points = array(
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2"><span>Buschi</span></td>
+					<td colspan="2"><span>Bee(r)ti</span></td>
 					<td colspan="2">
 						<div class="indikatoContainer">
-							<span data-ws="KZ_PF_BU_Moisture" class="ps-input">undefined</span>
-							<span data-ws="KZ_PF_BU_Moisture" class="<?=wpa::indikatorPfl?>"><?=wpHTML_EMPTY?></span>
+							<span data-ws="KZ_PF_BE_Moisture" class="ps-input">undefined</span>
+							<span data-ws="KZ_PF_BE_Moisture" class="<?=wpa::indikatorPfl?>"><?=wpHTML_EMPTY?></span>
 						</div>
 					</td>
 					<td colspan="2">
@@ -185,7 +185,7 @@ $points = array(
 <?
 	$cwww = new wpCwWw('172.17.80.164', 'KZ_KE');
 	$cwww->getStatus();
-	$cwww->getColorPicker('Halloween', 'schwebende Geister', 'Fensterschnee');
+	$cwww->getColorPicker('Halloween', 'schwebende Geister', 'Pom-Pom');
 ?>
 <?
 	$rgb = new wpRGB('172.17.80.163', 'shellies/RGBW2');

@@ -75,7 +75,7 @@ class overview {
 			'WZ_PF_FE_RE2' => new cPflanze('Pflanze am Fenster, 2. rechts', '172.17.80.105', 74),
 			'Melonie' => new cPflanze('Melonie', '172.17.80.109', 97),
 			'KZ_PF_PF' => new cPflanze('Pflanzi', '172.17.80.168', 93),
-			'KZ_PF_BU' => new cPflanze('Buschi', '172.17.80.167', 92)
+			'KZ_PF_BE' => new cPflanze('Bee(r)ti', '172.17.80.167', 92)
 		);
 	}
 	public static function getD1HT() {

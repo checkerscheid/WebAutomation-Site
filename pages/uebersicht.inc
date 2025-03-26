@@ -105,6 +105,7 @@ $calid = array(
 	'BA' => 1,
 	'BU' => 2,
 	'KZ' => 1024,
+	'KZMAXVT' => 1052,
 	'KU' => 4,
 	'WZ' => 6,
 	'SZ' => 5
@@ -491,7 +492,10 @@ foreach($zimmer as $kurz => $name) {
 						</td>
 						<td colspan="2">
 							<a href="std.trendview.<?=$trendid[$kurz] ?>.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a>
-							<a href="std.calendaredit.<?=$calid[$kurz] ?>.htm" class="ps-button ps-pluginbutton"><?=wpHTML_UHR ?></a>
+							<a href="std.calendaredit.<?=$calid[$kurz] ?>.htm" class="ps-button ps-pluginbutton" title="Sollwert"><?=wpHTML_UHR ?></a>
+<? if($kurz == 'KZ') { ?>
+							<a href="std.calendaredit.<?=$calid[$kurz . 'MAXVT'] ?>.htm" class="ps-button ps-pluginbutton" title="Geräuchminimierung"><?=wpHTML_UHR ?></a>
+<? } ?>
 						</td>
 					</tr>
 <? } ?>

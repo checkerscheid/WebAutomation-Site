@@ -11,10 +11,10 @@
 //#                                                                                 #
 //# Revision     : $Rev:: 701                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: ug_hzg.js 701 2024-10-14 00:14:32Z                       $ #
+//# File-ID      : $Id:: ug_hzg.css 701 2024-10-14 00:14:32Z                      $ #
 //#                                                                                 #
 //###################################################################################
-?> ug_hzg */
-p.page.load = function() {
-	// p.getValues();
-};
+?> ughzg */
+
+@media (orientation: portrait) {
+}

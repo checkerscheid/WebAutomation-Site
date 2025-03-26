@@ -21,6 +21,24 @@ use system\Helper\wpDatabase;
 require_once 'request/system/wpAnalogOut.psys';
 
 class mudda {
+	private static $trendsToClean = array(
+		1120, // WGT
+		1121, // WGH
+		1551, // KUT
+		1552, // KUH
+		1554, // WZT
+		1555, // WZH
+		1545, // EST
+		1546, // ESH
+		1548, // BAT
+		1549, // BAH
+		1117, // SZT
+		1118, // SZH
+		1542, // EIT
+		1543, // EIH
+		1123, // FL2T
+		1124 // FL2H
+	);
 	const c_writetopic = 'writetopic';
 	public static function writetopic() {
 		$WebCom = new WebCom();
@@ -29,9 +47,10 @@ class mudda {
 	const c_cleanMyTrends = 'cleanMyTrends';
 	public static function cleanMyTrends() {
 		$database = new wpDatabase();
-		$database->query("DELETE FROM [trendvalue] WHERE
-			([id_trend] = 1096 OR [id_trend] = 1077 OR [id_trend] = 1079 OR [id_trend] = 1095 OR [id_trend] = 1076 OR [id_trend] = 1078)
-			AND [value] = '0'");
+		$where = implode(' OR [id_trend] = ', self::$trendsToClean);
+		$sql = "DELETE FROM [trendvalue] WHERE ([id_trend] = " . $where . ") AND [value] = '0.00'";
+		// echo $sql;
+		$database->query($sql);
 		$database->fetch();
 		echo '{"erg":"S_OK"}';
 	}

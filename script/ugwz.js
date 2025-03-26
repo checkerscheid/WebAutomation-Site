@@ -11,11 +11,17 @@
 //#                                                                                 #
 //# Revision     : $Rev:: 711                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: ug_wz.css 711 2024-11-21 13:09:32Z                       $ #
+//# File-ID      : $Id:: ug_wz.js 711 2024-11-21 13:09:32Z                        $ #
 //#                                                                                 #
 //###################################################################################
-?> ug_wz */
-
-<? require_once 'style/system/wpNeoPixel.css'; ?>
-<? require_once 'style/system/wpCwWw.css'; ?>
-<? require_once 'style/system/wpRGB.css'; ?>
+?> ugwz */
+//<? require_once('script/system/websockets.js') ?>
+//<? require_once('script/system/wpNeoPixel.js') ?>
+//<? require_once('script/system/wpCwWw.js') ?>
+ws.logEnabled = true;
+p.page.load = function() {
+	wpNeoPixel.Init('ugwz');
+	wpCwWw.Init('ugwz');
+	// p.getValues();
+	ws.connect();
+};

@@ -16,3 +16,17 @@
 //###################################################################################
 ?> uglicht */
 
+#uglicht .shelly-dimmer,
+#uglicht .brigthness-dimmer { margin:5px 0 10px 0; }
+#uglicht .ps-container .twoColumns { width:auto; display:block; text-decoration:none; }
+
+#uglicht .clicklicht,
+#uglicht .ps-operable { cursor:pointer; }
+#uglicht .description { padding-left:20px; text-align:left; }
+#uglicht .loading .description { background:transparent url(images/layout/loader.gif) left center no-repeat; background-size:15px 5px; }
+#uglicht .ps-hastimer .description { background:transparent url(images/layout/clock_icon.svg) left center no-repeat; background-size:14px 14px; }
+
+@media (orientation: portrait) {
+	#uebersicht td.description,
+	#uebersicht td.description * { font-size:18px; }
+}

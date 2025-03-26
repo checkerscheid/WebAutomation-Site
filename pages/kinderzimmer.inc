@@ -41,7 +41,7 @@ $points += $kinderzimmer->getDatapoints();
 		<ul>
 			<li><a class="ps-button" href="std.d1mini.KZ_RU.htm">Raumüberwachung</a></li>
 			<li><a class="ps-button" href="std.d1mini.KZ_NP.htm">Lichtleiste</a></li>
-			<li><a class="ps-button" href="std.d1mini.KZ_PF_BU.htm">Buschi</a></li>
+			<li><a class="ps-button" href="std.d1mini.KZ_PF_BE.htm">Bee(r)ti</a></li>
 			<li><a class="ps-button" href="std.d1mini.KZ_PF_PF.htm">Pflanzi</a></li>
 		</ul>
 	</div>

@@ -23,6 +23,7 @@ wpInit::$AutoLogin = true;
 wpInit::$StartseiteStd = false;
 wpInit::$PageName = 'Freaka<span class="fzz">Z</span>one';
 wpInit::$AlarmsToShow = 3;
+wpInit::$SetAlarmLink = true;
 wpInit::$menuorder = array(
 	'pia', 'mudda', 'kamera'//, 'wohnzimmer','schlafzimmer', 'buero', 'kueche', 'bad', 'kinderzimmer'
 );
