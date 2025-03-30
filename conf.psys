@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 728                                                     $ #
+//# Revision     : $Rev:: 730                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: conf.psys 728 2025-02-27 22:40:10Z                       $ #
+//# File-ID      : $Id:: conf.psys 730 2025-03-30 13:24:07Z                       $ #
 //#                                                                                 #
 //###################################################################################
 use system\wpInit;

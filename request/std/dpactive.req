@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 680                                                     $ #
+//# Revision     : $Rev:: 730                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: dpactive.req 680 2024-07-20 00:28:36Z                    $ #
+//# File-ID      : $Id:: dpactive.req 730 2025-03-30 13:24:07Z                    $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -125,7 +125,7 @@ GROUP BY [g].[id_dpgroup], [g].[name]");
 			<span class="boldfont">'.$erg['description'].'</span><br />
 			<span class="smallfont">' . $erg['name'] . '</span>
 		</span>
-		<div class="buttonContainer">
+		<div class="buttonContainer dpgroupcontainer">
 			<span class="ps-hover-noborder ps-image-button ps-add" title="neuen Datenpunkt anlegen">' . wpHTML_EMPTY . '</span>
 			<span class="ps-hover-noborder ps-image-button ps-edit" data-writelevel="'.$erg['groupwrite'].'"
 				data-writegroup="'.std::arrays(self::$usergroup, $erg['usergroupwrite'], $erg['usergroupwrite']).' ('.$erg['usergroupwrite'].', '.$inheritted.')"
@@ -355,6 +355,31 @@ ORDER BY [dp].[name]";
 <?
 	}
 //###################################################################################
+	const c_dpadd = 'dpadd';
+	public static function dpadd() {
+		header(wpJSON_HEADER);
+		$name = wpConvert::cleanName(std::posts('name'), false);
+		$description = wpConvert::cleanName(std::posts('description'));
+		$unit = std::posts('unit');
+		$nks = std::posts('nks');
+		$min = std::posts('min');
+		$max = std::posts('max');
+		$factor = std::posts('factor');
+
+
+		if($name != '' && std::posts('groupId') != '') {
+			$sql = "INSERT INTO [dp] " .
+				"([id_dpgroup], [name], [description], [unit], [nks], [min], [max], [factor]) VALUES (" .
+				std::posts('groupId') . ", '" . $name . "', '" . $description . "', '" . $unit . "', " .
+				$nks . ", " . $min . ", " . $max . ", " . $factor . ")";
+			$database = new wpDatabase();
+			$database->query($sql);
+			echo '{"erg": "S_OK"}';
+		} else {
+			echo '{"erg": "S_ERROR", "message": "Der Name darf nicht leer sein"}';
+		}
+	}
+//###################################################################################
 	const c_popallgroup = 'popallgroup';
 	public static function popallgroup() {
 ?>
@@ -447,6 +472,9 @@ switch(std::gets('param1')) {
 		break;
 	case dpactive::c_getdp:
 		dpactive::getdp();
+		break;
+	case dpactive::c_dpadd:
+		dpactive::dpadd();
 		break;
 	case dpactive::c_popallgroup:
 		dpactive::popallgroup();

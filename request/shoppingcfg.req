@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 09.11.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 718                                                     $ #
+//# Revision     : $Rev:: 730                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: shoppingcfg.req 718 2025-02-11 05:57:26Z                 $ #
+//# File-ID      : $Id:: shoppingcfg.req 730 2025-03-30 13:24:07Z                 $ #
 //#                                                                                 #
 //###################################################################################
 namespace request;
@@ -117,12 +117,19 @@ class shoppingcfg {
 		} else {
 			echo '{"erg":"S_ERROR", "msg":"' . $sql . '"}';
 		}
+		echo ',';
+		$sql = "UPDATE [shoppinggroupproduct] SET [ok] = 0 WHERE [id_group] = " . std::posts('idGroup');
+		if($database->query($sql)) {
+			echo S_OK;
+		} else {
+			echo '{"erg":"S_ERROR", "msg":"' . $sql . '"}';
+		}
 	}
 	const c_addProductToList = 'addProductToList';
 	public static function addProductToList() {
 		header(wpJSON_HEADER);
 		$database = new wpDatabase();
-		$sql = "INSERT INTO [shoppinglistproduct] ([id_list], [id_product]) VALUES (" . std::posts('idList') . ", " . std::posts('idProduct') . ")";
+		$sql = "INSERT INTO [shoppinglistproduct] ([id_list], [id_product], [ok]) VALUES (" . std::posts('idList') . ", " . std::posts('idProduct') . ", 0)";
 		if($database->query($sql)) {
 			echo S_OK;
 		} else {

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 16.12.2019                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 700                                                     $ #
+//# Revision     : $Rev:: 730                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: shellycom.req 700 2024-10-14 00:13:37Z                   $ #
+//# File-ID      : $Id:: shellycom.req 730 2025-03-30 13:24:07Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -40,6 +40,9 @@ class shellycom {
 	const c_get_temp = 'get-temp';
 	const c_get_hum = 'get-hum';
 	const c_get_window = 'get-window';
+	const c_get_voltage = 'get-voltage';
+	const c_get_current = 'get-current';
+	const c_get_power = 'get-power';
 	const c_get_ldr = 'get-ldr';
 
 	const c_set_settings = 'set-settings';
@@ -324,6 +327,18 @@ switch(std::gets('param1')) {
 		//###################################################################################
 	case shellycom::c_get_window:
 		chooseDP('window');
+		break;
+		//###################################################################################
+	case shellycom::c_get_voltage:
+		chooseDP('voltage');
+		break;
+		//###################################################################################
+	case shellycom::c_get_current:
+		chooseDP('current');
+		break;
+		//###################################################################################
+	case shellycom::c_get_power:
+		chooseDP('power');
 		break;
 	//###################################################################################
 	case shellycom::c_do_scan:

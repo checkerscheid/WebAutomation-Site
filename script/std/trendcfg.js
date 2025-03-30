@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 15.05.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 608                                                     $ #
+//# Revision     : $Rev:: 730                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: trendcfg.js 608 2024-05-09 20:38:50Z                     $ #
+//# File-ID      : $Id:: trendcfg.js 730 2025-03-30 13:24:07Z                     $ #
 //#                                                                                 #
 //###################################################################################
 ?> trendcfg */
@@ -124,7 +124,7 @@ p.page.load = function() {
 						click: function() {
 							var newintervall = $('#c-intervall').val();
 							$.post('std.trendcfg.saveallintervall.req', {ids:ids, newintervall:newintervall}, function(data) {
-								if(data == 'S_OK') {
+								if(data.erg == 'S_OK') {
 									p.page.change('li[data-trend=' + $(tr).attr('data-group') + ']', 'std.trendcfg.gettrend.req', {trendgroup:$(tr).attr('data-group')});
 									p.page.alert('<span class="pos">gespeichert</span>');
 									$('#dialog').dialog('close');
@@ -162,7 +162,7 @@ p.page.load = function() {
 						text: 'Aktivieren',
 						click: function() {
 							$.post('std.trendcfg.saveallactive.req', {ids:ids, newaktiv:'True'}, function(data) {
-								if(data == 'S_OK') {
+								if(data.erg == 'S_OK') {
 									p.page.change('li[data-trend=' + $(tr).attr('data-group') + ']', 'std.trendcfg.gettrend.req', {trendgroup:$(tr).attr('data-group')});
 									p.page.alert('<span class="pos">gespeichert</span>');
 									$('#dialog').dialog('close');
@@ -175,7 +175,7 @@ p.page.load = function() {
 						text: 'Deaktivieren',
 						click: function() {
 							$.post('std.trendcfg.saveallactive.req', {ids:ids, newaktiv:'False'}, function(data) {
-								if(data == 'S_OK') {
+								if(data.erg == 'S_OK') {
 									p.page.change('li[data-trend=' + $(tr).attr('data-group') + ']', 'std.trendcfg.gettrend.req', {trendgroup:$(tr).attr('data-group')});
 									p.page.alert('<span class="pos">gespeichert</span>');
 									$('#dialog').dialog('close');
@@ -214,7 +214,7 @@ p.page.load = function() {
 						click: function() {
 							var newmaximal = $('#c-max').val();
 							$.post('std.trendcfg.saveallmaximal.req', {ids:ids, newmaximal:newmaximal}, function(data) {
-								if(data == 'S_OK') {
+								if(data.erg == 'S_OK') {
 									p.page.change('li[data-trend=' + $(tr).attr('data-group') + ']', 'std.trendcfg.gettrend.req', {trendgroup:$(tr).attr('data-group')});
 									p.page.alert('<span class="pos">gespeichert</span>');
 									$('#dialog').dialog('close');
@@ -253,7 +253,7 @@ p.page.load = function() {
 						click: function() {
 							var newalter = $('#c-maxage').val();
 							$.post('std.trendcfg.saveallalter.req', {ids:ids, newalter:newalter}, function(data) {
-								if(data == 'S_OK') {
+								if(data.erg == 'S_OK') {
 									p.page.change('li[data-trend=' + $(tr).attr('data-group') + ']', 'std.trendcfg.gettrend.req', {trendgroup:$(tr).attr('data-group')});
 									p.page.alert('<span class="pos">gespeichert</span>');
 									$('#dialog').dialog('close');

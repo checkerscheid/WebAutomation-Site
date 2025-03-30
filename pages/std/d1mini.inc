@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 723                                                     $ #
+//# Revision     : $Rev:: 730                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.inc 723 2025-02-27 14:24:23Z                      $ #
+//# File-ID      : $Id:: d1mini.inc 730 2025-03-30 13:24:07Z                      $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
@@ -855,4 +855,4 @@ if(($d1Mini->FreakaZoneDevice->useModul->AnalogOut2 ?? false) &&
 
 		</pre>
 	</div>
-</di>
+</div>

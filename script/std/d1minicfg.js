@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 03.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 728                                                     $ #
+//# Revision     : $Rev:: 730                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.js 728 2025-02-27 22:40:10Z                    $ #
+//# File-ID      : $Id:: d1minicfg.js 730 2025-03-30 13:24:07Z                    $ #
 //#                                                                                 #
 //###################################################################################
 ?> d1minicfg */
@@ -190,14 +190,20 @@ p.page.load = function() {
 		});
 	});
 	$('#erg').on('click', '.setActive', function() {
+		var that = $(this);
+		var d1minigroup = $(this).parents('.d1miniingroup:first').attr('data-group');
 		const setActive = {
-			id: $(this).parents('tr:first').attr('data-id')
+			id: $(that).parents('tr:first').attr('data-id')
 		};
 		$.post('std.d1minicfg.setActive.req', setActive, function(data) {
-			if(data == 'S_OK') {
-				D1MiniRenew(d1minigroup);
+			if(data.erg == 'S_OK') {
+				if($(that).hasClass('ps-fontgreen')) {
+					$(that).removeClass('ps-fontgreen').addClass('ps-fontyellow').text('deaktiviert');
+				} else {
+					$(that).addClass('ps-fontgreen').removeClass('ps-fontyellow').text('aktiv');
+				}
 			}
-		});
+		}, 'json');
 	});
 	$('#erg').on('click', '.D1MiniDevice .forceupdate', function() {
 		var name = $(this).parents('tr.D1MiniDevice').attr('data-name');
@@ -498,6 +504,7 @@ function D1MiniServerRenew() {
 	}, 'json');
 }
 function D1MiniRenew(d1minigroup) {
+	console.log('D1MiniRenew', d1minigroup);
 	$.post('std.d1minicfg.getalld1minisettings.req', {d1minigroup:d1minigroup},  function(data) {
 		for (const [key, value] of Object.entries(data)) {
 			var mac = value.Mac.toLowerCase().replaceAll(':', '');
@@ -533,6 +540,7 @@ function setTextIfNotStored(name, column, givenValue) {
 function setD1MiniInfo(data) {
 	console.log(data);
 	var values = data.FreakaZoneDevice;
+	if(typeof values == 'undefined') return;
 	var name = values.DeviceName;
 	var mac = values.MAC.toLowerCase().replaceAll(':', '');
 	setTextIfNotStored(name, 'name', values.DeviceName);
@@ -557,6 +565,7 @@ function setD1MiniInfo(data) {
 	for( const [key, value] of Object.entries(values.Debug)) {
 		debugModule += `<span class="ps-checkbox ps-disabled${(value ? ' checked' : '')}" title="${key}">&nbsp;</span>`;
 	}
+	$(`tr[data-name=${name}] td[data-column=name] .stored`).removeClass('ps-fontyellow').attr('title', '');
 	$(`tr[data-name=${name}] td[data-column=tdDebug]`).find('.debugModules').html(debugModule);
 	var td = $(`tr[data-json=${name}] td.json`);
 	$(td).html('<div class="showJsonContainer">' +

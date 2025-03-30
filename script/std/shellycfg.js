@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 16.12.2019                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 715                                                     $ #
+//# Revision     : $Rev:: 730                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: shellycfg.js 715 2025-01-29 18:35:26Z                    $ #
+//# File-ID      : $Id:: shellycfg.js 730 2025-03-30 13:24:07Z                    $ #
 //#                                                                                 #
 //###################################################################################
 ?> scenecfg */
@@ -353,6 +353,21 @@ p.page.load = function() {
 		$(this).parents('td').find('.description').addClass('toUpdate');
 		shelly.edit.ldr($(this).parents('td'), id);
 	});
+	$('#erg').on('click', '#shellyedit .sh-editvoltage', function() {
+		var id = $(this).parents('tr').attr('data-id');
+		$(this).parents('td').find('.description').addClass('toUpdate');
+		shelly.edit.voltage($(this).parents('td'), id);
+	});
+	$('#erg').on('click', '#shellyedit .sh-editcurrent', function() {
+		var id = $(this).parents('tr').attr('data-id');
+		$(this).parents('td').find('.description').addClass('toUpdate');
+		shelly.edit.current($(this).parents('td'), id);
+	});
+	$('#erg').on('click', '#shellyedit .sh-editpower', function() {
+		var id = $(this).parents('tr').attr('data-id');
+		$(this).parents('td').find('.description').addClass('toUpdate');
+		shelly.edit.power($(this).parents('td'), id);
+	});
 	$('#dialog').on('click', '.datapointchooseable', function() {
 		var shelly = $('#dialog .ps-tree-top').attr('data-shelly');
 		var action = $('#dialog .ps-tree-top').attr('data-action');
@@ -642,6 +657,69 @@ var shelly = {
 		},
 		window: function(td, id) {
 			$.post('std.shellycom.get-window.req', { ShellyID: id }, function(data) {
+				$('#dialog').html(data).dialog({
+					title: 'Shelly ' + id, modal: true, width: 1000, maxHeight: 600, buttons: [{
+						text:'Löschen',
+						click: function() {
+							var action = $('#dialog .ps-tree-top').attr('data-action');
+							var dpid = 'NULL';
+							$.post('std.shellycom.set-datapoint.req', {shelly:id, action:action, id:dpid}, function(data) {
+								if(data != 'S_OK') p.page.alert(data, 5000);
+								else {
+									$(td).find('.description').attr({'title':''}).text('');
+									$('.description.toUpdate').removeClass('toUpdate');
+								}
+								$('#dialog').dialog('close');
+							});
+						}
+					}]
+				});
+			});
+		},
+		voltage: function(td, id) {
+			$.post('std.shellycom.get-voltage.req', { ShellyID: id }, function(data) {
+				$('#dialog').html(data).dialog({
+					title: 'Shelly ' + id, modal: true, width: 1000, maxHeight: 600, buttons: [{
+						text:'Löschen',
+						click: function() {
+							var action = $('#dialog .ps-tree-top').attr('data-action');
+							var dpid = 'NULL';
+							$.post('std.shellycom.set-datapoint.req', {shelly:id, action:action, id:dpid}, function(data) {
+								if(data != 'S_OK') p.page.alert(data, 5000);
+								else {
+									$(td).find('.description').attr({'title':''}).text('');
+									$('.description.toUpdate').removeClass('toUpdate');
+								}
+								$('#dialog').dialog('close');
+							});
+						}
+					}]
+				});
+			});
+		},
+		current: function(td, id) {
+			$.post('std.shellycom.get-current.req', { ShellyID: id }, function(data) {
+				$('#dialog').html(data).dialog({
+					title: 'Shelly ' + id, modal: true, width: 1000, maxHeight: 600, buttons: [{
+						text:'Löschen',
+						click: function() {
+							var action = $('#dialog .ps-tree-top').attr('data-action');
+							var dpid = 'NULL';
+							$.post('std.shellycom.set-datapoint.req', {shelly:id, action:action, id:dpid}, function(data) {
+								if(data != 'S_OK') p.page.alert(data, 5000);
+								else {
+									$(td).find('.description').attr({'title':''}).text('');
+									$('.description.toUpdate').removeClass('toUpdate');
+								}
+								$('#dialog').dialog('close');
+							});
+						}
+					}]
+				});
+			});
+		},
+		power: function(td, id) {
+			$.post('std.shellycom.get-power.req', { ShellyID: id }, function(data) {
 				$('#dialog').html(data).dialog({
 					title: 'Shelly ' + id, modal: true, width: 1000, maxHeight: 600, buttons: [{
 						text:'Löschen',

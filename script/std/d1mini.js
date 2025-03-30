@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 715                                                     $ #
+//# Revision     : $Rev:: 730                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.js 715 2025-01-29 18:35:26Z                       $ #
+//# File-ID      : $Id:: d1mini.js 730 2025-03-30 13:24:07Z                       $ #
 //#                                                                                 #
 //###################################################################################
 use system\std

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 04.03.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 728                                                     $ #
+//# Revision     : $Rev:: 730                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.req 728 2025-02-27 22:40:10Z                   $ #
+//# File-ID      : $Id:: d1minicfg.req 730 2025-03-30 13:24:07Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -263,7 +263,7 @@ class d1minicfg {
 					<th>MAC</th>
 					<th>Version</th>
 					<th>MQTT</th>
-					<th>UpdateMode</th>
+					<!--th>UpdateMode</th-->
 					<th>UpdateChanel</th>
 					<th>aktiv</th>
 					<th>compiledWith</th>
@@ -274,6 +274,7 @@ class d1minicfg {
 			<tbody class="D1MiniDeviceList">';
 		$s = \json_decode(file_get_contents('http://d1miniupdate.freakazone.com/'), true);
 		foreach($s['wpFreakaZone'] as $name => $versionArray) {
+			if($name == 'firmware') self::$VersionArray['cleaner'] = $versionArray['VersionName'];
 			self::$VersionArray[$name] = $versionArray['VersionName'];
 		}
 		while($erg = $wpDatabase->fetch()) {
@@ -289,11 +290,11 @@ class d1minicfg {
 					<td data-column="name">
 						<div class="tdButton">
 							<div>
-								<span class="stored">' . $erg['name'] . '</span><br />
+								<span class="stored ps-fontyellow" title="Offline">' . $erg['name'] . '</span><br />
 								<span class="smallfont ps-fontyellow name"></span>
 							</div>
 							<div class="buttonContainer">
-								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice" title="von D1 Mini übernehmen"></span>
+								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice ps-hidden" title="von D1 Mini übernehmen"></span>
 							</div>
 						</div>
 					</td>
@@ -304,7 +305,7 @@ class d1minicfg {
 								<span class="smallfont ps-fontyellow description"></span>
 							</div>
 							<div class="buttonContainer">
-								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice" title="von D1 Mini übernehmen"></span>
+								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice ps-hidden" title="von D1 Mini übernehmen"></span>
 							</div>
 						</div>
 					</td>';
@@ -322,7 +323,7 @@ class d1minicfg {
 								<span class="smallfont ps-fontyellow ip"></span>
 							</div>
 							<div class="buttonContainer">
-								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice" title="von D1 Mini übernehmen"></span>
+								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice ps-hidden" title="von D1 Mini übernehmen"></span>
 								<a href="http://' . $erg['ip'] . '/print" target="_blank" class="ps-hover-noborder ps-image-button ps-conversation" title="Debug"></a>
 								<a href="http://' . $erg['ip'] . '/status" target="_blank" class="ps-hover-noborder ps-image-button ps-status" title="Status"></a>
 							</div>
@@ -338,7 +339,7 @@ class d1minicfg {
 								<span class="smallfont ps-fontyellow mac"></span>
 							</div>
 							<div class="buttonContainer">
-								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice" title="von D1 Mini übernehmen"></span>
+								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice ps-hidden" title="von D1 Mini übernehmen"></span>
 							</div>
 						</div>
 					</td>
@@ -349,16 +350,16 @@ class d1minicfg {
 								<span class="smallfont ps-fontyellow version"></span>
 							</div>
 							<div class="buttonContainer">
-								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice" title="von D1 Mini übernehmen"></span>
+								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice ps-hidden" title="von D1 Mini übernehmen"></span>
 							</div>
 						</div>
 					</td>
 					<td>
 						<span class="ps-hover-noborder ps-image-button ps-export renewMqtt" data-ip="' . $erg['ip'] . '"></span>
 					</td>
-					<td data-column="updatemode">
+					<!--td data-column="updatemode">
 						<span class="updatemode"></span>
-					</td>
+					</td-->
 					<td data-column="updatechanel">
 						<div class="tdButton">
 							<div>
@@ -366,7 +367,7 @@ class d1minicfg {
 								<span class="smallfont ps-fontyellow updatechanel"></span>
 							</div>
 							<div class="buttonContainer">
-								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice" title="von D1 Mini übernehmen"></span>
+								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice ps-hidden" title="von D1 Mini übernehmen"></span>
 							</div>
 						</div>
 					</td>
@@ -386,7 +387,7 @@ class d1minicfg {
 								<span class="smallfont ps-fontyellow compiledwith"></span>
 							</div>
 							<div class="buttonContainer">
-								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice" title="von D1 Mini übernehmen"></span>
+								<span class="ps-hover-noborder ps-image-button ps-export saveFromDevice ps-hidden" title="von D1 Mini übernehmen"></span>
 							</div>
 						</div>
 					</td>
@@ -466,7 +467,7 @@ class d1minicfg {
 	public static function setActive() {
 		header(wpJSON_HEADER);
 		$database = new wpDatabase();
-		$database->query("UPDATE [d1mini] SET [active] = ~[active] WHERE [id_d1mini] = " . std::posts(id));
+		$database->query("UPDATE [d1mini] SET [active] = ~[active] WHERE [id_d1mini] = " . std::posts('id'));
 		$WebCom = new WebCom();
 		echo $WebCom->send('RenewD1MiniActiveState');
 	}
@@ -629,6 +630,10 @@ switch(std::gets('param1')) {
 		//###################################################################################
 	case d1minicfg::c_restartdevice:
 		d1minicfg::restartdevice(std::posts('ip'));
+		break;
+		//###################################################################################
+	case d1minicfg::c_setActive:
+		d1minicfg::setActive();
 		break;
 		//###################################################################################
 	case d1minicfg::c_allGroup:

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 680                                                     $ #
+//# Revision     : $Rev:: 730                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: dpactive.js 680 2024-07-20 00:28:36Z                     $ #
+//# File-ID      : $Id:: dpactive.js 730 2025-03-30 13:24:07Z                     $ #
 //#                                                                                 #
 //###################################################################################
 use request\std;
@@ -179,6 +179,37 @@ p.page.load = function() {
 			});
 			$(this).addClass('open');
 		}
+	});
+
+	$('#dpactive').on('click', '.dpgroupcontainer .ps-add', function() {
+		var groupId = $(this).parents('li:first').attr('data-dpgroup');
+		var description = $(this).parents('li:first').find('.dpgroup .boldfont').text();
+		var name = $(this).parents('li:first').find('.dpgroup .smallfont').text();
+		var headline = description + ' (' + name + ')';
+		$.post('std.dpactive.dpadd.pop', {headline:headline}, function(data) {
+			$('#dialog').html(data).dialog({
+				title: 'Neuen Datenpunkt in Gruppe anlegen', modal: true, width: p.popup.width.middle,
+				buttons: [{
+					text: 'speichern',
+					click: function() {
+						var obj = {
+							groupId:groupId,
+							name:$.trim($('#NewDatapointName').val()),
+							description:$.trim($('#NewDatapointDescription').val()),
+							unit:$.trim($('#NewDatapointUnit').val()),
+							nks:$.trim($('#NewDatapointNks').val()),
+							min:$.trim($('#NewDatapointMin').val()),
+							max:$.trim($('#NewDatapointMax').val()),
+							factor:$.trim($('#NewDatapointFaktor').val())
+						};
+						$.post('std.dpactive.dpadd.req', obj, function(data) {
+							if(data.erg == 'S_OK') $('#dialog').dialog('close');
+							if(data.erg == 'S_ERROR') p.page.alertred(data.message);
+						}, 'json');
+					}
+				}]
+			});
+		});
 	});
 	
 //###################################################################################

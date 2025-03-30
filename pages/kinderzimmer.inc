@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 26.01.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 696                                                     $ #
+//# Revision     : $Rev:: 730                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: kinderzimmer.inc 696 2024-10-06 19:11:29Z                $ #
+//# File-ID      : $Id:: kinderzimmer.inc 730 2025-03-30 13:24:07Z                $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */

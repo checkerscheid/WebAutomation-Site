@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 16.07.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 682                                                     $ #
+//# Revision     : $Rev:: 730                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: dpactive.req 682 2024-07-21 14:28:53Z                    $ #
+//# File-ID      : $Id:: dpactive.req 730 2025-03-30 13:24:07Z                    $ #
 //#                                                                                 #
 //###################################################################################
 /** @var stdAjax $system */
@@ -56,6 +56,42 @@ class dpactive {
 	</div>
 </div>';
 	}
+	//###################################################################################
+	const c_dpadd = 'dpadd';
+	public static function dpadd() {
+		echo '
+<h3>' . std::posts('headline') . '</h3>
+<div class="table">
+	<div class="tr">
+		<div class="td"><label for="NewDatapointName">Name:</label></div>
+		<div class="td"><input type="text" class="ps-input" id="NewDatapointName" /></div>
+	</div>
+	<div class="tr">
+		<div class="td"><label for="NewDatapointDescription">Beschreibung:</label></div>
+		<div class="td"><input type="text" class="ps-input" id="NewDatapointDescription" /></div>
+	</div>
+	<div class="tr">
+		<div class="td"><label for="NewDatapointUnit">Einheit:</label></div>
+		<div class="td"><input type="text" class="ps-input" id="NewDatapointUnit" /></div>
+	</div>
+	<div class="tr">
+		<div class="td"><label for="NewDatapointNks">NKS:</label></div>
+		<div class="td"><input type="text" class="ps-input" id="NewDatapointNks" /></div>
+	</div>
+	<div class="tr">
+		<div class="td"><label for="NewDatapointMin">Min:</label></div>
+		<div class="td"><input type="text" class="ps-input" id="NewDatapointMin" value="0" /></div>
+	</div>
+	<div class="tr">
+		<div class="td"><label for="NewDatapointMax">Max:</label></div>
+		<div class="td"><input type="text" class="ps-input" id="NewDatapointMax" value="100" /></div>
+	</div>
+	<div class="tr">
+		<div class="td"><label for="NewDatapointFaktor">Faktor:</label></div>
+		<div class="td"><input type="text" class="ps-input" id="NewDatapointFaktor" value="1" /></div>
+	</div>
+</div>';
+	}
 }
 switch(std::gets('param1')) {
 	case dpactive::c_renamedpnamespace:
@@ -63,6 +99,9 @@ switch(std::gets('param1')) {
 		break;
 	case dpactive::c_dpgroupadd:
 		dpactive::dpgroupadd();
+		break;
+	case dpactive::c_dpadd:
+		dpactive::dpadd();
 		break;
 	default:
 		\system\html::default();

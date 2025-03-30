@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 706                                                     $ #
+//# Revision     : $Rev:: 730                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.css 706 2024-11-04 15:08:34Z                  $ #
+//# File-ID      : $Id:: uebersicht.css 730 2025-03-30 13:24:07Z                  $ #
 //#                                                                                 #
 //###################################################################################
 ?> uebersicht */
@@ -29,8 +29,6 @@
 #uebersicht .ps-container .twoColumns { width:auto; display:block; text-decoration:none; }
 #uebersicht .ps-container .RenewShellyState { min-width:100px; width:auto; }
 #uebersicht .ps-container hr { margin:5px auto; }
-#uebersicht .ps-button { padding:8px 6px; }
-#uebersicht .ps-button.pa-scene { padding:8px 25px; }
 
 #uebersicht .shelly-dimmer,
 #uebersicht .brigthness-dimmer { margin:5px 0 10px 0; }
