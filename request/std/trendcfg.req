@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 15.05.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 704                                                     $ #
+//# Revision     : $Rev:: 731                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: trendcfg.req 704 2024-10-20 17:29:04Z                    $ #
+//# File-ID      : $Id:: trendcfg.req 731 2025-04-03 16:37:32Z                    $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -402,6 +402,7 @@ switch(std::gets('param1')) {
 		break;
 //###################################################################################
 	case trendcfg::c_deleteonetrend:
+		header(wpJSON_HEADER);
 		$database = new wpDatabase();
 		$database->query('DELETE FROM [trend] WHERE [id_trend] = ' . std::posts('id'));
 		$WebCom = new WebCom();

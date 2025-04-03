@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 15.05.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 730                                                     $ #
+//# Revision     : $Rev:: 731                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: trendcfg.js 730 2025-03-30 13:24:07Z                     $ #
+//# File-ID      : $Id:: trendcfg.js 731 2025-04-03 16:37:32Z                     $ #
 //#                                                                                 #
 //###################################################################################
 ?> trendcfg */
@@ -359,10 +359,10 @@ p.page.load = function() {
 //###################################################################################
 	$('#erg').on('click', '.trenddelete', function() {
 		var tr = $(this).parents('div.tr:first');
-		var id = $(tr).attr('data-id');
+		var id = $(tr).attr('data-idtrend');
 		$.post('std.trendcfg.deleteonetrend.req', {id:id}, function(data) {
 			if(data.erg == 'S_OK') $(tr).hide();
 			else p.page.alert('<span class="neg">' + data.message + '</span>');
-		});
+		}, 'json');
 	});
 };

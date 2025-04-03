@@ -7,16 +7,44 @@
 //###################################################################################
 //#                                                                                 #
 //# Author       : Christian Scheid                                                 #
-//# Date         : 06.11.2024                                                       #
+//# Date         : 03.04.2025                                                       #
 //#                                                                                 #
 //# Revision     : $Rev:: 732                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: ugwz.req 732 2025-04-03 16:39:02Z                        $ #
+//# File-ID      : $Id:: heizzentrale.req 732 2025-04-03 16:39:02Z                $ #
 //#                                                                                 #
 //###################################################################################
 namespace request;
-
-require_once 'request/system/wpNeoPixel.psys';
-require_once 'request/system/wpCwWw.psys';
-
+use system\std;
+use system\Helper\wpDatabase;
+class heizzentrale {
+	private static $trendsToClean = array(
+		1605, // RVL
+		1604, // RRL
+		1606, // FVL
+		1607 // FRL
+	);
+	const c_cleanTrends = 'cleanTrends';
+	public static function cleanTrends() {
+		header(wpJSON_HEADER);
+		$database = new wpDatabase();
+		$where = implode(' OR [id_trend] = ', self::$trendsToClean);
+		$sql = "DELETE FROM [trendvalue] WHERE ([id_trend] = " . $where . ") AND [value] LIKE '0%'";
+		if($database->query($sql)) {
+			echo S_OK;
+		} else {
+			echo '{"erg":"S_ERROR", "msg":"' . $sql . '"}';
+		}
+	}
+}
+switch(std::gets('param1')) {
+	//###################################################################################
+	case heizzentrale::c_cleanTrends:
+		heizzentrale::cleanTrends();
+		break;
+	//###################################################################################
+	default:
+		\system\html::default();
+		break;
+}
 ?>

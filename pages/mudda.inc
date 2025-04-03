@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 715                                                     $ #
+//# Revision     : $Rev:: 731                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: mudda.inc 715 2025-01-29 18:35:26Z                       $ #
+//# File-ID      : $Id:: mudda.inc 731 2025-04-03 16:37:32Z                       $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -153,14 +153,14 @@ $schlafzimmer->getStatus();
 						<td><span>Wintergarten:</span></td>
 						<td>
 							<div class="indiContainer">
-								<span class="ps-input" data-ws="_WG1_RT_SH" title="EG Wintergarten Temperatur">-</span>
-								<span class="<?=wpa::indikatorTemp?>" data-ws="_WG1_RT_SH"><?=wpHTML_EMPTY ?></span>
+								<span class="ps-input" data-ws="WG1_HTp_Temp" title="EG Wintergarten Temperatur">-</span>
+								<span class="<?=wpa::indikatorTemp?>" data-ws="WG1_HTp_Temp"><?=wpHTML_EMPTY ?></span>
 							</div>
 						</td>
 						<td>
 							<div class="indiContainer">
-								<span class="ps-input" data-ws="_WG1_RF_SH" title="EG Wintergarten Feuchte">-</span>
-								<span class="<?=wpa::indikatorHum?>" data-ws="_WG1_RF_SH"><?=wpHTML_EMPTY ?></span>
+								<span class="ps-input" data-ws="WG1_HTp_Hum" title="EG Wintergarten Feuchte">-</span>
+								<span class="<?=wpa::indikatorHum?>" data-ws="WG1_HTp_Hum"><?=wpHTML_EMPTY ?></span>
 							</div>
 						</td>
 						<td></td>
@@ -169,14 +169,14 @@ $schlafzimmer->getStatus();
 						<td><span>Schlafzimmer:</span></td>
 						<td>
 							<div class="indiContainer">
-								<span class="ps-input" data-ws="_SZ1_RT_SH" title="EG Schlafzimmer Temperatur">-</span>
-								<span class="<?=wpa::indikatorTemp?>" data-ws="_SZ1_RT_SH"><?=wpHTML_EMPTY ?></span>
+								<span class="ps-input" data-ws="SZ1_HT_Temp" title="EG Schlafzimmer Temperatur">-</span>
+								<span class="<?=wpa::indikatorTemp?>" data-ws="SZ1_HT_Temp"><?=wpHTML_EMPTY ?></span>
 							</div>
 						</td>
 						<td>
 							<div class="indiContainer">
-								<span class="ps-input" data-ws="_SZ1_RF_SH" title="EG Schlafzimmer Feuchte">-</span>
-								<span class="<?=wpa::indikatorHum?>" data-ws="_SZ1_RF_SH"><?=wpHTML_EMPTY ?></span>
+								<span class="ps-input" data-ws="SZ1_HT_Hum" title="EG Schlafzimmer Feuchte">-</span>
+								<span class="<?=wpa::indikatorHum?>" data-ws="SZ1_HT_Hum"><?=wpHTML_EMPTY ?></span>
 							</div>
 						</td>
 						<td></td>
@@ -185,14 +185,14 @@ $schlafzimmer->getStatus();
 						<td><span>Flur OG:</span></td>
 						<td>
 							<div class="indiContainer">
-								<span class="ps-input" data-ws="_FL2_RT_SH" title="OG Flur Temperatur">-</span>
-								<span class="<?=wpa::indikatorTemp?>" data-ws="_FL2_RT_SH"><?=wpHTML_EMPTY ?></span>
+								<span class="ps-input" data-ws="FL2_HT_Temp" title="OG Flur Temperatur">-</span>
+								<span class="<?=wpa::indikatorTemp?>" data-ws="FL2_HT_Temp"><?=wpHTML_EMPTY ?></span>
 							</div>
 						</td>
 						<td>
 							<div class="indiContainer">
-								<span class="ps-input" data-ws="_FL2_RF_SH" title="OG Flur Feuchte">-</span>
-								<span class="<?=wpa::indikatorHum?>" data-ws="_FL2_RF_SH"><?=wpHTML_EMPTY ?></span>
+								<span class="ps-input" data-ws="FL2_HT_Hum" title="OG Flur Feuchte">-</span>
+								<span class="<?=wpa::indikatorHum?>" data-ws="FL2_HT_Hum"><?=wpHTML_EMPTY ?></span>
 							</div>
 						</td>
 						<td></td>

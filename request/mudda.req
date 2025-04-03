@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.10.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 730                                                     $ #
+//# Revision     : $Rev:: 731                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: mudda.req 730 2025-03-30 13:24:07Z                       $ #
+//# File-ID      : $Id:: mudda.req 731 2025-04-03 16:37:32Z                       $ #
 //#                                                                                 #
 //###################################################################################
 namespace request;
@@ -48,11 +48,12 @@ class mudda {
 	public static function cleanMyTrends() {
 		$database = new wpDatabase();
 		$where = implode(' OR [id_trend] = ', self::$trendsToClean);
-		$sql = "DELETE FROM [trendvalue] WHERE ([id_trend] = " . $where . ") AND [value] = '0.00'";
-		// echo $sql;
-		$database->query($sql);
-		$database->fetch();
-		echo '{"erg":"S_OK"}';
+		$sql = "DELETE FROM [trendvalue] WHERE ([id_trend] = " . $where . ") AND [value] LIKE '0%'";
+		if($database->query($sql)) {
+			echo S_OK;
+		} else {
+			echo '{"erg":"S_ERROR", "msg":"' . $sql . '"}';
+		}
 	}
 }
 switch(std::gets('param1')) {

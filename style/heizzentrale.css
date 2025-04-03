@@ -1,22 +1,23 @@
-<?
+/*<?
 //###################################################################################
 //#                                                                                 #
-//#              (C) FreakaZone GmbH                                                #
-//#              =======================                                            #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
 //#                                                                                 #
 //###################################################################################
 //#                                                                                 #
 //# Author       : Christian Scheid                                                 #
-//# Date         : 06.11.2024                                                       #
+//# Date         : 02.04.2025                                                       #
 //#                                                                                 #
 //# Revision     : $Rev:: 732                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: ugwz.req 732 2025-04-03 16:39:02Z                        $ #
+//# File-ID      : $Id:: heizzentrale.css 732 2025-04-03 16:39:02Z                $ #
 //#                                                                                 #
 //###################################################################################
-namespace request;
+?> heizzentrale */
 
-require_once 'request/system/wpNeoPixel.psys';
-require_once 'request/system/wpCwWw.psys';
-
-?>
+div.ps-flex-container { align-items: center; }
+#heizzentrale .description { width:200px;}
+#ergTrend { display:block; width:100%; height:300px; }
+#heizzentrale .legendLabel { padding:2px 5px; text-align:left; cursor:pointer; }
+#heizzentrale .legendLabel .ps-fontgrey { color:#888; }

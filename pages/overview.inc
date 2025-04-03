@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 730                                                     $ #
+//# Revision     : $Rev:: 731                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: overview.inc 730 2025-03-30 13:24:07Z                  $ #
+//# File-ID      : $Id:: overview.inc 731 2025-04-03 16:37:32Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /**
@@ -419,7 +419,7 @@ overview::setPflanze();
 					<td colspan="3">Shelly ForceMqttUpdate:</td>
 					<td colspan="3"><span class="ps-button ForceMqttUpdate">anfordern</span></td>
 				</tr>
-				<!--tr>
+				<tr>
 					<td>BrowseMqtt:</td>
 					<td><span class="ps-button setBrowseMqtt">anfordern</span></td>
 				</tr>

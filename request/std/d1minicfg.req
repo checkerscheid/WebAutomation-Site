@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 04.03.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 730                                                     $ #
+//# Revision     : $Rev:: 731                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.req 730 2025-03-30 13:24:07Z                   $ #
+//# File-ID      : $Id:: d1minicfg.req 731 2025-04-03 16:37:32Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -226,7 +226,7 @@ class d1minicfg {
 			<div class="tr">
 				<div class="td"><span>markierte:</span></div>
 				<div class="td">
-					<span class="ps-button allHttpUpdate" title="HTTP Update">HTTP Update</span>
+					<span class="ps-button allHttpUpdate" title="HTTP Update">Update</span>
 					<span class="ps-button allForceMqttUpdate" title="Force MQTT Update">Force MQTT Update</span>
 					<span class="ps-button allRestart" title="Restart Device">Restart Device</span>
 					<span class="ps-button allgroup" title="in Gruppe verschieben">Gruppe</span>
@@ -400,7 +400,7 @@ class d1minicfg {
 						<div class="buttonContainer">
 							<span class="ps-hover-noborder ps-image-button ps-send forceupdate" title="Force MQTT Update"></span>
 							<!--span class="ps-hover-noborder ps-image-button ps-import setupmode" title="Set FW Update Mode On"></span-->
-							<span class="ps-hover-noborder ps-image-button ps-import setuphttp" data-ip="' . $erg['ip'] . '" title="Setup Http"></span>
+							<span class="ps-hover-noborder ps-image-button ps-import setuphttp" data-ip="' . $erg['ip'] . '" title="Update"></span>
 							<span class="ps-hover-noborder ps-image-button ps-refresh restartdevice" title="neu starten"></span>
 							<span class="ps-hover-noborder ps-image-button ps-export getAndSave" data-ip="' . $erg['ip'] . '" title="Get And Save Status"></span>
 						</div>

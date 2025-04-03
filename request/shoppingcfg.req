@@ -9,15 +9,16 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 09.11.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 730                                                     $ #
+//# Revision     : $Rev:: 731                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: shoppingcfg.req 730 2025-03-30 13:24:07Z                 $ #
+//# File-ID      : $Id:: shoppingcfg.req 731 2025-04-03 16:37:32Z                 $ #
 //#                                                                                 #
 //###################################################################################
 namespace request;
 use system\std;
 use system\Helper\wpDatabase;
 class shoppingcfg {
+	//###################################################################################
 	const c_setListName = 'setListName';
 	public static function setListName() {
 		header(wpJSON_HEADER);
@@ -33,6 +34,7 @@ class shoppingcfg {
 			echo '{"erg":"S_ERROR", "msg":"' . $sql . '"}';
 		}
 	}
+	//###################################################################################
 	const c_setGroupName = 'setGroupName';
 	public static function setGroupName() {
 		header(wpJSON_HEADER);
@@ -48,6 +50,7 @@ class shoppingcfg {
 			echo '{"erg":"S_ERROR", "msg":"' . $sql . '"}';
 		}
 	}
+	//###################################################################################
 	const c_setProductName = 'setProductName';
 	public static function setProductName() {
 		header(wpJSON_HEADER);
@@ -63,6 +66,7 @@ class shoppingcfg {
 			echo '{"erg":"S_ERROR", "msg":"' . $sql . '"}';
 		}
 	}
+	//###################################################################################
 	const c_addProductToGroup = 'addProductToGroup';
 	public static function addProductToGroup() {
 		header(wpJSON_HEADER);
@@ -74,6 +78,7 @@ class shoppingcfg {
 			echo '{"erg":"S_ERROR", "msg":"' . $sql . '"}';
 		}
 	}
+	//###################################################################################
 	const c_deleteGroupFromList = 'deleteGroupFromList';
 	public static function deleteGroupFromList() {
 		header(wpJSON_HEADER);
@@ -85,6 +90,7 @@ class shoppingcfg {
 			echo '{"erg":"S_ERROR", "msg":"' . $sql . '"}';
 		}
 	}
+	//###################################################################################
 	const c_deleteProductFromList = 'deleteProductFromList';
 	public static function deleteProductFromList() {
 		header(wpJSON_HEADER);
@@ -96,6 +102,7 @@ class shoppingcfg {
 			echo '{"erg":"S_ERROR", "msg":"' . $sql . '"}';
 		}
 	}
+	//###################################################################################
 	const c_deleteProductFromGroup = 'deleteProductFromGroup';
 	public static function deleteProductFromGroup() {
 		header(wpJSON_HEADER);
@@ -107,6 +114,7 @@ class shoppingcfg {
 			echo '{"erg":"S_ERROR", "msg":"' . $sql . '"}';
 		}
 	}
+	//###################################################################################
 	const c_addGroupToList = 'addGroupToList';
 	public static function addGroupToList() {
 		header(wpJSON_HEADER);
@@ -117,14 +125,15 @@ class shoppingcfg {
 		} else {
 			echo '{"erg":"S_ERROR", "msg":"' . $sql . '"}';
 		}
-		echo ',';
+		//echo ',';
 		$sql = "UPDATE [shoppinggroupproduct] SET [ok] = 0 WHERE [id_group] = " . std::posts('idGroup');
 		if($database->query($sql)) {
-			echo S_OK;
+			//echo S_OK;
 		} else {
-			echo '{"erg":"S_ERROR", "msg":"' . $sql . '"}';
+			//echo '{"erg":"S_ERROR", "msg":"' . $sql . '"}';
 		}
 	}
+	//###################################################################################
 	const c_addProductToList = 'addProductToList';
 	public static function addProductToList() {
 		header(wpJSON_HEADER);
@@ -206,6 +215,7 @@ ORDER BY [group], [sgp].[ok], [product]";
 		</ul>
 <?
 	}
+	//###################################################################################
 	const c_getHtmlGroups = 'getHtmlGroups';
 	public static function getHtmlGroups() {
 		$database = new wpDatabase();
@@ -227,7 +237,8 @@ ORDER BY [group], [sgp].[ok], [product]";
 ?>
 			<li class="groupHeader dragGroup" data-idGroup="<?=$erg['id_group'] ?>">
 				<div class="product-row">
-					<span class="moveGroup">&#10303;</span>
+					<span class="vis-portrait addGroupToStdList">&#10133;</span>
+					<span class="vis-normal moveGroup">&#10303;</span>
 					<input type="text" class="ps-input name" value="<?=$erg['name'] ?>" />
 					<span class="ps-image-button ps-export"></span>
 				</div>
@@ -247,6 +258,7 @@ ORDER BY [group], [sgp].[ok], [product]";
 		</ul>
 <?
 	}
+	//###################################################################################
 	const c_getHtmlGroupEntries = 'getHtmlGroupEntries';
 	public static function getHtmlGroupEntries() {
 		$database = new wpDatabase();
@@ -275,6 +287,7 @@ ORDER BY [group], [sgp].[ok], [product]";
 <?
 		}
 	}
+	//###################################################################################
 	const c_getHtmlProducts = 'getHtmlProducts';
 	public static function getHtmlProducts() {
 		$database = new wpDatabase();
@@ -296,7 +309,8 @@ ORDER BY [group], [sgp].[ok], [product]";
 ?>
 			<li class="dragProduct productHeader" data-idProduct="<?=$erg['id_product'] ?>">
 				<div class="product-row">
-					<span class="moveProduct">&#10303;</span>
+					<span class="vis-portrait addProductToStdList">&#10133;</span>
+					<span class="vis-normal moveProduct">&#10303;</span>
 					<input type="text" class="ps-input name" value="<?=$erg['name'] ?>" />
 					<span class="ps-image-button ps-export"></span>
 				</div>

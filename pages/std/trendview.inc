@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.10.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 705                                                     $ #
+//# Revision     : $Rev:: 731                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: trendview.inc 705 2024-10-20 17:29:42Z                   $ #
+//# File-ID      : $Id:: trendview.inc 731 2025-04-03 16:37:32Z                   $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
@@ -25,7 +25,7 @@ class trendview {
 	private $headline;
 	private $database;
 	private $id;
-	private $trendtype;
+	private $trendType;
 	private $pageinfo;
 	private $name;
 	private $forJS;

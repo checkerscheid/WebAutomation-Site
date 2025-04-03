@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 08.11.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 719                                                     $ #
+//# Revision     : $Rev:: 731                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: shoppingcfg.js 719 2025-02-13 12:27:37Z                  $ #
+//# File-ID      : $Id:: shoppingcfg.js 731 2025-04-03 16:37:32Z                  $ #
 //#                                                                                 #
 //###################################################################################
 ?> shoppingcfg */
@@ -154,6 +154,24 @@ p.page.load = function() {
 			}, 'json');
 		}
 	});
+	$('#shoppingcfg').on('click', '.addGroupToStdList', function() {
+		var that = $(this);
+		const idGroup = $(this).parents('li:first').attr('data-idGroup');
+		$(this).addClass("dropHoverBorder");
+		setTimeout(() => { $(that).removeClass("dropHoverBorder"); }, 500);
+		$.post('shoppingcfg.addGroupToList.req', {
+			idList: 1,
+			idGroup: idGroup
+		}, function(data) {
+			if(data.erg == 'S_ERROR') {
+				p.page.alertError('ERROR: ' + data.msg, 5000);
+			}
+			if(data.erg == 'S_OK') {
+				p.page.message('Group added');
+				shoppingcfg.loadLists(1);;
+			}
+		}, 'json');
+	});
 	$('.dropProductToList').droppable({
 		accept: '.dragProduct',
 		activeClass: 'dropBorder',
@@ -174,6 +192,24 @@ p.page.load = function() {
 				}
 			}, 'json');
 		}
+	});
+	$('#shoppingcfg').on('click', '.addProductToStdList', function() {
+		var that = $(this);
+		const idProduct = $(this).parents('li:first').attr('data-idProduct');
+		$(this).addClass("dropHoverBorder");
+		setTimeout(() => { $(that).removeClass("dropHoverBorder"); }, 500);
+		$.post('shoppingcfg.addProductToList.req', {
+			idList: 1,
+			idProduct: idProduct
+		}, function(data) {
+			if(data.erg == 'S_ERROR') {
+				p.page.alertError('ERROR: ' + data.msg, 5000);
+			}
+			if(data.erg == 'S_OK') {
+				p.page.message('Product added');
+				shoppingcfg.loadLists(1);
+			}
+		}, 'json');
 	});
 	ws.connect();
 	// p.getValues();

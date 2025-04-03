@@ -7,36 +7,41 @@
 //###################################################################################
 //#                                                                                 #
 //# Author       : Christian Scheid                                                 #
-//# Date         : 06.11.2024                                                       #
+//# Date         : 02.04.2025                                                       #
 //#                                                                                 #
 //# Revision     : $Rev:: 732                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: ugwz.inc 732 2025-04-03 16:39:02Z                        $ #
+//# File-ID      : $Id:: heizzentrale.inc 732 2025-04-03 16:39:02Z                $ #
 //#                                                                                 #
 //###################################################################################
 namespace pages;
 use system\html;
-use system\Helper\wpNeoPixel;
-use system\Helper\wpCwWw;
-
-require_once 'system/Helper/wpa.psys';
-require_once 'system/Helper/wpNeoPixel.psys';
-require_once 'system/Helper/wpCwWw.psys';
 ?>
-
-<div id="pia">
+<div id="heizzentrale" class="page">
 	<h1><? html::getPageHeadline();?></h1>
-	<div class="ps-flex-container page">
-<?
-	$neoPixel = new wpNeoPixel('172.17.80.99', 'WZ_NP');
-	$neoPixel->getStatus();
-	$neoPixel->getColorPicker('Lichtleiste');
-	$neoPixel->getColorScenen('Lichtleiste');
-?>
-<?
-	$cwww = new wpCwWw('172.17.80.97', 'WZ_KE');
-	$cwww->getStatus();
-	$cwww->getColorPicker('Eventbeleuchtung', 'schwebende Geister', 'Spinnen');
-?>
+	<div class="ps-container">
+		<div class="ps-flex-container">
+			<span class="description">Radiatoren Rücklauf</span>
+			<span class="ps-input" data-ws="KE_HZG_Temp1">- °C</span>
+		</div>
+		<div class="ps-flex-container">
+			<span class="description">Radiatoren Vorlauf</span>
+			<span class="ps-input" data-ws="KE_HZG_Temp2">- °C</span>
+		</div>
+		<div class="ps-flex-container">
+			<span class="description">Fussboden Vorlauf</span>
+			<span class="ps-input" data-ws="KE_HZG_Temp3">- °C</span>
+		</div>
+		<div class="ps-flex-container">
+			<span class="description">Fussboden Rücklauf</span>
+			<span class="ps-input" data-ws="KE_HZG_Temp4">- °C</span>
+		</div>
+		<div class="ps-flex-container">
+			<span class="ps-button cleanTrends">clean Trends</span>
+		</div>
+	</div>
+	<div class="ps-container">
+		<h2>Temperaturen</h2>
+		<div id="ergTrend"></div>
 	</div>
 </div>
