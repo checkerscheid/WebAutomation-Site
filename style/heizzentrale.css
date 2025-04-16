@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 02.04.2025                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 732                                                     $ #
+//# Revision     : $Rev:: 733                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: heizzentrale.css 732 2025-04-03 16:39:02Z                $ #
+//# File-ID      : $Id:: heizzentrale.css 733 2025-04-16 03:01:56Z                $ #
 //#                                                                                 #
 //###################################################################################
 ?> heizzentrale */
@@ -19,5 +19,6 @@
 div.ps-flex-container { align-items: center; }
 #heizzentrale .description { width:200px;}
 #ergTrend { display:block; width:100%; height:300px; }
+#ergTrendValve { display:block; width:100%; height:400px; }
 #heizzentrale .legendLabel { padding:2px 5px; text-align:left; cursor:pointer; }
 #heizzentrale .legendLabel .ps-fontgrey { color:#888; }

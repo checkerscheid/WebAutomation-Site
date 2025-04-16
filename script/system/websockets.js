@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 08.06.2021                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 728                                                     $ #
+//# Revision     : $Rev:: 733                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: websockets.js 728 2025-02-27 22:40:10Z                   $ #
+//# File-ID      : $Id:: websockets.js 733 2025-04-16 03:01:56Z                   $ #
 //#                                                                                 #
 //###################################################################################
 use system\Helper\wpa;
@@ -86,13 +86,20 @@ var ws = {
 			}
 			if(msg.response == 'getD1MiniJson') {
 				console.log(msg);
-				setD1MiniInfo(msg.data.D1Mini);
+				if(typeof setD1MiniInfo === 'function')
+					setD1MiniInfo(msg.data.D1Mini);
 			}
 			if(msg.response == 'SearchD1Mini') {
-				getHtmlNewD1MiniRow(msg.data.exists, msg.data.recieved.Iam);
+				if(typeof getHtmlNewD1MiniRow === 'function')
+					getHtmlNewD1MiniRow(msg.data.exists, msg.data.recieved.Iam);
 			}
 			if(msg.response == 'SearchD1MiniFinished') {
-				SearchD1MiniFinished();
+				if(typeof SearchD1MiniFinished === 'function')
+					SearchD1MiniFinished();
+			}
+			if(msg.response == 'setShoppingChecked') {
+				if(typeof SetShoppingChecked === 'function')
+					SetShoppingChecked(msg.idGroup, msg.idProduct, msg.isChecked);
 			}
 			if(msg.response == 'sendDatapoint' || msg.response == 'addDatapoints') {
 				$.each(msg.data, function() {

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 02.04.2025                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 732                                                     $ #
+//# Revision     : $Rev:: 733                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: heizzentrale.inc 732 2025-04-03 16:39:02Z                $ #
+//# File-ID      : $Id:: heizzentrale.inc 733 2025-04-16 03:01:56Z                $ #
 //#                                                                                 #
 //###################################################################################
 namespace pages;
@@ -43,5 +43,9 @@ use system\html;
 	<div class="ps-container">
 		<h2>Temperaturen</h2>
 		<div id="ergTrend"></div>
+	</div>
+	<div class="ps-container">
+		<h2>Ventile</h2>
+		<div id="ergTrendValve"></div>
 	</div>
 </div>

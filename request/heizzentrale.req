@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 03.04.2025                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 732                                                     $ #
+//# Revision     : $Rev:: 733                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: heizzentrale.req 732 2025-04-03 16:39:02Z                $ #
+//# File-ID      : $Id:: heizzentrale.req 733 2025-04-16 03:01:56Z                $ #
 //#                                                                                 #
 //###################################################################################
 namespace request;
@@ -29,7 +29,7 @@ class heizzentrale {
 		header(wpJSON_HEADER);
 		$database = new wpDatabase();
 		$where = implode(' OR [id_trend] = ', self::$trendsToClean);
-		$sql = "DELETE FROM [trendvalue] WHERE ([id_trend] = " . $where . ") AND [value] LIKE '0%'";
+		$sql = "DELETE FROM [trendvalue] WHERE ([id_trend] = " . $where . ") AND CAST([value] AS float) < 10";
 		if($database->query($sql)) {
 			echo S_OK;
 		} else {
