@@ -179,9 +179,9 @@ class d1mini {
 		$id_dp_hum = $this->mergeDP($id_mqtttopic_hum, 'Hum', 'Feuchte', '%rF', 0);
 		$this->mergeTrend($id_dp_hum, 'Feuchte');
 		echo "saved: 'Feuchte', ";
-		$id_mqtttopic_err = $this->insertTopic('ERROR/HT');
-		$id_dp_err = $this->mergeDP($id_mqtttopic_err, 'ERROR_HT', 'HT Sensor Error', '0:Ok;1:Error;');
-		$this->mergeAlarm($id_dp_err, 'ERROR_HT', 'HT Sensor Error');
+		$id_mqtttopic_err = $this->insertTopic('ERROR/DHT');
+		$id_dp_err = $this->mergeDP($id_mqtttopic_err, 'ERROR_DHT', 'HT Sensor Error', '0:Ok;1:Error;');
+		$this->mergeAlarm($id_dp_err, 'ERROR_DHT', 'HT Sensor Error');
 		echo "saved: 'HT Sensor Error'<br />";
 	}
 	private function setLDR() {

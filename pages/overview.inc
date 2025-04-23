@@ -409,7 +409,7 @@ overview::setPflanze();
 						<span data-ws="WZ_PF_FE_LI_Weight" class="ps-input">undefined</span>
 					</td>
 					<td colspan="2">
-						<a href="std.trendview.94.htm" class="ps-button ps-pluginbutton"><?= wpHTML_TREND ?></a>
+						<a href="std.trendview.108.htm" class="ps-button ps-pluginbutton"><?= wpHTML_TREND ?></a>
 					</td>
 				</tr>
 				<?=overview::getPflanze() ?>
