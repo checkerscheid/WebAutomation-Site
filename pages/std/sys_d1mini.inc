@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 27.02.2025                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 729                                                     $ #
+//# Revision     : $Rev:: 734                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: sys_d1mini.inc 729 2025-02-27 22:40:52Z                  $ #
+//# File-ID      : $Id:: sys_d1mini.inc 734 2025-04-25 19:30:07Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /**
@@ -39,120 +39,47 @@ $serverVersion = $WebCom->send('getVersion');
 <div id="d1mini" class="page">
 	<h1><?=$headline['name']?></h1>
 	<div class="ps-flex-container">
+		<div class="ps-container ps-flex-element">
+			<table summary="">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Beschreibung</th>
+						<th>IP</th>
+						<th>MAC</th>
+						<th>RSSI</th>
+						<th>Version</th>
+						<th>Channel</th>
+						<th>Boot Counter</th>
+						<th>Boot Reason</th>
+						<th>Online Duration</th>
+					</tr>
+				</thead>
+				<tbody>
 <?
-	$database->query("SELECT [name], [description], [ip], [mac], [active] FROM [d1mini] ORDER BY [name]");
+	$database->query("SELECT [name], [description], [ip], [mac], [active] FROM [d1mini] ORDER BY [active] DESC, [name]");
 	while($erg = $database->fetch()) {
 ?>
-		<div id="<?= $erg['name']?>" class="ps-container ps-flex-element">
-			<h1><?=$erg['description']?></h1>
-<?
-		if($erg['active'] == 1) {
-?>
-			<h2 class="d1mOffline ps-fontred">-- Offline --</h2>
-<?
-		} else {
-?>
-			<h2 class="ps-fontyellow">-- Deactivated --</h2>
-<?
-		}
-?>
-			<table summary="">
-				<tbody>
-					<tr class="ps-hidden">
-						<th class="ps-taleft">
-							<?= $erg['name']?>
-						</th>
-						<th class="ps-taleft">
-							<span class="d1mVersion"></span>
-						</th>
-						<th class="ps-taleft">
-							<p class="storedIp" data-ip="<?=$erg['ip'] ?>">(<?=$erg['ip'] ?>, <?=$erg['mac'] ?>)</p>
-						</th>
+					<tr id="<?=$erg['name'] ?>">
+						<td><a href="std.d1mini.<?=$erg['name'] ?>.htm"><?=$erg['name'] ?></a></td>
+						<td><?=$erg['description']?></td>
+						<td><a class="storedIp" data-ip="<?=$erg['ip'] ?>" href="http://<?=$erg['ip'] ?>/print" target="_blank"><?=$erg['ip'] ?></a></td>
+						<td><?=$erg['mac'] ?></td>
+						<td><?=($erg['active'] == 1 ?
+							'<span data-ws="' . $erg['name'] . '_Rssi" class="' . wpa::rssi . ' ps-hidden">-</span><span class="d1mOffline ps-fontred">-- Offline --</span>' :
+							'<span class="ps-fontyellow">-- Deactivated --</span>') ?></td>
+						<td><span class="d1mVersion">--</span></td>
+						<td><span class="d1mUpdateChanel">--</span></td>
+						<td><span class="d1mBootCounter">--</span></td>
+						<td><span class="d1mRestartReason">--</span></td>
+						<td><span class="d1mOnDuration">--</span></td>
 					</tr>
-					<tr class="ps-hidden">
-						<td class="ps-taleft"><a href="std.d1mini.<?= $erg['name']?>.htm"><?= $erg['description']?></a>:</td>
-						<td><span data-ws="<?= $erg['name']?>_Rssi" class="<?= wpa::rssi?>">-</span></td>
-						<td>
-<?
-				if($erg['active'] == 1) {
-?>
-							<span data-ws="<?= $erg['name']?>_Online" class="ps-input <?= wpa::GreenRed?>">-</span>
-<?
-				} else {
-?>
-							<span class="ps-input">deactivated</span>
-<?
-				}
-?>
-						</td>
-					</tr>
-					<tr class="ps-hidden">
-						<td class="ps-taleft"><span>newName:</span></td>
-						<td><input class="ps-input newName" type="text" value="<?=$erg['name'] ?>" /></td>
-						<td><span class="ps-hidden ps-button SetName">speichern</span></td>
-					</tr>
-					<tr class="ps-hidden">
-						<td class="ps-taleft"><span>newDescrption:</span></td>
-						<td><input class="ps-input newDescrption" type="text" value="<?=$erg['description'] ?>" /></td>
-						<td><span class="ps-hidden ps-button SetDescrption">speichern</span></td>
-					</tr>
-					<tr>
-						<td colspan="3"><hr /></td>
-					</tr>
-					<tr class="ps-hidden">
-						<td class="ps-taleft"><span>updateChanel:</span></td>
-						<td>
-							<select class="ps-input d1mUpdateChanel">
-<?
-$updateChanel = array (
-	99 => 'clean',
-	0 => 'firmware',
-	1 => 'light',
-	2 => 'io',
-	3 => 'heating',
-	4 => 'rfid'
-);
-foreach($updateChanel as $key => $value) {
-	echo '<option value="' . $key . '">' . $value . '</option>';
-}
-?>
-							</select>
-						</td>
-						<td><span class="ps-hidden ps-button SetChanel">speichern</span></td>
-					</tr>
-					<tr class="ps-hidden">
-						<td class="ps-taleft"><span>Last Boot Reason:</span></td>
-						<td class="ps-taleft" colspan="2"><span class="d1mRestartReason">--</span></td>
-					</tr>
-					<tr class="ps-hidden">
-						<td class="ps-taleft"><span>Boot Counter:</span></td>
-						<td class="ps-taleft"><span class="d1mBootCounter">--</span></td>
-						<td class="buttonContainer">
-							<span class="ps-hidden ps-button SetCmd" data-cmd="ResetBootCounter">reset</span>
-						</td>
-					</tr>
-					<tr class="ps-hidden">
-						<td class="ps-taleft"><span>Online Since:</span></td>
-						<td class="ps-taleft" colspan="2"><span class="d1mOnSince">--</span></td>
-					</tr>
-					<tr class="ps-hidden">
-						<td class="ps-taleft"><span>Online Duration:</span></td>
-						<td class="ps-taleft" colspan="2"><span class="d1mOnDuration">--</span></td>
-					</tr>
-					<tr class="ps-hidden">
-						<td class="ps-taleft"><span>WiFi Since:</span></td>
-						<td class="ps-taleft" colspan="2"><span class="d1mWiFiSince">--</span></td>
-					</tr>
-					<tr class="ps-hidden">
-						<td class="ps-taleft"><span>MQTT Since:</span></td>
-						<td class="ps-taleft" colspan="2"><span class="d1mMQTTSince">--</span></td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
 <?
 	}
 ?>
+				</tbody>
+			</table>
+		</div>
 	</div>
 	<hr />
 	<p class="serverinfo">

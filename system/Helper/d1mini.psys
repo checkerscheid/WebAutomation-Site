@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 26.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 713                                                     $ #
+//# Revision     : $Rev:: 734                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.psys 713 2024-12-14 16:26:31Z                     $ #
+//# File-ID      : $Id:: d1mini.psys 734 2025-04-25 19:30:07Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -290,6 +290,12 @@ class d1mini {
 				$id_mqtttopicReadedTemp = $this->insertTopic('AnalogOut/ReadedTemp');
 				$id_dp = $this->mergeDP($id_mqtttopicReadedTemp, 'AnalogOutReadedTemp', 'Temperatur', '°C', 1);
 				$this->mergeTrend($id_dp, 'AnalogOut ReadedTemp', 0);
+				$id_mqtttopicSetWatung = $this->insertTopic('settings/AnalogOut/Wartung');
+				$this->mergeDP($id_mqtttopicSetWatung, 'AnalogOut_SetWartung', 'AnalogOut Set Wartung', '0:inaktiv;1:aktiv;', 'NULL', 0, 1);
+				echo "saved: 'AnalogOut Wartung',";
+				$id_mqtttopicWartungError = $this->insertTopic('ERROR/AnalogOutWartungActive');
+				$id_dp_WartungError = $this->mergeDP($id_mqtttopicWartungError, 'AnalogOut_Wartung', 'AnalogOut Wartung', '0:Wartung inaktiv;1:Wartung aktiv;', 'NULL', 0, 1);
+				$this->mergeAlarm($id_dp_WartungError, 'AnalogOut_Wartung', 'AnalogOut Wartung', AlarmType::Meldung);
 		}
 		echo "saved: 'AnalogOut'<br />";
 	}
@@ -416,6 +422,13 @@ class d1mini {
 		$id_mqtttopicSetTempURL = $this->insertTopic('settings/Underfloor' . $i . '/TempURL');
 		$this->mergeDP($id_mqtttopicSetTempURL, 'Underfloor' . $i . '_SetTempURL', 'Ventil ' . $i . ' SetTempURL');
 		echo "saved: 'Ventil" . $i . " SetTempURL',";
+		$id_mqtttopicSetWatung = $this->insertTopic('settings/Underfloor' . $i . '/Wartung');
+		$this->mergeDP($id_mqtttopicSetWatung, 'Underfloor' . $i . '_SetWartung', 'Ventil ' . $i . ' Set Wartung', '0:inaktiv;1:aktiv;', 'NULL', 0, 1);
+		echo "saved: 'Ventil" . $i . " Wartung',";
+		$id_mqtttopicWartungError = $this->insertTopic('ERROR/Underfloor' . $i . 'WartungActive');
+		$id_dp_WartungError = $this->mergeDP($id_mqtttopicWartungError, 'Underfloor' . $i . '_Wartung', 'Ventil ' . $i . ' Wartung', '0:Wartung inaktiv;1:Wartung aktiv;', 'NULL', 0, 1);
+		$this->mergeAlarm($id_dp_WartungError, 'Underfloor' . $i . '_Wartung', 'Ventil ' . $i . ' Wartung', AlarmType::Meldung);
+		echo "saved: 'Ventil" . $i . " Wartung',";
 		echo "saved: 'Underfloor" . $i . "'<br />";
 	}
 	private function setDS18B20() {

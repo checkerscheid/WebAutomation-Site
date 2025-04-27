@@ -38,8 +38,9 @@ p.page.load = function() {
 //###################################################################################
 	$('#calendarscene').on('click', '[data-writescene]', function(data) {
 		$.post('std.writescene.setid.req', {id:$(this).attr('data-writescene')}, function(data) {
-			if(data != 'S_OK') p.page.alert(data);
-		});
+			if(data.erg == 'S_OK') p.page.alert(data.message, 5000);
+			else p.page.alertError(data.message, 5000);
+		}, 'json');
 	});
 //###################################################################################
 	$('#calendarschedule').on('click', '.gsync', function() {

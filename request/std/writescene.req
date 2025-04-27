@@ -55,6 +55,7 @@ switch(std::gets('param1')) {
 		break;
 	//###################################################################################
 	case writescene::c_setid:
+		header(wpJSON_HEADER);
 		$WebCom = new WebCom();
 		echo $WebCom->send('WriteSceneDP', $_SESSION[SESSION_ID]['USER'].'%~%'.std::posts('id'));
 		break;

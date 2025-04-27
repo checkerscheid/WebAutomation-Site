@@ -9,13 +9,13 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 27.02.2025                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 730                                                     $ #
+//# Revision     : $Rev:: 734                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: sys_d1mini.css 730 2025-03-30 13:24:07Z                  $ #
+//# File-ID      : $Id:: sys_d1mini.css 734 2025-04-25 19:30:07Z                  $ #
 //#                                                                                 #
 //###################################################################################
 ?> d1mini */
 
 #d1mini h1, #d1mini h2, #d1mini h3 { text-align:center; }
-#d1mini .ps-input { width:auto; }
+#d1mini td { padding:5px 10px; border:1px solid #CCC; }
 #d1mini .serverinfo { position:fixed; top:85px; right:25px; color:#FFF; font-size:7pt; }
