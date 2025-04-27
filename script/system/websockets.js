@@ -182,6 +182,81 @@ var ws = {
 									$(this).removeClass('ps-blue').addClass('ps-yellow')
 										.html(typeof(textTrue) == 'undefined' ? that.valuestring : textTrue);
 								}
+
+
+	//###################################################################################
+							} else if($(this).hasClass('<?=wpa::FontGreyGreen ?>')) {
+								if(that.value == 'False' || that.value == '0' || that.value == 'Off') {
+									$(this).removeClass('ps-fontgreen')
+										.html(typeof(textFalse) == 'undefined' ? that.valuestring : textFalse);
+								} else {
+									$(this).addClass('ps-fontgreen')
+										.html(typeof(textTrue) == 'undefined' ? that.valuestring : textTrue);
+								}
+	//###################################################################################
+							} else if($(this).hasClass('<?=wpa::FontGreyYellow ?>')) {
+								if(that.value == 'False' || that.value == '0' || that.value == 'Off') {
+									$(this).removeClass('ps-fontyellow')
+										.html(typeof(textFalse) == 'undefined' ? that.valuestring : textFalse);
+								} else {
+									$(this).addClass('ps-fontyellow')
+										.html(typeof(textTrue) == 'undefined' ? that.valuestring : textTrue);
+								}
+	//###################################################################################
+							} else if($(this).hasClass('<?=wpa::FontGreyRed ?>')) {
+								if(that.value == 'False' || that.value == '0' || that.value == 'Off') {
+									$(this).removeClass('ps-fontred')
+										.html(typeof(textFalse) == 'undefined' ? that.valuestring : textFalse);
+								} else {
+									$(this).addClass('ps-fontred')
+										.html(typeof(textTrue) == 'undefined' ? that.valuestring : textTrue);
+								}
+	//###################################################################################
+							} else if($(this).hasClass('<?=wpa::FontGreenYellow ?>')) {
+								if(that.value == 'False' || that.value == '0' || that.value == 'Off') {
+									$(this).removeClass('ps-fontyellow').addClass('ps-fontgreen')
+										.html(typeof(textFalse) == 'undefined' ? that.valuestring : textFalse);
+								} else {
+									$(this).removeClass('ps-fontgreen').addClass('ps-fontyellow')
+										.html(typeof(textTrue) == 'undefined' ? that.valuestring : textTrue);
+								}
+	//###################################################################################
+							} else if($(this).hasClass('<?=wpa::FontGreenRed ?>')) {
+								if(that.value == 'False' || that.value == '0' || that.value == 'Off') {
+									$(this).removeClass('ps-fontred').addClass('ps-fontgreen')
+										.html(typeof(textFalse) == 'undefined' ? that.valuestring : textFalse);
+								} else {
+									$(this).removeClass('ps-fontgreen').addClass('ps-fontred')
+										.html(typeof(textTrue) == 'undefined' ? that.valuestring : textTrue);
+								}
+	//###################################################################################
+							} else if($(this).hasClass('<?=wpa::FontRedGreen ?>')) {
+								if(that.value == 'False' || that.value == '0' || that.value == 'Off') {
+									$(this).removeClass('ps-fontgreen').addClass('ps-fontred')
+										.html(typeof(textFalse) == 'undefined' ? that.valuestring : textFalse);
+								} else {
+									$(this).removeClass('ps-fontred').addClass('ps-fontgreen')
+										.html(typeof(textTrue) == 'undefined' ? that.valuestring : textTrue);
+								}
+	//###################################################################################
+							} else if($(this).hasClass('<?=wpa::FontYellowGreen ?>')) {
+								if(that.value == 'False' || that.value == '0' || that.value == 'Off') {
+									$(this).removeClass('ps-fontgreen').addClass('ps-fontyellow')
+										.html(typeof(textFalse) == 'undefined' ? that.valuestring : textFalse);
+								} else {
+									$(this).removeClass('ps-fontyellow').addClass('ps-fontgreen')
+										.html(typeof(textTrue) == 'undefined' ? that.valuestring : textTrue);
+								}
+	//###################################################################################
+							} else if($(this).hasClass('<?=wpa::FontBlueYellow ?>')) {
+								if(that.value == 'False' || that.value == '0' || that.value == 'Off') {
+									$(this).removeClass('ps-fontyellow').addClass('ps-fontblue')
+										.html(typeof(textFalse) == 'undefined' ? that.valuestring : textFalse);
+								} else {
+									$(this).removeClass('ps-fontblue').addClass('ps-fontyellow')
+										.html(typeof(textTrue) == 'undefined' ? that.valuestring : textTrue);
+								}
+
 	//###################################################################################
 							} else if($(this).hasClass('pa-hide')) {
 								if(that.value == 'False' || that.value == '0' || that.value == 'Off') {

@@ -25,6 +25,16 @@ class wpa {
 	public const RedGreen = 'wpa-RedGreen';
 	public const YellowGreen = 'wpa-YellowGreen';
 	public const BlueYellow = 'wpa-BlueYellow';
+
+	public const FontGreyGreen = 'wpa-FontGreyGreen';
+	public const FontGreyYellow = 'wpa-FontGreyYellow';
+	public const FontGreyRed = 'wpa-FontGreyRed';
+	public const FontGreenYellow = 'wpa-FontGreenYellow';
+	public const FontGreenRed = 'wpa-FontGreenRed';
+	public const FontRedGreen = 'wpa-FontRedGreen';
+	public const FontYellowGreen = 'wpa-FontYellowGreen';
+	public const FontBlueYellow = 'wpa-FontBlueYellow';
+
 	public const rssi = 'wpa-rssi';
 	public const indikator = 'wpa-indikator';
 	public const indikatorTemp = 'wpa-indikator indikator-temp';

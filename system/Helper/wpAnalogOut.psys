@@ -101,6 +101,18 @@ class wpAnalogOut {
 						<div class="topic-slider" data-ws="<?=$this->name ?>_AnalogOutHand" data-topic="<?=$this->name ?>/settings/AnalogOut/SetHandValue"></div>
 					</td>
 				</tr>
+				<tr><td colspan="6"><hr /></td></tr>
+				<tr>
+					<td colspan="6"><h3>Wartung</h3></td>
+				</tr>
+				<tr>
+					<td colspan="3">
+					<td><span class="<?=wpa::FontGreenYellow ?>" data-ws="<?=$this->name ?>_AnalogOut_Wartung">--</span></td>
+					</td>
+					<td colspan="3">
+						<span class="ps-button writeTopic" data-topic="<?=$this->name ?>/settings/AnalogOut/Wartung" data-write="1">einschalten</span>
+					</td>
+				</tr>
 			<? if($this->status->useModul->DHT11 ||
 				$this->status->useModul->DHT22 ||
 				isset($this->status->AnalogOut->CalcCycle)) {

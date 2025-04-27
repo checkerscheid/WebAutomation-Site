@@ -45,6 +45,12 @@ class d1mini {
 		$WebCom = new WebCom();
 		echo $WebCom->send('SetD1MiniUrlCmd', $ip . '%~%' . 'setCmd?cmd=' . $cmd);
 	}
+	const c_setUnderfloorWartung = 'setUnderfloorWartung';
+	public static function setUnderfloorWartung($ip, $id) {
+		header(wpJSON_HEADER);
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', $ip . '%~%' . 'setUnderfloor' . $id . '?wartung');
+	}
 }
 
 switch(std::gets('param1')) {
@@ -59,6 +65,10 @@ switch(std::gets('param1')) {
 		//###################################################################################
 	case d1mini::c_setcmd:
 		d1mini::setcmd(std::posts('ip'), std::posts('cmd'));
+		break;
+		//###################################################################################
+	case d1mini::c_setUnderfloorWartung:
+		d1mini::setUnderfloorWartung(std::posts('ip'), std::posts('id'));
 		break;
 		//###################################################################################
 	default:

@@ -188,6 +188,17 @@ p.page.load = function() {
 			});
 		});
 	});
+	$('.page').on('click', '.setUnderfloorWartung', function() {
+		const wartung = {
+			ip: $('#storedIP').attr('data-ip'),
+			id: $(this).attr('data-id')
+		}
+		$.post('std.d1mini.setUnderfloorWartung.req', wartung, function(data) {
+			if(data.erg != 'S_OK') {
+				p.page.alertError(data.msg);
+			}
+		}, 'json');
+	});
 	ws.connect();
 	
 	d1MiniWs.connectionstring = 'ws://' + $('#storedIP').attr('data-ip') + '/ws',
