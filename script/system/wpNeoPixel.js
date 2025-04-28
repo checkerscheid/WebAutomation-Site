@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 715                                                     $ #
+//# Revision     : $Rev:: 735                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpNeoPixel.js 715 2025-01-29 18:35:26Z                   $ #
+//# File-ID      : $Id:: wpNeoPixel.js 735 2025-04-28 19:45:43Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> wpNeoPixel */
