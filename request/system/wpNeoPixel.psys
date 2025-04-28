@@ -73,6 +73,20 @@ class wpNeoPixel {
 		$WebCom = new WebCom();
 		echo $WebCom->send('SetD1MiniUrlCmd', wpNeoPixel::$ip . '%~%' . 'setNeoPixelEffectSpeed?' . $cmd);
 	}
+	const c_NeoPixelWW = 'NeoPixelWW';
+	public static function NeoPixelWW() {
+		header(wpJSON_HEADER);
+		$cmd = 'ww=' . std::posts('ww');
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', wpNeoPixel::$ip . '%~%' . 'setNeoPixelWW?' . $cmd);
+	}
+	const c_NeoPixelChangeWW = 'NeoPixelChangeWW';
+	public static function NeoPixelChangeWW() {
+		header(wpJSON_HEADER);
+		$cmd = 'changeww';
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', wpNeoPixel::$ip . '%~%' . 'setNeoPixelWW?' . $cmd);
+	}
 	const c_NeoPixelCW = 'NeoPixelCW';
 	public static function NeoPixelCW() {
 		header(wpJSON_HEADER);
@@ -80,12 +94,12 @@ class wpNeoPixel {
 		$WebCom = new WebCom();
 		echo $WebCom->send('SetD1MiniUrlCmd', wpNeoPixel::$ip . '%~%' . 'setNeoPixelCW?' . $cmd);
 	}
-	const c_NeoPixelWW = 'NeoPixelWW';
-	public static function NeoPixelWW() {
+	const c_NeoPixelChangeCW = 'NeoPixelChangeCW';
+	public static function NeoPixelChangeCW() {
 		header(wpJSON_HEADER);
-		$cmd = 'ww=' . std::posts('ww');
+		$cmd = 'changecw';
 		$WebCom = new WebCom();
-		echo $WebCom->send('SetD1MiniUrlCmd', wpNeoPixel::$ip . '%~%' . 'setNeoPixelWW?' . $cmd);
+		echo $WebCom->send('SetD1MiniUrlCmd', wpNeoPixel::$ip . '%~%' . 'setNeoPixelCW?' . $cmd);
 	}
 	const c_setNeoPixelOn = 'setNeoPixelOn';
 	public static function setNeoPixelOn() {
@@ -180,8 +194,16 @@ switch(std::gets('param1')) {
 		wpNeoPixel::NeoPixelWW();
 		break;
 		//###################################################################################
+	case wpNeoPixel::c_NeoPixelChangeWW:
+		wpNeoPixel::NeoPixelChangeWW();
+		break;
+		//###################################################################################
 	case wpNeoPixel::c_NeoPixelCW:
 		wpNeoPixel::NeoPixelCW();
+		break;
+		//###################################################################################
+	case wpNeoPixel::c_NeoPixelChangeCW:
+		wpNeoPixel::NeoPixelChangeCW();
 		break;
 		//###################################################################################
 	case wpNeoPixel::c_setNeoPixelOn:

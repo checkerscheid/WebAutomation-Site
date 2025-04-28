@@ -102,6 +102,16 @@ var wpNeoPixel = {
 			var sec = ($('.NeoPixelSleepHour').text() * 60 * 60) + ($('.NeoPixelSleepMinute').text() * 60);
 			wpNeoPixel.setSleep(sec);
 		});
+		$('.changeWW').on('click', function() {
+			const change = { ip: wpNeoPixel.ip };
+			$.post(wpNeoPixel.target + '.NeoPixelChangeWW.req', change, function(data) {
+			}, 'json');
+		});
+		$('.changeCW').on('click', function() {
+			const change = { ip: wpNeoPixel.ip };
+			$.post(wpNeoPixel.target + '.NeoPixelChangeCW.req', change, function(data) {
+			}, 'json');
+		});
 		$('.colorBorder').on('click', function() {
 			const led = {
 				ip: wpNeoPixel.ip,

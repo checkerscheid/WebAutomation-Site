@@ -23,7 +23,7 @@ use system\WebCom;
  * @author Checker
  */
 class wpCwWw {
-	private $database, $status;
+	private $database, $status, $pixelStatus;
 	private $ip, $name;
 	const modes = array(
 		4 => 'Pulse',
@@ -38,7 +38,7 @@ class wpCwWw {
 		$this->ip = $ip;
 		$this->name = $name;
 		//$this->getStatus();
-		$this->getPixelStatus();
+		//$this->getPixelStatus();
 	}
 	public function getStatus() {
 		$WebCom = new WebCom();
@@ -66,10 +66,10 @@ class wpCwWw {
 			<h3><?=$headline ?></h3>
 			<hr />
 			<div class="colorPicker">
-				<h3><?=$ww ?> (<span class="CwWwWW _wp-b-to-p" data-ws="<?=$this->name ?>_AnalogOut"><?=floor($this->status->AnalogOut->HandValue / 2.55) ?></span>)</h3>
-				<div class="CwWwSliderW CwWwSliderWW wpSlider" data-ws="<?=$this->name ?>_AnalogOut"></div>
-				<h3><?=$cw ?> (<span class="CwWwCW _wp-b-to-p" data-ws="<?=$this->name ?>_AnalogOut2"><?=floor($this->status->AnalogOut2->HandValue / 2.55) ?></span>)</h3>
-				<div class="CwWwSliderW CwWwSliderCW wpSlider" data-ws="<?=$this->name ?>_AnalogOut2"></div>
+				<h3><?=$ww ?> (<span class="CwWwWW _wp-b-to-p" data-ws="<?=$this->name ?>_WW">--</span>)</h3>
+				<div class="CwWwSliderW CwWwSliderWW wpSlider" data-ws="<?=$this->name ?>_WW"></div>
+				<h3><?=$cw ?> (<span class="CwWwCW _wp-b-to-p" data-ws="<?=$this->name ?>_CW">--</span>)</h3>
+				<div class="CwWwSliderW CwWwSliderCW wpSlider" data-ws="<?=$this->name ?>_CW"></div>
 			</div>
 			<h3>Scenen</h3>
 			<div class="sceneContainer">

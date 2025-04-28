@@ -129,22 +129,24 @@ class wpNeoPixel {
 ?>
 					</div>
 				</div>
-<?
-			$ao = $this->status->useModul->AnalogOut ?? false;
-			$ao2 = $this->status->useModul->AnalogOut2 ?? false;
-			if($ao || $ao2) {
-?>
 				<hr />
-				<? if($ao) { ?>
-				<h3>Warmweiß (<span class="NeoPixelWW"><?=$this->status->AnalogOut->HandValue ?></span> %)</h3>
-				<div class="NeoPixelSliderW NeoPixelSliderWW wpSlider" data-ws="<?=$this->name ?>_AnalogOut"></div>
+				<? if($this->status->NeoPixel->useWW) { ?>
+				<h3>Warmweiß (<span class="NeoPixelWW" data-ws="<?=$this->name ?>_WW">--</span> %)</h3>
+				<div class="NeoPixelSliderW NeoPixelSliderWW wpSlider" data-ws="<?=$this->name ?>_WW"></div>
 				<? } ?>
-				<? if($ao2) { ?>
-				<h3>Kaltweiß (<span class="NeoPixelCW"><?=$this->status->AnalogOut2->HandValue ?></span> %)</h3>
-				<div class="NeoPixelSliderW NeoPixelSliderCW wpSlider" data-ws="<?=$this->name ?>_AnalogOut2"></div>
+				<? if($this->status->NeoPixel->useCW) { ?>
+				<h3>Kaltweiß (<span class="NeoPixelCW" data-ws="<?=$this->name ?>_CW">--</span> %)</h3>
+				<div class="NeoPixelSliderW NeoPixelSliderCW wpSlider" data-ws="<?=$this->name ?>_CW"></div>
 				<? } ?>
 <?
-			}
+		if(security::checkGroup(security::entwickler)) {
+?>
+				<div>
+					<span class="ps-button changeWW <?=$this->status->NeoPixel->useWW == 1 ? 'ps-green' : 'ps-grey' ?>">use WW</span>
+					<span class="ps-button changeCW <?=$this->status->NeoPixel->useCW == 1 ? 'ps-green' : 'ps-grey' ?>">use CW</span>
+				</div>
+<?
+		}
 ?>
 			</div>
 		</div>
