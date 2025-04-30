@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 03.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 730                                                     $ #
+//# Revision     : $Rev:: 736                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.js 730 2025-03-30 13:24:07Z                    $ #
+//# File-ID      : $Id:: d1minicfg.js 736 2025-04-30 13:48:40Z                    $ #
 //#                                                                                 #
 //###################################################################################
 ?> d1minicfg */
@@ -82,11 +82,11 @@ p.page.load = function() {
 		$('#erg .ps-checkbox:not(.ps-disabled)').removeClass('checked');
 	});
 //###################################################################################
-	$('#erg').on('click', '[data-column="name"] .stored', function() {
-		var name = $(this).text();
-		// $('[data-json="' + name + '"]').find('.showJson').toggleClass('closed');
-		location.href = 'std.d1mini.' + name + '.htm';
-	});
+	// $('#erg').on('click', '[data-column="name"] .stored', function() {
+	// 	var name = $(this).text();
+	// 	// $('[data-json="' + name + '"]').find('.showJson').toggleClass('closed');
+	// 	location.href = 'std.d1mini.' + name + '.htm';
+	// });
 //###################################################################################
 	$('#d1minicfg').on('click', '.searchResult .d1MiniAdd', function() {
 		var myData = $(this).data();
@@ -248,6 +248,15 @@ p.page.load = function() {
 			}
 		});
 	});
+	$('#erg').on('click', '.allCheckHttpUpdate', function() {
+		var tr = $(this).parents('ul.d1miniingroup:first');
+		$(tr).find('tr[data-id]').each(function() {
+			if($(this).find('.ps-checkbox.checkboxactive').hasClass('checked')) {
+				var ip = $(this).find('[data-column="ip"] .stored').text();
+				$.post('std.d1minicfg.checkhttpupdate.req', {ip:ip});
+			}
+		});
+	});
 	$('#erg').on('click', '.allForceMqttUpdate', function() {
 		var tr = $(this).parents('ul.d1miniingroup:first');
 		$(tr).find('tr[data-id]').each(function() {
@@ -263,6 +272,15 @@ p.page.load = function() {
 			if($(this).find('.ps-checkbox.checkboxactive').hasClass('checked')) {
 				var ip = $(this).find('[data-column="ip"] .stored').text();
 				$.post('std.d1minicfg.restartdevice.req', {ip:ip});
+			}
+		});
+	});
+	$('#erg').on('click', '.allResetCounter', function() {
+		var tr = $(this).parents('ul.d1miniingroup:first');
+		$(tr).find('tr[data-id]').each(function() {
+			if($(this).find('.ps-checkbox.checkboxactive').hasClass('checked')) {
+				var ip = $(this).find('[data-column="ip"] .stored').text();
+				$.post('std.d1mini.setcmd.req', {ip:ip, cmd:'ResetBootCounter'});
 			}
 		});
 	});

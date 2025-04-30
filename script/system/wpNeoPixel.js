@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 735                                                     $ #
+//# Revision     : $Rev:: 736                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpNeoPixel.js 735 2025-04-28 19:45:43Z                   $ #
+//# File-ID      : $Id:: wpNeoPixel.js 736 2025-04-30 13:48:40Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> wpNeoPixel */
@@ -105,11 +105,19 @@ var wpNeoPixel = {
 		$('.changeWW').on('click', function() {
 			const change = { ip: wpNeoPixel.ip };
 			$.post(wpNeoPixel.target + '.NeoPixelChangeWW.req', change, function(data) {
+				if(data.erg == 'S_OK') {
+					if(data.useWW) $('.changeWW').addClass('ps-green').removeClass('ps-grey');
+					else $('.changeWW').addClass('ps-grey').removeClass('ps-green');
+				}
 			}, 'json');
 		});
 		$('.changeCW').on('click', function() {
 			const change = { ip: wpNeoPixel.ip };
 			$.post(wpNeoPixel.target + '.NeoPixelChangeCW.req', change, function(data) {
+				if(data.erg == 'S_OK') {
+					if(data.useCW) $('.changeCW').addClass('ps-green').removeClass('ps-grey');
+					else $('.changeCW').addClass('ps-grey').removeClass('ps-green');
+				}
 			}, 'json');
 		});
 		$('.colorBorder').on('click', function() {

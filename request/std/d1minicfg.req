@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 04.03.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 734                                                     $ #
+//# Revision     : $Rev:: 736                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.req 734 2025-04-25 19:30:07Z                   $ #
+//# File-ID      : $Id:: d1minicfg.req 736 2025-04-30 13:48:40Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -226,9 +226,11 @@ class d1minicfg {
 			<div class="tr">
 				<div class="td"><span>markierte:</span></div>
 				<div class="td">
-					<span class="ps-button allHttpUpdate" title="HTTP Update">Update</span>
+					<span class="ps-button allHttpUpdate" title="Update">Update</span>
+					<span class="ps-button allCheckHttpUpdate" title="Check Update">Check Update</span>
 					<span class="ps-button allForceMqttUpdate" title="Force MQTT Update">Force MQTT Update</span>
 					<span class="ps-button allRestart" title="Restart Device">Restart Device</span>
+					<span class="ps-button allResetCounter" title="Reset Boot Counter">Reset Boot Counter</span>
 					<span class="ps-button allgroup" title="in Gruppe verschieben">Gruppe</span>
 					<span class="ps-button allaktiv" title="aktivieren / deaktivieren">Aktiv</span>
 					<span class="ps-button alldelete">l&ouml;schen</span>
@@ -290,7 +292,7 @@ class d1minicfg {
 					<td data-column="name">
 						<div class="tdButton">
 							<div>
-								<span class="stored ps-fontyellow" title="Offline">' . $erg['name'] . '</span><br />
+								<a class="stored ps-fontyellow" title="Offline" href="std.d1mini.' . $erg['name'] . '.htm">' . $erg['name'] . '</a><br />
 								<span class="smallfont ps-fontyellow name"></span>
 							</div>
 							<div class="buttonContainer">
@@ -457,12 +459,19 @@ class d1minicfg {
 		$WebCom = new WebCom();
 		echo $WebCom->send('SetD1MiniUrlCmd', $ip . '%~%' . 'setCmd?cmd=UpdateHTTP');
 	}
+	const c_checkhttpupdate = 'checkhttpupdate';
+	public static function checkhttpupdate($ip) {
+		header(wpJSON_HEADER);
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', $ip . '%~%' . 'setCmd?cmd=UpdateCheck');
+	}
 	const c_restartdevice = 'restartdevice';
 	public static function restartdevice($ip) {
 		header(wpJSON_HEADER);
 		$WebCom = new WebCom();
 		echo $WebCom->send('SetD1MiniUrlCmd', $ip . '%~%' . 'setCmd?cmd=RestartDevice');
 	}
+	
 	const c_setActive = 'setActive';
 	public static function setActive() {
 		header(wpJSON_HEADER);
@@ -626,6 +635,10 @@ switch(std::gets('param1')) {
 		//###################################################################################
 	case d1minicfg::c_starthttpupdate:
 		d1minicfg::starthttpupdate(std::posts('ip'));
+		break;
+		//###################################################################################
+	case d1minicfg::c_checkhttpupdate:
+		d1minicfg::checkhttpupdate(std::posts('ip'));
 		break;
 		//###################################################################################
 	case d1minicfg::c_restartdevice:
