@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 08.06.2021                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 735                                                     $ #
+//# Revision     : $Rev:: 737                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpa.psys 735 2025-04-28 19:45:43Z                        $ #
+//# File-ID      : $Id:: wpa.psys 737 2025-05-01 20:16:09Z                        $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -25,6 +25,7 @@ class wpa {
 	public const RedGreen = 'wpa-RedGreen';
 	public const YellowGreen = 'wpa-YellowGreen';
 	public const BlueYellow = 'wpa-BlueYellow';
+	public const YellowBlue = 'wpa-YellowBlue';
 
 	public const FontGreyGreen = 'wpa-FontGreyGreen';
 	public const FontGreyYellow = 'wpa-FontGreyYellow';
@@ -34,6 +35,7 @@ class wpa {
 	public const FontRedGreen = 'wpa-FontRedGreen';
 	public const FontYellowGreen = 'wpa-FontYellowGreen';
 	public const FontBlueYellow = 'wpa-FontBlueYellow';
+	public const FontYellowBlue = 'wpa-FontYellowBlue';
 
 	public const rssi = 'wpa-rssi';
 	public const indikator = 'wpa-indikator';

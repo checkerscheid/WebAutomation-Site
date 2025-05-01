@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 29.11.2023                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 715                                                     $ #
+//# Revision     : $Rev:: 737                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht_parameter.req 715 2025-01-29 18:35:26Z        $ #
+//# File-ID      : $Id:: uebersicht_parameter.req 737 2025-05-01 20:16:09Z        $ #
 //#                                                                                 #
 //###################################################################################
 namespace request;
@@ -24,6 +24,8 @@ class uebersicht_parameter {
 	const c_pia_wn = 'pia_wn';
 	const c_pia_we = 'pia_we';
 	const c_pia_wnwe = 'pia_wnwe';
+	const c_pop_summer = 'pop_summer';
+	const c_set_summer = 'set_summer';
 }
 class weihnachten {
 	const Fenster = '172.17.80.133';
@@ -104,6 +106,47 @@ switch(std::gets('param1')) {
 		// Pia
 		$http = file_get_contents('http://wpLicht:turner@' . weihnachten::Pia . '/settings/relay/0/?index=0&schedule=true&schedule_rules=0030bss-0123456-on,0030asr-0123456-off');
 		echo $http . ']}';
+		break;
+	//###################################################################################
+	case uebersicht_parameter::c_pop_summer:
+		echo '
+<div class="popup">
+	<h1>' . std::posts('headline') . '</h1>
+	<table summary="">
+		<tr>
+			<td colspan="2">
+				<hr />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<span>Istwert:</span>
+			</td>
+			<td>
+				<span class="ps-input pa-EinAus" data-value="' . std::posts('elem') . '">undefined</span>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<hr />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<span class="ps-button setSummer">Sommerbetrieb</span>
+			</td>
+			<td>
+				<span class="ps-button setWinter">Winterbetrieb</span>
+			</td>
+		</tr>
+	</table>
+</div>';
+		break;
+	//###################################################################################
+	case uebersicht_parameter::c_set_summer:
+		header('Content-Type: application/json');
+		$WebCom = new \system\WebCom();
+		echo $WebCom->send('SetSummer', std::posts('summer'));
 		break;
 	//###################################################################################
 	default:

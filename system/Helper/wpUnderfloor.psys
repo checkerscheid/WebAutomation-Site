@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 735                                                     $ #
+//# Revision     : $Rev:: 737                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpUnderfloor.psys 735 2025-04-28 19:45:43Z               $ #
+//# File-ID      : $Id:: wpUnderfloor.psys 737 2025-05-01 20:16:09Z               $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -111,6 +111,14 @@ class wpUnderfloor {
 			</tr>
 			<tr>
 				<td colspan="2"><span class="ps-button setUnderfloorWartung" data-id="<?=$this->no ?>">Wartung einschalten</span></td>
+			</tr>
+			<tr>
+				<td>
+					<span>Betriebsmodus:</span>
+				</td>
+				<td>
+					<span class="<?=wpa::FontYellowBlue ?>" data-ws="<?=$this->name ?>_Underfloor<?=$this->no ?>_Summer">--</span>
+				</td>
 			</tr>
 		</table>
 	</div>

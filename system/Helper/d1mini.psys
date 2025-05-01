@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 26.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 735                                                     $ #
+//# Revision     : $Rev:: 737                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.psys 735 2025-04-28 19:45:43Z                     $ #
+//# File-ID      : $Id:: d1mini.psys 737 2025-05-01 20:16:09Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -292,10 +292,14 @@ class d1mini {
 				$this->mergeTrend($id_dp, 'AnalogOut ReadedTemp', 0);
 				$id_mqtttopicSetWatung = $this->insertTopic('settings/AnalogOut/Wartung');
 				$this->mergeDP($id_mqtttopicSetWatung, 'AnalogOut_SetWartung', 'AnalogOut Set Wartung', '0:inaktiv;1:aktiv;', 'NULL', 0, 1);
-				echo "saved: 'AnalogOut Wartung',";
+				echo "saved: 'AnalogOut Set Wartung',";
 				$id_mqtttopicWartungError = $this->insertTopic('ERROR/AnalogOutWartungActive');
 				$id_dp_WartungError = $this->mergeDP($id_mqtttopicWartungError, 'AnalogOut_Wartung', 'AnalogOut Wartung', '0:Wartung inaktiv;1:Wartung aktiv;', 'NULL', 0, 1);
 				$this->mergeAlarm($id_dp_WartungError, 'AnalogOut_Wartung', 'AnalogOut Wartung', AlarmType::Meldung);
+				echo "saved: 'AnalogOut Wartung ERROR',";
+				$id_mqtttopicSummerError = $this->insertTopic('ERROR/AnalogOutSummer');
+				$this->mergeDP($id_mqtttopicSummerError, 'AnalogOut_Summer', 'AnalogOut Sommer', '0:Sommerbetrieb;1:Heizbetrieb;', 'NULL', 0, 1);
+				echo "saved: 'AnalogOut Summer',";
 		}
 		echo "saved: 'AnalogOut'<br />";
 	}
@@ -435,6 +439,9 @@ class d1mini {
 		$id_dp_WartungError = $this->mergeDP($id_mqtttopicWartungError, 'Underfloor' . $i . '_Wartung', 'Ventil ' . $i . ' Wartung', '0:Wartung inaktiv;1:Wartung aktiv;', 'NULL', 0, 1);
 		$this->mergeAlarm($id_dp_WartungError, 'Underfloor' . $i . '_Wartung', 'Ventil ' . $i . ' Wartung', AlarmType::Meldung);
 		echo "saved: 'Ventil" . $i . " Wartung',";
+		$id_mqtttopicSummerError = $this->insertTopic('ERROR/Underfloor' . $i . 'Summer');
+		$this->mergeDP($id_mqtttopicSummerError, 'Underfloor' . $i . '_Summer', 'Underfloor' . $i . ' Sommer', '0:Heizbetrieb;1:Sommerbetrieb;', 'NULL', 0, 1);
+		echo "saved: 'Underfloor" . $i . " Summer',";
 		echo "saved: 'Underfloor" . $i . "'<br />";
 	}
 	private function setDS18B20() {

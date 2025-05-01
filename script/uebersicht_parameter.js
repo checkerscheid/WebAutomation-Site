@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 14.01.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 657                                                     $ #
+//# Revision     : $Rev:: 737                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht_parameter.js 657 2024-07-07 21:24:59Z         $ #
+//# File-ID      : $Id:: uebersicht_parameter.js 737 2025-05-01 20:16:09Z         $ #
 //#                                                                                 #
 //###################################################################################
 ?> uebersicht_parameter */
@@ -23,11 +23,27 @@
 p.page.load = function() {
 	$('#uebersicht_parameter').on('click', '.pa-EinAus.ps-parambool', function() {
 		var headline = $(this).attr('data-popup');
-		$.post('std.truefalseohnehandauto.pop', {elem:$(this).attr('data-value'), type:'EinAus', headline:headline, dataTrue:'Sommerbetrieb', dataFalse:'Heizbetrieb'}, function(data) {
+		$.post('uebersicht_parameter.pop_summer.req', {elem:$(this).attr('data-value'), headline:headline}, function(data) {
 			$('#dialog').html(data).dialog({
 				title: 'Parameter', modal: true, width: '300px', buttons:null
 			});
 		});
+	});
+	$('#dialog').on('click', '.setSummer', function() {
+		$.post('uebersicht_parameter.set_summer.req', {summer:1}, function(data) {
+			if(data.erg == 'S_OK') {
+				p.page.alert(data.message);
+				$('#dialog').dialog('close');
+			}
+		}, 'json');
+	});
+	$('#dialog').on('click', '.setWinter', function() {
+		$.post('uebersicht_parameter.set_summer.req', {summer:0}, function(data) {
+			if(data.erg == 'S_OK') {
+				p.page.alert(data.message);
+				$('#dialog').dialog('close');
+			}
+		}, 'json');
 	});
 	$('#uebersicht_parameter').on('click', '.ps-param', function() {
 		var headline = $(this).attr('data-popup');

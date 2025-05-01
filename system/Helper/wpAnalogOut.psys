@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 735                                                     $ #
+//# Revision     : $Rev:: 737                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpAnalogOut.psys 735 2025-04-28 19:45:43Z                $ #
+//# File-ID      : $Id:: wpAnalogOut.psys 737 2025-05-01 20:16:09Z                $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -103,15 +103,26 @@ class wpAnalogOut {
 				</tr>
 				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
-					<td colspan="6"><h3>Wartung</h3></td>
-				</tr>
-				<tr>
 					<td colspan="3">
-					<td><span class="<?=wpa::FontGreenYellow ?>" data-ws="<?=$this->name ?>_AnalogOut_Wartung">--</span></td>
+						<span class="<?=wpa::FontGreenYellow ?>" data-ws="<?=$this->name ?>_AnalogOut_Wartung">--</span>
 					</td>
 					<td colspan="3">
 						<span class="ps-button writeTopic" data-topic="<?=$this->name ?>/settings/AnalogOut/Wartung" data-write="1">einschalten</span>
 					</td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						<span>Betriebsmodus</span>
+					</td>
+					<td colspan="3">
+						<span class="<?=wpa::FontYellowBlue ?>" data-ws="<?=$this->name ?>_AnalogOut_Summer">--</span>
+					</td>
+					<!--td colspan="2">
+						<span class="ps-button writeTopic" data-topic="<?=$this->name ?>/settings/AnalogOut/Wartung" data-write="0">einschalten</span>
+					</td>
+					<td colspan="2">
+						<span class="ps-button writeTopic" data-topic="<?=$this->name ?>/settings/AnalogOut/Wartung" data-write="0">ausschalten</span>
+					</td-->
 				</tr>
 			<? if($this->status->useModul->DHT11 ||
 				$this->status->useModul->DHT22 ||

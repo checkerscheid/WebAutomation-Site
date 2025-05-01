@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 08.06.2021                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 735                                                     $ #
+//# Revision     : $Rev:: 737                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: websockets.js 735 2025-04-28 19:45:43Z                   $ #
+//# File-ID      : $Id:: websockets.js 737 2025-05-01 20:16:09Z                   $ #
 //#                                                                                 #
 //###################################################################################
 use system\Helper\wpa;
@@ -182,6 +182,15 @@ var ws = {
 									$(this).removeClass('ps-blue').addClass('ps-yellow')
 										.html(typeof(textTrue) == 'undefined' ? that.valuestring : textTrue);
 								}
+	//###################################################################################
+							} else if($(this).hasClass('<?=wpa::YellowBlue ?>')) {
+								if(that.value == 'False' || that.value == '0' || that.value == 'Off') {
+									$(this).removeClass('ps-blue').addClass('ps-yellow')
+										.html(typeof(textFalse) == 'undefined' ? that.valuestring : textFalse);
+								} else {
+									$(this).removeClass('ps-yellow').addClass('ps-blue')
+										.html(typeof(textTrue) == 'undefined' ? that.valuestring : textTrue);
+								}
 
 
 	//###################################################################################
@@ -254,6 +263,15 @@ var ws = {
 										.html(typeof(textFalse) == 'undefined' ? that.valuestring : textFalse);
 								} else {
 									$(this).removeClass('ps-fontblue').addClass('ps-fontyellow')
+										.html(typeof(textTrue) == 'undefined' ? that.valuestring : textTrue);
+								}
+	//###################################################################################
+							} else if($(this).hasClass('<?=wpa::FontYellowBlue ?>')) {
+								if(that.value == 'False' || that.value == '0' || that.value == 'Off') {
+									$(this).removeClass('ps-fontblue').addClass('ps-fontyellow')
+										.html(typeof(textFalse) == 'undefined' ? that.valuestring : textFalse);
+								} else {
+									$(this).removeClass('ps-fontyellow').addClass('ps-fontblue')
 										.html(typeof(textTrue) == 'undefined' ? that.valuestring : textTrue);
 								}
 
