@@ -17,7 +17,7 @@
 ?> mudda */
 //<? require_once('system/websockets.js') ?>
 //<? require_once('script/system/wpAnalogOut.js') ?>
-ws.logEnabled = false;
+ws.logEnabled = true;
 
 timezoneJS.timezone.zoneFileBasePath = 'resources/tz';
 timezoneJS.timezone.defaultZoneFile = ['europe.txt'];

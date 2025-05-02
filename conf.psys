@@ -32,7 +32,7 @@ wpInit::$systemmenuorder['webvisucs']['Sonstiges'] = array('wetter', 'weather', 
 wpInit::$systemmenuorder['system']['Systeminformationen'] = array('sys_codesys', 'sys_d1mini', 'sys_shelly');
 wpInit::$systemmenuorder['system']['Entwicklung'] = array('websockets');
 wpInit::$noStdPageInSystem = array('wetter', 'betriebsstunden', 'websockets', 'kamera', 'shopping', 'shoppingcfg', 'tvremote');
-wpInit::$stdpoints = array('AT' => '_GA_RT');
+wpInit::$stdpoints = array('AT' => '_GA_RT', 'Modus' => 'Sommerbetrieb');
 wpInit::$showATinFooter = '_GA_RT';
 wpInit::$weathercode = '2804554';
 wpInit::$weatherkey = '08bbfef5eea9504adfb37366f9d970fb';

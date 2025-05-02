@@ -136,7 +136,7 @@ switch(std::gets('param1')) {
 				<span class="ps-button setSummer">Sommerbetrieb</span>
 			</td>
 			<td>
-				<span class="ps-button setWinter">Winterbetrieb</span>
+				<span class="ps-button setWinter">Heizbetrieb</span>
 			</td>
 		</tr>
 	</table>

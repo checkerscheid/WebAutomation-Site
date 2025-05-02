@@ -221,8 +221,9 @@ if(security::checkGroup(security::entwickler)) {
 					<div id="wartungactive" class="ps-hidden" title="Wartung ist aktiv"></div>
 					<? } ?>
 					<? if(wpInit::$SetAlarmLink) { ?>
-					<span class="SetAlarmLinkActive" title="Automatischer Alarmlink Insert eingeschaltet!"></span>
+					<span class="SetAlarmLinkActive" title="Automatischer Alarmlink Insert eingeschaltet!">&#9088;</span>
 					<? } ?>
+					<span class="heatingMode pa-heizenModus" data-value="Modus" data-ws="Sommerbetrieb" data-False="&#10052;" data-True="&#9728;">--</span>
 					<? if(std::vars(wpInit::$showATinFooter) != '') { ?>
 					<span class="footertemp"><span class="ps-sm-hide">AT: </span><span data-ws="<?=wpInit::$showATinFooter?>" data-value="AT" class="atinfooter"><?=wpHTML_EMPTY?></span></span>
 					<? } ?>

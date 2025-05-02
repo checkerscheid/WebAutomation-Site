@@ -170,7 +170,7 @@ if(wpInit::$PageName != '' || strtolower(std::arrays($_SESSION[SESSION_ID], 'USE
 */
 .pagemenucontent { height:39px; margin:0 10px; padding:0px 10px 0 10px;
 	/*background:transparent url(images/layout/Navi_mitte.png) repeat-x;*/ }
-.footermenucontent { height:50px;
+.footermenucontent { height:50px; cursor:default;
 	background:transparent url(images/layout/Navi_footer_mitte.png) repeat-x; }
 .pagecontent { margin:0 11px; padding:5px 20px 20px 20px; }
 .pagemenucontent a.menuentry { border:1px solid #CCC; border-radius:4px; box-shadow:none; }
@@ -548,8 +548,12 @@ table.dataTable thead th.noborder { border:none; }
 .alarmsettings:active { box-shadow:inset 0px 0px 3px #CCC; }
 .alarmup:active { box-shadow:inset 0px 0px 3px #CCC; }
 
-.SetAlarmLinkActive { float:right; margin:14px 5px 0 0; padding:2px; line-height:24px; display:block;
-	width:28px; height:24px; background:transparent url(images/layout/mini_route.png) no-repeat center center; }
+.SetAlarmLinkActive { float:right; margin:14px 5px 0 0; padding:2px; font-size:24px; line-height:24px;
+	display:block; width:28px; height:24px;
+	/*background:transparent url(images/layout/mini_route.png) no-repeat center center;*/ }
+.heatingMode {float:right; margin:14px 5px 0 0; padding:2px; font-size:24px; line-height:24px;
+	display:block; width:28px; height:24px; }
+.heatingMode.ps-fontblue { text-shadow: 0px 0px 2px #fff; }
 
 .alarmsettingspopup { position:absolute; bottom:160px; right:145px; width:0px; height:0px;
 	overflow:auto; background-color:#EEE; background:rgba(238, 238, 238, 0.85);

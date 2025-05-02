@@ -617,6 +617,33 @@ var p = {
 					}
 				}
 			//*****************************************************
+				if($(this).hasClass('pa-heizenModus')) {
+					foundElement = true;
+					if(TheValue == 'False' || TheValue == '0' || TheValue == 'Off') {
+						$(this).addClass('ps-fontblue').removeClass('ps-fontyellow').attr('title', 'Modus: Heizbetrieb');
+						if(typeof(dataFalse) == 'undefined' && ValueString == TheValue) {
+							$(this).html('Aus');
+						} else {
+							if(typeof(dataFalse) == 'undefined' && ValueString != TheValue) {
+								$(this).html(ValueString);
+							} else {
+								$(this).html(dataFalse);
+							}
+						}
+					} else {
+						$(this).addClass('ps-fontyellow').removeClass('ps-fontblue').attr('title', 'Modus: Sommerbetrieb');
+						if(typeof(dataTrue) == 'undefined' && ValueString == TheValue) {
+							$(this).html('Betrieb');
+						} else {
+							if(typeof(dataTrue) == 'undefined' && ValueString != TheValue) {
+								$(this).html(ValueString);
+							} else {
+								$(this).html(dataTrue);
+							}
+						}
+					}
+				}
+			//*****************************************************
 				if($(this).hasClass('pa-HeizenKuehlenEnum')) {
 					foundElement = true;
 					$(this).removeClass('ps-blue').removeClass('ps-red');
