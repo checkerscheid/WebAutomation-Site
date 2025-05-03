@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 733                                                     $ #
+//# Revision     : $Rev:: 738                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: init.js 733 2025-04-16 03:01:56Z                         $ #
+//# File-ID      : $Id:: init.js 738 2025-05-03 00:04:48Z                         $ #
 //#                                                                                 #
 //###################################################################################
 use system\wpInit;
