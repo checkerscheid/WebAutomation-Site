@@ -278,7 +278,6 @@ class uebersicht {
 ?>
 
 <div id="uebersicht" class="page">
-	<h3 class="pa-hide ps-tacenter ps-roundborder ps-shadow wartungmeldung" data-value="Wartung">Wartung aktiv</h3>
 	<div class="ps-flex-container">
 		<div class="ps-container">
 			<h2>Navigation</h2>
@@ -423,6 +422,9 @@ class uebersicht {
 					</tr>
 					<tr>
 						<td colspan="4"><hr /></td>
+					</tr>
+					<tr>
+						<td colspan="4"><h3 class="pa-hide ps-tacenter ps-roundborder ps-shadow wartungmeldung" data-value="Wartung">Wartung aktiv</h3></td>
 					</tr>
 <?
 foreach($zimmer as $kurz => $name) {

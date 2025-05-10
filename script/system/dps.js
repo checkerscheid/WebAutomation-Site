@@ -46,9 +46,8 @@ var dps = {
 				}
 			});
 			$.post('std.' + dps.target + '.savenewelems.req', {table:dps.tablename, newelems:newelems}, function(data) {
-				if(data != '') {
-					p.page.alert(data);
-				} else {
+				if(data.erg == 'S_OK') {
+					p.page.message('Die neuen Elemente wurden erfolgreich gespeichert.');
 					p.page.change('#erg', 'std.' + dps.target + '.menunewelem.req', {table:dps.tablename});
 				}
 			}, 'json');

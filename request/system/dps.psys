@@ -111,6 +111,7 @@ class dps {
 	const c_savenewelems = 'savenewelems';
 	public static function savenewelems() {
 		if(std::posts('newelems') != '' && count(std::posts('newelems')) > 0) {
+			header(wpJSON_HEADER);
 			$database = new wpDatabase();
 			foreach(std::posts('newelems') as $newElem) {
 				$database->query("INSERT INTO [" . std::posts('table') . "] ([id_dp], [name])
@@ -125,6 +126,7 @@ class dps {
 // 	</span>';
 // 				}
 			}
+			echo '{"erg":"S_OK"}';
 		}
 	}
 	//###################################################################################
