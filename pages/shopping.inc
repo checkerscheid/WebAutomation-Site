@@ -17,13 +17,18 @@
 /** @var wpDatabase $database */
 namespace pages;
 use system\html;
+use system\std;
 use system\Helper\wpDatabase;
 ?>
 <div id="shopping">
 	<h1><? html::getPageHeadline();?></h1>
 	<div class="page">
 <?
-$sqlList = "SELECT [id_list], [name] FROM [shoppinglist]";
+$id = std::gets('param1');
+if($id == "") {
+	$id = 1;
+}
+$sqlList = "SELECT [id_list], [name] FROM [shoppinglist] WHERE [id_list] = " . $id;
 $database->query($sqlList);
 while($ergList = $database->fetch()) {
 ?>

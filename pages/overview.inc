@@ -73,7 +73,7 @@ class overview {
 			'WZ_PF_FE_LI' => new cPflanze('Pflanze am Fenster, links', '172.17.80.103', 72),
 			'WZ_PF_FE_RE1' => new cPflanze('Pflanze am Fenster, 1. rechts', '172.17.80.104', 73),
 			'WZ_PF_FE_RE2' => new cPflanze('Pflanze am Fenster, 2. rechts', '172.17.80.105', 74),
-			'Melonie' => new cPflanze('Melonie', '172.17.80.109', 97),
+			//'Melonie' => new cPflanze('Melonie', '172.17.80.109', 97),
 			'KZ_PF_PF' => new cPflanze('Pflanzi', '172.17.80.168', 93),
 			'KZ_PF_BE' => new cPflanze('Bee(r)ti', '172.17.80.167', 92)
 		);
@@ -156,22 +156,15 @@ class overview {
 	public static function getD1Mini() {
 		GLOBAL $database;
 		$returns = '';
-		$database->query("SELECT [name], [description], [ip], [active] FROM [d1mini] ORDER BY [name]");
+		$database->query("SELECT [name], [description], [ip] FROM [d1mini] WHERE [active] = 1 ORDER BY [name]");
 		while($erg = $database->fetch()) {
 			$returns .= '
 				<tr>
 					<!--td colspan="2"><a href="http://' . $erg['ip'] . '/print" target="_blank">' . $erg['description'] . '</a>:</td-->
 					<td class="ps-taleft" colspan="2"><a href="std.d1mini.' . $erg['name'] . '.htm">' . $erg['description'] . '</a>:</td>
 					<td colspan="2"><span data-ws="' . $erg['name']. '_Rssi" class="' . wpa::rssi . '">-</span></td>
-					<td colspan="2">';
-			if($erg['active'] == 1) {
-				$returns .= '
-						<span data-ws="' . $erg['name'] . '_Online" class="ps-input ' . wpa::GreenRed . '">-</span>';
-			} else {
-				$returns .= '
-						<span class="ps-input">deactivated</span>';;
-			}
-			$returns .= '
+					<td colspan="2">
+						<span data-ws="' . $erg['name'] . '_Online" class="ps-input ' . wpa::GreenRed . '">-</span>
 					</td>
 				</tr>';
 		}
