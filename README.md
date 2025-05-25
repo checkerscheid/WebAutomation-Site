@@ -1,0 +1,1 @@
+Works on the Apache web server with mod-rewrite and php. Apache must be configured so that ws connections are forwarded to a local port. php must be started with sockets and the mssql extension activated.
