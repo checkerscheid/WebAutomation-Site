@@ -1,0 +1,40 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 01.08.2024                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 741                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: wpClock.psys 741 2025-05-25 18:12:07Z                    $ #
+//#                                                                                 #
+//###################################################################################
+namespace request\system;
+
+use system\WebCom;
+use system\std;
+require_once 'system/Helper/wpClock.psys';
+wpClock::$ip = std::posts('ip');
+class wpClock {
+	public static $ip;
+	const c_setColor = 'setColor';
+	public static function setColor() {
+		header(wpJSON_HEADER);
+		$cmd = 'cmd=setColor' . std::posts('section') . '&r=' . std::posts('r') . '&g=' . std::posts('g') . '&b=' . std::posts('b');
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', wpClock::$ip . '%~%' . 'setClock?' . $cmd);
+	}
+}
+
+switch(std::gets('param1')) {
+	//###################################################################################
+	case wpClock::c_setColor:
+		wpClock::setColor();
+		break;
+}
+

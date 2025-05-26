@@ -1,0 +1,158 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 25.05.2025                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 735                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: wpColor.psys 735 2025-04-28 19:45:43Z                 $ #
+//#                                                                                 #
+//###################################################################################
+namespace system\Helper;
+use system\WebCom;
+
+class wpClock {
+	private $status;
+	private $ip, $name;
+	public function __construct($ip, $name) {
+		$this->ip = $ip;
+		$this->name = $name;
+	}
+	public function getStatus() {
+		$returns = true;
+		$WebCom = new WebCom();
+		$res = $WebCom->send('getD1MiniStatus', $this->ip);
+		$jsonres = \json_decode($res);
+		if(\json_last_error() != JSON_ERROR_NONE) {
+			echo '<!-- Json Error: ' . \json_last_error_msg() . '-->';
+			echo $res;
+			$returns = false;
+		}
+		if(isset($jsonres->FreakaZoneDevice)) {
+			$this->status = $jsonres->FreakaZoneDevice;
+		}
+		//std::test_array($this->status, 'getStatus');
+		return $returns;
+	}
+	public function getStatusFromJson($json) {
+		$this->status = $json;
+		//std::test_array($this->status, 'getStatusFromJson');
+	}
+	public function getHtml() {
+		$this->getZeiger();
+		$this->getZiffernblatt();
+	}
+	private function getZeiger($headline = 'Zeiger Farben') {
+		$rh = $this->status->Clock->Hour->R ?? 0;
+		$gh = $this->status->Clock->Hour->G ?? 0;
+		$bh = $this->status->Clock->Hour->B ?? 0;
+		$rm = $this->status->Clock->Minute->R ?? 0;
+		$gm = $this->status->Clock->Minute->G ?? 0;
+		$bm = $this->status->Clock->Minute->B ?? 0;
+		$rs = $this->status->Clock->Second->R ?? 0;
+		$gs = $this->status->Clock->Second->G ?? 0;
+		$bs = $this->status->Clock->Second->B ?? 0;
+?>
+		<div class="wpClock ps-container" data-ip="<?=$this->ip ?>">
+<?
+		if(!isset($this->status)) {
+			echo '<h1 class="ps-fontred">--- OFFLINE ---</h1><hr />';
+		}
+?>
+			<h3><?=$headline ?></h3>
+			<div>
+				<h4>Hour</h4>
+				<span class="ClockColorPreview ColorPreviewH" style="background-color:rgb(<?=$rh ?>, <?=$gh ?>, <?=$bh ?>);"><?=wpHTML_EMPTY ?></span>
+				<div<?=(security::checkGroup(security::entwickler) ? '' : ' class="ps-hidden"') ?>>
+					<input type="text" class="ps-input ColorHR" placeholder="Red 0 - 255" value="<?=$rh ?>" />
+					<input type="text" class="ps-input ColorHG" placeholder="Green 0 - 255" value="<?=$gh ?>" />
+					<input type="text" class="ps-input ColorHB" placeholder="Blue 0 - 255" value="<?=$bh ?>" />
+				</div>
+				<div class="ClockSlider ClockSliderR ClockSliderHR wpSlider"></div>
+				<div class="ClockSlider ClockSliderG ClockSliderHG wpSlider"></div>
+				<div class="ClockSlider ClockSliderB ClockSliderHB wpSlider"></div>
+				<span class="ps-button saveClockColor" data-section="H">save</span>
+			</div>
+			<hr />
+			<div>
+				<h4>Minute</h4>
+				<span class="ClockColorPreview ColorPreviewM" style="background-color:rgb(<?=$rm ?>, <?=$gm ?>, <?=$bm ?>);"><?=wpHTML_EMPTY ?></span>
+				<div<?=(security::checkGroup(security::entwickler) ? '' : ' class="ps-hidden"') ?>>
+					<input type="text" class="ps-input ColorMR" placeholder="Red 0 - 255" value="<?=$rm ?>" />
+					<input type="text" class="ps-input ColorMG" placeholder="Green 0 - 255" value="<?=$gm ?>" />
+					<input type="text" class="ps-input ColorMB" placeholder="Blue 0 - 255" value="<?=$bm ?>" />
+				</div>
+				<div class="ClockSlider ClockSliderR ClockSliderMR wpSlider"></div>
+				<div class="ClockSlider ClockSliderG ClockSliderMG wpSlider"></div>
+				<div class="ClockSlider ClockSliderB ClockSliderMB wpSlider"></div>
+				<span class="ps-button saveClockColor" data-section="M">save</span>
+			</div>
+			<hr />
+			<div>
+				<h4>Second</h4>
+				<span class="ClockColorPreview ColorPreviewS" style="background-color:rgb(<?=$rs ?>, <?=$gs ?>, <?=$bs ?>);"><?=wpHTML_EMPTY ?></span>
+				<div<?=(security::checkGroup(security::entwickler) ? '' : ' class="ps-hidden"') ?>>
+					<input type="text" class="ps-input ColorSR" placeholder="Red 0 - 255" value="<?=$rs ?>" />
+					<input type="text" class="ps-input ColorSG" placeholder="Green 0 - 255" value="<?=$gs ?>" />
+					<input type="text" class="ps-input ColorSB" placeholder="Blue 0 - 255" value="<?=$bs ?>" />
+				</div>
+				<div class="ClockSlider ClockSliderR ClockSliderSR wpSlider"></div>
+				<div class="ClockSlider ClockSliderG ClockSliderSG wpSlider"></div>
+				<div class="ClockSlider ClockSliderB ClockSliderSB wpSlider"></div>
+				<span class="ps-button saveClockColor" data-section="S">save</span>
+			</div>
+		</div>
+<?
+	}
+	private function getZiffernblatt($headline = 'Ziffernblatt Farben') {
+		$rq = $this->status->Clock->Quarter->R ?? 0;
+		$gq = $this->status->Clock->Quarter->G ?? 0;
+		$bq = $this->status->Clock->Quarter->B ?? 0;
+		$r5 = $this->status->Clock->Five->R ?? 0;
+		$g5 = $this->status->Clock->Five->G ?? 0;
+		$b5 = $this->status->Clock->Five->B ?? 0;
+?>
+		<div class="wpClock ps-container" data-ip="<?=$this->ip ?>">
+<?
+		if(!isset($this->status)) {
+			echo '<h1 class="ps-fontred">--- OFFLINE ---</h1><hr />';
+		}
+?>
+			<h3><?=$headline ?></h3>
+			<div>
+				<h4>Quarter</h4>
+				<span class="ClockColorPreview ColorPreviewQ" style="background-color:rgb(<?=$rq ?>, <?=$gq ?>, <?=$bq ?>);"><?=wpHTML_EMPTY ?></span>
+				<div<?=(security::checkGroup(security::entwickler) ? '' : ' class="ps-hidden"') ?>>
+					<input type="text" class="ps-input ColorQR" placeholder="Red 0 - 255" value="<?=$rq ?>" />
+					<input type="text" class="ps-input ColorQG" placeholder="Green 0 - 255" value="<?=$gq ?>" />
+					<input type="text" class="ps-input ColorQB" placeholder="Blue 0 - 255" value="<?=$bq ?>" />
+				</div>
+				<div class="ClockSlider ClockSliderR ClockSliderQR wpSlider"></div>
+				<div class="ClockSlider ClockSliderG ClockSliderQG wpSlider"></div>
+				<div class="ClockSlider ClockSliderB ClockSliderQB wpSlider"></div>
+				<span class="ps-button saveClockColor" data-section="Q">save</span>
+			</div>
+			<hr />
+			<div>
+				<h4>Five</h4>
+				<span class="ClockColorPreview ColorPreview5" style="background-color:rgb(<?=$r5 ?>, <?=$g5 ?>, <?=$b5 ?>);"><?=wpHTML_EMPTY ?></span>
+				<div<?=(security::checkGroup(security::entwickler) ? '' : ' class="ps-hidden"') ?>>
+					<input type="text" class="ps-input Color5R" placeholder="Red 0 - 255" value="<?=$r5 ?>" />
+					<input type="text" class="ps-input Color5G" placeholder="Green 0 - 255" value="<?=$g5 ?>" />
+					<input type="text" class="ps-input Color5B" placeholder="Blue 0 - 255" value="<?=$b5 ?>" />
+				</div>
+				<div class="ClockSlider ClockSliderR ClockSlider5R wpSlider"></div>
+				<div class="ClockSlider ClockSliderG ClockSlider5G wpSlider"></div>
+				<div class="ClockSlider ClockSliderB ClockSlider5B wpSlider"></div>
+				<span class="ps-button saveClockColor" data-section="5">save</span>
+			</div>
+		</div>
+<?
+	}
+}

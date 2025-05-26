@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 730                                                     $ #
+//# Revision     : $Rev:: 740                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.inc 730 2025-03-30 13:24:07Z                      $ #
+//# File-ID      : $Id:: d1mini.inc 740 2025-05-25 18:10:37Z                      $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
@@ -20,12 +20,14 @@ use system\std, system\WebCom;
 use system\Helper\wpa;
 use system\Helper\wpNeoPixel;
 use system\Helper\wpCwWw;
+use system\Helper\wpClock;
 use system\Helper\wpAnalogOut;
 use system\Helper\wpUnderfloor;
 
 require_once 'system/Helper/wpa.psys';
 require_once 'system/Helper/wpNeoPixel.psys';
 require_once 'system/Helper/wpCwWw.psys';
+require_once 'system/Helper/wpClock.psys';
 require_once 'system/Helper/wpAnalogOut.psys';
 require_once 'system/Helper/wpUnderfloor.psys';
 
@@ -432,6 +434,11 @@ if($d1Mini->FreakaZoneDevice->useModul->CwWw ?? false) {
 	$cwww = new wpCwWw($erg['ip'], $erg['name']);
 	$cwww->getStatusFromJson($d1Mini->FreakaZoneDevice);
 	$cwww->getColorPicker();
+}
+if($d1Mini->FreakaZoneDevice->useModul->Clock ?? false) {
+	$clock = new wpClock($erg['ip'], $erg['name']);
+	$clock->getStatusFromJson($d1Mini->FreakaZoneDevice);
+	$clock->getHtml();
 }
 if(($d1Mini->FreakaZoneDevice->useModul->AnalogOut ?? false) &&
 	(!$d1Mini->FreakaZoneDevice->useModul->NeoPixel ?? false) &&

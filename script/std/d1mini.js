@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 735                                                     $ #
+//# Revision     : $Rev:: 740                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.js 735 2025-04-28 19:45:43Z                       $ #
+//# File-ID      : $Id:: d1mini.js 740 2025-05-25 18:10:37Z                       $ #
 //#                                                                                 #
 //###################################################################################
 use system\std
@@ -19,6 +19,7 @@ use system\std
 //<? require_once('script/system/websockets.js') ?>
 //<? require_once('script/system/wpNeoPixel.js') ?>
 //<? require_once('script/system/wpCwWw.js') ?>
+//<? require_once('script/system/wpClock.js') ?>
 //<? require_once('script/system/wpAnalogOut.js') ?>
 
 
@@ -79,6 +80,7 @@ d1MiniWs.logEnabled = true;
 p.page.load = function() {
 	wpNeoPixel.Init('std.d1mini');
 	wpCwWw.Init('std.d1mini');
+	wpClock.Init('std.d1mini');
 	wpAnalogOut.Init('std.d1mini');
 	// ?? warum war das? $.get('std.d1mini.getD1MiniSettings.<?=std::gets("param1")?>.req');
 	$('.buttonContainer').on('click', '.SetCmd', function() {

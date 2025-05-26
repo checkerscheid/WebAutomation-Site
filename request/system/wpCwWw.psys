@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 713                                                     $ #
+//# Revision     : $Rev:: 740                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpCwWw.psys 713 2024-12-14 16:26:31Z                     $ #
+//# File-ID      : $Id:: wpCwWw.psys 740 2025-05-25 18:10:37Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\system;
@@ -21,34 +21,6 @@ require_once 'system/Helper/wpCwWw.psys';
 wpCwWw::$ip = std::posts('ip');
 class wpCwWw {
 	public static $ip;
-	const c_CwWwEffect = 'CwWwEffect';
-	public static function CwWwEffect() {
-		header(wpJSON_HEADER);
-		$cmd = 'effect=' . std::posts('id');
-		$WebCom = new WebCom();
-		echo $WebCom->send('SetD1MiniUrlCmd', wpCwWw::$ip . '%~%' . 'setCwWwEffect?' . $cmd);
-	}
-	const c_CwWwSleep = 'CwWwSleep';
-	public static function CwWwSleep() {
-		header(wpJSON_HEADER);
-		$cmd = 'sleep=' . std::posts('sleep');
-		$WebCom = new WebCom();
-		echo $WebCom->send('SetD1MiniUrlCmd', wpCwWw::$ip . '%~%' . 'setCwWwSleep?' . $cmd);
-	}
-	const c_CwWwOn = 'CwWwOn';
-	public static function CwWwOn() {
-		header(wpJSON_HEADER);
-		$cmd = 'turn=1';
-		$WebCom = new WebCom();
-		echo $WebCom->send('SetD1MiniUrlCmd', wpCwWw::$ip . '%~%' . 'setCwWw?' . $cmd);
-	}
-	const c_CwWwOff = 'CwWwOff';
-	public static function CwWwOff() {
-		header(wpJSON_HEADER);
-		$cmd = 'turn=0';
-		$WebCom = new WebCom();
-		echo $WebCom->send('SetD1MiniUrlCmd', wpCwWw::$ip . '%~%' . 'setCwWw?' . $cmd);
-	}
 	const c_CwWwCW = 'CwWwCW';
 	public static function CwWwCW() {
 		header(wpJSON_HEADER);
@@ -70,19 +42,55 @@ class wpCwWw {
 		$WebCom = new WebCom();
 		echo $WebCom->send('SetD1MiniUrlCmd', wpCwWw::$ip . '%~%' . 'setCwWw?' . $cmd);
 	}
+	const c_CwWwSleep = 'CwWwSleep';
+	public static function CwWwSleep() {
+		header(wpJSON_HEADER);
+		$cmd = 'sleep=' . std::posts('sleep');
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', wpCwWw::$ip . '%~%' . 'setCwWw?' . $cmd);
+	}
+	const c_CwWwOn = 'CwWwOn';
+	public static function CwWwOn() {
+		header(wpJSON_HEADER);
+		$cmd = 'turn=1';
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', wpCwWw::$ip . '%~%' . 'setCwWw?' . $cmd);
+	}
+	const c_CwWwOff = 'CwWwOff';
+	public static function CwWwOff() {
+		header(wpJSON_HEADER);
+		$cmd = 'turn=0';
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', wpCwWw::$ip . '%~%' . 'setCwWw?' . $cmd);
+	}
+	const c_CwWwEffect = 'CwWwEffect';
+	public static function CwWwEffect() {
+		header(wpJSON_HEADER);
+		$cmd = 'effect=' . std::posts('id');
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', wpCwWw::$ip . '%~%' . 'setCwWw?' . $cmd);
+	}
 	const c_CwWwEffectSpeed = 'CwWwEffectSpeed';
 	public static function CwWwEffectSpeed() {
 		header(wpJSON_HEADER);
 		$cmd = 'effectSpeed=' . std::posts('effectSpeed');
 		$WebCom = new WebCom();
-		echo $WebCom->send('SetD1MiniUrlCmd', wpCwWw::$ip . '%~%' . 'setCwWwEffectSpeed?' . $cmd);
+		echo $WebCom->send('SetD1MiniUrlCmd', wpCwWw::$ip . '%~%' . 'setCwWw?' . $cmd);
 	}
 }
 
 switch(std::gets('param1')) {
 		//###################################################################################
-	case wpCwWw::c_CwWwEffect:
-		wpCwWw::CwWwEffect();
+	case wpCwWw::c_CwWwWW:
+		wpCwWw::CwWwWW();
+		break;
+		//###################################################################################
+	case wpCwWw::c_CwWwCW:
+		wpCwWw::CwWwCW();
+		break;
+		//###################################################################################
+	case wpCwWw::c_CwWwCWWW:
+		wpCwWw::CwWwCWWW();
 		break;
 		//###################################################################################
 	case wpCwWw::c_CwWwSleep:
@@ -97,16 +105,8 @@ switch(std::gets('param1')) {
 		wpCwWw::CwWwOff();
 		break;
 		//###################################################################################
-	case wpCwWw::c_CwWwWW:
-		wpCwWw::CwWwWW();
-		break;
-		//###################################################################################
-	case wpCwWw::c_CwWwCW:
-		wpCwWw::CwWwCW();
-		break;
-		//###################################################################################
-	case wpCwWw::c_CwWwCWWW:
-		wpCwWw::CwWwCWWW();
+	case wpCwWw::c_CwWwEffect:
+		wpCwWw::CwWwEffect();
 		break;
 		//###################################################################################
 	case wpCwWw::c_CwWwEffectSpeed:

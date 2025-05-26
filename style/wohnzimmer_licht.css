@@ -1,0 +1,21 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 25.05.2025                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 741                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: wohnzimmer_licht.css 741 2025-05-25 18:12:07Z            $ #
+//#                                                                                 #
+//###################################################################################
+?> wohnzimmer_licht */
+
+<? require_once 'style/system/wpNeoPixel.css'; ?>
+<? require_once 'style/system/wpCwWw.css'; ?>
+<? require_once 'style/system/wpRGB.css'; ?>

@@ -1,0 +1,48 @@
+/*<?
+//###################################################################################
+//#                                                                                 #
+//#                (C) FreakaZone GmbH                                              #
+//#                =======================                                          #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 25.05.2025                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 741                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: wpClock.css 741 2025-05-25 18:12:07Z                     $ #
+//#                                                                                 #
+//###################################################################################
+?> wpClock */
+
+.wpClock { min-width:350px; }
+.wpClock .ClockSlider a { text-decoration:none; outline:none; }
+.wpClock .ClockSlider span.toleft {
+	position:relative; top:-25px; left:10px; background:#151515;
+	border:1px solid #888; border-radius:2px; padding:3px; }
+.wpClock .ClockSlider { margin:15px 15px; }
+.wpClock .ps-input { min-width:40px; max-width:40px; width:40px; }
+.wpClock .ps-button { width:auto; min-width:100px; }
+
+.wpClock .ClockSliderR .ui-slider-range { background: #ef2929; }
+.wpClock .ClockSliderR .ui-slider-handle { background: #ef2929; }
+.wpClock .ClockSliderG .ui-slider-range { background: #8ae234; }
+.wpClock .ClockSliderG .ui-slider-handle { background: #8ae234; }
+.wpClock .ClockSliderB .ui-slider-range { background: #729fcf; }
+.wpClock .ClockSliderB .ui-slider-handle { background: #729fcf; }
+
+.wpClock .ClockColorPreview { display:inline-block; min-width:150px; height:25px;
+	box-shadow:inset 3px 3px 6px #222;
+	border-radius:3px; }
+
+@media (orientation: portrait) {
+	.wpClock .ps-button { padding:25px 6px; }
+	.wpClock .ps-button.pa-scene { padding:25px 25px; }
+	.wpClock .ui-slider .ui-slider-handle { width:30px; height:30px; }
+	.wpClock .ui-slider-horizontal { height:20px; }
+	.wpClock .ps-input { font-size:18px; padding:5px; }
+	.wpClock span.hand.pa-hide { top:3px; }
+	.wpClock span.wpa-indikator { top:8px; }
+}
+

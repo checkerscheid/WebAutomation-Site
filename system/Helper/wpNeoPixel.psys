@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 735                                                     $ #
+//# Revision     : $Rev:: 740                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpNeoPixel.psys 735 2025-04-28 19:45:43Z                 $ #
+//# File-ID      : $Id:: wpNeoPixel.psys 740 2025-05-25 18:10:37Z                 $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -113,7 +113,7 @@ class wpNeoPixel {
 						<div>
 							<span class="ps-button setNeoPixelOffRunner">Aus Runner</span><br />
 							<span class="ps-input <?=wpa::GreyGreen?>" data-ws="<?=$this->name ?>_Border">-</span><br />
-							<span class="ps-button setNeoPixelBorder">Border</span>
+							<!--span class="ps-button setNeoPixelBorder">Border</span-->
 						</div>
 					</div>
 					<div class="ps-flex-container<?=(security::checkGroup(security::entwickler) ? '' : ' ps-hidden') ?>">
