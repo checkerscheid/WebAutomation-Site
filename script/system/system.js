@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 723                                                     $ #
+//# Revision     : $Rev:: 742                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: system.js 723 2025-02-27 14:24:23Z                       $ #
+//# File-ID      : $Id:: system.js 742 2025-05-27 14:16:13Z                       $ #
 //#                                                                                 #
 //###################################################################################
 use system\wpInit;
@@ -1078,7 +1078,7 @@ function setfltgroup5() {
 	}
 }
 var firstalarmcontact = true;
-var alarmQoS = 10;
+var alarmQoS = 120;
 var alarmCounter = 0;
 function getOnlineAlarms() {
 	lastWatchDogByte = WatchDogByte;
@@ -1087,7 +1087,7 @@ function getOnlineAlarms() {
 	var shownAlarms = {};
 	var AlarmPriority = $('#onlinealarm').attr('data-priority');
 	if(++alarmCounter > alarmQoS) {
-		AlarmPriority = 0;
+		AlarmPriority = -1;
 		alarmCounter = 0;
 	}
 	$('#onlinealarm tbody tr').each(function() {

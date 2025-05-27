@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 696                                                     $ #
+//# Revision     : $Rev:: 742                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: request.req 696 2024-10-06 19:11:29Z                     $ #
+//# File-ID      : $Id:: request.req 742 2025-05-27 14:16:13Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -60,7 +60,7 @@ switch(std::gets('param1')) {
 //###################################################################################
 	case request::c_activedpalarm:
 		getScript::getActivePoints();
-		getScript::getActiveAlarms();
+		getScript::getActiveAlarms(std::gets('param2'));
 		break;
 //###################################################################################
 	case request::c_activedpextended:
