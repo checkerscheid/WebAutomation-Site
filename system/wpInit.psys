@@ -85,7 +85,7 @@ class wpInit {
 			'name'						=> 'WebAutomation',
 			// Headline => src
 			'Aktivitäten'				=> array( 'userhistorics', 'alarmhistorics', 'emailhistorics', 'visitors' ),
-			'Plug Ins'					=> array( 'trendselect', 'calendar', 'scene', 'calendarscene', 'opcrouter' ),
+			'Plug Ins'					=> array( 'trendselect', 'calendar', 'scene', 'calendarscene' ),
 			'Alarmierung' 				=> array( 'useralarming', 'contacts', 'alarming' ),
 			'Sonstiges'					=> array( 'weather', 'bsp-bedienung', 'shopping' )
 		),
@@ -95,7 +95,7 @@ class wpInit {
 			'name'						=> 'Projektierung',
 			// Headline => src
 			'Treiber Konfiguration'		=> array( 'dpactive', 'opcbrowse', 'opcactive', 'mqttactive', 'restactive', 'shellycfg', 'd1minicfg' ),
-			'Server Konfiguration'		=> array( 'alarmcfg', 'trendcfg', 'calendarcfg', 'scenecfg', 'calendarscenecfg', 'shoppingcfg' )
+			'Server Konfiguration'		=> array( 'alarmcfg', 'trendcfg', 'calendarcfg', 'scenecfg', 'calendarscenecfg', 'router', 'shoppingcfg' )
 		),
 		// Popup id
 		'website' => array(

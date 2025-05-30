@@ -27,7 +27,7 @@ wpInit::$SetAlarmLink = false;
 wpInit::$menuorder = array(
 	'pia', 'mudda', 'kamera'//, 'wohnzimmer','schlafzimmer', 'buero', 'kueche', 'bad', 'kinderzimmer'
 );
-wpInit::$systemmenuorder['webvisucs']['Plug Ins'] = array( 'trendselect', 'calendar', 'calendarscene', 'opcrouter' );
+wpInit::$systemmenuorder['webvisucs']['Plug Ins'] = array( 'trendselect', 'calendar', 'calendarscene' );
 wpInit::$systemmenuorder['webvisucs']['Sonstiges'] = array('wetter', 'weather', 'betriebsstunden', 'kamera', 'shopping', 'tvremote');
 wpInit::$systemmenuorder['system']['Systeminformationen'] = array('sys_codesys', 'sys_d1mini', 'sys_shelly');
 wpInit::$systemmenuorder['system']['Entwicklung'] = array('websockets');

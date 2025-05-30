@@ -108,7 +108,7 @@ class groups {
 	//###################################################################################
 	const c_groupdelete = 'groupdelete';
 	public static function groupdelete() {
-		if(std::posts('table') != '' && std::posts('member') && std::posts('id') != '') {
+		if(std::posts('table') != '' && std::posts('member') != '' && std::posts('id') != '') {
 			header(wpJSON_HEADER);
 			$database = new wpDatabase();
 			if(std::posts('force') == 'true') {

@@ -14,53 +14,80 @@
 //# File-ID      : $Id:: opcrouter.js 505 2021-05-07 21:55:45Z checker            $ #
 //#                                                                                 #
 //###################################################################################
-?> opcrouter */
+?> router */
 
 // p.log.level = p.log.type.info;
 
+//<? require_once 'script/system/groups.js'; ?>
+//<? require_once 'script/system/dps.js'; ?>
+
+groups.tablename = 'router';
+groups.member = 'router';
+groups.target = 'router';
+
+dps.tablename = 'router';
+dps.target = 'router';
+
 p.page.load = function() {
+	groups.init();
+	dps.init();
 //###################################################################################
 // Allgemein
 //###################################################################################
 	$('#submenu').on('click', '.ps-button', function() {
-		p.page.change('#erg', 'std.opcrouter.menu' + $(this).attr('data-target') + '.req');
+		p.page.change('#erg', 'std.router.menu' + $(this).attr('data-target') + '.req', {table:groups.tablename, targetClass:'saveelemfrom'});
 	});
 
 //###################################################################################
 // OPC Routen
 //###################################################################################
 	// Treeview
-	$('#erg').on('click', '#tree .ps-tree-parent', function() {
-		$('input.filtertext').val('').removeClass('neg');
-		if($(this).hasClass('open')) {
-			$('[data-points]').html('');
-			$('.ps-tree-parent').removeClass('open');
-		} else {
-			$('[data-points]').html('');
-			$('.ps-tree-parent').removeClass('open');
-			$(this).addClass('open');
-			var group = $(this).attr('data-group');
-			$.post('std.opcrouter.getpoints.req', {group:group}, function(data) {
-				$('[data-points=' + group + ']').html(data);
-			});
-		}
-	});
-	$('#erg').on('click', '[data-dp]', function() {
-		var datapoint = $(this).attr('data-dp');
-		var name = $(this).html();
-		p.page.change('#erg', 'std.opcrouter.menurouteto.req', {datapoint:datapoint, name:name}, function() {
-			$('#routwahl option[data-point=' + datapoint + ']').attr('selected', 'selected');
-			$.post('std.opcrouter.menuroutetochoice.req', {datapoint:datapoint}, function(data) {
-				$('#tree1').html(data);
-			});
-			$.get('std.opcrouter.submenu.req', function(data) {
-				$('#selectdp').html(data);
-			});
+	$('#erg').on('click', '.saveelemfrom', function() {
+		var newelems = [];
+		$('#erg li.checked').each(function() {
+			if(!$(this).hasClass('ps-hidden') && !$(this).hasClass('ps-disabled')) {
+				p.log.write('attr: ' + $(this).attr('data-dp'));
+				newelems.push($(this).attr('data-dp'));
+			}
 		});
+		$.post('std.' + dps.target + '.menuroutefrom.req', {table:dps.tablename, newelems:newelems}, function(data) {
+			if(data.erg == 'S_OK') {
+				p.page.message('Die neuen Elemente wurden erfolgreich gespeichert.');
+				p.page.change('#erg', 'std.' + dps.target + '.menunewelem.req', {table:dps.tablename});
+			}
+		}, 'json');
 	});
+	// $('#erg').on('click', '#tree .ps-tree-parent', function() {
+	// 	$('input.filtertext').val('').removeClass('neg');
+	// 	if($(this).hasClass('open')) {
+	// 		$('[data-points]').html('');
+	// 		$('.ps-tree-parent').removeClass('open');
+	// 	} else {
+	// 		$('[data-points]').html('');
+	// 		$('.ps-tree-parent').removeClass('open');
+	// 		$(this).addClass('open');
+	// 		var group = $(this).attr('data-group');
+	// 		$.post('std.router.getpoints.req', {group:group}, function(data) {
+	// 			$('[data-points=' + group + ']').html(data);
+	// 		});
+	// 	}
+	// });
+	// $('#erg').on('click', '[data-dp]', function() {
+	// 	var datapoint = $(this).attr('data-dp');
+	// 	var name = $(this).html();
+	// 	p.page.change('#erg', 'std.router.menurouteto.req', {datapoint:datapoint, name:name}, function() {
+	// 		$('#routwahl option[data-point=' + datapoint + ']').attr('selected', 'selected');
+	// 		$.post('std.router.menuroutetochoice.req', {datapoint:datapoint}, function(data) {
+	// 			$('#tree1').html(data);
+	// 		});
+	// 		$.get('std.router.submenu.req', function(data) {
+	// 			$('#selectdp').html(data);
+	// 		});
+	// 	});
+	// });
 	$('#erg').on('click', '.ps-delete', function() {
 		var router = $('select option:selected').attr('data-point');
-		$.post('std.opcrouter.deleterouter.req', {router:router}, function(data) {
+		$.post('std.router.deleterouter.req', {router:router}, function(data) {
 			if(data == 'S_OK') {
 				$('#selectdp').html('');
 				$('#tree1').html('');
@@ -74,10 +101,10 @@ p.page.load = function() {
 	$('#erg').on('change', '#routwahl', function() {
 		var datapoint = $('select option:selected').attr('data-point');
 		if(typeof(datapoint) != 'undefined') {
-			$.post('std.opcrouter.menuroutetochoice.req', {datapoint:datapoint}, function(data) {
+			$.post('std.router.menuroutetochoice.req', {datapoint:datapoint}, function(data) {
 				$('#tree1').html(data);
 			});
-			$.get('std.opcrouter.submenu.req', function(data) {
+			$.post('std.router.menunewelem.req', {targetClass:'savenewroute'}, function(data) {
 				$('#selectdp').html(data);
 			});
 		} else {
@@ -85,22 +112,22 @@ p.page.load = function() {
 			$('#selectdp').html('');
 		}
 	});
-	$('#erg').on('click', '#selectdp .ps-tree-parent', function() {
-		$('input.newdpfilter').val('').removeClass('neg');
-		var datapoint = $('select option:selected').attr('data-point');
-		if($(this).hasClass('open')) {
-			$('[data-points]').html('');
-			$('.ps-tree-parent').removeClass('open');
-		} else {
-			$('[data-points]').html('');
-			$('.ps-tree-parent').removeClass('open');
-			$(this).addClass('open');
-			var group = $(this).attr('data-group');
-			$.post('std.opcrouter.getnewrout.req', {group:group, datapoint:datapoint}, function(data) {
-				$('[data-points=' + group + ']').html(data);
-			});
-		}
-	});
+	// $('#erg').on('click', '#selectdp .ps-tree-parent', function() {
+	// 	$('input.newdpfilter').val('').removeClass('neg');
+	// 	var datapoint = $('select option:selected').attr('data-point');
+	// 	if($(this).hasClass('open')) {
+	// 		$('[data-points]').html('');
+	// 		$('.ps-tree-parent').removeClass('open');
+	// 	} else {
+	// 		$('[data-points]').html('');
+	// 		$('.ps-tree-parent').removeClass('open');
+	// 		$(this).addClass('open');
+	// 		var group = $(this).attr('data-group');
+	// 		$.post('std.router.getnewrout.req', {group:group, datapoint:datapoint}, function(data) {
+	// 			$('[data-points=' + group + ']').html(data);
+	// 		});
+	// 	}
+	// });
 //###################################################################################
 // Markierungen
 //###################################################################################
@@ -125,18 +152,18 @@ p.page.load = function() {
 	$('#erg').on('click', '.savenewroute', function() {
 		var routes = [];
 		var router = $('select option:selected').attr('data-point');
-		$('#erg li.checked').each(function() {
-			routes.push($(this).attr('data-value'));
+		$('#selectdp li.checked').each(function() {
+			routes.push($(this).attr('data-dp'));
 		});
 		if(routes.length > 0) {
-			$.post('std.opcrouter.savenewroute.req', {routes:routes, router:router}, function(data) {
-				$.post('std.opcrouter.menuroutetochoice.req', {datapoint:router}, function(data) {
+			$.post('std.router.savenewroute.req', {routes:routes, router:router}, function(data) {
+				$.post('std.router.menuroutetochoice.req', {datapoint:router}, function(data) {
 					$('#tree1').html(data);
 				});
-				$.get('std.opcrouter.submenu.req',function(data) {
+				$.get('std.router.newelemto.req', function(data) {
 					$('#selectdp').html(data);
 				});
-			});
+			}, 'json');
 		}
 	});
 //###################################################################################
@@ -151,11 +178,11 @@ p.page.load = function() {
 	$('#erg').on('click', '.deletesingle', function() {
 		var single = $(this).parents('div.tr').find('[data-routid]').attr('data-routid');
 		var router = $('select option:selected').attr('data-point');
-		$.post('std.opcrouter.deletesingle.req', {single:single, router:router}, function(data) {
-			$.post('std.opcrouter.menuroutetochoice.req', {datapoint:router}, function(data) {
+		$.post('std.router.deletesingle.req', {single:single, router:router}, function(data) {
+			$.post('std.router.menuroutetochoice.req', {datapoint:router}, function(data) {
 				$('#tree1').html(data);
 			});
-			$.get('std.opcrouter.submenu.req',function(data){
+			$.get('std.router.submenu.req',function(data){
 				$('#selectdp').html(data);
 			});
 		});
@@ -166,16 +193,16 @@ p.page.load = function() {
 		$('#erg span.checked').each(function() {
 			group.push($(this).attr('data-routid'));
 		});
-		$.post('std.opcrouter.deletechecked.req', {group:group, router:router}, function(data) {
-			$.post('std.opcrouter.menuroutetochoice.req', {datapoint:router}, function(data) {
+		$.post('std.router.deletechecked.req', {group:group, router:router}, function(data) {
+			$.post('std.router.menuroutetochoice.req', {datapoint:router}, function(data) {
 				$('#tree1').html(data);
 			});
-			$.get('std.opcrouter.submenu.req',function(data){
+			$.get('std.router.submenu.req',function(data){
 				$('#selectdp').html(data);
 			});
 		});
 	});
-	p.getValues();
+	//p.getValues();
 };
 //###################################################################################
 // Filter Funktion

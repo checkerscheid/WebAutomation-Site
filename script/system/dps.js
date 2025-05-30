@@ -23,12 +23,13 @@ var dps = {
 	init: function() {
 //###################################################################################
 		$('#erg').on('click', '.dpgroupfolder', function() {
+			console.log($(this))
 			if($(this).hasClass('open')) {
 				$('[data-dps]').html('');
-				$('.ps-tree-parent').removeClass('open');
+				$('.dpgroupfolder').removeClass('open');
 			} else {
 				$('[data-dps]').html('');
-				$('.ps-tree-parent').removeClass('open');
+				$('.dpgroupfolder').removeClass('open');
 				$(this).addClass('open');
 				var dpgroup = $(this).attr('data-dpgroup');
 				$.post('std.' + dps.target + '.dp.req', {table:dps.tablename, writeable:dps.writable ? 'True' : 'False', dpgroup:dpgroup}, function(data) {

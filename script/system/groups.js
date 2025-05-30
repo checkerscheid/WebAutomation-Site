@@ -25,10 +25,10 @@ var groups = {
 		$('#erg').on('click', '.dpnamespacefolder', function() {
 			if($(this).hasClass('open')) {
 				$('[data-groups]').html('');
-				$('.ps-tree-parent').removeClass('open');
+				$('.dpnamespacefolder').removeClass('open');
 			} else {
 				$('[data-groups]').html('');
-				$('.ps-tree-parent').removeClass('open');
+				$('.dpnamespacefolder').removeClass('open');
 				$(this).addClass('open');
 				var dpnamespace = $(this).attr('data-dpnamespace');
 				$.post('std.' + dps.target + '.dpgroup.req', {dpnamespace:dpnamespace}, function(data) {

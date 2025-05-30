@@ -41,6 +41,7 @@ class dps {
 	//###################################################################################
 	const c_dpmenu = 'menunewelem';
 	public static function dpmenu() {
+		$targetClass = std::posts('targetClass') == '' ? 'savenewelem' : std::posts('targetClass');
 		$database = new wpDatabase();
 		$database->query("SELECT [id_dpnamespace], [name] FROM [dpnamespace] ORDER BY [name]");
 		echo'
@@ -48,7 +49,7 @@ class dps {
 			<span>Filter:</span><input type="text" class="ps-input filterNewelem" />
 			<span class="markall ps-button">alle markieren</span>
 			<span class="markno ps-button">Markierung entfernen</span>
-			<span class="savenewelem ps-button">markierte hinzuf&uuml;gen</span>
+			<span class="' . $targetClass . ' ps-button">markierte hinzuf&uuml;gen</span>
 			<hr />
 			<ul>';
 		while($erg = $database->fetch()) {
@@ -116,15 +117,6 @@ class dps {
 			foreach(std::posts('newelems') as $newElem) {
 				$database->query("INSERT INTO [" . std::posts('table') . "] ([id_dp], [name])
 					SELECT TOP 1 " . $newElem . ", ISNULL([description], [name]) AS [name] FROM [dp] WHERE [id_dp] = '" . $newElem . "'");
-// 				$WebCom = new WebCom();
-// 				$data = \json_decode($WebCom->send('SaveNewTrend', $newElem));
-// 				if($data->erg == 'S_ERROR') {
-// 					echo '
-// 	<span class="neg">
-// 		Datenpunkt konnte nicht gespeichert werden ('.$newTrend.')<br />
-// 		' . $data->message . '
-// 	</span>';
-// 				}
 			}
 			echo '{"erg":"S_OK"}';
 		}

@@ -14,13 +14,13 @@
 //# File-ID      : $Id:: opcrouter.css 505 2021-05-07 21:55:45Z checker           $ #
 //#                                                                                 #
 //###################################################################################
-?> opcrouter */
+?> router */
 
 #submenu { height:20px; padding:0 0 5px 50px; }
 #submenu li { float:left; }
-#opcroute { margin:10px 50px; }
-#opcroute ul { margin:0 30px; }
-#opcroute div.td, #opcroute div.th { padding:2px 5px; }
+#router { margin:10px 50px; }
+#router ul { margin:0 30px; }
+#router div.td, #router div.th { padding:2px 5px; }
 #erg input.neg, #erg select.neg { border-color:#A91919; color:#A91919; }
 h2.editorder { cursor:pointer; }
 div.divupdate div, div.divinsert { border:1px solid #CCC; padding:3px 5px; margin:3px; display:inline-block; border-radius:6px; }
