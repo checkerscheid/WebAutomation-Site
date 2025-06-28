@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 10.02.2025                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 719                                                     $ #
+//# Revision     : $Rev:: 745                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: tvremote.req 719 2025-02-13 12:27:37Z                    $ #
+//# File-ID      : $Id:: tvremote.req 745 2025-06-18 08:33:40Z                    $ #
 //#                                                                                 #
 //###################################################################################
 namespace request;
@@ -27,13 +27,11 @@ class tvremote {
 			echo $WebCom->send('RemoteControl', std::posts('name') .
 				'%~%' . std::posts('button') .
 				'%~%' .
-				'%~%' .
 				'%~%');
 		} else {
 			echo $WebCom->send('RemoteControl', std::posts('name') .
 				'%~%' . 
 				'%~%' . std::posts('button') .
-				'%~%' .
 				'%~%');
 		}
 	}
@@ -44,7 +42,6 @@ class tvremote {
 		echo $WebCom->send('RemoteControl', std::posts('name') .
 			'%~%' .
 			'%~%' . std::posts('button') .
-			'%~%' .
 			'%~%');
 	}
 	const c_dienst = 'dienst';
@@ -52,17 +49,6 @@ class tvremote {
 		header(wpJSON_HEADER);
 		$WebCom = new WebCom();
 		echo $WebCom->send('RemoteControl', std::posts('name') .
-			'%~%' .
-			'%~%' .
-			'%~%' . std::posts('button') .
-			'%~%');
-	}
-	const c_richtung = 'richtung';
-	public static function richtung() {
-		header(wpJSON_HEADER);
-		$WebCom = new WebCom();
-		echo $WebCom->send('RemoteControl', std::posts('name') .
-			'%~%' .
 			'%~%' .
 			'%~%' .
 			'%~%' . std::posts('button'));
@@ -80,10 +66,6 @@ switch(std::gets('param1')) {
 	//###################################################################################
 	case tvremote::c_dienst:
 		tvremote::dienst();
-		break;
-	//###################################################################################
-	case tvremote::c_richtung:
-		tvremote::richtung();
 		break;
 	//###################################################################################
 	default:

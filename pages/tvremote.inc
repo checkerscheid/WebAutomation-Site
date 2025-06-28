@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 10.02.2025                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 722                                                     $ #
+//# Revision     : $Rev:: 745                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: tvremote.inc 722 2025-02-18 19:42:31Z                    $ #
+//# File-ID      : $Id:: tvremote.inc 745 2025-06-18 08:33:40Z                    $ #
 //#                                                                                 #
 //###################################################################################
 namespace pages;
@@ -73,19 +73,19 @@ use system\std;
 				</tr>
 				<tr>
 					<td><div class="border-corner corner1"></div></td>
-					<td><span class="ps-button tvrichtung" data-tvbutton="hoch">&#708;</span></td>
+					<td><span class="ps-button tvbutton" data-tvbutton="hoch">&#708;</span></td>
 					<td><div class="border-corner corner2"></div></td>
 					<td colspan="2"><span class="ps-button tvdienst" data-tvbutton="netflix">Netflix</span></td>
 				</tr>
 				<tr>
-					<td><span class="ps-button tvrichtung" data-tvbutton="links">&#706;</span></td>
+					<td><span class="ps-button tvbutton" data-tvbutton="links">&#706;</span></td>
 					<td><span class="ps-button tvbutton" data-tvbutton="enter">OK</span></td>
-					<td><span class="ps-button tvrichtung" data-tvbutton="rechts">&#707;</span></td>
+					<td><span class="ps-button tvbutton" data-tvbutton="rechts">&#707;</span></td>
 					<td colspan="2"><span class="ps-button tvdienst" data-tvbutton="disney">Disney +</span></td>
 				</tr>
 				<tr>
 					<td><div class="border-corner corner4"></div></td>
-					<td><span class="ps-button tvrichtung" data-tvbutton="runter">&#709;</span></td>
+					<td><span class="ps-button tvbutton" data-tvbutton="runter">&#709;</span></td>
 					<td><div class="border-corner corner3"></div></td>
 					<td colspan="2"><span class="ps-button tvdienst" data-tvbutton="youtube">YouTube</span></td>
 				</tr>

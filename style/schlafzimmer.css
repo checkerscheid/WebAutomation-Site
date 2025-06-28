@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 26.01.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 696                                                     $ #
+//# Revision     : $Rev:: 745                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: schlafzimmer.css 696 2024-10-06 19:11:29Z                $ #
+//# File-ID      : $Id:: schlafzimmer.css 745 2025-06-18 08:33:40Z                $ #
 //#                                                                                 #
 //###################################################################################
 ?> schlafzimmer */
@@ -36,4 +36,5 @@
 #D1MiniSites * { position:static; }
 #D1MiniSites a { display:block; width:auto; }
 
-#FK { top:212px; left:755px; } /* new: checker 2021-12-03T08:03:12 */
+#FK { top:432px; left:1050px; } /* checker 2025-06-01T14:17:49 */
+#RT { top:376px; left:583px; } /* new: checker 2025-06-01T14:17:52 */

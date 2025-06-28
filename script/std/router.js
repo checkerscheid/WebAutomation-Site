@@ -9,9 +9,9 @@
 //# Author       : Christopher Korn                                                 #
 //# Date         : 06.06.2015                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 744                                                     $ #
+//# Revision     : $Rev:: 745                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: router.js 744 2025-05-30 11:17:23Z                       $ #
+//# File-ID      : $Id:: router.js 745 2025-06-18 08:33:40Z                       $ #
 //#                                                                                 #
 //###################################################################################
 ?> router */
@@ -102,10 +102,10 @@ p.page.load = function() {
 		var datapoint = $('select option:selected').attr('data-point');
 		if(typeof(datapoint) != 'undefined') {
 			$.post('std.router.menuroutetochoice.req', {datapoint:datapoint}, function(data) {
-				$('#tree1').html(data);
+				$('#tree1').html('<div class="ps-container">' + data + '</div>');
 			});
 			$.post('std.router.menunewelem.req', {targetClass:'savenewroute'}, function(data) {
-				$('#selectdp').html(data);
+				$('#selectdp').html('<div class="ps-container">' + data + '</div>');
 			});
 		} else {
 			$('#tree1').html('');
@@ -158,10 +158,10 @@ p.page.load = function() {
 		if(routes.length > 0) {
 			$.post('std.router.savenewroute.req', {routes:routes, router:router}, function(data) {
 				$.post('std.router.menuroutetochoice.req', {datapoint:router}, function(data) {
-					$('#tree1').html(data);
+					$('#tree1').html('<div class="ps-container">' + data + '</div>');
 				});
-				$.get('std.router.newelemto.req', function(data) {
-					$('#selectdp').html(data);
+				$.get('std.router.submenu.req',function(data){
+					$('#selectdp').html('<div class="ps-container">' + data + '</div>');
 				});
 			}, 'json');
 		}
@@ -180,10 +180,10 @@ p.page.load = function() {
 		var router = $('select option:selected').attr('data-point');
 		$.post('std.router.deletesingle.req', {single:single, router:router}, function(data) {
 			$.post('std.router.menuroutetochoice.req', {datapoint:router}, function(data) {
-				$('#tree1').html(data);
+				$('#tree1').html('<div class="ps-container">' + data + '</div>');
 			});
 			$.get('std.router.submenu.req',function(data){
-				$('#selectdp').html(data);
+				$('#selectdp').html('<div class="ps-container">' + data + '</div>');
 			});
 		});
 	});
@@ -195,10 +195,10 @@ p.page.load = function() {
 		});
 		$.post('std.router.deletechecked.req', {group:group, router:router}, function(data) {
 			$.post('std.router.menuroutetochoice.req', {datapoint:router}, function(data) {
-				$('#tree1').html(data);
+				$('#tree1').html('<div class="ps-container">' + data + '</div>');
 			});
 			$.get('std.router.submenu.req',function(data){
-				$('#selectdp').html(data);
+				$('#selectdp').html('<div class="ps-container">' + data + '</div>');
 			});
 		});
 	});

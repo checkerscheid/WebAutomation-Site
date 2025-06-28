@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 29.02.2016                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 672                                                     $ #
+//# Revision     : $Rev:: 745                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: alarming.req 672 2024-07-12 13:20:57Z                    $ #
+//# File-ID      : $Id:: alarming.req 745 2025-06-18 08:33:40Z                    $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $system */
@@ -203,6 +203,7 @@ switch(std::gets('param1')) {
 						<div class="td"><span>ausgewählte Alarme:</span></div>
 						<div class="td">
 							<span class="ps-button contactstomarked" title="Teilnehmer zuweisen">Teilnehmer zuweisen</span>
+							<span class="ps-button contactsfrommarked" title="Teilnehmer entfernen">Teilnehmer entfernen</span>
 						</div>
 					</div>
 				</div>';
@@ -506,6 +507,7 @@ function getAlarms($idgroup5, $idgroup4, $idgroup3, $idgroup2, $idgroup1, $idgro
 						<div class="td"><span>ausgewählte Alarme:</span></div>
 						<div class="td">
 							<span class="ps-button contactstomarked" title="Teilnehmer zuweisen">Teilnehmer zuweisen</span>
+							<span class="ps-button contactsfrommarked" title="Teilnehmer entfernen">Teilnehmer entfernen</span>
 						</div>
 					</div>
 				</div>

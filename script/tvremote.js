@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 10.02.2025                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 719                                                     $ #
+//# Revision     : $Rev:: 745                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: tvremote.js 719 2025-02-13 12:27:37Z                     $ #
+//# File-ID      : $Id:: tvremote.js 745 2025-06-18 08:33:40Z                     $ #
 //#                                                                                 #
 //###################################################################################
 ?> tvremote */
@@ -41,15 +41,6 @@ p.page.load = function() {
 			button: $(this).attr('data-tvbutton')
 		}
 		$.post('tvremote.dienst.req', params, function(data) {
-			p.page.message(data.message);
-		}, 'json');
-	});
-	$('.tvrichtung').on('click', function() {
-		const params = {
-			name: $('.tvName').val(),
-			button: $(this).attr('data-tvbutton')
-		}
-		$.post('tvremote.richtung.req', params, function(data) {
 			p.page.message(data.message);
 		}, 'json');
 	});

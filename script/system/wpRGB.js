@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 11.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 709                                                     $ #
+//# Revision     : $Rev:: 745                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpRGB.js 709 2024-11-21 13:08:04Z                        $ #
+//# File-ID      : $Id:: wpRGB.js 745 2025-06-18 08:33:40Z                        $ #
 //#                                                                                 #
 //###################################################################################
 ?> wpRGB */
@@ -57,6 +57,7 @@ var wpRGB = {
 		$('.setRGBColor').on('click', function() {
 			const on = {
 				ip: wpRGB.ip,
+				turn: 'true',
 				r: $('.RGBColorR').val(),
 				g: $('.RGBColorG').val(),
 				b: $('.RGBColorB').val()
@@ -71,6 +72,7 @@ var wpRGB = {
 		$('.RGBSavedColor').on('click', '.colorBorderFav', function() {
 			const led = {
 				ip: wpRGB.ip,
+				turn: 'true',
 				r: $(this).attr('data-r'),
 				g: $(this).attr('data-g'),
 				b: $(this).attr('data-b')
@@ -119,6 +121,7 @@ var wpRGB = {
 				$('.RGBColorB').val(b);
 				const color = {
 					ip: wpRGB.ip,
+					turn: 'true',
 					r: r,
 					g: g,
 					b: b
@@ -157,6 +160,7 @@ var wpRGB = {
 					if($(this).hasClass('RGBSliderB')) $('.RGBColorB').val(ui.value);
 					const slider = {
 						ip: wpRGB.ip,
+						turn: 'true',
 						r: $('.RGBColorR').val(),
 						g: $('.RGBColorG').val(),
 						b: $('.RGBColorB').val()
@@ -170,6 +174,7 @@ var wpRGB = {
 					$('.RGBColorBr').text(ui.value);
 					const br = {
 						ip: wpRGB.ip,
+						turn: 'true',
 						brightness: ui.value
 					};
 					$.post(wpRGB.target + '.RGBBrightness.req', br, function(data) {
@@ -196,6 +201,7 @@ var wpRGB = {
 				$('.RGBColorBr').text(ui.value);
 				const br = {
 					ip: wpRGB.ip,
+					turn: 'true',
 					brightness: ui.value
 				};
 				$.post(wpRGB.target + '.RGBBrightness.req', br, function(data) {

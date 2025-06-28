@@ -9,9 +9,9 @@
 //# Author       : Christopher Korn                                                 #
 //# Date         : 06.06.2015                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 744                                                     $ #
+//# Revision     : $Rev:: 745                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: router.req 744 2025-05-30 11:17:23Z                      $ #
+//# File-ID      : $Id:: router.req 745 2025-06-18 08:33:40Z                      $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -49,9 +49,13 @@ switch(std::gets('param1')) {
 	break;
 //###################################################################################
 	case router::c_menurouteto:
-		echo '<h1>Routenzuordnung</h1><hr /><div id="routen"><span>OPC Datenpunkt Quelle:';
-		echo '<select id="routwahl" class="ps-input">';
-		echo '<option>Bitte wählen</option>';
+		echo '
+		<h1>Routenzuordnung</h1>
+		<hr />
+		<div id="routen">
+			<span>OPC Datenpunkt Quelle:
+				<select id="routwahl" class="ps-input">
+					<option>Bitte wählen</option>';
 		if (std::posts('name') != '' ){
 			echo '<option data-point="'.std::posts('datapoint').'">'.std::posts('name').'</option>';
 		};
@@ -63,15 +67,21 @@ switch(std::gets('param1')) {
 		while($erg = $database->fetch()) {
 			echo '<option data-point="'.$erg['id_dp'].'">'.$erg['name'].'</option>';
 		}
-		echo '</select></span><span class="ps-delete">'.wpHTML_EMPTY.'</span>';
-		echo '</div>';
-		echo '<hr />';
-		echo '<ul id="tree1"></ul>';
-		echo '<div id="selectdp"></div>';
+		echo '
+				</select>
+			</span>
+			<span class="ps-delete">'.wpHTML_EMPTY.'</span>
+		</div>
+		<hr />
+		<div class="ps-flex-container">
+			<div id="tree1"></div>
+			<div id="selectdp"></div>
+		</div>';
+
 		break;
 //###################################################################################
 	case router::c_menuroutetochoice:
-		echo '<h3>Datenpunkt Ziele</h3>';
+		echo '<h2>Datenpunkt Ziele</h2><hr />';
 		echo '<ul>';
 		if (std::posts('datapoint') != '') {
 			echo '

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 29.02.2016                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 638                                                     $ #
+//# Revision     : $Rev:: 745                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: alarming.js 638 2024-07-04 14:41:27Z                     $ #
+//# File-ID      : $Id:: alarming.js 745 2025-06-18 08:33:40Z                     $ #
 //#                                                                                 #
 //###################################################################################
 ?> alarming */
@@ -54,7 +54,7 @@ p.page.load = function() {
 				$('#dialog').html(data).dialog({
 					title: 'Teilnehmerzuweisung', modal: true, width: p.popup.width.middle,
 					buttons: [{
-						text:'Speichern',
+						text:'Alarme den markierten Teilnehmern zuweisen',
 						click: function() {
 							var alarmids = ids;
 							var cinsert = [];
@@ -62,12 +62,42 @@ p.page.load = function() {
 							$('div.allcontacts span.ps-checkbox').each(function() {
 								if($(this).hasClass('checked')) {
 									cinsert.push($(this).attr('data-idcontact'));
-									//p.log.write('INSERT Alarm: ' + $(this).attr('data-idcontact'));
 								}
-								if(!$(this).hasClass('checked')) {
-									//! TODO andere Lösung für Teilnehmer entfernen
-									//cdelete.push($(this).attr('data-idcontact'));
-									//p.log.write('DELETE Alarm: ' + $(this).attr('data-idcontact'));
+							});
+							$('#dialog').dialog('close');
+							p.page.save('std.alarming.contactstoalarm.req', {alarmids:alarmids, cinsert:cinsert, cdelete:cdelete});
+						}
+					}]
+				});
+				$("#dialog").css('max-height','600px');
+			});
+		} else {
+			p.page.alert('Keine Alarme ausgewählt');
+		}
+	});
+//###################################################################################
+	$('#erg').on('click', '.contactsfrommarked', function() {
+		var tr = $(this).parents('ul.alarmsingroup:first');
+		var name = 'Alle markierten Alarme';
+		var ids = [];
+		$(tr).find('[data-id]').each(function() {
+			if($(this).find('.ps-checkbox').hasClass('checked')) {
+				ids.push($(this).attr('data-id'));
+			}
+		});
+		if(ids.length > 0) {
+			$.post('std.alarming.editcontacts.req', {ids:ids, name:name}, function(data) {
+				$('#dialog').html(data).dialog({
+					title: 'markierte Teilnehmer vom Alarm entfernen', modal: true, width: p.popup.width.middle,
+					buttons: [{
+						text:'Teilnehmer entfernen',
+						click: function() {
+							var alarmids = ids;
+							var cinsert = [];
+							var cdelete = [];
+							$('div.allcontacts span.ps-checkbox').each(function() {
+								if($(this).hasClass('checked')) {
+									cdelete.push($(this).attr('data-idcontact'));
 								}
 							});
 							$('#dialog').dialog('close');

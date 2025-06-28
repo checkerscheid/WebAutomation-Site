@@ -9,9 +9,9 @@
 //# Author       : Christopher Korn                                                 #
 //# Date         : 06.06.2015                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 744                                                     $ #
+//# Revision     : $Rev:: 745                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: router.css 744 2025-05-30 11:17:23Z                      $ #
+//# File-ID      : $Id:: router.css 745 2025-06-18 08:33:40Z                      $ #
 //#                                                                                 #
 //###################################################################################
 ?> router */
@@ -21,6 +21,7 @@
 #router { margin:10px 50px; }
 #router ul { margin:0 30px; }
 #router div.td, #router div.th { padding:2px 5px; }
+#router .ps-container ul * { text-align:left; }
 #erg input.neg, #erg select.neg { border-color:#A91919; color:#A91919; }
 h2.editorder { cursor:pointer; }
 div.divupdate div, div.divinsert { border:1px solid #CCC; padding:3px 5px; margin:3px; display:inline-block; border-radius:6px; }
@@ -33,8 +34,6 @@ div.table-item { padding-left:25px; }
 span.ps-tree-parent { display:inline-block; }
 h1 { text-align:center; }
 #routen .ps-delete { width:27px; height:27px; line-height:27px; cursor:pointer; float:right; background:transparent url(images/layout/ic_menu_delete.png) center center no-repeat; }
-#tree1 { display:inline-block; float:left; }
-#selectdp { display:inline-block; }
 .td { vertical-align:middle; }
 #routen span { display:inline-block; margin:0 4px; line-height:27px; }
 #tree .dplink { text-indent:10px; cursor:pointer; padding:4px 0px; }

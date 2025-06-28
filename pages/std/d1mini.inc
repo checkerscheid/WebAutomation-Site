@@ -64,17 +64,17 @@ if(!isset($d1Mini->FreakaZoneDevice)) {
 }
 ?>
 	<p id="storedIP" data-ip="<?=$erg['ip'] ?>">(<?=$erg['ip'] ?>, <?=$erg['mac'] ?>)</p>
+	<div class="buttonContainer">
 <?
 if($online) {
 ?>
-	<div class="buttonContainer">
 		<span class="ps-button SetCmd" data-cmd="ForceMqttUpdate" title="Force MQTT Update">Force MQTT Update</span>
 		<span class="ps-button SetCmd" data-cmd="UpdateHTTP" title="Update">Update</span>
 		<span class="ps-button SetCmd" data-cmd="RestartDevice" title="neu starten">neu starten</span>
 		<span class="ps-button SetCmd" data-cmd="Blink" title="Blink">Blink</span>
+<? } ?>
 		<a class="ps-button" target="_blank" href="http://<?=$erg['ip'] ?>/print">Device Site</a>
 	</div>
-<? } ?>
 	<div class="progressContainer ps-hidden">
 		<div class="ps-container">
 			<div class="progressBg">
