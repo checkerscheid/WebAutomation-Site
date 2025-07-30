@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 730                                                     $ #
+//# Revision     : $Rev:: 749                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 730 2025-03-30 13:24:07Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 749 2025-07-30 22:16:38Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -403,6 +403,30 @@ class uebersicht {
 					<? */ ?>
 					<tr>
 						<td colspan="2"><span class="ps-button twoColumns RenewShellyState">RenwShellyState</span></td>
+					</tr>
+					<tr><td colspan="2"><hr /></td></tr>
+					<tr><td colspan="2"><h3>Strom EG</h3></td></tr>
+					<tr>
+						<td>Zählerstand Netz (1.8.0):</td>
+						<td><span class="ps-input" data-ws="EG_EZ_ZsNetz">undefined</span></td>
+					</tr>
+					<tr>
+						<td>Zählerstand Solar (2.8.0):</td>
+						<td><span class="ps-input" data-ws="EG_EZ_ZsSolar">undefined</span></td>
+					</tr>
+					<tr>
+						<td>Leistung Netz:</td>
+						<td><span class="ps-input" data-ws="EG_EZ_PSolar">undefined</span></td>
+					</tr>
+					<tr><td colspan="2"><hr /></td></tr>
+					<tr><td colspan="2"><h3>Strom UG</h3></td></tr>
+					<tr>
+						<td>Zählerstand Netz (1.8.0):</td>
+						<td><span class="ps-input" data-ws="UG_EZ_ZsNetz">undefined</span></td>
+					</tr>
+					<tr>
+						<td>Leistung Netz:</td>
+						<td><span class="ps-input" data-ws="UG_EZ_PNetz">undefined</span></td>
 					</tr>
 				</tbody>
 			</table>

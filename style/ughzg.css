@@ -9,12 +9,19 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 08.10.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 732                                                     $ #
+//# Revision     : $Rev:: 747                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: ughzg.css 732 2025-04-03 16:39:02Z                       $ #
+//# File-ID      : $Id:: ughzg.css 747 2025-07-07 14:14:56Z                       $ #
 //#                                                                                 #
 //###################################################################################
 ?> ughzg */
+
+#ergTemp, #ergHum { display:block; width:100%; height:300px; }
+#ughzg .legend > div:first-child { padding:5px; border-radius:10px;
+	box-shadow:6px 6px 8px 0px #222; }
+#ughzg .legend table { margin:5px; }
+#ughzg .legendLabel { padding:2px 5px; text-align:left; cursor:pointer; }
+#ughzg .legendLabel .ps-fontgrey { color:#888; }
 
 @media (orientation: portrait) {
 }

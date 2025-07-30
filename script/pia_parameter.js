@@ -7,20 +7,23 @@
 //###################################################################################
 //#                                                                                 #
 //# Author       : Christian Scheid                                                 #
-//# Date         : 27.07.2024                                                       #
+//# Date         : 07.07.2025                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 749                                                     $ #
+//# Revision     : $Rev:: 748                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: shelly.js 749 2025-07-30 22:16:38Z                       $ #
+//# File-ID      : $Id:: pia_parameter.js 748 2025-07-07 14:20:45Z                $ #
 //#                                                                                 #
 //###################################################################################
-use system\std
-?> pia */
-//<? require_once('script/system/websockets.js') ?>
-//<? require_once('script/system/wpRGB.js') ?>
-ws.logEnabled = true;
+?> pia_parameter */
 p.page.load = function() {
-	wpRGB.Init('std.shelly');
-	//ws.connectionstring = 'ws://172.17.80.170/debog/log';
-	ws.connect();
+	// p.getValues();
+	$('#pia_parameter').on('click', '.SetKZKE', function() {
+		var newName = {
+			ww: $('.KZ_KE_L').val(),
+			cw: $('.KZ_KE_R').val()
+		};
+		$.post('pia_parameter.setChanelName.req', newName, function(data) {
+
+		});
+	});
 };

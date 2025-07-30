@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 740                                                     $ #
+//# Revision     : $Rev:: 749                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.js 740 2025-05-25 18:10:37Z                       $ #
+//# File-ID      : $Id:: d1mini.js 749 2025-07-30 22:16:38Z                       $ #
 //#                                                                                 #
 //###################################################################################
 use system\std
@@ -197,6 +197,43 @@ p.page.load = function() {
 		}
 		$.post('std.d1mini.setUnderfloorWartung.req', wartung, function(data) {
 			if(data.erg != 'S_OK') {
+				p.page.alertError(data.msg);
+			}
+		}, 'json');
+	});
+	$('.page').on('click', '.saveMeterType', function() {
+		const ip = $('#storedIP').attr('data-ip');
+		const meterType = $('.meterType').val();
+		$.post('std.d1mini.setMeterType.req', {ip:ip, meterType:meterType}, function(data) {
+			if(data.erg == 'S_OK') {
+				p.page.message('Zähler Typ gespeichert');
+			} else if(data.erg == 'S_WARNING') {
+				p.page.alertWarning(data.msg);
+			} else if(data.erg == 'S_ERROR') {
+				p.page.alertError(data.msg);
+			}
+		}, 'json');
+	});
+	$('.page').on('click', '.setInfo', function() {
+		const ip = $('#storedIP').attr('data-ip');
+		$.post('std.d1mini.setInfo.req', {ip:ip}, function(data) {
+			if(data.erg == 'S_OK') {
+				p.page.message('Info freigeschaltet');
+			} else if(data.erg == 'S_WARNING') {
+				p.page.alertWarning(data.msg);
+			} else if(data.erg == 'S_ERROR') {
+				p.page.alertError(data.msg);
+			}
+		}, 'json');
+	});
+	$('.page').on('click', '.setPrintSml', function() {
+		const ip = $('#storedIP').attr('data-ip');
+		$.post('std.d1mini.setPrintSml.req', {ip:ip}, function(data) {
+			if(data.erg == 'S_OK') {
+				p.page.message('Print / Parse SML umgeschaltet');
+			} else if(data.erg == 'S_WARNING') {
+				p.page.alertWarning(data.msg);
+			} else if(data.erg == 'S_ERROR') {
 				p.page.alertError(data.msg);
 			}
 		}, 'json');

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 746                                                     $ #
+//# Revision     : $Rev:: 749                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.inc 746 2025-06-28 14:59:52Z                      $ #
+//# File-ID      : $Id:: d1mini.inc 749 2025-07-30 22:16:38Z                      $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
@@ -433,7 +433,8 @@ if($d1Mini->FreakaZoneDevice->useModul->NeoPixel ?? false) {
 if($d1Mini->FreakaZoneDevice->useModul->CwWw ?? false) {
 	$cwww = new wpCwWw($erg['ip'], $erg['name']);
 	$cwww->getStatusFromJson($d1Mini->FreakaZoneDevice);
-	$cwww->getColorPicker();
+	$cwww->setText();
+	$cwww->getColorPicker('CW-WW');
 }
 if($d1Mini->FreakaZoneDevice->useModul->Clock ?? false) {
 	$clock = new wpClock($erg['ip'], $erg['name']);
@@ -541,6 +542,51 @@ if(($d1Mini->FreakaZoneDevice->useModul->AnalogOut2 ?? false) &&
 	$points['Underfloor4_HandError'] = $erg['name'] . '_Underfloor4_HandError';
 ?>
 	<? } ?>
+	<? if($d1Mini->FreakaZoneDevice->useModul->SML ?? false) { ?>
+		<div class="ps-container">
+			<h3>SML</h3>
+			<table summary="">
+				<tr>
+					<td>Zählerstand Netz (1.8.0):</td>
+					<td><span class="ps-input" data-ws="<?=$erg['name'] ?>_ZsNetz">undefined</span></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>Leistung Netz:</td>
+					<td><span class="ps-input" data-ws="<?=$erg['name'] ?>_PNetz">undefined</span></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>Zählerstand Solar (2.8.0):</td>
+					<td><span class="ps-input" data-ws="<?=$erg['name'] ?>_ZsSolar">undefined</span></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>Leistung Solar:</td>
+					<td><span class="ps-input" data-ws="<?=$erg['name'] ?>_PSolar">undefined</span></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>Zählertyp:</td>
+					<td>
+						<select class="ps-input">
+							<option value="1"<?=($d1Mini->FreakaZoneDevice->SML->MeterType == 1 ? ' selected="selected"' : '')?>>APATOR LEPUS</option>
+							<option value="2"<?=($d1Mini->FreakaZoneDevice->SML->MeterType == 2 ? ' selected="selected"' : '')?>>DZG</option>
+						</select>
+					</td>
+					<td><span class="ps-button saveMeterType">speichern</span></td>
+				</tr>
+				<tr>
+					<td colspan="2">Info freischalten</td>
+					<td><span class="ps-button setInfo">senden</span>
+				</tr>
+				<tr>
+					<td colspan="2">SML print / parse</td>
+					<td><span class="ps-button setPrintSml">umschalten</span>
+				</tr>
+			</table>
+		</div>
+	<? } ?>	
 	<? if(($d1Mini->FreakaZoneDevice->useModul->Relais ?? false) ||
 		($d1Mini->FreakaZoneDevice->useModul->RelaisShield ?? false)) {
 			$points['PumpeHandError'] = $erg['name'] . '_PumpeHandError';

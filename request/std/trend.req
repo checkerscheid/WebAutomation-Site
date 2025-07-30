@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 704                                                     $ #
+//# Revision     : $Rev:: 749                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: trend.req 704 2024-10-20 17:29:04Z                       $ #
+//# File-ID      : $Id:: trend.req 749 2025-07-30 22:16:38Z                       $ #
 //#                                                                                 #
 //###################################################################################
 /**
@@ -74,8 +74,8 @@ class trend {
 		$data = '['.($time->getTimestamp() * 1000).', '.str_replace(',','.',strtolower($value)).'],';
 		$this->data .= $data;
 	}
-	public function setFilename($id, $filename) {
-		$this->filename = $id . ' - ' . $filename . '.csv';
+	public function setFilename($filename) {
+		$this->filename = $this->id . ' - ' . $filename . '.csv';
 		$this->tablename = 'tmp' . $filename;
 	}
 	public function isBool() {
@@ -137,6 +137,7 @@ class trend {
 //********************
 // HTML get / POST
 //********************
+$err = '';
 if(std::posts('choosen') == 'fromto' && std::posts('from') != '' && std::posts('to') != '') {
 	$datefrom = date(wpDateTime::forDB, std::posts('from'));
 	$dateto = date(wpDateTime::forDB, strtotime('+1 day', std::posts('to')));
@@ -215,7 +216,7 @@ if($ids != '' && count($ids) > 0) {
 	while($ergTrend = $database->fetch()) {
 		$trends[$ergTrend['id_trend']] = new trend($ergTrend['id_trend'], $ergTrend['name']);
 		$trends[$ergTrend['id_trend']]->setMinMaxUnit($ergTrend['min'], $ergTrend['max'], $ergTrend['unit'], $ergTrend['nks']);
-		$trends[$ergTrend['id_trend']]->setFilename($ergTrend['id_dp'], $ergTrend['filename']);
+		$trends[$ergTrend['id_trend']]->setFilename($ergTrend['filename']);
 	}
 
 	//********************
@@ -237,10 +238,15 @@ if($ids != '' && count($ids) > 0) {
 			$tmpfilename = wpInit::$trendBasePath . '\\' . $trendFolder . '\\' . $i->format('Y') . '\\' . $i->format('m') . '\\' . $i->format('d') . '\\' . $trendfordata->getFilename();
 			//echo $tmpfilename;
 			if(file_exists($tmpfilename)) {
-				$database->query("INSERT INTO " . $trendfordata->getTablename(). " SELECT  DATA.* FROM OPENROWSET(
+				$sql = "INSERT INTO " . $trendfordata->getTablename(). " SELECT  DATA.* FROM OPENROWSET(
 					BULK '" . $tmpfilename. "',
 					FORMATFILE = '" . wpInit::$trendBasePath . "\\trendvalue.fmt'
-					) AS DATA");
+					) AS DATA";
+				//echo $sql;
+				$database->query($sql);
+			// } else {
+			// 	$tmpfilename = str_replace('\\', '/', $tmpfilename);
+			// 	$err .= 'Trend Datei ' . $tmpfilename . ' nicht gefunden!<br />';
 			}
 		}
 
@@ -316,5 +322,6 @@ function getyAxes($pointminmax) {
 		"crosshair":{"mode":"xy"},
 		"grid":{"hoverable":true, "clickable":true},
 		"legend": {"container":"#trendlegend"}
-	}
+	},
+	"error": "<?=$err; ?>"
 }

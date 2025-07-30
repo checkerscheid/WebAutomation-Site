@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 706                                                     $ #
+//# Revision     : $Rev:: 747                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: mudda.css 706 2024-11-04 15:08:34Z                       $ #
+//# File-ID      : $Id:: mudda.css 747 2025-07-07 14:14:56Z                       $ #
 //#                                                                                 #
 //###################################################################################
 ?> mudda */
@@ -25,12 +25,13 @@
 #mudda table { margin:auto; }
 #ergTemp, #ergHum { display:block; width:100%; height:300px; }
 
-#mudda .forecast, #mudda .cleanMyTrends { min-width: 100px; width: auto; }
-#mudda .legend > div:first-child { padding:5px;border-radius:10px;
+#mudda .forecast, #mudda .cleanMyTrends { min-width:100px; width:auto; }
+#mudda .legend > div:first-child { padding:5px; border-radius:10px;
 	box-shadow:6px 6px 8px 0px #222; }
 #mudda .legend table { margin:5px; }
 #mudda .legendLabel { padding:2px 5px; text-align:left; cursor:pointer; }
 #mudda .legendLabel .ps-fontgrey { color:#888; }
+#mudda .flex { display:flex; justify-content: center; align-items: center; }
 
 @media (orientation: portrait) {
 	#mudda span { font-size:18px; }
@@ -40,4 +41,5 @@
 	#mudda .ps-pluginbutton { font-size:40px; }
 	#mudda span.hand.pa-hide { top:3px; }
 	#mudda span.wpa-indikator { top:8px; }
+	#mudda .heatingMode { font-size:40px; }
 }

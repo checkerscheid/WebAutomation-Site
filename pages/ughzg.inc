@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 08.10.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 732                                                     $ #
+//# Revision     : $Rev:: 749                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: ughzg.inc 732 2025-04-03 16:39:02Z                       $ #
+//# File-ID      : $Id:: ughzg.inc 749 2025-07-30 22:16:38Z                       $ #
 //#                                                                                 #
 //###################################################################################
 namespace pages;
@@ -162,9 +162,42 @@ foreach($zimmer as $kurz => $name) {
 <? } ?>
 						</td>
 					</tr>
+<?
+	if($kurz == 'BU') {
+		$dpTemp = 'FL_RU_Temp';
+		$dpHum = 'FL_RU_Hum';
+?>
+					<tr>
+						<td class="ps-taleft" colspan="4"><h4>Flur</h4></td>
+					</tr>
+					<tr>
+						<td>
+							<div class="indiContainer">
+								<span class="ps-input" data-ws="<?=$dpTemp ?>" title="UG Flur Temperatur">-</span>
+								<span class="<?=wpa::indikatorTemp?>" data-ws="<?=$dpTemp ?>"><?=wpHTML_EMPTY ?></span>
+							</div>
+						</td>
+						<td>
+							<div class="indiContainer">
+								<span class="ps-input" data-ws="<?=$dpHum ?>" title="UG Flur Feuchte">-</span>
+								<span class="<?=wpa::indikatorHum?>" data-ws="<?=$dpHum ?>"><?=wpHTML_EMPTY ?></span>
+							</div>
+						</td>
+						<td colspan="2">
+						</td>
+					</tr>
+<? } ?>
 <? } ?>
 				</tbody>
 			</table>
 		</div>
+	</div>
+	<div class="ps-container">
+		<h2>Temperaturen</h2>
+		<div id="ergTemp"></div>
+	</div>
+	<div class="ps-container">
+		<h2>Feuchte</h2>
+		<div id="ergHum"></div>
 	</div>
 </div>

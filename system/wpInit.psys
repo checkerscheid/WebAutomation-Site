@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 743                                                     $ #
+//# Revision     : $Rev:: 749                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpInit.psys 743 2025-05-30 11:15:44Z                     $ #
+//# File-ID      : $Id:: wpInit.psys 749 2025-07-30 22:16:38Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace system;
@@ -144,7 +144,7 @@ class wpInit {
 	/** absoluter Pfad zum Trend Archiv (vgl. settings.ini von WEBautomationCS) */
 	public static $trendBasePath = 'C:\\Archiv';
 	/** Projekt Nummer (vgl. settings.ini von WEBautomationCS) */
-	public static $ProjektNumber = '190000';
+	public static $ProjektNumber = '240000';
 	/** Projekt Name (vgl. settings.ini von WEBautomationCS) */
 	public static $ProjektName = 'Ziegelhausen';
 	/** Maximale Anzahl Buttons in einer Reihe */

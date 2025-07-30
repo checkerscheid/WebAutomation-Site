@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 690                                                     $ #
+//# Revision     : $Rev:: 749                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.inc 690 2024-08-02 00:24:56Z                      $ #
+//# File-ID      : $Id:: shelly.inc 749 2025-07-30 22:16:38Z                      $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
@@ -46,8 +46,8 @@ $erg = array(
 	<div class="ps-flex-container page">
 <?
 
-	$rgb = new wpRGB('172.17.80.97', 'shellies/RGBW2');
-	$rgb->getColorPicker();
+	//$rgb = new wpRGB('172.17.80.97', 'shellies/RGBW2');
+	//$rgb->getColorPicker();
 ?>
 	</div>
 </div>

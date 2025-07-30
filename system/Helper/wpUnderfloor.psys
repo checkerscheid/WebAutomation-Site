@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 738                                                     $ #
+//# Revision     : $Rev:: 747                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpUnderfloor.psys 738 2025-05-03 00:04:48Z               $ #
+//# File-ID      : $Id:: wpUnderfloor.psys 747 2025-07-07 14:14:56Z               $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -117,7 +117,7 @@ class wpUnderfloor {
 					<span>Betriebsmodus:</span>
 				</td>
 				<td>
-					<span class="heatingMode pa-heizenModus" data-value="Modus" data-ws="Sommerbetrieb" data-False="&#10052;" data-True="&#9728;">--</span>
+					<span class="heatingMode pa-heizenModus" data-ws="<?=$this->name ?>_Underfloor<?=$this->no ?>_Summer" data-False="&#10052;" data-True="&#9728;">--</span>
 					<!--span class="<?=wpa::FontYellowBlue ?>" data-ws="<?=$this->name ?>_Underfloor<?=$this->no ?>_Summer">--</span-->
 				</td>
 			</tr>

@@ -1,0 +1,59 @@
+<?
+//###################################################################################
+//#                                                                                 #
+//#              (C) FreakaZone GmbH                                                #
+//#              =======================                                            #
+//#                                                                                 #
+//###################################################################################
+//#                                                                                 #
+//# Author       : Christian Scheid                                                 #
+//# Date         : 07.07.2025                                                       #
+//#                                                                                 #
+//# Revision     : $Rev:: 748                                                     $ #
+//# Author       : $Author::                                                      $ #
+//# File-ID      : $Id:: pia_parameter.req 748 2025-07-07 14:20:45Z               $ #
+//#                                                                                 #
+//###################################################################################
+namespace request;
+
+use system\std;
+use system\helper\wpDatabase;
+
+class pia_parameter {
+	const setChanelName = 'setChanelName';
+	public static function setChanelName() {
+		header(wpJSON_HEADER);
+		$database = new wpDatabase();
+		$ww = std::posts('ww');
+		$sqlww = "DELETE FROM [cfg] WHERE [key] = 'wwkz_ke'";
+		if(!empty($ww)) {
+			$sqlww = "MERGE INTO [cfg] USING (VALUES('wwkz_ke', '" . $ww . "')) AS [source] ([key], [value]) ON [cfg].[key] = [source].[key]
+			WHEN MATCHED THEN UPDATE SET [value] = [source].[value]
+			WHEN NOT MATCHED THEN INSERT ([key], [value]) VALUES ([source].[key], [source].[value]);";
+		}
+		$cw = std::posts('cw');
+		$sqlcw = "DELETE FROM [cfg] WHERE [key] = 'cwkz_ke'";
+		if(!empty($cw)) {
+			$sqlcw = "MERGE INTO [cfg] USING (VALUES('cwkz_ke', '" . $cw . "')) AS [source] ([key], [value]) ON [cfg].[key] = [source].[key]
+			WHEN MATCHED THEN UPDATE SET [value] = [source].[value]
+			WHEN NOT MATCHED THEN INSERT ([key], [value]) VALUES ([source].[key], [source].[value]);";
+		}
+		if($database->query($sqlww) && $database->query($sqlcw)) {
+			echo S_OK;
+		} else {
+			echo '{"erg":"S_ERROR", "msg":"SQL-Fehler"}';
+		}
+	}
+}
+switch(std::gets('param1')) {
+	//###################################################################################
+	case pia_parameter::setChanelName:
+		echo pia_parameter::setChanelName();
+		break;
+	//###################################################################################
+	default:
+		\system\html::default();
+		break;
+}
+
+?>

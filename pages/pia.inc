@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 27.07.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 730                                                     $ #
+//# Revision     : $Rev:: 747                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pia.inc 730 2025-03-30 13:24:07Z                         $ #
+//# File-ID      : $Id:: pia.inc 747 2025-07-07 14:14:56Z                         $ #
 //#                                                                                 #
 //###################################################################################
 /**
@@ -185,7 +185,8 @@ $points = array(
 <?
 	$cwww = new wpCwWw('172.17.80.164', 'KZ_KE');
 	$cwww->getStatus();
-	$cwww->getColorPicker('Halloween', 'schwebende Geister', 'Pom-Pom');
+	$cwww->setText();
+	$cwww->getColorPicker('Halloween');
 ?>
 <?
 	$rgb = new wpRGB('172.17.80.163', 'shellies/RGBW2');

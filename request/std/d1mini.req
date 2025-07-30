@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 740                                                     $ #
+//# Revision     : $Rev:: 749                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.req 740 2025-05-25 18:10:37Z                      $ #
+//# File-ID      : $Id:: d1mini.req 749 2025-07-30 22:16:38Z                      $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -52,6 +52,24 @@ class d1mini {
 		$WebCom = new WebCom();
 		echo $WebCom->send('SetD1MiniUrlCmd', $ip . '%~%' . 'setUnderfloor' . $id . '?wartung');
 	}
+	const c_setMeterType = 'setMeterType';
+	public static function setMeterType($ip, $type) {
+		header(wpJSON_HEADER);
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', $ip . '%~%' . 'setSML?meterType=' . $type);
+	}
+	const c_setInfo = 'setInfo';
+	public static function setInfo($ip) {
+		header(wpJSON_HEADER);
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', $ip . '%~%' . 'setSML?setInfo');
+	}
+	const c_setPrintSml = 'setPrintSml';
+	public static function setPrintSml($ip) {
+		header(wpJSON_HEADER);
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', $ip . '%~%' . 'setSML?setPrintSml');
+	}
 }
 
 switch(std::gets('param1')) {
@@ -70,6 +88,18 @@ switch(std::gets('param1')) {
 		//###################################################################################
 	case d1mini::c_setUnderfloorWartung:
 		d1mini::setUnderfloorWartung(std::posts('ip'), std::posts('id'));
+		break;
+		//###################################################################################
+	case d1mini::c_setMeterType:
+		d1mini::setMeterType(std::posts('ip'), std::posts('meterType'));
+		break;
+		//###################################################################################
+	case d1mini::c_setInfo:
+		d1mini::setInfo(std::posts('ip'));
+		break;
+		//###################################################################################
+	case d1mini::c_setPrintSml:
+		d1mini::setPrintSml(std::posts('ip'));
 		break;
 		//###################################################################################
 	default:

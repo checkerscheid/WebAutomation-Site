@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 731                                                     $ #
+//# Revision     : $Rev:: 749                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: mudda.inc 731 2025-04-03 16:37:32Z                       $ #
+//# File-ID      : $Id:: mudda.inc 749 2025-07-30 22:16:38Z                       $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -95,9 +95,10 @@ class mudda {
 				</div>
 				<? } ?>
 			</td>
-			<td>
+			<td class="flex">
 				<a href="std.trendview.<?=$this->trendid ?>.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a>
 				<a href="std.calendaredit.<?=$this->calid ?>.htm" class="ps-button ps-pluginbutton"><?=wpHTML_UHR ?></a>
+				<span class="heatingMode pa-heizenModus" data-ws="EG_HZG_VTG<?=$this->group ?>_Underfloor<?=$this->valve ?>_Summer" data-False="&#10052;" data-True="&#9728;">--</span>
 			</td>
 		</tr>
 <?
@@ -147,7 +148,7 @@ $schlafzimmer->getStatus();
 						<td><span>Regen</span></td>
 					</tr>
 					<tr>
-						<td colspan="3"><hr /></td>
+						<td colspan="4"><hr /></td>
 					</tr>
 					<tr>
 						<td><span>Wintergarten:</span></td>
@@ -245,6 +246,20 @@ $schlafzimmer->getStatus();
 						<td>
 							<span class="ps-input" data-ws="GA2_WE_Gaube_Rain" title="Wetter Gaube Regen">-</span>
 						</td>
+					</tr>
+					<tr>
+						<td colspan="4"><hr /></td>
+					</tr>
+					<tr>
+						<td colspan = "4">
+							<h3>Stromzähler</h3>
+						</td>
+					</tr>
+					<tr>
+						<td>Zählerstand Netz (1.8.0):</td>
+						<td><span class="ps-input" data-ws="EG_EZ_ZsNetz">undefined</span></td>
+						<td>Zählerstand Solar (2.8.0):</td>
+						<td><span class="ps-input" data-ws="EG_EZ_ZsSolar">undefined</span></td>
 					</tr>
 				</tbody>
 			</table>

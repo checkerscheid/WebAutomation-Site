@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 735                                                     $ #
+//# Revision     : $Rev:: 747                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpCwWw.psys 735 2025-04-28 19:45:43Z                     $ #
+//# File-ID      : $Id:: wpCwWw.psys 747 2025-07-07 14:14:56Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -25,6 +25,7 @@ use system\WebCom;
 class wpCwWw {
 	private $database, $status, $pixelStatus;
 	private $ip, $name;
+	private $ww, $cw;
 	const modes = array(
 		4 => 'Pulse',
 		5 => 'WW Pulse',
@@ -37,6 +38,8 @@ class wpCwWw {
 		$this->database = new wpDatabase();
 		$this->ip = $ip;
 		$this->name = $name;
+		$this->ww = 'Warmweiß';
+		$this->cw = 'Kaltweiß';
 		//$this->getStatus();
 		//$this->getPixelStatus();
 	}
@@ -60,15 +63,31 @@ class wpCwWw {
 		$this->pixelStatus = \json_decode($WebCom->send('getD1MiniCwWwStatus', $this->ip), true);
 		//std::test_array($this->pixelStatus, 'getPixelStatus');
 	}
-	public function getColorPicker($headline = 'CW-WW', $ww = 'Warmweiß', $cw = 'Kaltweiß') {
+	public function setText() {
+		$this->database->query("SELECT [key], [value] FROM [cfg] WHERE [key] = 'ww" . strtolower($this->name) . "' OR [key] = 'cw" . strtolower($this->name) . "'");
+		while($cwww = $this->database->fetch()) {
+			if($cwww['key'] == 'ww' . strtolower($this->name)) {
+				$this->ww = $cwww['value'];
+			} elseif($cwww['key'] == 'cw' . strtolower($this->name)) {
+				$this->cw = $cwww['value'];
+			}
+		}
+	}
+	public function getWwText() {
+		return $this->ww;
+	}
+	public function getCwText() {
+		return $this->cw;
+	}
+	public function getColorPicker($headline = 'CW-WW') {
 ?>
 		<div class="wpCwWw ps-container" data-ip="<?=$this->ip ?>">
 			<h3><?=$headline ?></h3>
 			<hr />
 			<div class="colorPicker">
-				<h3><?=$ww ?> (<span class="CwWwWW _wp-b-to-p" data-ws="<?=$this->name ?>_WW">--</span>)</h3>
+				<h3><?=$this->ww ?> (<span class="CwWwWW _wp-b-to-p" data-ws="<?=$this->name ?>_WW">--</span>)</h3>
 				<div class="CwWwSliderW CwWwSliderWW wpSlider" data-ws="<?=$this->name ?>_WW"></div>
-				<h3><?=$cw ?> (<span class="CwWwCW _wp-b-to-p" data-ws="<?=$this->name ?>_CW">--</span>)</h3>
+				<h3><?=$this->cw ?> (<span class="CwWwCW _wp-b-to-p" data-ws="<?=$this->name ?>_CW">--</span>)</h3>
 				<div class="CwWwSliderW CwWwSliderCW wpSlider" data-ws="<?=$this->name ?>_CW"></div>
 			</div>
 			<h3>Scenen</h3>
@@ -85,6 +104,7 @@ class wpCwWw {
 					<div class="CwWwSliderEffectSpeed wpSlider" data-ws="<?=$this->name ?>_EffectSpeed"></div>
 <?
 		foreach(self::modes as $id => $name) {
+			$name = str_replace(array('WW', 'CW'), array($this->ww, $this->cw), $name);
 ?>
 					<span class="ps-button setCwWwEffect" data-id="<?=$id ?>"><?=$name ?></span><br />
 <?

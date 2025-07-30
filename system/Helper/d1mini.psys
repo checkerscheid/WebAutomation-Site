@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 26.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 745                                                     $ #
+//# Revision     : $Rev:: 749                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.psys 745 2025-06-18 08:33:40Z                     $ #
+//# File-ID      : $Id:: d1mini.psys 749 2025-07-30 22:16:38Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -144,6 +144,10 @@ class d1mini {
 			if(isset($this->status->FreakaZoneDevice->useModul->DS18B20) &&
 				$this->status->FreakaZoneDevice->useModul->DS18B20) {
 				$this->setDS18B20();
+			}
+			if(isset($this->status->FreakaZoneDevice->useModul->SML) &&
+				$this->status->FreakaZoneDevice->useModul->SML) {
+				$this->setSML();
 			}
 			return $this->id;
 		}
@@ -452,6 +456,24 @@ class d1mini {
 			$this->mergeTrend($id_dp_temp, 'Temperatur ' . ($i + 1));
 			echo "saved: 'Temperatur " . $i . "', ";
 		}
+	}
+	private function setSML() {
+		$id_mqtttopic_pnetz = $this->insertTopic('SML/PNetz');
+		$id_dp_pnetz = $this->mergeDP($id_mqtttopic_pnetz, 'PNetz', 'Leistung aus Netz', 'W', 0);
+		$this->mergeTrend($id_dp_pnetz, 'Leistung aus Netz', 60);
+		echo "saved: 'PNetz',";
+		$id_mqtttopic_psolar = $this->insertTopic('SML/PSolar');
+		$id_dp_psolar = $this->mergeDP($id_mqtttopic_psolar, 'PSolar', 'Leistung Solar', 'W', 0);
+		$this->mergeTrend($id_dp_psolar, 'Leistung Solar', 60);
+		echo "saved: 'PSolar',";
+		$id_mqtttopic_zsnetz = $this->insertTopic('SML/ZsNetz');
+		$id_dp_zsnetz = $this->mergeDP($id_mqtttopic_zsnetz, 'ZsNetz', 'Zählerstand Netz', 'kWh', 0);
+		$this->mergeTrend($id_dp_zsnetz, 'Zählerstand Netz', 60);
+		echo "saved: 'ZsNetz'<br />";
+		$id_mqtttopic_zssolar = $this->insertTopic('SML/ZsSolar');
+		$id_dp_zssolar = $this->mergeDP($id_mqtttopic_zssolar, 'ZsSolar', 'Zählerstand Solar', 'kWh', 0);
+		$this->mergeTrend($id_dp_zssolar, 'Zählerstand Solar', 60);
+		echo "saved: 'ZsSolar'<br />";
 	}
 	private function setRain() {
 		$id_mqtttopic = $this->insertTopic('Rain');
