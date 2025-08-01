@@ -256,10 +256,19 @@ $schlafzimmer->getStatus();
 						</td>
 					</tr>
 					<tr>
-						<td>Zählerstand Netz (1.8.0):</td>
+						<td colspan="2">Verbrauch / Gewinn:</td>
+						<td><span class="ps-input pa-negisgood" data-ws="EG_EZ_PSolar">undefined</span></td>
+						<td><a href="std.trendview.1647.1.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a></td>
+					</tr>
+					<tr>
+						<td colspan="2">Zählerstand Netz (1.8.0):</td>
 						<td><span class="ps-input" data-ws="EG_EZ_ZsNetz">undefined</span></td>
-						<td>Zählerstand Solar (2.8.0):</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td colspan="2">Zählerstand Solar (2.8.0):</td>
 						<td><span class="ps-input" data-ws="EG_EZ_ZsSolar">undefined</span></td>
+						<td></td>
 					</tr>
 				</tbody>
 			</table>

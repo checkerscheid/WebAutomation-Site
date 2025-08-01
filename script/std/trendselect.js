@@ -40,6 +40,8 @@ var autoloadtrenddatatimer = null;
 var autoloadtrenddatastarted = false;
 var autoloadtrenddataseconds = 0;
 
+const ergHeight = 600;
+
 timezoneJS.timezone.zoneFileBasePath = 'resources/tz';
 timezoneJS.timezone.defaultZoneFile = ['europe.txt'];
 timezoneJS.timezone.init({async: true});
@@ -209,7 +211,7 @@ p.page.load = function() {
 			});
 	});
 	$('#trendusercfg').on('click', '.ps-bold', function() {
-		$('#erg').height('300px').addClass('ps-loading');
+		$('#erg').height(ergHeight + 'px').addClass('ps-loading');
 		idsfortrend = [];
 		$('#choosentrend').html('');
 		$('[data-trends]').html('');
@@ -447,7 +449,7 @@ function setAutomaticTrendData() {
 }
 function getTrendData() {
 	$('#trendcontainer .ps-button').removeClass('ps-hidden');
-	$('#erg').height('300px').addClass('ps-loading');
+	$('#erg').height(ergHeight + 'px').addClass('ps-loading');
 	var dpfrom = $('.timefrom').datepicker('getDate') == null ? '' : $('.timefrom').datepicker('getDate').getTime() / 1000;
 	var dpto = $('.timeto').datepicker('getDate') == null ? '' : $('.timeto').datepicker('getDate').getTime() / 1000;
 	var dpday = $('.trendday').datepicker('getDate') == null ? '' : $('.trendday').datepicker('getDate').getTime() / 1000;

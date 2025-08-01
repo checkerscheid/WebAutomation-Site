@@ -404,30 +404,6 @@ class uebersicht {
 					<tr>
 						<td colspan="2"><span class="ps-button twoColumns RenewShellyState">RenwShellyState</span></td>
 					</tr>
-					<tr><td colspan="2"><hr /></td></tr>
-					<tr><td colspan="2"><h3>Strom EG</h3></td></tr>
-					<tr>
-						<td>Zählerstand Netz (1.8.0):</td>
-						<td><span class="ps-input" data-ws="EG_EZ_ZsNetz">undefined</span></td>
-					</tr>
-					<tr>
-						<td>Zählerstand Solar (2.8.0):</td>
-						<td><span class="ps-input" data-ws="EG_EZ_ZsSolar">undefined</span></td>
-					</tr>
-					<tr>
-						<td>Leistung Netz:</td>
-						<td><span class="ps-input" data-ws="EG_EZ_PSolar">undefined</span></td>
-					</tr>
-					<tr><td colspan="2"><hr /></td></tr>
-					<tr><td colspan="2"><h3>Strom UG</h3></td></tr>
-					<tr>
-						<td>Zählerstand Netz (1.8.0):</td>
-						<td><span class="ps-input" data-ws="UG_EZ_ZsNetz">undefined</span></td>
-					</tr>
-					<tr>
-						<td>Leistung Netz:</td>
-						<td><span class="ps-input" data-ws="UG_EZ_PNetz">undefined</span></td>
-					</tr>
 				</tbody>
 			</table>
 		</div>
@@ -458,7 +434,7 @@ foreach($zimmer as $kurz => $name) {
 					</tr>
 					<tr>
 						<td>
-<?	if($kurz != 'KZ') { ?>
+<? if($kurz != 'KZ') { ?>
 							<span class="ps-input" data-ws="_<?=$kurz?>_RT" data-sm="<?=$kurz?>_SM">-</span>
 <? } else { ?>
 							<span class="ps-input" data-ws="_<?=$kurz?>_RT">-</span>

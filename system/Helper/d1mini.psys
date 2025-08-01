@@ -467,12 +467,10 @@ class d1mini {
 		$this->mergeTrend($id_dp_psolar, 'Leistung Solar', 60);
 		echo "saved: 'PSolar',";
 		$id_mqtttopic_zsnetz = $this->insertTopic('SML/ZsNetz');
-		$id_dp_zsnetz = $this->mergeDP($id_mqtttopic_zsnetz, 'ZsNetz', 'Zählerstand Netz', 'kWh', 0);
-		$this->mergeTrend($id_dp_zsnetz, 'Zählerstand Netz', 60);
+		$this->mergeDP($id_mqtttopic_zsnetz, 'ZsNetz', 'Zählerstand Netz', 'kWh', 0);
 		echo "saved: 'ZsNetz'<br />";
 		$id_mqtttopic_zssolar = $this->insertTopic('SML/ZsSolar');
-		$id_dp_zssolar = $this->mergeDP($id_mqtttopic_zssolar, 'ZsSolar', 'Zählerstand Solar', 'kWh', 0);
-		$this->mergeTrend($id_dp_zssolar, 'Zählerstand Solar', 60);
+		$this->mergeDP($id_mqtttopic_zssolar, 'ZsSolar', 'Zählerstand Solar', 'kWh', 0);
 		echo "saved: 'ZsSolar'<br />";
 	}
 	private function setRain() {

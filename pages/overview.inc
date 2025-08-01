@@ -125,16 +125,15 @@ class overview {
 		foreach(overview::$Pflanze as $name => $p) {
 			$returns .= '
 				<tr>
-					<!--td colspan="2"><a href="http://' . $p->getIpAddress() . '/print" target="_blank">' . $p->getDescription() . '</a></td-->
-					<td class="ps-taleft" coslpan="2"><a href="std.d1mini.' . $name . '.htm">' . $p->getDescription() . '</a></td>
-					<td colspan="2">
+					<td class="ps-taleft" colspan="4"><a href="std.d1mini.' . $name . '.htm">' . $p->getDescription() . '</a></td>
+					<td>
 						<div class="indiContainer">
 							<span data-ws="' . $name . '_Moisture" class="ps-input">undefined</span>
 							<span data-ws="' . $name . '_Moisture" class="' . wpa::indikatorPfl . '">' . wpHTML_EMPTY . '</span>
 							<span data-ws="' . $name . '_PumpeHandError" class="wpa-hand pa-hide">' . wpHTML_EMPTY . '</span>
 						</div>
 					</td>
-					<td colspan="2">
+					<td>
 						' . $p->getTrendButton() . '
 					</td>
 				</tr>';
@@ -148,7 +147,8 @@ class overview {
 			$returns .= '
 				<tr>
 					<td class="ps-taleft" colspan="3">' . $name . ':</td>
-					<td colspan="3"><span data-ws="' . $dp . '_Power" class="ps-input">undefined</span></td>
+					<td colspan="2"><span data-ws="' . $dp . '_Power" class="ps-input">undefined</span></td>
+					<td></td>
 				</tr>';
 		}
 		return $returns;
@@ -217,61 +217,6 @@ overview::setPflanze();
 ?>
 <div id="uebersicht" class="ps-flex-container page">
 	<div class="ps-container">
-		<table id="LichtEnergie">
-			<tbody>
-				<tr><td colspan="6"><h2>Licht / Relais</h2></td></tr>
-				<tr><td colspan="6"><hr /></td></tr>
-				<?=overview::getLicht() ?>
-				<tr><td colspan="6"><a class="ps-button" href="std.d1mini.WZ_NP.htm">Wohnzimmer Lichtleiste</a></td></tr>
-				<tr><td colspan="6"><a class="ps-button" href="std.d1mini.WZ_LS_NP.htm">Wohnzimmer Lautsprecher</a></td></tr>
-				<tr><td colspan="6"><a class="ps-button" href="std.d1mini.WZ_PF_TE.htm">Wohnzimmer Pflanze</a></td></tr>
-				<tr><td colspan="6"><a class="ps-button" href="std.d1mini.KZ_NP.htm">Kinderzimmer NeoPixel</a></td></tr>
-				<tr><td colspan="6"><a class="ps-button" href="std.d1mini.BA_Lue.htm">Bad Lüfter</a></td></tr>
-				<tr><td colspan="6"><a class="ps-button" href="std.d1mini.UG_EMeter.htm">Elektrozähler</a></td></tr>
-				<tr><td colspan="6"><h2>Energie</h2></td></tr>
-				<tr><td colspan="6"><hr /></td></tr>
-				<?=overview::getPower() ?>
-				<tr><td colspan="6"><h2>Energiezähler</h2></td></tr>
-				<tr><td colspan="6"><hr /></td></tr>
-				<tr>
-					<td colspan="2"></td>
-					<td colspan="2">Hauptzähler</td>
-					<td colspan="2">Server</td>
-				</tr>
-				<tr>
-					<td class="ps-taleft" colspan="2">Leistung:</td>
-					<td colspan="2"><span data-ws="SY_EZ_power" class="ps-input">undefined</span></td>
-					<td colspan="2"><span data-ws="SY_SRV_power" class="ps-input">undefined</span></td>
-				</tr>
-				<tr>
-					<td class="ps-taleft" colspan="2">Blindleistung:</td>
-					<td colspan="2"><span data-ws="SY_EZ_reactive_power" class="ps-input">undefined</span></td>
-					<td colspan="2"><span data-ws="SY_SRV_reactive_power" class="ps-input">undefined</span></td>
-				</tr>
-				<tr>
-					<td class="ps-taleft" colspan="2">cos &phi;:</td>
-					<td colspan="2"><span data-ws="SY_EZ_pf" class="ps-input">undefined</span></td>
-					<td colspan="2"><span data-ws="SY_SRV_pf" class="ps-input">undefined</span></td>
-				</tr>
-				<tr>
-					<td class="ps-taleft" colspan="2">Energie:</td>
-					<td colspan="2"><span data-ws="SY_EZ_energy" class="ps-input">undefined</span></td>
-					<td colspan="2"><span data-ws="SY_SRV_energy" class="ps-input">undefined</span></td>
-				</tr>
-				<tr>
-					<td class="ps-taleft" colspan="2">erzeugte Energie:</td>
-					<td colspan="2"><span data-ws="SY_EZ_returned_energy" class="ps-input">undefined</span></td>
-					<td colspan="2"><span data-ws="SY_SRV_returned_energy" class="ps-input">undefined</span></td>
-				</tr>
-				<tr>
-					<td class="ps-taleft" colspan="2">Spannung:</td>
-					<td colspan="2"><span data-ws="SY_EZ_voltage" class="ps-input">undefined</span></td>
-					<td colspan="2"><span data-ws="SY_SRV_voltage" class="ps-input">undefined</span></td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-	<div class="ps-container">
 		<table id="Sensoren">
 			<tbody>
 				<tr><td colspan="6"><h2>Sensoren</h2></td></tr>
@@ -322,57 +267,118 @@ overview::setPflanze();
 		</table>
 	</div>
 	<div class="ps-container">
-		<table id="SensorenII">
+		<table id="LichtEnergie">
 			<tbody>
-				<tr><td colspan="6"><h2>Gartenhaus</h2></td></tr>
+				<tr>
+					<td colspan="6">
+						<h3>Strom EG</h3>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">Leistung:</td>
+					<td colspan="2">
+						<span class="ps-input pa-negisgood" data-ws="EG_EZ_PSolar">undefined</span>
+					</td>
+					<td>
+						<a href="std.trendview.1647.1.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">Zählerstand Netz (1.8.0):</td>
+					<td colspan="2"><span class="ps-input" data-ws="EG_EZ_ZsNetz">undefined</span></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td colspan="3">Zählerstand Solar (2.8.0):</td>
+					<td colspan="2"><span class="ps-input" data-ws="EG_EZ_ZsSolar">undefined</span></td>
+					<td></td>
+				</tr>
 				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
-					<td class="ps-taleft" colspan="3">Füllstand:</td>
-					<td colspan="3"><span data-ws="GA1_FS_Vol" class="ps-input">undefined</span></td>
+					<td colspan="6">
+						<h3>Strom UG</h3>
+					</td>
 				</tr>
 				<tr>
-					<td class="ps-taleft" colspan="3">Füllstand Höhe (RAW):</td>
-					<td colspan="3"><span data-ws="GA1_FS_Raw" class="ps-input">undefined</span></td>
+					<td colspan="3">Leistung:</td>
+					<td colspan="2">
+						<span class="ps-input" data-ws="UG_EZ_PNetz">undefined</span>
+					</td>
+					<td>
+						<a href="std.trendview.1650.1.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a>
+					</td>
 				</tr>
 				<tr>
-					<td class="ps-taleft" colspan="3">Füllstand Höhe (AVG):</td>
-					<td colspan="3"><span data-ws="GA1_FS_Avg" class="ps-input">undefined</span></td>
-				</tr>
-				<tr>
-					<td colspan="2"></td>
-					<td colspan="2"><h2>Licht</h2></td>
-					<td colspan="2"><h2>BM</h2></td>
+					<td colspan="3">Zählerstand Netz (1.8.0):</td>
+					<td colspan="2"><span class="ps-input" data-ws="UG_EZ_ZsNetz">undefined</span></td>
+					<td></td>
 				</tr>
 				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
-					<td class="ps-taleft" colspan="2">Büro:</td>
-					<td colspan="2"><span data-ws="BU_RU_LDR" class="ps-input">undefined</span></td>
-					<td colspan="2"><span data-ws="BU_RU_BM" class="ps-input <?=wpa::GreyGreen ?>">undefined</span></td>
+					<td colspan="5">
+						<span>gesamter Stromverbrauch:</span>
+					</td>
+					<td>
+						<a href="std.trendview.112.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a>
+					</td>
+				</tr>
+<? /*				
+				<tr><td colspan="6"><h2>Licht / Relais</h2></td></tr>
+				<tr><td colspan="6"><hr /></td></tr>
+				<?=overview::getLicht() ?>
+				<tr><td colspan="6"><a class="ps-button" href="std.d1mini.WZ_NP.htm">Wohnzimmer Lichtleiste</a></td></tr>
+				<tr><td colspan="6"><a class="ps-button" href="std.d1mini.WZ_LS_NP.htm">Wohnzimmer Lautsprecher</a></td></tr>
+				<tr><td colspan="6"><a class="ps-button" href="std.d1mini.WZ_PF_TE.htm">Wohnzimmer Pflanze</a></td></tr>
+				<tr><td colspan="6"><a class="ps-button" href="std.d1mini.KZ_NP.htm">Kinderzimmer NeoPixel</a></td></tr>
+				<tr><td colspan="6"><a class="ps-button" href="std.d1mini.BA_Lue.htm">Bad Lüfter</a></td></tr>
+				<tr><td colspan="6"><a class="ps-button" href="std.d1mini.UG_EMeter.htm">Elektrozähler</a></td></tr>
+*/ ?>
+				<tr><td colspan="6"><h2>Energie</h2></td></tr>
+				<tr><td colspan="6"><hr /></td></tr>
+				<?=overview::getPower() ?>
+				<tr><td colspan="6"><h2>Energiezähler</h2></td></tr>
+				<tr><td colspan="6"><hr /></td></tr>
+				<tr>
+					<td colspan="3"></td>
+					<td>Hauptzähler</td>
+					<td>Server</td>
+					<td></td>
 				</tr>
 				<tr>
-					<td class="ps-taleft" colspan="2">Küche:</td>
-					<td colspan="2"><span data-ws="KU_RU_LDR" class="ps-input">undefined</span></td>
-					<td colspan="2"><span data-ws="KU_RU_BM" class="ps-input <?=wpa::GreyGreen ?>">undefined</span></td>
+					<td class="ps-taleft" colspan="3">Leistung:</td>
+					<td><span data-ws="SY_EZ_power" class="ps-input">undefined</span></td>
+					<td><span data-ws="SY_SRV_power" class="ps-input">undefined</span></td>
+					<td></td>
 				</tr>
 				<tr>
-					<td class="ps-taleft" colspan="2">Flur:</td>
-					<td colspan="2"><span data-ws="FL_RU_LDR" class="ps-input">undefined</span></td>
-					<td colspan="2"><span data-ws="FL_RU_BM" class="ps-input <?=wpa::GreyGreen ?>">undefined</span></td>
+					<td class="ps-taleft" colspan="3">Blindleistung:</td>
+					<td><span data-ws="SY_EZ_reactive_power" class="ps-input">undefined</span></td>
+					<td><span data-ws="SY_SRV_reactive_power" class="ps-input">undefined</span></td>
+					<td></td>
 				</tr>
 				<tr>
-					<td class="ps-taleft" colspan="2">Bad:</td>
-					<td colspan="2"><span data-ws="BA_RU_LDR" class="ps-input">undefined</span></td>
-					<td colspan="2"><span data-ws="BA_RU_BM" class="ps-input <?=wpa::GreyGreen ?>">undefined</span></td>
+					<td class="ps-taleft" colspan="3">cos &phi;:</td>
+					<td><span data-ws="SY_EZ_pf" class="ps-input">undefined</span></td>
+					<td><span data-ws="SY_SRV_pf" class="ps-input">undefined</span></td>
+					<td></td>
 				</tr>
 				<tr>
-					<td class="ps-taleft" colspan="2">Schlafzimmer:</td>
-					<td colspan="2"><span data-ws="SZ_RU_LDR" class="ps-input">undefined</span></td>
-					<td colspan="2"></td>
+					<td class="ps-taleft" colspan="3">Energie:</td>
+					<td><span data-ws="SY_EZ_energy" class="ps-input">undefined</span></td>
+					<td><span data-ws="SY_SRV_energy" class="ps-input">undefined</span></td>
+					<td></td>
 				</tr>
 				<tr>
-					<td class="ps-taleft" colspan="2">Kinderzimmer:</td>
-					<td colspan="2"><span data-ws="KZ_RU_LDR" class="ps-input">undefined</span></td>
-					<td colspan="2"></td>
+					<td class="ps-taleft" colspan="3">erzeugte Energie:</td>
+					<td><span data-ws="SY_EZ_returned_energy" class="ps-input">undefined</span></td>
+					<td><span data-ws="SY_SRV_returned_energy" class="ps-input">undefined</span></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="ps-taleft" colspan="3">Spannung:</td>
+					<td><span data-ws="SY_EZ_voltage" class="ps-input">undefined</span></td>
+					<td><span data-ws="SY_SRV_voltage" class="ps-input">undefined</span></td>
+					<td></td>
 				</tr>
 			</tbody>
 		</table>
@@ -383,25 +389,27 @@ overview::setPflanze();
 				<tr><td colspan="6"><h2>Pflanzen</h2></td></tr>
 				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
-					<td class="ps-taleft" colspan="3">Referenztemperatur</td>
-					<td colspan="3">
+					<td class="ps-taleft" colspan="4">Referenztemperatur</td>
+					<td>
 						<span data-ws="WZ_PF_FE_Temp" class="ps-input">undefined</span>
 						<span data-ws="WZ_PF_FE_Temp" class="<?=wpa::indikatorTemp?>"><?=wpHTML_EMPTY?></span>
 					</td>
+					<td>
 				</tr>
 				<tr>
-					<td class="ps-taleft" colspan="3">Referenzfeuchte</td>
-					<td colspan="3">
+					<td class="ps-taleft" colspan="4">Referenzfeuchte</td>
+					<td>
 						<span data-ws="WZ_PF_FE_Hum" class="ps-input">undefined</span>
 						<span data-ws="WZ_PF_FE_Hum" class="<?=wpa::indikatorHum?>"><?=wpHTML_EMPTY?></span>
 					</td>
+					<td></td>
 				</tr>
 				<tr>
-					<td class="ps-taleft" colspan="2">Wassergewicht</td>
-					<td colspan="2">
+					<td class="ps-taleft" colspan="4">Wassergewicht</td>
+					<td>
 						<span data-ws="WZ_PF_FE_LI_Weight" class="ps-input">undefined</span>
 					</td>
-					<td colspan="2">
+					<td>
 						<a href="std.trendview.108.htm" class="ps-button ps-pluginbutton"><?= wpHTML_TREND ?></a>
 					</td>
 				</tr>
@@ -428,9 +436,70 @@ overview::setPflanze();
 					<td colspan="3">internal getShellyStatus:</td>
 					<td colspan="3"><span class="ps-button getShellyStatus">anfordern</span></td>
 				</tr-->
+				<tr><td colspan="6"><h2>Gartenhaus</h2></td></tr>
+				<tr><td colspan="6"><hr /></td></tr>
+				<tr>
+					<td class="ps-taleft" colspan="4">Füllstand:</td>
+					<td><span data-ws="GA1_FS_Vol" class="ps-input">undefined</span></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="ps-taleft" colspan="4">Füllstand Höhe (RAW):</td>
+					<td><span data-ws="GA1_FS_Raw" class="ps-input">undefined</span></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="ps-taleft" colspan="4">Füllstand Höhe (AVG):</td>
+					<td><span data-ws="GA1_FS_Avg" class="ps-input">undefined</span></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td colspan="3"></td>
+					<td><h2>Licht</h2></td>
+					<td><h2>BM</h2></td>
+					<td></td>
+				</tr>
+				<tr><td colspan="6"><hr /></td></tr>
+				<tr>
+					<td class="ps-taleft" colspan="3">Büro:</td>
+					<td><span data-ws="BU_RU_LDR" class="ps-input">undefined</span></td>
+					<td><span data-ws="BU_RU_BM" class="ps-input <?=wpa::GreyGreen ?>">undefined</span></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="ps-taleft" colspan="3">Küche:</td>
+					<td><span data-ws="KU_RU_LDR" class="ps-input">undefined</span></td>
+					<td><span data-ws="KU_RU_BM" class="ps-input <?=wpa::GreyGreen ?>">undefined</span></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="ps-taleft" colspan="3">Flur:</td>
+					<td><span data-ws="FL_RU_LDR" class="ps-input">undefined</span></td>
+					<td><span data-ws="FL_RU_BM" class="ps-input <?=wpa::GreyGreen ?>">undefined</span></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="ps-taleft" colspan="3">Bad:</td>
+					<td><span data-ws="BA_RU_LDR" class="ps-input">undefined</span></td>
+					<td><span data-ws="BA_RU_BM" class="ps-input <?=wpa::GreyGreen ?>">undefined</span></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="ps-taleft" colspan="3">Schlafzimmer:</td>
+					<td><span data-ws="SZ_RU_LDR" class="ps-input">undefined</span></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td class="ps-taleft" colspan="3">Kinderzimmer:</td>
+					<td><span data-ws="KZ_RU_LDR" class="ps-input">undefined</span></td>
+					<td></td>
+					<td></td>
+				</tr>
 			</tbody>
 		</table>
 	</div>
+<? /*
 	<div class="ps-container">
 		<table id="Energie">
 			<tbody>
@@ -443,5 +512,6 @@ overview::setPflanze();
 			</tbody>
 		</table>
 	</div>
+*/ ?>
 </div>
 

@@ -92,6 +92,7 @@ html.black { background:#606060 url(images/layout/black/main-border.png) repeat-
 .black .footermenucontent { background:transparent url(images/layout/black/footer-center.png) 0px -15px repeat-x; }
 .black .ps-input, .black .ps-input * { color:#000; }
 .black .pos, .black .ps-fontgreen { color:#0F0; }
+.black .pos, .black .ps-fontgreen.ps-input { color:#050; }
 .black .neg, .black .ps-fontred { color:#A91919; }
 .black .warn, .black .ps-fontyellow { color:#FFBF00; }
 .black .info, .black .ps-fontblue { color:#00F; }

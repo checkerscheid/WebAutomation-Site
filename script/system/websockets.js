@@ -294,6 +294,22 @@ var ws = {
 										.html(typeof(textTrue) == 'undefined' ? that.valuestring : textTrue);
 									}
 		//###################################################################################
+								} else if($(this).hasClass('pa-negisgood')) {
+									if(that.value < 0) {
+										$(this).addClass('ps-fontgreen');
+									} else {
+										$(this).removeClass('ps-fontgreen');
+									}
+									$(this).text(that.valuestring);
+		//###################################################################################
+								} else if($(this).hasClass('pa-negisbad')) {
+									if(that.value < 0) {
+										$(this).addClass('ps-fontred');
+									} else {
+										$(this).removeClass('ps-fontred');
+									}
+									$(this).text(that.valuestring);
+		//###################################################################################
 								} else if($(this).hasClass('<?=wpa::rssi ?>')) {
 									$(this).removeClass('rssi60 rssi70 rssi80 rssi90 rssi100 rssibat rssioff');
 									var rssi = -1 * that.value;
