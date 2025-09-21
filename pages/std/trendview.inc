@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.10.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 731                                                     $ #
+//# Revision     : $Rev:: 750                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: trendview.inc 731 2025-04-03 16:37:32Z                   $ #
+//# File-ID      : $Id:: trendview.inc 750 2025-09-21 14:18:43Z                   $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
@@ -144,4 +144,7 @@ $tv = new trendview('trendview');
 	<?=$tv->getJS() ?>
 <? } ?>
 	<div><?=$tv->getPageinfo()?></div>
+<? if(std::gets('type') != '') { ?>
+	<div class="ps-hidden" id="trendtype" data-type="<?= std::gets('type')?>"></div>
+<? } ?>
 </div>

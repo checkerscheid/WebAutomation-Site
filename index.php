@@ -10,9 +10,9 @@ header('Content-Type: text/html; charset=utf-8');
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 738                                                     $ #
+//# Revision     : $Rev:: 750                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: index.php 738 2025-05-03 00:04:48Z                       $ #
+//# File-ID      : $Id:: index.php 750 2025-09-21 14:18:43Z                       $ #
 //#                                                                                 #
 //###################################################################################
 /** @var array $points */
@@ -164,6 +164,7 @@ if(security::checkGroup(security::entwickler)) {
 		echo '<div><span class="ps-red">Debug Mode eingeschaltet!</span></div>';
 		std::test_array($_SESSION[SESSION_ID]);
 		std::test_array($_SERVER);
+		std::test_array($_GET);
 	}
 }
 ?>

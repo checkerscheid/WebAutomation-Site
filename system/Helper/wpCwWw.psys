@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 747                                                     $ #
+//# Revision     : $Rev:: 750                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpCwWw.psys 747 2025-07-07 14:14:56Z                     $ #
+//# File-ID      : $Id:: wpCwWw.psys 750 2025-09-21 14:18:43Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -81,7 +81,7 @@ class wpCwWw {
 	}
 	public function getColorPicker($headline = 'CW-WW') {
 ?>
-		<div class="wpCwWw ps-container" data-ip="<?=$this->ip ?>">
+		<div class="wpCwWw <?=$this->name?> ps-container" data-ip="<?=$this->ip ?>">
 			<h3><?=$headline ?></h3>
 			<hr />
 			<div class="colorPicker">

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 749                                                     $ #
+//# Revision     : $Rev:: 750                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: mudda.inc 749 2025-07-30 22:16:38Z                       $ #
+//# File-ID      : $Id:: mudda.inc 750 2025-09-21 14:18:43Z                       $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -258,7 +258,7 @@ $schlafzimmer->getStatus();
 					<tr>
 						<td colspan="2">Verbrauch / Gewinn:</td>
 						<td><span class="ps-input pa-negisgood" data-ws="EG_EZ_PSolar">undefined</span></td>
-						<td><a href="std.trendview.1647.1.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a></td>
+						<td><a href="std.trendview.1657.1.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a></td>
 					</tr>
 					<tr>
 						<td colspan="2">Zählerstand Netz (1.8.0):</td>

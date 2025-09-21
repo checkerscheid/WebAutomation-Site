@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 724                                                     $ #
+//# Revision     : $Rev:: 750                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: trendselect.js 724 2025-02-27 14:52:17Z                  $ #
+//# File-ID      : $Id:: trendselect.js 750 2025-09-21 14:18:43Z                  $ #
 //#                                                                                 #
 //###################################################################################
 ?> trendselect */

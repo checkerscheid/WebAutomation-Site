@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 741                                                     $ #
+//# Revision     : $Rev:: 750                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpClock.psys 741 2025-05-25 18:12:07Z                    $ #
+//# File-ID      : $Id:: wpClock.psys 750 2025-09-21 14:18:43Z                    $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\system;
@@ -29,12 +29,37 @@ class wpClock {
 		$WebCom = new WebCom();
 		echo $WebCom->send('SetD1MiniUrlCmd', wpClock::$ip . '%~%' . 'setClock?' . $cmd);
 	}
+	const c_simulateTime = 'SimulateTime';
+	public static function simulateTime() {
+		header(wpJSON_HEADER);
+		$hour = std::posts('hour');
+		$minute = std::posts('minute');
+		$second = std::posts('second');
+		$cmd = 'cmd=simulate&h=' . $hour . '&m=' . $minute . '&s=' . $second;
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', wpClock::$ip . '%~%' . 'setClock?' . $cmd);
+	}
+	const c_simulationOff = 'SimulateOff';
+	public static function simulationOff() {
+		header(wpJSON_HEADER);
+		$cmd = 'cmd=simulate';
+		$WebCom = new WebCom();
+		echo $WebCom->send('SetD1MiniUrlCmd', wpClock::$ip . '%~%' . 'setClock?' . $cmd);
+	}
 }
 
 switch(std::gets('param1')) {
 	//###################################################################################
 	case wpClock::c_setColor:
 		wpClock::setColor();
+		break;
+	//###################################################################################
+	case wpClock::c_simulateTime:
+		wpClock::simulateTime();
+		break;
+	//###################################################################################
+	case wpClock::c_simulationOff:
+		wpClock::simulationOff();
 		break;
 }
 

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 27.07.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 747                                                     $ #
+//# Revision     : $Rev:: 750                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pia.inc 747 2025-07-07 14:14:56Z                         $ #
+//# File-ID      : $Id:: pia.inc 750 2025-09-21 14:18:43Z                         $ #
 //#                                                                                 #
 //###################################################################################
 /**
@@ -181,6 +181,12 @@ $points = array(
 	$neoPixel->getStatus();
 	$neoPixel->getColorPicker('Lichtleiste');
 	$neoPixel->getColorScenen('Lichtleiste');
+?>
+<?
+	$cwww = new wpCwWw('172.17.80.73', 'KZ_Hasi');
+	$cwww->getStatus();
+	$cwww->setText();
+	$cwww->getColorPicker('Hasi');
 ?>
 <?
 	$cwww = new wpCwWw('172.17.80.164', 'KZ_KE');

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.10.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 724                                                     $ #
+//# Revision     : $Rev:: 750                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: trendview.js 724 2025-02-27 14:52:17Z                    $ #
+//# File-ID      : $Id:: trendview.js 750 2025-09-21 14:18:43Z                    $ #
 //#                                                                                 #
 //###################################################################################
 ?> trendview */
@@ -208,6 +208,9 @@ function loadTrendData() {
 		only1axes: $('.GroupHeadLine').attr('data-only1axes'),
 		nobr: 'true'
 	};
+	if($('#trendtype').length > 0) {
+		obj.type = $('#trendtype').attr('data-type');
+	}
 	$.post('std.trend.req', obj, function(data) {
 		plotdata = data.plotdata;
 		plotoptions = data.plotoptions;

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 30.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 730                                                     $ #
+//# Revision     : $Rev:: 750                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uglicht.inc 730 2025-03-30 13:24:07Z                     $ #
+//# File-ID      : $Id:: uglicht.inc 750 2025-09-21 14:18:43Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace pages;
@@ -26,6 +26,7 @@ const WZ_LS_NP = '172.17.80.98';
 const WZ_PF_TE = '172.17.80.106';
 const WZ_KE = '172.17.80.97';
 const KZ_NP = '172.17.80.169';
+const KZ_Hasi = '172.17.80.73';
 const KZ_KE = '172.17.80.164';
 const KU_CwWw = '172.17.80.142';
 const BU_RU = '172.17.80.125';
@@ -285,6 +286,7 @@ class uglicht {
 					<tr><td colspan="2"><hr /></td></tr>
 					<?=uglicht::NeoPixel(KZ_NP, 'KZ_NP', 'Kinderzimmer NeoPixel')?>
 					<?=uglicht::tasterShelly('Kinderzimmer', 'KZ')?>
+					<?=uglicht::CwWw(KZ_Hasi, 'KZ_Hasi', 'Kinderzimmer Hasi')?>
 					<?=uglicht::CwWw(KZ_KE, 'KZ_KE', 'Kinderzimmer Lichterkette')?>
 					<?=uglicht::tasterShelly('Bilderrahmen', 'KZ_RGB')?>
 					<?=uglicht::tasterShelly('Kinderzimmer <br class="showonportrait" />Bett', 'KZ_BE')?>

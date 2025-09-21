@@ -9,15 +9,17 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 735                                                     $ #
+//# Revision     : $Rev:: 750                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: overview.inc 735 2025-04-28 19:45:43Z                    $ #
+//# File-ID      : $Id:: overview.inc 750 2025-09-21 14:18:43Z                    $ #
 //#                                                                                 #
 //###################################################################################
 /**
  * @var Type $points
  */
 namespace pages;
+
+use DateTime;
 use system\Helper\wpa;
 use system\Helper\shelly;
 require_once 'system/Helper/wpa.psys';
@@ -280,7 +282,7 @@ overview::setPflanze();
 						<span class="ps-input pa-negisgood" data-ws="EG_EZ_PSolar">undefined</span>
 					</td>
 					<td>
-						<a href="std.trendview.1647.1.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a>
+						<a href="std.electrictrend.1657.1.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a>
 					</td>
 				</tr>
 				<tr>
@@ -314,12 +316,36 @@ overview::setPflanze();
 					<td></td>
 				</tr>
 				<tr><td colspan="6"><hr /></td></tr>
+				<tr><td colspan="6"><h2>Höchstwerte PV</h2></td></tr>
+<?
+$sql = "SELECT TOP 1 [time], [value] FROM [trendvalue] WHERE [id_trend] = 1657 ORDER BY CAST([value] AS integer)";
+$database->query($sql);
+while($erg = $database->fetch()) {
+?>
+				<tr>
+					<td colspan="3"><?=$erg['time']->format('d.m.Y H:i')?></td>
+					<td colspan="3"><?=(-1 * $erg['value'])?> kW</td>
+				</tr>
+<?
+}
+$dt = new DateTime();
+$sql = "SELECT TOP 1 [value] FROM [trendvalue] WHERE [id_trend] = 1657 AND [time] > '" . $dt->format('Y-m-d') . "T00:00:00' ORDER BY CAST([value] AS integer)";
+$database->query($sql);
+while($erg = $database->fetch()) {
+?>
+				<tr>
+					<td colspan="3">Heute</td>
+					<td colspan="3"><?=(-1 * $erg['value'])?> kW</td>
+				</tr>
+<?
+}
+?>
 				<tr>
 					<td colspan="5">
 						<span>gesamter Stromverbrauch:</span>
 					</td>
 					<td>
-						<a href="std.trendview.112.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a>
+						<a href="std.electrictrend.113.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a>
 					</td>
 				</tr>
 <? /*				

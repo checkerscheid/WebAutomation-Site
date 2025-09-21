@@ -9,10 +9,17 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 31.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 701                                                     $ #
+//# Revision     : $Rev:: 750                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: ug.css 701 2024-10-14 00:14:32Z                          $ #
+//# File-ID      : $Id:: ug.css 750 2025-09-21 14:18:43Z                          $ #
 //#                                                                                 #
 //###################################################################################
 ?> ug */
 
+#ergTemp, #ergHum { display:block; width:100%; height:300px; }
+#ug .legend > div:first-child { padding:5px; border-radius:10px;
+	box-shadow:6px 6px 8px 0px #222; }
+#ug .legend table { margin:5px; }
+#ug .legendLabel { padding:2px 5px; text-align:left; cursor:pointer; }
+#ug .legendLabel .ps-fontgrey { color:#888; }
+#ug .flex { display:flex; justify-content: center; align-items: center; }

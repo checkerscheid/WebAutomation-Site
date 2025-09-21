@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 749                                                     $ #
+//# Revision     : $Rev:: 750                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 749 2025-07-30 22:16:38Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 750 2025-09-21 14:18:43Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -117,6 +117,7 @@ const WZ_PF_TE = '172.17.80.106';
 const WZ_KE = '172.17.80.97';
 const KZ_NP = '172.17.80.169';
 const KZ_KE = '172.17.80.164';
+const KZ_Hasi = '172.17.80.73';
 const KU_CwWw = '172.17.80.142';
 const BU_RU = '172.17.80.125';
 const FL_RU = '172.17.80.128';
@@ -312,8 +313,8 @@ class uebersicht {
 						<td colspan="2"><span class="ps-input twoColumns <?=wpa::GreenYellow ?>" data-ws="BU_RU_Manual">undefined</span></td>
 					</tr>
 					<tr>
-						<td class="ps-tal"><span class="ps-button RU_Auto" data-ip="<?=BU_RU ?>" data-lichtip="172.17.80.120">Auto</span></td>
-						<td class="ps-tar"><span class="ps-button RU_Manual" data-ip="<?=BU_RU ?>" data-lichtip="172.17.80.120">Manual</span></td>
+						<td class="ps-tal"><span class="ps-button RU_Manual" data-ip="<?=BU_RU ?>" data-lichtip="172.17.80.120">Manual</span></td>
+						<td class="ps-tar"><span class="ps-button RU_Auto" data-ip="<?=BU_RU ?>" data-lichtip="172.17.80.120">Auto</span></td>
 					</tr>
 					<?=uebersicht::CwWw(BU_KE, 'BU_KE', 'Büro Event Lichterkette')?>
 				</tbody>
@@ -334,8 +335,8 @@ class uebersicht {
 						<td colspan="2"><span class="ps-input twoColumns <?=wpa::GreenYellow ?>" data-ws="FL_RU_Manual">undefined</span></td>
 					</tr>
 					<tr>
-						<td class="ps-tal"><span class="ps-button RU_Auto" data-ip="<?=FL_RU ?>">Auto</span></td>
-						<td class="ps-tar"><span class="ps-button RU_Manual" data-ip="<?=FL_RU ?>">Manual</span></td>
+						<td class="ps-tal"><span class="ps-button RU_Manual" data-ip="<?=FL_RU ?>">Manual</span></td>
+						<td class="ps-tar"><span class="ps-button RU_Auto" data-ip="<?=FL_RU ?>">Auto</span></td>
 					</tr>
 					<tr><td colspan="2"><hr /></td></tr>
 					<?=uebersicht::tasterShellyDimmer('Bad', 'BA')?>
@@ -344,6 +345,7 @@ class uebersicht {
 					<tr><td colspan="2"><hr /></td></tr>
 					<?=uebersicht::NeoPixel(KZ_NP, 'KZ_NP', 'Kinderzimmer NeoPixel')?>
 					<?=uebersicht::tasterShelly('Kinderzimmer', 'KZ')?>
+					<?=uebersicht::CwWw(KZ_Hasi, 'KZ_Hasi', 'Kinderzimmer Hasi')?>
 					<?=uebersicht::CwWw(KZ_KE, 'KZ_KE', 'Kinderzimmer Lichterkette')?>
 					<?=uebersicht::tasterShelly('Bilderrahmen', 'KZ_RGB')?>
 					<?=uebersicht::tasterShelly('Kinderzimmer <br class="showonportrait" />Bett', 'KZ_BE')?>
@@ -388,6 +390,10 @@ class uebersicht {
 					<tr><td colspan="2"><hr /></td></tr>
 					<?=uebersicht::tasterShelly('Schaltschrank', 'SS')?>
 					<?=uebersicht::tasterShelly('Warmwasser', 'WW')?>
+					<tr>
+						<td></td>
+						<td><span data-ws="SY_WW_Power" class="ps-input">undefined</span></td>
+					</tr>
 					<?=uebersicht::tasterShelly('Kühlschrank', 'KS')?>
 					<? /*=uebersicht::taster('Garten <br class="showonportrait" />Töpfe', 'GA_BT')*/?>
 					<tr><td colspan="2"><hr /></td></tr>

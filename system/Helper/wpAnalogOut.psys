@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 747                                                     $ #
+//# Revision     : $Rev:: 750                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpAnalogOut.psys 747 2025-07-07 14:14:56Z                $ #
+//# File-ID      : $Id:: wpAnalogOut.psys 750 2025-09-21 14:18:43Z                $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -101,8 +101,8 @@ class wpAnalogOut {
 						<div class="topic-slider" data-ws="<?=$this->name ?>_AnalogOutHand" data-topic="<?=$this->name ?>/settings/AnalogOut/SetHandValue"></div>
 					</td>
 				</tr>
-				<? if($admin) { ?>
 				<tr><td colspan="6"><hr /></td></tr>
+				<? if($admin) { ?>
 				<tr>
 					<td colspan="3">
 						<span class="<?=wpa::FontGreenYellow ?>" data-ws="<?=$this->name ?>_AnalogOut_Wartung">--</span>
@@ -111,6 +111,7 @@ class wpAnalogOut {
 						<span class="ps-button writeTopic" data-topic="<?=$this->name ?>/settings/AnalogOut/Wartung" data-write="1">einschalten</span>
 					</td>
 				</tr>
+				<? } ?>
 				<tr>
 					<td colspan="3">
 						<span>Betriebsmodus</span>
@@ -126,7 +127,6 @@ class wpAnalogOut {
 						<span class="ps-button writeTopic" data-topic="<?=$this->name ?>/settings/AnalogOut/Wartung" data-write="0">ausschalten</span>
 					</td-->
 				</tr>
-				<? } ?>
 			<? if($this->status->useModul->DHT11 ||
 				$this->status->useModul->DHT22 ||
 				isset($this->status->AnalogOut->CalcCycle)) {

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 25.05.2025                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 741                                                     $ #
+//# Revision     : $Rev:: 750                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpClock.js 741 2025-05-25 18:12:07Z                   $ #
+//# File-ID      : $Id:: wpClock.js 750 2025-09-21 14:18:43Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> wpClock */
@@ -102,6 +102,25 @@ var wpClock = {
 				}
 				$(this).removeClass('WriteOnly').find('a').text('');
 			}
+		});
+		$('.saveSimulateTime').on('click', () => {
+			const simulateTime = {
+				ip: wpClock.ip,
+				hour: $('.setSimulateHour').val(),
+				minute: $('.setSimulateMinute').val(),
+				second: $('.setSimulateSecond').val()
+			};
+			$.post(wpClock.target + '.SimulateTime.req', simulateTime, function(data) {
+				console.log(data);
+			}, 'json');
+		});
+		$('.setAutoTime').on('click', () => {
+			const autoTime = {
+				ip: wpClock.ip
+			};
+			$.post(wpClock.target + '.SimulateOff.req', autoTime, function(data) {
+				console.log(data);
+			}, 'json');
 		});
 	},
 	changeColorPreview: function(section) {

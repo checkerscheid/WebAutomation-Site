@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 709                                                     $ #
+//# Revision     : $Rev:: 750                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: trendselect.inc 709 2024-11-21 13:08:04Z                 $ #
+//# File-ID      : $Id:: trendselect.inc 750 2025-09-21 14:18:43Z                 $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
@@ -68,7 +68,7 @@ $database->query('SELECT [id_trendgroup], [name] FROM [trendgroup] ORDER BY [nam
 			<span class="description">Konfigurationsname:</span>
 			<input type="text" class="ps-input trendsavename" />
 			<? if(security::checkGroup(security::administrator)) { ?>
-			<span class="ps-button trendsaveadmin">Trend für alle Benutzer speichern</span>
+			<span class="ps-button trendsaveadmin">Trend für alle Benutzer speichern</span><br />
 			<? } ?>
 			<span class="ps-button trendsaveuser">Trend <?=((security::checkGroup(security::administrator)) ? 'für angemeldeten Benutzer ' : '')?>speichern</span>
 			<hr />
@@ -87,7 +87,7 @@ $database->query('SELECT [id_trendgroup], [name] FROM [trendgroup] ORDER BY [nam
 		<ul>
 <?
 	while($erg = $database->fetch()) {
-		echo '<li data-group="'.$erg['id_trendgroup'].'" class="ps-tree-parent">'.$erg['name'].'</li>';
+		echo '<li data-group="'.$erg['id_trendgroup'].'" class="ps-tree-parent"><span>'.$erg['name'].'</span></li>';
 		echo '<li data-trends="'.$erg['id_trendgroup'].'" class="p-tree-child"></li>';
 	}
 ?>

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 27.07.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 719                                                     $ #
+//# Revision     : $Rev:: 750                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pia.js 719 2025-02-13 12:27:37Z                          $ #
+//# File-ID      : $Id:: pia.js 750 2025-09-21 14:18:43Z                          $ #
 //#                                                                                 #
 //###################################################################################
 use system\std
@@ -23,8 +23,9 @@ use system\std
 ws.logEnabled = true;
 p.page.load = function() {
 	wpNeoPixel.Init('pia');
-	wpCwWw.Init('pia');
 	wpRGB.Init('pia');
+	var kette = new wpCwWw('pia', 'KZ_KE');
+	var hasi = new wpCwWw('pia', 'KZ_Hasi');
 	$('#pia').on('click', '.ps-input.ps-operable.zp', function() {
 		var dpType = 'VT_BOOL';
 		if($(this).attr('data-bm') == 'KZ_ZP_RM') dpType = 'SW';
@@ -53,7 +54,8 @@ p.page.load = function() {
 	});
 	$('.AllesAus').click(function() {
 		wpNeoPixel.setOff();
-		wpCwWw.setOff();
+		hasi.setOff();
+		kette.setOff();
 		wpRGB.setOff();
 		$.post('std.shellycom.set-relay.req', {ShellyIP: '172.17.80.160', turn: 'false'});
 		$.post('std.shellycom.set-relay.req', {ShellyIP: '172.17.80.161', turn: 'false'});
@@ -67,13 +69,16 @@ p.page.load = function() {
 		}, 'json');
 	});
 	$('.AllesSchlafen').click(function() {
-		wpNeoPixel.setColor(75, 5, 0);
-		wpCwWw.setBrightness(10, 0);
+		//wpNeoPixel.setColor(75, 5, 0);
+		wpNeoPixel.setOff();
+		hasi.setBrightness(0, 1);
+		kette.setBrightness(10, 0);
 		const h = 0;
 		const m = 30;
 		var sec = (h * 60 * 60) + (m * 60);
 		wpNeoPixel.setSleep(sec);
-		wpCwWw.setSleep(sec);
+		hasi.setSleep(sec);
+		kette.setSleep(sec);
 		wpRGB.setOff();
 		$.post('std.shellycom.set-relay.req', {ShellyIP: '172.17.80.160', turn: 'false'});
 		$.post('std.shellycom.set-relay.req', {ShellyIP: '172.17.80.161', turn: 'false'});
@@ -82,7 +87,8 @@ p.page.load = function() {
 	$('.setAllSleep').click(function() {
 		var sec = ($('.AllSleepHour').text() * 60 * 60) + ($('.AllSleepMinute').text() * 60);
 		wpNeoPixel.setSleep(sec);
-		wpCwWw.setSleep(sec);
+		hasi.setSleep(sec);
+		kette.setSleep(sec);
 		wpRGB.setSleep(sec);
 		$.post('std.shellycom.set-relay-timer.req', {ShellyIP: '172.17.80.160', sleep: sec});
 		$.post('std.shellycom.set-relay-timer.req', {ShellyIP: '172.17.80.161', sleep: sec});

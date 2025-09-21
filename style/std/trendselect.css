@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 692                                                     $ #
+//# Revision     : $Rev:: 750                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: trendselect.css 692 2024-08-07 11:51:08Z                 $ #
+//# File-ID      : $Id:: trendselect.css 750 2025-09-21 14:18:43Z                 $ #
 //#                                                                                 #
 //###################################################################################
 ?> trendselect */
@@ -19,11 +19,12 @@
 #trendselect { display:flex; }
 #trendselect span.text { line-height:30px; }
 #trendselect span.description { display:inline-block; width:140px; }
-#trendselect .trend { width:300px; }
+/*#trendselect .trend { width:300px; }*/
 #trendselect .GroupHeadLine, #trendselect .ps-tree-parent { white-space: nowrap; }
 #trendexists .ps-button { float:right; }
 #choosentrend .ps-button { float:left; }
-#trendexists, #trendconfig, #trendusercfg { float:left; border:1px solid #CCC; padding:5px; margin:10px; width:350px; }
+#trendconfig { float:left; border:1px solid #CCC; padding:5px; margin:10px; width:350px; }
+#trendexists, #trendusercfg { float:left; border:1px solid #CCC; padding:5px; margin:10px; min-width:450px; }
 #trendcontainer { padding:10px 50px; position:relative; overflow:hidden; }
 #trendlegendcontainer .selectedtime { padding-left:20px; }
 #erg { height:0px; width:100%; overflow:hidden; }

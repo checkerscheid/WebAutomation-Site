@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 04.03.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 736                                                     $ #
+//# Revision     : $Rev:: 750                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1minicfg.req 736 2025-04-30 13:48:40Z                   $ #
+//# File-ID      : $Id:: d1minicfg.req 750 2025-09-21 14:18:43Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -241,7 +241,7 @@ class d1minicfg {
 						<option value="light">light</option>
 						<option value="io">io</option>
 						<option value="heating">heating</option>
-						<option value="rfid">rfid</option>
+						<option value="com">com</option>
 					</select>
 					<input type="text" class="ps-input D1MiniCompiledFilter" placeholder="CompiledWith filter" />
 				</div>

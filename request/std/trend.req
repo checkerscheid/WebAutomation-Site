@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 749                                                     $ #
+//# Revision     : $Rev:: 750                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: trend.req 749 2025-07-30 22:16:38Z                       $ #
+//# File-ID      : $Id:: trend.req 750 2025-09-21 14:18:43Z                       $ #
 //#                                                                                 #
 //###################################################################################
 /**
@@ -314,13 +314,15 @@ function getyAxes($pointminmax) {
 			if(++$i < count($trends)) echo ',';
 		}
 	}
+	$markings = '';
+	if(std::posts('type') == 'electric') $markings = ',"markings":[{"color":"#435143","y2axis":{"to":0}},{"color":"#514343","y2axis":{"from":0}}]';
 ?>
 	],"plotoptions": {
 		"yaxes":[<?=(isset($yaxes) ? $yaxes : '')?>],
 		"xaxis":{"mode":"time","timezone":"Europe/Berlin"},
 		"selection":{"mode":"x"},
 		"crosshair":{"mode":"xy"},
-		"grid":{"hoverable":true, "clickable":true},
+		"grid":{"hoverable":true, "clickable":true<?=$markings ?>},
 		"legend": {"container":"#trendlegend"}
 	},
 	"error": "<?=$err; ?>"

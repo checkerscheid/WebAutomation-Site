@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 665                                                     $ #
+//# Revision     : $Rev:: 750                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: weather.js 665 2024-07-09 22:56:49Z                      $ #
+//# File-ID      : $Id:: weather.js 750 2025-09-21 14:18:43Z                      $ #
 //#                                                                                 #
 //###################################################################################
 ?> wetter */
@@ -75,7 +75,7 @@ p.page.load = function() {
 				hoverable: true
 			},
 			crosshair: {
-				"mode":"x"
+				"mode":"xy"
 			},
 			legend: {
 				show:true,

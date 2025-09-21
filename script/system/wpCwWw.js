@@ -9,48 +9,48 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 713                                                     $ #
+//# Revision     : $Rev:: 750                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpCwWw.js 713 2024-12-14 16:26:31Z                   $ #
+//# File-ID      : $Id:: wpCwWw.js 750 2025-09-21 14:18:43Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> wpCwWw */
 
-var wpCwWw = {
-	ip: null,
-	target:null,
-	Init: function(target) {
-		wpCwWw.ip = $('.wpCwWw').attr('data-ip');
-		wpCwWw.target = target;
-		wpCwWw.Register();
-		$('.CwWwSliderWW').slider('option', 'value', $('.CwWwWW').text());
-		$('.CwWwSliderCW').slider('option', 'value', $('.CwWwCW').text());
-	},
-	Register: function() {
-		$('.setCwWwEffect').on('click', function() {
+class wpCwWw {
+	constructor(target, name) {
+		this.name = name;
+		this.ip = $('.' + this.name).attr('data-ip');
+		console.log(this.ip);
+		this.target = target;
+		this.Register();
+		$('.' + this.name + ' .CwWwSliderWW').slider('option', 'value', $('.' + this.name + ' .CwWwWW').text());
+		$('.' + this.name + ' .CwWwSliderCW').slider('option', 'value', $('.' + this.name + ' .CwWwCW').text());
+	}
+	Register() {
+		$('.' + this.name + ' .setCwWwEffect').on('click', () => {
 			const effect = {
-				ip: wpCwWw.ip,
+				ip: this.ip,
 				id: $(this).attr('data-id')
 			};
-			$.post(wpCwWw.target + '.CwWwEffect.req', effect, function(data) {
+			$.post(this.target + '.CwWwEffect.req', effect, function(data) {
 			}, 'json');
 		});
-		$('.setCwWwOn').on('click', function() {
+		$('.' + this.name + ' .setCwWwOn').on('click', () => {
 			const on = {
-				ip: wpCwWw.ip
+				ip: this.ip
 			};
-			$.post(wpCwWw.target + '.CwWwOn.req', on, function(data) {
+			$.post(this.target + '.CwWwOn.req', on, function(data) {
 				console.log(data);
 			}, 'json');
 		});
-		$('.setCwWwOff').on('click', function() {
-			wpCwWw.setOff();
+		$('.' + this.name + ' .setCwWwOff').on('click', () => {
+			this.setOff();
 		});
-		$('.setCwWwSleep').on('click', function() {
+		$('.' + this.name + ' .setCwWwSleep').on('click', () => {
 			var sec = ($('.CwWwSleepHour').text() * 60 * 60) + ($('.CwWwSleepMinute').text() * 60);
-			wpCwWw.setSleep(sec);
+			this.setSleep(sec);
 		});
-		$('.CwWwSliderW').slider({
+		$('.' + this.name + ' .CwWwSliderW').slider({
 			min: 0,
 			max: 100,
 			range: 'min',
@@ -64,28 +64,30 @@ var wpCwWw = {
 				$(TheSpan).text(TheValue);
 			},
 			stop: function(event, ui) {
-				if($(this).hasClass('CwWwSliderWW')) {
+				if($(ui.handle.parentNode).hasClass('CwWwSliderWW')) {
+					console.log('CwWwSliderWW');
 					$('.CwWwWW').text(ui.value);
 					const ww = {
-						ip: wpCwWw.ip,
+						ip: this.ip,
 						ww: ui.value
 					};
-					$.post(wpCwWw.target + '.CwWwWW.req', ww, function(data) {
+					$.post(this.target + '.CwWwWW.req', ww, function(data) {
 					}, 'json');
 				}
-				if($(this).hasClass('CwWwSliderCW')) {
+				if($(ui.handle.parentNode).hasClass('CwWwSliderCW')) {
+					console.log('CwWwSliderCW');
 					$('.CwWwCW').text(ui.value);
 					const cw = {
-						ip: wpCwWw.ip,
+						ip: this.ip,
 						cw: ui.value
 					};
-					$.post(wpCwWw.target + '.CwWwCW.req', cw, function(data) {
+					$.post(this.target + '.CwWwCW.req', cw, function(data) {
 					}, 'json');
 				}
-				$(this).removeClass('WriteOnly').find('a').text('');
-			}
+				$('.' + this.name + ' .CwWwSliderW').removeClass('WriteOnly').find('a').html('');
+			}.bind(this)
 		});
-		$('.CwWwSliderEffectSpeed').slider({
+		$('.' + this.name + ' .CwWwSliderEffectSpeed').slider({
 			min: 1,
 			max: 9,
 			range: 'min',
@@ -99,16 +101,15 @@ var wpCwWw = {
 			},
 			stop: function(event, ui) {
 				const effectSpeed = {
-					ip: wpCwWw.ip,
+					ip: this.ip,
 					effectSpeed: ui.value
 				};
-				$.post(wpCwWw.target + '.CwWwEffectSpeed.req', effectSpeed, function(data) {
+				$.post(this.target + '.CwWwEffectSpeed.req', effectSpeed, function(data) {
 				}, 'json');
-				$(this).removeClass('WriteOnly');
-				$(this).find('a').html('');
-			}
+				$('.' + this.name + ' .CwWwSliderEffectSpeed').removeClass('WriteOnly').find('a').html('');
+			}.bind(this)
 		});
-		$('.CwWwSleepHourSlider').slider({
+		$('.' + this.name + ' .CwWwSleepHourSlider').slider({
 			min: 0,
 			max: 2,
 			orientation: 'vertical',
@@ -119,7 +120,7 @@ var wpCwWw = {
 				$(TheSpan).text(TheValue);
 			}
 		});
-		$('.CwWwSleepMinuteSlider').slider({
+		$('.' + this.name + ' .CwWwSleepMinuteSlider').slider({
 			min: 0,
 			max: 59,
 			step: 5,
@@ -131,30 +132,30 @@ var wpCwWw = {
 				$(TheSpan).text(TheValue);
 			}
 		});
-	},
-	setOff: function() {
+	}
+	setOff() {
 		const off = {
-			ip: wpCwWw.ip
+			ip: this.ip
 		};
-		$.post(wpCwWw.target + '.CwWwOff.req', off, function(data) {
+		$.post(this.target + '.CwWwOff.req', off, function(data) {
 			console.log(data);
 		}, 'json');
-	},
-	setBrightness: function(cw, ww) {
+	}
+	setBrightness(cw, ww) {
 		const cwww = {
-			ip: wpCwWw.ip,
+			ip: this.ip,
 			cw: cw, ww: ww
 		};
-		$.post(wpCwWw.target + '.CwWwCWWW.req', cwww, function(data) {
+		$.post(this.target + '.CwWwCWWW.req', cwww, function(data) {
 			console.log(data);
 		}, 'json');
-	},
-	setSleep: function(sec) {
+	}
+	setSleep(sec) {
 		const sleep = {
-			ip: wpCwWw.ip,
+			ip: this.ip,
 			sleep: sec
 		};
-		$.post(wpCwWw.target + '.CwWwSleep.req', sleep, function(data) {
+		$.post(this.target + '.CwWwSleep.req', sleep, function(data) {
 		}, 'json');
 	}
 };

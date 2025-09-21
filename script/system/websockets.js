@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 08.06.2021                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 749                                                     $ #
+//# Revision     : $Rev:: 750                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: websockets.js 749 2025-07-30 22:16:38Z                   $ #
+//# File-ID      : $Id:: websockets.js 750 2025-09-21 14:18:43Z                   $ #
 //#                                                                                 #
 //###################################################################################
 use system\Helper\wpa;

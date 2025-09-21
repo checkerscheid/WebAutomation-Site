@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 749                                                     $ #
+//# Revision     : $Rev:: 750                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.inc 749 2025-07-30 22:16:38Z                      $ #
+//# File-ID      : $Id:: d1mini.inc 750 2025-09-21 14:18:43Z                      $ #
 //#                                                                                 #
 //###################################################################################
 /** @var wpDatabase $database */
@@ -115,7 +115,7 @@ $updateChanel = array (
 	1 => 'light',
 	2 => 'io',
 	3 => 'heating',
-	4 => 'rfid'
+	4 => 'com'
 );
 foreach($updateChanel as $key => $value) {
 	echo '<option value="' . $key . '"' . (($d1Mini->FreakaZoneDevice->UpdateChanel ?? '') == $value ? ' selected="selected"' : '') . '>' . $value . '</option>';

@@ -15,6 +15,9 @@ RewriteRule ^logout\.auto\.htm$					/index.php?path=std&src=login&aktion=out&aut
 RewriteRule ^logout\.htm$						/index.php?path=std&src=login&aktion=out [L]
 RewriteRule ^login\.htm$						/index.php?path=std&src=login [L]
 
+RewriteRule ^std\.electrictrend\.(.*)\.(.*)\.htm$	/index.php?path=std&src=trendview&param1=$1&param2=$2&type=electric [L]
+RewriteRule ^std\.electrictrend\.(.*)\.htm$	/index.php?path=std&src=trendview&param1=$1&type=electric [L]
+
 RewriteRule ^std\.(.*)\.(.*)\.(.*)\.htm$		/index.php?path=std&src=$1&param1=$2&param2=$3 [L]
 RewriteRule ^std\.(.*)\.(.*)\.htm$				/index.php?path=std&src=$1&param1=$2 [L]
 RewriteRule ^std\.(.*)\.htm$					/index.php?path=std&src=$1 [L]

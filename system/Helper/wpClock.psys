@@ -9,12 +9,14 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 25.05.2025                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 744                                                     $ #
+//# Revision     : $Rev:: 750                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpClock.psys 744 2025-05-30 11:17:23Z                 $ #
+//# File-ID      : $Id:: wpClock.psys 750 2025-09-21 14:18:43Z                 $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
+
+use DateTime;
 use system\WebCom;
 
 class wpClock {
@@ -151,6 +153,34 @@ class wpClock {
 				<div class="ClockSlider ClockSliderG ClockSlider5G wpSlider"></div>
 				<div class="ClockSlider ClockSliderB ClockSlider5B wpSlider"></div>
 				<span class="ps-button saveClockColor" data-section="5">save</span>
+			</div>
+			<hr />
+			<div>
+				<h3>Simulation</h3>
+				<span>Uhrzeit:</span>
+				<select class="ps-input setSimulateHour">
+					<? for($i = 0; $i < 24; $i++) { 
+						$sel = (new DateTime())->format('H') == $i ? ' selected="selected"' : '';
+					?>
+						<option value="<?=$i ?>"<?=$sel ?>><?=$i ?></option>
+					<? } ?>
+				</select>:
+				<select class="ps-input setSimulateMinute">
+					<? for($i = 0; $i < 60; $i++) { 
+						$sel = (new DateTime())->format('i') == $i ? ' selected="selected"' : '';
+					?>
+						<option value="<?=$i ?>"<?=$sel ?>><?=$i ?></option>
+					<? } ?>
+				</select>:
+				<select class="ps-input setSimulateSecond">
+					<? for($i = 0; $i < 60; $i++) { 
+						$sel = (new DateTime())->format('s') == $i ? ' selected="selected"' : '';
+					?>
+						<option value="<?=$i ?>"<?=$sel ?>><?=$i ?></option>
+					<? } ?>
+				</select><br />
+				<span class="ps-button saveSimulateTime">simulieren</span>
+				<span class="ps-button setAutoTime">Automatik</span>
 			</div>
 		</div>
 <?
