@@ -32,12 +32,31 @@ $points = array(
 );
 class overview {
 	private static $Licht = array(
+		'WZ_LI'			=> 'Wohnzimmer Licht',
+		'WZ_LI_LS'		=> 'Wohnzimmer Lautsprecher',
+		'WZ_LI_SL'		=> 'Wohnzimmer Stehlampe',
+		'WZ_LI_HZ'		=> 'Wohnzimmer Herz',
+		'WZ_LI_KA'		=> 'Wohnzimmer Kamin',
+		'WZ_LI_LL'		=> 'Wohnzimmer Lichtleiste',
+		'SZ_LI'			=> 'Schlafzimmer Licht',
+		'BU_LI'			=> 'Büro Licht',
+		'KU_LI'			=> 'Küche Licht',
+		'KU_LI_KA'		=> 'Küche Kaffee',
+		'FL_LI'			=> 'Flur Licht',
+		'BA_LI'			=> 'Bad Licht',
 		'BA_SP'			=> 'Bad Spiegelbeleuchtung',
+		'KZ_LI'			=> 'Kinderzimmer Licht',
 		'KZ_BE'			=> 'Kinderzimmer Bett',
+		'KZ_LI_NL'		=> 'Kinderzimmer Nachtlicht',
+		'KZ_RGB'		=> 'Kinderzimmer Bilderrahmen',
 		'Testboard'		=> 'Testboard',
+		'KE'			=> 'Keller Licht',
+		'GA_LI'			=> 'Garten Licht',
 		'GA_BT'			=> 'Blumentöpfe'
 	);
 	private static $SystemRelay = array(
+		'EN_FR'			=> 'Fricke',
+		'EN_SRV'		=> 'Server',
 		'SY_SS'			=> 'Schaltschrank',
 		'SY_WW'			=> 'Warmwasser',
 		'SY_KS'			=> 'Kühlschrank'
@@ -269,7 +288,7 @@ overview::setPflanze();
 		</table>
 	</div>
 	<div class="ps-container">
-		<table id="LichtEnergie">
+		<table id="Energie">
 			<tbody>
 				<tr>
 					<td colspan="6">
@@ -359,9 +378,6 @@ while($erg = $database->fetch()) {
 				<tr><td colspan="6"><a class="ps-button" href="std.d1mini.BA_Lue.htm">Bad Lüfter</a></td></tr>
 				<tr><td colspan="6"><a class="ps-button" href="std.d1mini.UG_EMeter.htm">Elektrozähler</a></td></tr>
 */ ?>
-				<tr><td colspan="6"><h2>Energie</h2></td></tr>
-				<tr><td colspan="6"><hr /></td></tr>
-				<?=overview::getPower() ?>
 				<tr><td colspan="6"><h2>Energiezähler</h2></td></tr>
 				<tr><td colspan="6"><hr /></td></tr>
 				<tr>
@@ -405,6 +421,16 @@ while($erg = $database->fetch()) {
 					<td><span data-ws="SY_EZ_voltage" class="ps-input">undefined</span></td>
 					<td><span data-ws="SY_SRV_voltage" class="ps-input">undefined</span></td>
 					<td></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="ps-container">
+		<table id="LichtEnergie">
+			<tbody>	
+				<tr><td colspan="6"><h2>Licht Energie</h2></td></tr>
+				<tr><td colspan="6"><hr /></td></tr>
+				<?=overview::getPower() ?>
 				</tr>
 			</tbody>
 		</table>

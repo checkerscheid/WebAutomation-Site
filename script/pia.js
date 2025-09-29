@@ -76,7 +76,7 @@ p.page.load = function() {
 		const h = 0;
 		const m = 30;
 		var sec = (h * 60 * 60) + (m * 60);
-		wpNeoPixel.setSleep(sec);
+		//wpNeoPixel.setSleep(sec);
 		hasi.setSleep(sec);
 		kette.setSleep(sec);
 		wpRGB.setOff();

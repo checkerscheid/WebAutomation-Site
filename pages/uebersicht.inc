@@ -69,6 +69,8 @@ $points = array(
 	'LI_BM_GA'			=> '_GA_BM_LI',
 	'LI_BM_GA_BT'		=> '_GA_BM_LI_BT',
 	'LI_BM_GA_TR'		=> '_GA_BM_LI_TR',
+	'LI_BM_FR'			=> 'EN_FR',	
+	'LI_BM_SRV'			=> 'EN_SRV',
 	'LI_BM_SS'			=> '_SY_SS',
 	'LI_BM_WW'			=> '_SY_WW',
 	'LI_BM_KS'			=> '_SY_KS',
@@ -388,13 +390,31 @@ class uebersicht {
 						<td><span class="ps-input" data-ws="_SS_RT">undefined</span></td>
 					</tr>
 					<tr><td colspan="2"><hr /></td></tr>
+					<?=uebersicht::tasterShelly('Server', 'SRV')?>
+					<tr>
+						<td><a href="std.trendview.1664.1.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a></td>
+						<td><span data-ws="EN_SRV_Power" class="ps-input">undefined</span></td>
+					</tr>
+					<?=uebersicht::tasterShelly('Fricke', 'FR')?>
+					<tr>
+						<td><a href="std.trendview.1663.1.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a></td>
+						<td><span data-ws="EN_FR_Power" class="ps-input">undefined</span></td>
+					</tr>
 					<?=uebersicht::tasterShelly('Schaltschrank', 'SS')?>
+					<tr>
+						<td><a href="std.trendview.1171.1.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a></td>
+						<td><span data-ws="SY_SS_Power" class="ps-input">undefined</span></td>
+					</tr>
 					<?=uebersicht::tasterShelly('Warmwasser', 'WW')?>
 					<tr>
-						<td></td>
+						<td><a href="std.trendview.1174.1.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a></td>
 						<td><span data-ws="SY_WW_Power" class="ps-input">undefined</span></td>
 					</tr>
 					<?=uebersicht::tasterShelly('Kühlschrank', 'KS')?>
+					<tr>
+						<td><a href="std.trendview.1177.1.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a></td>
+						<td><span data-ws="SY_KS_Power" class="ps-input">undefined</span></td>
+					</tr>
 					<? /*=uebersicht::taster('Garten <br class="showonportrait" />Töpfe', 'GA_BT')*/?>
 					<tr><td colspan="2"><hr /></td></tr>
 					<tr><td colspan="2"><h2>Mudda</h2></td></tr>

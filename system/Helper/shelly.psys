@@ -39,24 +39,25 @@ class shelly {
 	const PM_Mini_3 = 'Mini1PMG3';
 	/** Steckdose */
 	const PLG = 'SHPLG-S';
+	const PLG3 = 'PlugSG3';
 	/** Energiezähler */
 	const EM = 'SHEM';
 	/** Dimmer */
 	const DIMMER = 'SHDM-1';
-	/** Dimmer Version 2 */
 	const DIMMER2 = 'SHDM-2';
+	/** RGB */
 	const RGBW = 'SHRGBW';
 	const RGBW2 = 'SHRGBW2';
 	/** Batteriebetrieben */
 	const bat = array(self::DW, self::HT, self::HT_Plus, self::HT_3);
 	/** Relay */
-	const relay = array(self::SW, self::PM, self::PM_Plus, self::PM2_Plus, self::PM_Mini, self::PM_Mini_3, self::PLG, self::EM);
+	const relay = array(self::SW, self::PM, self::PM_Plus, self::PM2_Plus, self::PM_Mini, self::PM_Mini_3, self::PLG, self::PLG3, self::EM);
 	/** light */
 	const light = array(self::DIMMER, self::DIMMER2, self::RGBW, self::RGBW2);
 	/** Generation 1 */
 	const gen1 = array(self::SW, self::PM, self::PLG, self::DIMMER, self::DIMMER2, self::RGBW, self::RGBW2, self::EM);
 	/** Generation 2 */
-	const gen2 = array(self::PM_Plus, self::PM2_Plus, self::PM_Mini, self::PM_Mini_3);
+	const gen2 = array(self::PM_Plus, self::PM2_Plus, self::PM_Mini, self::PM_Mini_3, self::PLG3);
 	/** Shelly ist Batteriebetrieben */
 	public static function hasBat($type) {
 		$type = self::getTypeFromJson($type);

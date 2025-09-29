@@ -504,13 +504,13 @@ var shelly = {
 						var id = $(this).attr('data-id');
 						var ip = $(this).find('.sh-ip').text();
 						var shType = $(this).find('.sh-type').text();
-						if(shType == 'SHSW-PM' || shType == 'SHDM-1' || shType == 'SHDM-2' || shType == 'SHPLG-S') {
+						if(shType == 'SHSW-PM' || shType == 'SHDM-1' || shType == 'SHDM-2' || shType == 'SHPLG-S' || shType == 'SHRGBW2' || shType == 'SHEM') {
 							$.post('std.shellycom.get-update-signal.req', {ShellyIP:ip}, function() {
 								$('[data-id="' + id + '"] .ps-update div').html(getUpdate());
 								$('[data-id="' + id + '"] .ps-signal div').html(getSignal());
 								$('[data-id="' + id + '"] .ps-names div').html(getNames());
 							}, 'script');
-						} else if(shType == 'Plus1PM' || shType == 'Mini1PMG3') {
+						} else if(shType == 'Plus1PM' || shType == 'Mini1PMG3' || shType == 'PlugSG3') {
 							$.post('std.shellycom.get-update-signal-2.req', {ShellyIP:ip}, function() {
 								$('[data-id="' + id + '"] .ps-update div').html(getUpdate());
 								$('[data-id="' + id + '"] .ps-signal div').html(getSignal());

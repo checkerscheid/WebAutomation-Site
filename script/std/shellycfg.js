@@ -530,7 +530,7 @@ var shelly = {
 								$('[data-id="' + id + '"] .ps-signal div').html(data.signal);
 								$('[data-id="' + id + '"] .ps-names div').html(data.names);
 							}, 'json');
-						} else if(shType == 'Plus1PM' || shType == 'Mini1PMG3') {
+						} else if(shType == 'Plus1PM' || shType == 'Mini1PMG3' || shType == 'PlugSG3') {
 							$.post('std.shellycom.get-update-signal-2.req', {ShellyIP:ip}, function(data) {
 								$('[data-id="' + id + '"] .ps-update div').html(data.update);
 								$('[data-id="' + id + '"] .ps-signal div').html(data.signal);
