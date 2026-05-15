@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 673                                                     $ #
+//# Revision     : $Rev:: 752                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpDatabase.psys 673 2024-07-12 13:22:12Z                 $ #
+//# File-ID      : $Id:: wpDatabase.psys 752 2026-01-15 08:48:48Z                 $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -92,6 +92,9 @@ class wpDatabase {
 	 */
 	public function fetch() {
 		return sqlsrv_fetch_array($this->result);
+	}
+	public function pointer_reset() {
+		sqlsrv_fetch($this->result, SQLSRV_SCROLL_ABSOLUTE, -1);
 	}
 	/**
 	 * Gibt die Anzahl der Zeilen des letzen query zurueck

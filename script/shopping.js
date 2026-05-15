@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 08.11.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 733                                                     $ #
+//# Revision     : $Rev:: 752                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: shopping.js 733 2025-04-16 03:01:56Z                     $ #
+//# File-ID      : $Id:: shopping.js 752 2026-01-15 08:48:48Z                     $ #
 //#                                                                                 #
 //###################################################################################
 ?> shopping */
@@ -19,6 +19,7 @@
 ws.logEnabled = true;
 var gekaufteAusblenden = false;
 p.page.load = function() {
+	gekaufteAusblenden = $('.gekaufte').hasClass('checked');
 	$('#shopping').on('click', '.gekaufte', function() {
 		const list = {
 			id: $(this).attr('data-idList'),
@@ -39,6 +40,7 @@ p.page.load = function() {
 			$.each($('ul.ulGroups'), function() { $(this).removeClass('ps-hidden') });
 			$(this).parents('div[data-idList]:first').find('.liproduct').removeClass('ps-hidden');
 		}
+		$.post('std.setsession.req', { key: 'SHOPPED', value: list.checked });
 	});
 	$('#shopping').on('click', '.groupproduct', function() {
 		const that = $(this);
@@ -49,11 +51,6 @@ p.page.load = function() {
 			idProduct: $(product).attr('data-idProduct')
 		};
 		console.log(prod);
-		// if(prod.checked && gekaufteAusblenden) {
-		// 	$(that).addClass('ps-hidden');
-		// 	const ul = $(that).parents('ul:first');
-		// 	CheckGroupHide(ul);
-		// }
 		$.post('shopping.setGroupProductChecked.req', prod, function(data) {
 		});
 	});
@@ -66,11 +63,6 @@ p.page.load = function() {
 			idProduct: $(product).attr('data-idProduct')
 		};
 		console.log(prod);
-		// if(prod.checked && gekaufteAusblenden) {
-		// 	$(that).addClass('ps-hidden');
-		// 	const ul = $(that).parents('ul:first');
-		// 	CheckGroupHide(ul);
-		// }
 		$.post('shopping.setProductChecked.req', prod, function(data) {
 			if(data.erg != 'S_OK') {
 				$(product).toggleClass('checked');
@@ -101,7 +93,9 @@ function SetShoppingChecked(idGroup, idProduct, isChecked) {
 		}
 	}
 	ul = $(product).parents('ul:first');
-	CheckGroupHide(ul);
+	if(gekaufteAusblenden) {
+		CheckGroupHide(ul);
+	}
 }
 function CheckGroupHide(ul) {
 	const check = $(ul).find('.ps-checkbox').length;
@@ -112,6 +106,5 @@ function CheckGroupHide(ul) {
 	} else {
 		$(ul).removeClass('ps-hidden');
 	}
-
 }
 

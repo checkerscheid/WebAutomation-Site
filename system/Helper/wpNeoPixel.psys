@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 740                                                     $ #
+//# Revision     : $Rev:: 751                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpNeoPixel.psys 740 2025-05-25 18:10:37Z                 $ #
+//# File-ID      : $Id:: wpNeoPixel.psys 751 2025-10-13 06:14:37Z                 $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -74,7 +74,7 @@ class wpNeoPixel {
 		//$br = $this->status->NeoPixel->Brightness ?? 0;
 		$pc = $this->status->NeoPixel->PixelCount ?? 0;
 ?>
-		<div class="wpNeoPixel ps-container" data-ip="<?=$this->ip ?>">
+		<div class="wpNeoPixel <?=$this->name?> ps-container" data-ip="<?=$this->ip ?>">
 <?
 		if(!isset($this->status)) {
 			echo '<h1 class="ps-fontred">--- OFFLINE ---</h1><hr />';
@@ -108,7 +108,7 @@ class wpNeoPixel {
 					<hr />
 					<div class="ps-flex-container">
 						<div class="pickerContainer">
-							<canvas id="picker" width="200" height="200"></canvas>
+							<canvas id="<?=$this->name?>" width="200" height="200"></canvas>
 						</div>
 						<div>
 							<span class="ps-button setNeoPixelOffRunner">Aus Runner</span><br />
@@ -130,11 +130,11 @@ class wpNeoPixel {
 					</div>
 				</div>
 				<hr />
-				<? if($this->status->NeoPixel->useWW) { ?>
+				<? if($this->status->NeoPixel->useWW ?? false) { ?>
 				<h3>Warmweiß (<span class="NeoPixelWW" data-ws="<?=$this->name ?>_WW">--</span> %)</h3>
 				<div class="NeoPixelSliderW NeoPixelSliderWW wpSlider" data-ws="<?=$this->name ?>_WW"></div>
 				<? } ?>
-				<? if($this->status->NeoPixel->useCW) { ?>
+				<? if($this->status->NeoPixel->useCW ?? false) { ?>
 				<h3>Kaltweiß (<span class="NeoPixelCW" data-ws="<?=$this->name ?>_CW">--</span> %)</h3>
 				<div class="NeoPixelSliderW NeoPixelSliderCW wpSlider" data-ws="<?=$this->name ?>_CW"></div>
 				<? } ?>
@@ -142,8 +142,8 @@ class wpNeoPixel {
 		if(security::checkGroup(security::entwickler)) {
 ?>
 				<div>
-					<span class="ps-button changeWW <?=$this->status->NeoPixel->useWW == 1 ? 'ps-green' : 'ps-grey' ?>">use WW</span>
-					<span class="ps-button changeCW <?=$this->status->NeoPixel->useCW == 1 ? 'ps-green' : 'ps-grey' ?>">use CW</span>
+					<span class="ps-button changeWW <?=$this->status->NeoPixel->useWW ?? 0 == 1 ? 'ps-green' : 'ps-grey' ?>">use WW</span>
+					<span class="ps-button changeCW <?=$this->status->NeoPixel->useCW ?? 0 == 1 ? 'ps-green' : 'ps-grey' ?>">use CW</span>
 				</div>
 <?
 		}
@@ -154,7 +154,7 @@ class wpNeoPixel {
 	}
 	public function getColorScenen($headline = 'NeoPixel') {
 ?>
-		<div class="wpNeoPixel ps-container" data-ip="<?=$this->ip ?>">
+		<div class="wpNeoPixel <?=$this->name?>_scene ps-container" data-ip="<?=$this->ip ?>">
 <?
 		if(!isset($this->status)) {
 			echo '<h1 class="ps-fontred">--- OFFLINE ---</h1><hr />';

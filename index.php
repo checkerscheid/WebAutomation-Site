@@ -10,9 +10,9 @@ header('Content-Type: text/html; charset=utf-8');
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 750                                                     $ #
+//# Revision     : $Rev:: 751                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: index.php 750 2025-09-21 14:18:43Z                       $ #
+//# File-ID      : $Id:: index.php 751 2025-10-13 06:14:37Z                       $ #
 //#                                                                                 #
 //###################################################################################
 /** @var array $points */
@@ -153,6 +153,10 @@ if(security::checkGroup(security::entwickler) && wpInit::$SetAlarmLink) {
 		$sql = "UPDATE [alarm] SET [link] = '".substr($_SERVER['REQUEST_URI'],1)."' WHERE ISNULL([link], '') = '' AND [id_alarm] IN (SELECT [a].[id_alarm] FROM [dp] INNER JOIN [alarm] [a] ON [dp].[id_dp] = [a].[id_dp] WHERE" . $s_where . ")";
 		//echo $sql;
 		$database->query($sql);
+		$affected = $database->hasRows();
+		if($affected > 0) {
+			echo '<div class="SetAlarmLinkInfo">Es wurden ' . $affected . ' Alarme mit dem Alarmlink <span class="ps-bold">' . substr($_SERVER['REQUEST_URI'], 1) . '</span> versehen!</div>';
+		}
 	}
 }
 ?>

@@ -9,31 +9,33 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 706                                                     $ #
+//# Revision     : $Rev:: 751                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpAnalogOut.js 706 2024-11-04 15:08:34Z              $ #
+//# File-ID      : $Id:: wpAnalogOut.js 751 2025-10-13 06:14:37Z              $ #
 //#                                                                                 #
 //###################################################################################
 ?> wpCwWw */
 
-var wpAnalogOut = {
-	ip: null,
-	target:null,
-	Init: function(target) {
-		wpAnalogOut.ip = $('.wpAnalogOut').attr('data-ip');
-		wpAnalogOut.target = target;
-		wpAnalogOut.Register();
-	},
-	Register: function() {
-		$('.setAnalogOutPidType').on('click', function() {
+class wpAnalogOut {
+	name = null;
+	ip = null;
+	target = null;
+	constructor(target, name) {
+		this.name = name;
+		this.ip = $('.' + this.name + '.wpAnalogOut').attr('data-ip');
+		this.target = target;
+		this.Register();
+	}
+	Register() {
+		$('.' + this.name + ' .setAnalogOutPidType').on('click', () => {
 			const pidtype = {
-				ip: wpAnalogOut.ip,
-				id: $('.AnalogOutPidType').val()
+				ip: this.ip,
+				id: $('.' + this.name + ' .AnalogOutPidType').val()
 			};
-			$.post(wpAnalogOut.target + '.AnalogOutPidType.req', pidtype, function(data) {
+			$.post(this.target + '.AnalogOutPidType.req', pidtype, function(data) {
 			}, 'json');
 		});
-		$('.wpAnalogOut').on('click', '.ps-wsparam', function() {
+		$('.' + this.name + ' .wpAnalogOut').on('click', '.ps-wsparam', function() {
 			var obj = {
 				name: $(this).attr('data-ws'),
 				headline: $(this).attr('data-popup')

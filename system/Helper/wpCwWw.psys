@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 750                                                     $ #
+//# Revision     : $Rev:: 752                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpCwWw.psys 750 2025-09-21 14:18:43Z                     $ #
+//# File-ID      : $Id:: wpCwWw.psys 752 2026-01-15 08:48:48Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -44,15 +44,20 @@ class wpCwWw {
 		//$this->getPixelStatus();
 	}
 	public function getStatus() {
+		$returns = true;
 		$WebCom = new WebCom();
 		$res = $WebCom->send('getD1MiniStatus', $this->ip);
 		$jsonres = \json_decode($res);
 		if(\json_last_error() != JSON_ERROR_NONE) {
-			echo \json_last_error_msg();
+			echo '<!-- Json Error: ' . \json_last_error_msg() . '-->';
 			echo $res;
+			$returns = false;
 		}
-		$this->status = $jsonres->FreakaZoneDevice;
+		if(isset($jsonres->FreakaZoneDevice)) {
+			$this->status = $jsonres->FreakaZoneDevice;
+		}
 		//std::test_array($this->status, 'getStatus');
+		return $returns;
 	}
 	public function getStatusFromJson($json) {
 		$this->status = $json;
@@ -82,6 +87,11 @@ class wpCwWw {
 	public function getColorPicker($headline = 'CW-WW') {
 ?>
 		<div class="wpCwWw <?=$this->name?> ps-container" data-ip="<?=$this->ip ?>">
+<?
+		if(!isset($this->status)) {
+			echo '<h1 class="ps-fontred">--- OFFLINE ---</h1><hr />';
+		}
+?>
 			<h3><?=$headline ?></h3>
 			<hr />
 			<div class="colorPicker">

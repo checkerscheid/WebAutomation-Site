@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 738                                                     $ #
+//# Revision     : $Rev:: 751                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: mudda.js 738 2025-05-03 00:04:48Z                        $ #
+//# File-ID      : $Id:: mudda.js 751 2025-10-13 06:14:37Z                        $ #
 //#                                                                                 #
 //###################################################################################
 ?> mudda */
@@ -24,7 +24,7 @@ timezoneJS.timezone.defaultZoneFile = ['europe.txt'];
 timezoneJS.timezone.init({async: true});
 
 p.page.load = function() {
-	wpAnalogOut.Init('mudda');
+	var sz1_vt = new wpAnalogOut('mudda', 'SZ1_VT');
 	$('#mudda').on('click', '.pa-EinAus.bedienbar', function() {
 		var headline = $(this).attr('data-popup');
 		var id = $(this).attr('id');

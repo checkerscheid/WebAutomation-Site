@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 08.06.2021                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 750                                                     $ #
+//# Revision     : $Rev:: 752                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: websockets.js 750 2025-09-21 14:18:43Z                   $ #
+//# File-ID      : $Id:: websockets.js 752 2026-01-15 08:48:48Z                   $ #
 //#                                                                                 #
 //###################################################################################
 use system\Helper\wpa;
@@ -277,12 +277,89 @@ var ws = {
 											.html(typeof(textTrue) == 'undefined' ? that.valuestring : textTrue);
 									}
 
+
+		//###################################################################################
+								} else if($(this).hasClass('<?=wpa::FontOnlyGreyGreen ?>')) {
+									if(that.value == 'False' || that.value == '0' || that.value == 'Off') {
+										$(this).removeClass('ps-fontgreen');
+									} else {
+										$(this).addClass('ps-fontgreen');
+									}
+		//###################################################################################
+								} else if($(this).hasClass('<?=wpa::FontOnlyGreyYellow ?>')) {
+									if(that.value == 'False' || that.value == '0' || that.value == 'Off') {
+										$(this).removeClass('ps-fontyellow');
+									} else {
+										$(this).addClass('ps-fontyellow');
+									}
+		//###################################################################################
+								} else if($(this).hasClass('<?=wpa::FontOnlyGreyRed ?>')) {
+									if(that.value == 'False' || that.value == '0' || that.value == 'Off') {
+										$(this).removeClass('ps-fontred');
+									} else {
+										$(this).addClass('ps-fontred');
+									}
+		//###################################################################################
+								} else if($(this).hasClass('<?=wpa::FontOnlyGreenYellow ?>')) {
+									if(that.value == 'False' || that.value == '0' || that.value == 'Off') {
+										$(this).removeClass('ps-fontyellow').addClass('ps-fontgreen');
+									} else {
+										$(this).removeClass('ps-fontgreen').addClass('ps-fontyellow');
+									}
+		//###################################################################################
+								} else if($(this).hasClass('<?=wpa::FontOnlyGreenRed ?>')) {
+									if(that.value == 'False' || that.value == '0' || that.value == 'Off') {
+										$(this).removeClass('ps-fontred').addClass('ps-fontgreen');
+									} else {
+										$(this).removeClass('ps-fontgreen').addClass('ps-fontred');
+									}
+		//###################################################################################
+								} else if($(this).hasClass('<?=wpa::FontOnlyRedGreen ?>')) {
+									if(that.value == 'False' || that.value == '0' || that.value == 'Off') {
+										$(this).removeClass('ps-fontgreen').addClass('ps-fontred');
+									} else {
+										$(this).removeClass('ps-fontred').addClass('ps-fontgreen');
+									}
+		//###################################################################################
+								} else if($(this).hasClass('<?=wpa::FontOnlyYellowGreen ?>')) {
+									if(that.value == 'False' || that.value == '0' || that.value == 'Off') {
+										$(this).removeClass('ps-fontgreen').addClass('ps-fontyellow');
+									} else {
+										$(this).removeClass('ps-fontyellow').addClass('ps-fontgreen');
+									}
+		//###################################################################################
+								} else if($(this).hasClass('<?=wpa::FontOnlyBlueYellow ?>')) {
+									if(that.value == 'False' || that.value == '0' || that.value == 'Off') {
+										$(this).removeClass('ps-fontyellow').addClass('ps-fontblue');
+									} else {
+										$(this).removeClass('ps-fontblue').addClass('ps-fontyellow');
+									}
+		//###################################################################################
+								} else if($(this).hasClass('<?=wpa::FontOnlyYellowBlue ?>')) {
+									if(that.value == 'False' || that.value == '0' || that.value == 'Off') {
+										$(this).removeClass('ps-fontblue').addClass('ps-fontyellow');
+									} else {
+										$(this).removeClass('ps-fontyellow').addClass('ps-fontblue');
+									}
+
 		//###################################################################################
 								} else if($(this).hasClass('pa-hide')) {
 									if(that.value == 'False' || that.value == '0' || that.value == 'Off') {
 										$(this).addClass('ps-hidden');
 									} else {
 										$(this).removeClass('ps-hidden');
+									}
+		//###################################################################################
+								} else if($(this).hasClass('pa-slider')) {
+									if(!$(this).hasClass('WriteOnly')) {
+										$(this).slider('option', 'value', parseInt(that.value));
+										$(this).find('.ui-slider-handle').attr('title', that.valuestring);
+										if($(this).hasClass('pa-licht')) {
+											$(this).find('.ui-slider-handle').css({
+												boxShadow: '0px 0px 2px 2px rgba(255,200,0,' +
+													(parseInt(that.value) / 100) + ')'
+											});
+										}
 									}
 		//###################################################################################
 								} else if($(this).hasClass('pa-heizenModus')) {
@@ -309,6 +386,14 @@ var ws = {
 										$(this).removeClass('ps-fontred');
 									}
 									$(this).text(that.valuestring);
+		//###################################################################################
+								} else if($(this).hasClass('pa-playalarmsound')) {
+									$(this).text(that.valuestring);
+									var min = $(this).attr('data-min');
+									if(min == null) min = 10;
+									if(parseInt(that.value) < parseInt(min)) {
+										alarmsound.play();
+									}
 		//###################################################################################
 								} else if($(this).hasClass('<?=wpa::rssi ?>')) {
 									$(this).removeClass('rssi60 rssi70 rssi80 rssi90 rssi100 rssibat rssioff');

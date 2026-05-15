@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 720                                                     $ #
+//# Revision     : $Rev:: 754                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: security.psys 720 2025-02-16 01:24:20Z                   $ #
+//# File-ID      : $Id:: security.psys 754 2026-05-06 10:11:24Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -261,7 +261,7 @@ class security {
 	 * @param number $days
 	 */
 	static public function setCookie($key, $value, $days = 30) {
-		setcookie($key, $value, time() + (60 * 60 * 24 * $days));
+		setcookie($key, $value, time() + (60 * 60 * 24 * $days), secure: true, httponly: true);
 	}
 	/**
 	 *
@@ -271,7 +271,7 @@ class security {
 	 */
 	static public function renewCookie($key, $days = 30) {
 		$value = std::arrays($_COOKIE, $key);
-		setcookie($key, $value, time() + (60 * 60 * 24 * $days));
+		setcookie($key, $value, time() + (60 * 60 * 24 * $days), secure: true, httponly: true);
 		return $value;
 	}
 	/**
@@ -279,7 +279,7 @@ class security {
 	 * @param $key
 	 */
 	static public function unsetCookie($key) {
-		setcookie($key, '', time() - 3600);
+		setcookie($key, '', time() - 3600, secure: true, httponly: true);
 	}
 	/**
 	 *

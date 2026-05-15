@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 16.12.2019                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 730                                                     $ #
+//# Revision     : $Rev:: 752                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: shellycom.req 730 2025-03-30 13:24:07Z                   $ #
+//# File-ID      : $Id:: shellycom.req 752 2026-01-15 08:48:48Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -33,10 +33,12 @@ class shellycom {
 	const c_get_out = 'get-out';
 	const c_get_timerisset = 'get-timerisset';
 	const c_get_info = 'get-info';
+	const c_get_coiot = 'get-coiot';
 	const c_get_signal = 'get-signal';
 	const c_get_update_signal = 'get-update-signal';
 	const c_get_update_signal_2 = 'get-update-signal-2';
 	const c_get_onoff = 'get-onoff';
+	const c_get_brightness = 'get-brightness';
 	const c_get_temp = 'get-temp';
 	const c_get_hum = 'get-hum';
 	const c_get_window = 'get-window';
@@ -244,6 +246,12 @@ switch(std::gets('param1')) {
 		//std::test_array($settings);
 		break;
 	//###################################################################################
+	case shellycom::c_get_coiot:
+		header(wpJSON_HEADER);
+		$WebCom = new WebCom();
+		echo $WebCom->send('GetShellyCoIoTDescription', $ShellyIP);
+		break;
+	//###################################################################################
 	case shellycom::c_get_signal:
 		$status = json_decode(file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/status'));
 		echo '<div class="tr"><div class="td">WLAN:</div><div class="td">' . $status->wifi_sta->rssi . '</div></div>';
@@ -311,6 +319,10 @@ switch(std::gets('param1')) {
 		//###################################################################################
 	case shellycom::c_get_onoff:
 		chooseDP('onoff');
+		break;
+		//###################################################################################
+	case shellycom::c_get_brightness:
+		chooseDP('brightness');
 		break;
 		//###################################################################################
 	case shellycom::c_get_temp:
@@ -389,8 +401,8 @@ switch(std::gets('param1')) {
 	case shellycom::c_set_relay:
 		$turn = strtolower(std::posts('turn'));
 		if($turn == 'true' || $turn = 'false') {
-			$http = file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/relay/0?turn=' . ($turn == 'true' ? 'on' : 'off'));
-			echo $http;
+			$WebCom = new WebCom();
+			echo $WebCom->send('SetShellyUrlCmd', $ShellyIP . '%~%' . 'relay/0?turn=' . ($turn == 'true' ? 'on' : 'off'));
 		} else {
 			echo std::test_array($_POST, 'ERROR');
 		}
@@ -413,8 +425,8 @@ switch(std::gets('param1')) {
 		if($brightnessstr != '' || $turnstr != '') {
 			if($brightnessstr != '' && $turnstr != '') $urlext = $brightnessstr . '&' . $turnstr;
 			else $urlext = $brightnessstr . $turnstr;
-			$http = file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/light/0?' . $urlext);
-			echo $http;
+			$WebCom = new WebCom();
+			echo $WebCom->send('SetShellyUrlCmd', $ShellyIP . '%~%' . 'light/0?' . $urlext);
 		} else {
 			echo std::test_array($_POST, 'ERROR');
 		}
@@ -468,8 +480,8 @@ switch(std::gets('param1')) {
 			if($urlext != '' && $bluestr != '') $urlext = $urlext . '&' . $bluestr;
 			else $urlext = $urlext . $bluestr;
 
-			$http = file_get_contents('http://wpLicht:turner@' . $ShellyIP . '/color/0?' . $urlext);
-			echo $http;
+			$WebCom = new WebCom();
+			echo $WebCom->send('SetShellyUrlCmd', $ShellyIP . '%~%' . 'color/0?' . $urlext);
 		} else {
 			echo std::test_array($_POST, 'ERROR');
 		}
@@ -513,7 +525,7 @@ MERGE INTO [rest] AS [TARGET]
 				$cmd .= '&turn=on';
 			}
 		}
-		echo $WebCom->send('SetD1MiniUrlCmd', $ShellyIP . '%~%' . 'relay/0?' . $cmd);
+		echo $WebCom->send('SetShellyUrlCmd', $ShellyIP . '%~%' . 'relay/0?' . $cmd);
 		break;
 	//###################################################################################
 	case shellycom::c_do_renewshellystate:

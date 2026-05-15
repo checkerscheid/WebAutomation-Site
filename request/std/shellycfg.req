@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 15.05.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 730                                                     $ #
+//# Revision     : $Rev:: 751                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: shellycfg.req 730 2025-03-30 13:24:07Z                   $ #
+//# File-ID      : $Id:: shellycfg.req 751 2025-10-13 06:14:37Z                   $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\std;
@@ -261,6 +261,7 @@ switch(std::gets('param1')) {
 								<th>Signal</th>
 								<th>Update</th>
 								<th>On / Off</th>
+								<th>Brightness</th>
 								<th>Temp</th>
 								<th>Hum</th>
 								<th>LDR</th>
@@ -280,18 +281,19 @@ switch(std::gets('param1')) {
 		}
 		$database->query("SELECT
 			[s].[id_shelly], [s].[name], [s].[ip], [s].[type], [s].[mac], [s].[un], [s].[pw], [s].[active],
-			[d1].[id_dp] AS [idonoff], [d2].[id_dp] AS [idtemp], [d3].[id_dp] AS [idhum], [d4].[id_dp] AS [idldr], [d5].[id_dp] AS [idwindow], [d6].[id_dp] AS [idVolatge], [d7].[id_dp] AS [idCurrent], [d8].[id_dp] AS [idPower],
-			[d1].[name] AS [onoff], [d2].[name] AS [temp], [d3].[name] AS [hum], [d4].[name] AS [ldr], [d5].[name] AS [window], [d6].[name] AS [voltage], [d7].[name] AS [current], [d8].[name] AS [power]
+			[d1].[id_dp] AS [idonoff], [d2].[id_dp] AS [idbrightness], [d3].[id_dp] AS [idtemp], [d4].[id_dp] AS [idhum], [d5].[id_dp] AS [idldr], [d6].[id_dp] AS [idwindow], [d7].[id_dp] AS [idVolatge], [d8].[id_dp] AS [idCurrent], [d9].[id_dp] AS [idPower],
+			[d1].[name] AS [onoff], [d2].[name] AS [brightness], [d3].[name] AS [temp], [d4].[name] AS [hum], [d5].[name] AS [ldr], [d6].[name] AS [window], [d7].[name] AS [voltage], [d8].[name] AS [current], [d9].[name] AS [power]
 			FROM [shelly] [s]
 			LEFT JOIN [rest] [r] ON [s].[id_shelly] = [r].[id_shelly]
 			LEFT JOIN [dp] [d1] ON [r].[id_onoff] = [d1].[id_dp]
-			LEFT JOIN [dp] [d2] ON [r].[id_temp] = [d2].[id_dp]
-			LEFT JOIN [dp] [d3] ON [r].[id_hum] = [d3].[id_dp]
-			LEFT JOIN [dp] [d4] ON [r].[id_ldr] = [d4].[id_dp]
-			LEFT JOIN [dp] [d5] ON [r].[id_window] = [d5].[id_dp]
-			LEFT JOIN [dp] [d6] ON [r].[id_voltage] = [d6].[id_dp]
-			LEFT JOIN [dp] [d7] ON [r].[id_current] = [d7].[id_dp]
-			LEFT JOIN [dp] [d8] ON [r].[id_power] = [d8].[id_dp]
+			LEFT JOIN [dp] [d2] ON [r].[id_brightness] = [d2].[id_dp]
+			LEFT JOIN [dp] [d3] ON [r].[id_temp] = [d3].[id_dp]
+			LEFT JOIN [dp] [d4] ON [r].[id_hum] = [d4].[id_dp]
+			LEFT JOIN [dp] [d5] ON [r].[id_ldr] = [d5].[id_dp]
+			LEFT JOIN [dp] [d6] ON [r].[id_window] = [d6].[id_dp]
+			LEFT JOIN [dp] [d7] ON [r].[id_voltage] = [d7].[id_dp]
+			LEFT JOIN [dp] [d8] ON [r].[id_current] = [d8].[id_dp]
+			LEFT JOIN [dp] [d9] ON [r].[id_power] = [d9].[id_dp]
 			" . $where . " ORDER BY [active] DESC, [name]");
 		while($erg = $database->fetch()) {
 			$creds = ($erg['un'] != '' && $erg['pw'] != '') ? $erg['un'] . ':' . $erg['pw'] . '@' : '';
@@ -333,6 +335,12 @@ switch(std::gets('param1')) {
 									<div class="shelly-flex">
 										<span class="description" title="'.$erg['idonoff'].'">'.$erg['onoff'].'</span>
 										<span class="ps-image-button ps-edit sh-editonoff" title="DP On / Off">&nbsp;</span>
+									</div>
+								</td>
+								<td class="tar">
+									<div class="shelly-flex">
+										<span class="description" title="'.$erg['idbrightness'].'">'.$erg['brightness'].'</span>
+										<span class="ps-image-button ps-edit sh-editbrightness" title="DP Brightness">&nbsp;</span>
 									</div>
 								</td>
 								<td class="tar">

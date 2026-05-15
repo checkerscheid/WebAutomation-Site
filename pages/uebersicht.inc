@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 750                                                     $ #
+//# Revision     : $Rev:: 754                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.inc 750 2025-09-21 14:18:43Z                  $ #
+//# File-ID      : $Id:: uebersicht.inc 754 2026-05-06 10:11:24Z                  $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -56,7 +56,6 @@ $points = array(
 	'LI_BM_SZ'			=> '_SZ_BM_LI',
 	'LI_BM_KU'			=> '_KU_BM_LI',
 	'LI_BM_KU_ST'		=> '_KU_BM_LI_ST',
-	'LI_BM_KU_KA'		=> '_KU_BM_LI_KA',
 	'LI_BM_BU'			=> '_BU_BM_LI',
 	'LI_BM_BU_FL'		=> '_BU_BM_LI_FL',
 	'LI_BM_KZ'			=> '_KZ_BM_LI',
@@ -75,6 +74,7 @@ $points = array(
 	'LI_BM_WW'			=> '_SY_WW',
 	'LI_BM_KS'			=> '_SY_KS',
 	'LI_BM_EG_HZG_FB'	=> 'EG_HZG_FB',
+	'LI_BM_EG_KS'		=> 'EG_BM_KS',
 
 	'LI_BM_WB_FE'		=> '_WB_BM_LI_FE',
 	'LI_BM_WB_KA'		=> '_WB_BM_LI_KA',
@@ -188,6 +188,36 @@ class uebersicht {
 			</tr>';
 		return $return;
 	}
+	public static function tasterShellyWithAsk($name, $kurz) {
+		GLOBAL $points;
+		$database = new wpDatabase();
+		$sql = "SELECT [s].[ip], [s].[autooff], [s].[un], [s].[pw]
+			FROM [shelly] [s]
+			LEFT JOIN [rest] [r] ON [s].[id_shelly] = [r].[id_shelly]
+			INNER JOIN [dp] ON [r].[id_onoff] = [dp].[id_dp]
+			WHERE [dp].[name] = '".$points['LI_BM_'.$kurz]."'";
+		if(self::debug) std::test_array($sql);
+		$database->query($sql);
+		$erg = $database->fetch();
+		$return = '
+			<tr' . ($erg['autooff'] > 0 ? ' class="ps-hastimer"' : '') . '>
+				<td class="description">';
+		if(substr($_SERVER['REMOTE_ADDR'], 0, 7) == '172.17.' || security::checkGroup(security::entwickler)) {
+			$unpw = ($erg['un'] != '' && $erg['pw'] != '') ? $erg['un'] . ':' . $erg['pw'] . '@' : '';
+			$return .= '<a href="http://'.$unpw.$erg['ip'].'" target="_blank">'.$name.'</a>:';
+		} else {
+			$return .= $name.':';
+		}
+		$return .= '
+					<br />
+					<span class="time_remain" data-remaintime="0"></span>
+				</td>
+				<td>
+					<span data-value="LI_BM_'.$kurz.'" data-bm="LI_BM_'.$kurz.'" data-ip="'.$erg['ip'].'" data-autooff="'.$erg['autooff'].'" class="ps-button pa-Meldung ShellyDirectWithAsk">undefined</span>
+				</td>
+			</tr>';
+		return $return;
+	}
 	public static function tasterShellyDimmer($name, $kurz) {
 		GLOBAL $points;
 		$database = new wpDatabase();
@@ -218,7 +248,7 @@ class uebersicht {
 			</tr>
 			<tr>
 				<td colspan="2">
-					<div class="shelly-dimmer" data-ip="'.$erg['ip'].'"></div>
+					<div class="shelly-dimmer pa-slider pa-licht" data-ws="' . $kurz . '_LI_Brightness" data-ip="'.$erg['ip'].'"></div>
 				</td>
 			</tr>';
 		return $return;
@@ -292,9 +322,10 @@ class uebersicht {
 			<h2>Licht</h2>
 			<table>
 				<tbody>
-					<tr><td colspan="2"><span class="ps-button twoColumns AllesAus"> Alles aus</span></td></tr>
+					<tr><td colspan="2"><span class="ps-button twoColumns AllesAus">Alles aus</span></td></tr>
 					<tr><td colspan="2"><hr /></td></tr>
 					<tr><td colspan="2"><span class="ps-button twoColumns wz-gemuetlich">Couch</span></td></tr>
+					<tr><td colspan="2"><span class="ps-button twoColumns Schlafen">Schlafen</span></td></tr>
 					<tr><td colspan="2"><a class="ps-button twoColumns" href="tvremote.wohnzimmer.htm">Fernbedienung</a></td></tr>
 					<?=uebersicht::NeoPixel(WZ_NP, 'WZ_NP', 'Wohnzimmer NeoPixel')?>
 					<?=uebersicht::tasterShellyDimmer('Wohnzimmer <br class="showonportrait" />Lautsprecher', 'WZ_LS')?>
@@ -330,7 +361,6 @@ class uebersicht {
 					<?=uebersicht::tasterShelly('Küche', 'KU')?>
 					<?=uebersicht::CwWwAuto(KU_CwWw, 'KU_CwWw', 'Küche White-LED')?>
 					<?=uebersicht::tasterShelly('Küche <br class="showonportrait" />Strahler', 'KU_ST')?>
-					<?=uebersicht::tasterShelly('Küche <br class="showonportrait" />Kaffee', 'KU_KA')?>
 					<tr><td colspan="2"><hr /></td></tr>
 					<?=uebersicht::tasterShellyDimmer('Flur', 'BU_FL')?>
 					<tr>
@@ -352,6 +382,9 @@ class uebersicht {
 					<?=uebersicht::tasterShelly('Bilderrahmen', 'KZ_RGB')?>
 					<?=uebersicht::tasterShelly('Kinderzimmer <br class="showonportrait" />Bett', 'KZ_BE')?>
 					<?=uebersicht::tasterShelly('Kinderzimmer <br class="showonportrait" />Nachtlicht', 'KZ_NL')?>
+					<tr>
+						<td colspan="2"><span class="ps-button twoColumns RenewShellyState">RenwShellyState</span></td>
+					</tr>
 				</tbody>
 			</table>
 		</div>
@@ -364,7 +397,8 @@ class uebersicht {
 					<? if($useWeihnachten) { ?>
 					<?=uebersicht::tasterShelly('Fenster', 'WB_FE')?>
 					<?=uebersicht::tasterShelly('Kamin', 'WB_KA')?>
-					<?=uebersicht::tasterShelly('Aussen', 'WB_AU')?>
+					<? //uebersicht::tasterShelly('Aussen', 'WB_AU')
+					?>
 					<?=uebersicht::tasterShelly('Weihnachtsbaum', 'WB_WB')?>
 					<? } ?>
 					<?=uebersicht::tasterShelly('Testboard', 'SY_DI')?>
@@ -373,11 +407,11 @@ class uebersicht {
 					</tr-->
 					<? if($useWeihnachten) { ?>
 					<tr>
-						<td><span class="ps-button wz-wn-an">Alles an</span></td>
-						<td><span class="ps-button wz-wn-aus">Alles aus</span></td>
+						<td><span class="ps-button wz-wn-an">an</span></td>
+						<td><span class="ps-button wz-wn-aus">aus</span></td>
 					</tr>
-					<? } ?>
 					<tr><td colspan="2"><hr /></td></tr>
+					<? } ?>
 					<?=uebersicht::tasterShelly('Keller', 'KE')?>
 					<?=uebersicht::tasterShelly('Garten', 'GA')?>
 					<?=uebersicht::tasterShelly('Garten <br class="showonportrait" />Blumentöpfe', 'GA_BT')?>
@@ -390,12 +424,12 @@ class uebersicht {
 						<td><span class="ps-input" data-ws="_SS_RT">undefined</span></td>
 					</tr>
 					<tr><td colspan="2"><hr /></td></tr>
-					<?=uebersicht::tasterShelly('Server', 'SRV')?>
+					<?=uebersicht::tasterShellyWithAsk('Server', 'SRV')?>
 					<tr>
 						<td><a href="std.trendview.1664.1.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a></td>
 						<td><span data-ws="EN_SRV_Power" class="ps-input">undefined</span></td>
 					</tr>
-					<?=uebersicht::tasterShelly('Fricke', 'FR')?>
+					<?=uebersicht::tasterShellyWithAsk('Fricke', 'FR')?>
 					<tr>
 						<td><a href="std.trendview.1663.1.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a></td>
 						<td><span data-ws="EN_FR_Power" class="ps-input">undefined</span></td>
@@ -415,6 +449,11 @@ class uebersicht {
 						<td><a href="std.trendview.1177.1.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a></td>
 						<td><span data-ws="SY_KS_Power" class="ps-input">undefined</span></td>
 					</tr>
+					<?=uebersicht::tasterShelly('Kühlschrank EG', 'EG_KS')?>
+					<tr>
+						<td><a href="std.trendview.1672.1.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a></td>
+						<td><span data-ws="EG_KS_Power" class="ps-input">undefined</span></td>
+					</tr>
 					<? /*=uebersicht::taster('Garten <br class="showonportrait" />Töpfe', 'GA_BT')*/?>
 					<tr><td colspan="2"><hr /></td></tr>
 					<tr><td colspan="2"><h2>Mudda</h2></td></tr>
@@ -427,9 +466,6 @@ class uebersicht {
 					<?=uebersicht::tasterShelly('Steckdose oben', 'AN_SD1')?>
 					<?=uebersicht::tasterShelly('Steckdose unten', 'AN_SD2')?>
 					<? */ ?>
-					<tr>
-						<td colspan="2"><span class="ps-button twoColumns RenewShellyState">RenwShellyState</span></td>
-					</tr>
 				</tbody>
 			</table>
 		</div>

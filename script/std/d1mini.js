@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.06.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 750                                                     $ #
+//# Revision     : $Rev:: 751                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: d1mini.js 750 2025-09-21 14:18:43Z                       $ #
+//# File-ID      : $Id:: d1mini.js 751 2025-10-13 06:14:37Z                       $ #
 //#                                                                                 #
 //###################################################################################
 use system\std
@@ -78,10 +78,10 @@ var d1MiniWs = {
 ws.logEnabled = true;
 d1MiniWs.logEnabled = true;
 p.page.load = function() {
-	wpNeoPixel.Init('std.d1mini');
+	var NeoPixel = new wpNeoPixel('std.d1mini', '<?=std::gets("param1")?>');
 	var CwWw = new wpCwWw('std.d1mini', '<?=std::gets("param1")?>');
 	wpClock.Init('std.d1mini');
-	wpAnalogOut.Init('std.d1mini');
+	var ao = new wpAnalogOut('std.d1mini', '<?=std::gets("param1")?>');
 	// ?? warum war das? $.get('std.d1mini.getD1MiniSettings.<?=std::gets("param1")?>.req');
 	$('.buttonContainer').on('click', '.SetCmd', function() {
 		var ip = $('#storedIP').attr('data-ip');

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 700                                                     $ #
+//# Revision     : $Rev:: 751                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpRGB.psys 700 2024-10-14 00:13:37Z                 $ #
+//# File-ID      : $Id:: wpRGB.psys 751 2025-10-13 06:14:37Z                 $ #
 //#                                                                                 #
 //###################################################################################
 namespace request\system;
@@ -46,7 +46,7 @@ class wpRGB {
 		header(wpJSON_HEADER);
 		$cmd = 'timer=' . std::posts('sleep');
 		$WebCom = new WebCom();
-		echo $WebCom->send('SetD1MiniUrlCmd', wpRGB::$ip . '%~%' . 'color/0?' . $cmd);
+		echo $WebCom->send('SetShellyUrlCmd', wpRGB::$ip . '%~%' . 'color/0?' . $cmd);
 	}
 	const c_getRGBSavedColor = 'getRGBSavedColor';
 	public static function getRGBSavedColor() {
@@ -116,8 +116,10 @@ class wpRGB {
 			if($urlext != '' && $bluestr != '') $urlext = $urlext . '&' . $bluestr;
 			else $urlext = $urlext . $bluestr;
 
-			$http = file_get_contents('http://' . wpRGB::$ip . '/color/0?' . $urlext);
-			echo $http;
+			$WebCom = new WebCom();
+			echo $WebCom->send('SetShellyUrlCmd', wpRGB::$ip . '%~%' . 'color/0?' . $urlext);
+			//$http = file_get_contents('http://' . wpRGB::$ip . '/color/0?' . $urlext);
+			//echo $http;
 		} else {
 			echo std::test_array($_POST, 'ERROR');
 		}

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 750                                                     $ #
+//# Revision     : $Rev:: 751                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpAnalogOut.psys 750 2025-09-21 14:18:43Z                $ #
+//# File-ID      : $Id:: wpAnalogOut.psys 751 2025-10-13 06:14:37Z                $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
@@ -50,7 +50,7 @@ class wpAnalogOut {
 	}
 	public function getHtml($admin, $headline = 'AnalogOut', $fenster2 = 'Fenster 2', $fenster3 = 'Fenster 3') {
 ?>
-		<div class="wpAnalogOut ps-container" data-ip="<?=$this->ip ?>">
+		<div class="wpAnalogOut <?=$this->name?> ps-container" data-ip="<?=$this->ip ?>">
 			<h3><?=$headline ?></h3>
 			<hr />
 			<table summary="">

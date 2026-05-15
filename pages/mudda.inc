@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 13.04.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 750                                                     $ #
+//# Revision     : $Rev:: 752                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: mudda.inc 750 2025-09-21 14:18:43Z                       $ #
+//# File-ID      : $Id:: mudda.inc 752 2026-01-15 08:48:48Z                       $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $points */
@@ -253,6 +253,7 @@ $schlafzimmer->getStatus();
 					<tr>
 						<td colspan = "4">
 							<h3>Stromzähler</h3>
+							<span>1 DZG00 4010 9630</span>
 						</td>
 					</tr>
 					<tr>
@@ -269,6 +270,14 @@ $schlafzimmer->getStatus();
 						<td colspan="2">Zählerstand Solar (2.8.0):</td>
 						<td><span class="ps-input" data-ws="EG_EZ_ZsSolar">undefined</span></td>
 						<td></td>
+					</tr>
+					<tr>
+						<td colspan="4"><hr /></td>
+					</tr>
+					<tr>
+						<td colspan="2">Kühlschrank:</td>
+						<td><span class="ps-input pa-negisgood" data-ws="EG_KS_Power">undefined</span></td>
+						<td><a href="std.trendview.1672.1.htm" class="ps-button ps-pluginbutton"><?=wpHTML_TREND ?></a></td>
 					</tr>
 				</tbody>
 			</table>

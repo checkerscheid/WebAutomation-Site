@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 09.11.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 733                                                     $ #
+//# Revision     : $Rev:: 751                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: shopping.req 733 2025-04-16 03:01:56Z                    $ #
+//# File-ID      : $Id:: shopping.req 751 2025-10-13 06:14:37Z                    $ #
 //#                                                                                 #
 //###################################################################################
 namespace request;
@@ -21,27 +21,12 @@ class shopping {
 	const c_setGroupProductChecked = 'setGroupProductChecked';
 	public static function setGroupProductChecked() {
 		header(wpJSON_HEADER);
-// 		$database = new wpDatabase();
-// 		$sql = "UPDATE [shoppinggroupproduct] SET [ok] = " . (std::posts('checked') == 'true' ? '1' : '0') . " WHERE [id_group] = " . std::posts('idGroup') . " AND [id_product] = " . std::posts('idProduct');
-// 		if($database->query($sql)) {
-// 			echo S_OK;
-// 		} else {
-// 			echo '{"erg":"S_ERROR", "msg":"' . $sql . '"}';
-// 		}
-
 		$WebCom = new WebCom();
 		echo $WebCom->send('SetProductChecked', (std::posts('checked') == 'true' ? '1' : '0') . '%~%' . std::posts('idGroup') . '%~%' . std::posts('idProduct'));
 	}
 	const c_setProductChecked = 'setProductChecked';
 	public static function setProductChecked() {
 		header(wpJSON_HEADER);
-		// $database = new wpDatabase();
-		// $sql = "UPDATE [shoppinglistproduct] SET [ok] = " . (std::posts('checked') == 'true' ? '1' : '0') . " WHERE [id_list] = " . std::posts('idList') . " AND [id_product] = " . std::posts('idProduct');
-		// if($database->query($sql)) {
-		// 	echo S_OK;
-		// } else {
-		// 	echo '{"erg":"S_ERROR", "msg":"' . $sql . '"}';
-		// }
 		$WebCom = new WebCom();
 		echo $WebCom->send('SetProductChecked', (std::posts('checked') == 'true' ? '1' : '0') . '%~%0%~%' . std::posts('idProduct'));
 	}

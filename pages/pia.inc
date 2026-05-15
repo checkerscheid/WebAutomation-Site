@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 27.07.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 750                                                     $ #
+//# Revision     : $Rev:: 752                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pia.inc 750 2025-09-21 14:18:43Z                         $ #
+//# File-ID      : $Id:: pia.inc 752 2026-01-15 08:48:48Z                         $ #
 //#                                                                                 #
 //###################################################################################
 /**
@@ -56,7 +56,7 @@ $points = array(
 						<h3>Licht</h3>
 						<hr />
 						<span class="ps-button AllesAus">Alles Aus</span>
-						<span class="ps-button AllesSchlafen">Schlafen</span>
+						<span class="ps-button pa-scene" data-scene="3054">Schlafen</span>
 					</td>
 				</tr>
 				<?=pia::tasterShelly('Kinderzimmer', 'KZ')?>
@@ -195,7 +195,7 @@ $points = array(
 	$cwww->getColorPicker('Halloween');
 ?>
 <?
-	$rgb = new wpRGB('172.17.80.163', 'shellies/RGBW2');
+	$rgb = new wpRGB('172.17.80.163', 'KZ_Bild');
 	$rgb->getColorPicker('Bilderrahmen');
 ?>
 	</div>

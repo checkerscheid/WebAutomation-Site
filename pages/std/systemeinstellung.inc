@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.11.2023                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 665                                                     $ #
+//# Revision     : $Rev:: 751                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: systemeinstellung.inc 665 2024-07-09 22:56:49Z           $ #
+//# File-ID      : $Id:: systemeinstellung.inc 751 2025-10-13 06:14:37Z           $ #
 //#                                                                                 #
 //###################################################################################
 /**
@@ -53,6 +53,7 @@ $wpDebug = array(
 	'debugOpcRouter',
 	'debugWebSockets',
 	'debugREST',
+	'debugCoIot',
 	'debugShelly',
 	'debugD1Mini',
 	'debugMQTT'

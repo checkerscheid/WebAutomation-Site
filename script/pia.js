@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 27.07.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 750                                                     $ #
+//# Revision     : $Rev:: 751                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: pia.js 750 2025-09-21 14:18:43Z                          $ #
+//# File-ID      : $Id:: pia.js 751 2025-10-13 06:14:37Z                          $ #
 //#                                                                                 #
 //###################################################################################
 use system\std
@@ -22,8 +22,8 @@ use system\std
 //<? require_once('script/system/wpRGB.js') ?>
 ws.logEnabled = true;
 p.page.load = function() {
-	wpNeoPixel.Init('pia');
-	wpRGB.Init('pia');
+	var NeoPixel = new wpNeoPixel('pia', 'KZ_NP');
+	var bild = new wpRGB('pia', 'KZ_Bild');
 	var kette = new wpCwWw('pia', 'KZ_KE');
 	var hasi = new wpCwWw('pia', 'KZ_Hasi');
 	$('#pia').on('click', '.ps-input.ps-operable.zp', function() {
@@ -56,7 +56,7 @@ p.page.load = function() {
 		wpNeoPixel.setOff();
 		hasi.setOff();
 		kette.setOff();
-		wpRGB.setOff();
+		bild.setOff();
 		$.post('std.shellycom.set-relay.req', {ShellyIP: '172.17.80.160', turn: 'false'});
 		$.post('std.shellycom.set-relay.req', {ShellyIP: '172.17.80.161', turn: 'false'});
 		$.post('std.shellycom.set-relay.req', {ShellyIP: '172.17.80.162', turn: 'false'});
@@ -69,27 +69,27 @@ p.page.load = function() {
 		}, 'json');
 	});
 	$('.AllesSchlafen').click(function() {
-		//wpNeoPixel.setColor(75, 5, 0);
-		wpNeoPixel.setOff();
+		//NeoPixel.setColor(75, 5, 0);
+		NeoPixel.setOff();
 		hasi.setBrightness(0, 1);
 		kette.setBrightness(10, 0);
 		const h = 0;
 		const m = 30;
 		var sec = (h * 60 * 60) + (m * 60);
-		//wpNeoPixel.setSleep(sec);
+		//NeoPixel.setSleep(sec);
 		hasi.setSleep(sec);
 		kette.setSleep(sec);
-		wpRGB.setOff();
+		bild.setOff();
 		$.post('std.shellycom.set-relay.req', {ShellyIP: '172.17.80.160', turn: 'false'});
 		$.post('std.shellycom.set-relay.req', {ShellyIP: '172.17.80.161', turn: 'false'});
 		$.post('std.shellycom.set-relay.req', {ShellyIP: '172.17.80.162', turn: 'false'});
 	});
 	$('.setAllSleep').click(function() {
 		var sec = ($('.AllSleepHour').text() * 60 * 60) + ($('.AllSleepMinute').text() * 60);
-		wpNeoPixel.setSleep(sec);
+		NeoPixel.setSleep(sec);
 		hasi.setSleep(sec);
 		kette.setSleep(sec);
-		wpRGB.setSleep(sec);
+		bild.setSleep(sec);
 		$.post('std.shellycom.set-relay-timer.req', {ShellyIP: '172.17.80.160', sleep: sec});
 		$.post('std.shellycom.set-relay-timer.req', {ShellyIP: '172.17.80.161', sleep: sec});
 		$.post('std.shellycom.set-relay-timer.req', {ShellyIP: '172.17.80.162', sleep: sec});

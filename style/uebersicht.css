@@ -9,15 +9,15 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 730                                                     $ #
+//# Revision     : $Rev:: 754                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.css 730 2025-03-30 13:24:07Z                  $ #
+//# File-ID      : $Id:: uebersicht.css 754 2026-05-06 10:11:24Z                  $ #
 //#                                                                                 #
 //###################################################################################
 ?> uebersicht */
 
 /* #uebersicht { background:transparent url(images/uebersicht.jpg) center top no-repeat; min-height:410px; } */
-.pagecontent { background:transparent url(images/uebersicht_haus.png) center center no-repeat; background-size:100% auto; }
+.pagecontent { background:transparent url(images/uebersicht_haus.avif) center center no-repeat; background-size:100% auto; }
 @media (orientation: portrait) {
 	.pagecontent { background-size:auto 100%; }
 }

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 750                                                     $ #
+//# Revision     : $Rev:: 752                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.js 750 2025-09-21 14:18:43Z                   $ #
+//# File-ID      : $Id:: uebersicht.js 752 2026-01-15 08:48:48Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> uebersicht */
@@ -27,7 +27,6 @@ const lautsprecher = '172.17.80.92';
 const kamin = '172.17.80.94';
 const buero = '172.17.80.120';
 const herz = '172.17.80.95';
-const feuer = '172.17.80.97';
 // Weihnachten
 const wn_kamin = '172.17.1.60';
 const wn_baum = '172.17.1.61';
@@ -57,21 +56,22 @@ p.page.load = function() {
 		const allesaus = [
 			// Wohnzimmer
 			setNeoPixelOff('172.17.80.99', 'Wohnzimmer NeoPixel Lichtleiste'),
-			setShellyDimmerOff('172.17.80.92', 'Wohnzimmer Lautsprecher'),
+			setShellyDimmerOff(lautsprecher, 'Wohnzimmer Lautsprecher'),
 			setNeoPixelOff('172.17.80.98', 'Wohnzimmer Lautsprecher farbe'),
 			setShellyDimmerOff('172.17.80.94', 'Wohnzimmer Kamin'),
 			setNeoPixelOff('172.17.80.106', 'Wohnzimmer RGB Pflanze'),
-			setShellyRelayOff('172.17.80.95', 'Wohnzimmer Herz'),
+			//setShellyRelayOff(herz, 'Wohnzimmer Herz'),
 			setShellyRelayOff('172.17.80.93', 'Wohnzimmer Stehlampe'),
 			setShellyDimmerOff('172.17.80.90', 'Wohnzimmer'),
 			setShellyRelayOff('172.17.80.91', 'Wohnzimmer Lichtleiste'),
 			setCwWwOff('172.17.80.97', 'Wohnzimmer Event Lichterkette'),
+			setShellyDimmerOff(kamin, 'Wohnzimmer Kamin'),
 			// Schlafzimmer
 			setShellyDimmerOff('172.17.80.110', 'Schlafzimmer'),
 			// Flur
 			setNeoPixelOff('172.17.80.122', 'Büro / Flur NeoPixel Lichtleiste'),
 			setFLRUAuto('172.17.80.125', 'Flur set Auto'),
-			setShellyDimmerOff('172.17.80.120', 'Flur'),
+			setShellyDimmerOff(buero, 'Flur'),
 			// Küche
 			setShellyRelayOff('172.17.80.130', 'Küche'),
 			setShellyRelayOff('172.17.80.131', 'Küche Strahler'),
@@ -93,6 +93,7 @@ p.page.load = function() {
 				}
 				$.post('tvremote.button.req', params, function(data) {
 					resolve(data.message);
+					console.log(data.message);
 				}, 'json');
 			}),
 			new Promise((resolve) => {
@@ -102,6 +103,52 @@ p.page.load = function() {
 				}
 				$.post('tvremote.button.req', params, function(data) {
 					resolve(data.message);
+					console.log(data.message);
+				}, 'json');
+			})
+		];
+		Promise.all(allesaus).then((responses) => {
+			var msg = 'Alles aus:<br />';
+			for(const response of responses) {
+				msg += response;// + '<br />';
+			}
+			p.page.alert(msg, 5000);
+		});
+	});
+	$('#uebersicht').on('click', '.Schlafen', function() {
+		const allesaus = [
+			// Wohnzimmer
+			setNeoPixelOff('172.17.80.99', 'Wohnzimmer NeoPixel Lichtleiste'),
+			setShellyDimmerOff(lautsprecher, 'Wohnzimmer Lautsprecher'),
+			setNeoPixelOff('172.17.80.98', 'Wohnzimmer Lautsprecher farbe'),
+			setShellyDimmerOff('172.17.80.94', 'Wohnzimmer Kamin'),
+			setNeoPixelOff('172.17.80.106', 'Wohnzimmer RGB Pflanze'),
+			setShellyRelayOff(herz, 'Wohnzimmer Herz'),
+			setShellyRelayOff('172.17.80.93', 'Wohnzimmer Stehlampe'),
+			setShellyDimmerOff('172.17.80.90', 'Wohnzimmer'),
+			setShellyRelayOff('172.17.80.91', 'Wohnzimmer Lichtleiste'),
+			setCwWwOff('172.17.80.97', 'Wohnzimmer Event Lichterkette'),
+			setShellyDimmerOff(kamin, 'Wohnzimmer Kamin'),
+			// Schlafzimmer
+			setShellyDimmerOff('172.17.80.110', 'Schlafzimmer'),
+			// Flur
+			setNeoPixelOff('172.17.80.122', 'Büro / Flur NeoPixel Lichtleiste'),
+			setFLRUAuto('172.17.80.125', '172.17.80.120', 'Buero set Auto'),
+			setFLRUAuto('172.17.80.128', '172.17.80.121', 'Flur set Auto'),
+			// Küche
+			setShellyRelayOff('172.17.80.130', 'Küche'),
+			setShellyRelayOff('172.17.80.131', 'Küche Strahler'),
+			setCwWwOff('172.17.80.142', 'Küche White-LED'),
+			// Bad
+			setShellyDimmerOff('172.17.80.150', 'Bad'),
+			new Promise((resolve) => {
+				const params = {
+					name: 'wohnzimmer',
+					button: 'aus'
+				}
+				$.post('tvremote.button.req', params, function(data) {
+					resolve(data.message);
+					console.log(data.message);
 				}, 'json');
 			})
 		];
@@ -116,7 +163,7 @@ p.page.load = function() {
 	$('#uebersicht').on('click', '.wz-gemuetlich', function() {
 		const allesaus = [
 			new Promise((resolve) => {
-				$.post('std.shellycom.set-dimmer.req', {ShellyIP:lautsprecher, turn:'true'},
+				$.post('std.shellycom.set-dimmer.req', {ShellyIP:lautsprecher, turn:'true', brightness:20},
 					function(data) {
 						resolve('Lautsprecher ist ' + (data.ison ? 'an' : 'aus') + ', (' + data.brightness + ' %)');
 					}, 'json'); // Lautsprecher
@@ -125,7 +172,7 @@ p.page.load = function() {
 			new Promise((resolve) => {
 				$.post('std.shellycom.set-dimmer.req', {ShellyIP:kamin, turn:'true', brightness:20},
 					function(data) {
-						resolve('Kamin ist ' + (data.ison ? 'an' : 'aus') + ', (' + data.brightness + ' %)')
+						resolve('Kamin ist ' + (data.ison ? 'an' : 'aus') + ', (' + data.brightness + ' %)');
 					}, 'json'); // Kamin
 				}
 			),
@@ -135,6 +182,7 @@ p.page.load = function() {
 				}
 				$.post('tvremote.onoff.req', params, function(data) {
 					resolve(data.message);
+					console.log(data.message);
 				}, 'json');
 			})
 		];
@@ -146,29 +194,17 @@ p.page.load = function() {
 			p.page.alert(msg);
 		});
 	});
-	$('#uebersicht').on('click', '.wz-feuer-aus', function() {
-		$.post('std.shellycom.set-rgbw.req', {ShellyIP:feuer, turn:'false'},
-			function(data) {
-				p.page.alert('Leuchte ist ' + (data.ison ? 'an' : 'aus'));
-			},
-		'json');
-	});
-	$('#uebersicht').on('click', '.wz-feuer', function() {
-		$.post('std.shellycom.set-rgbw.req', {ShellyIP:feuer, turn:'true', gain:20, red:255, green:75, blue:0},
-			function(data) {
-				p.page.alert('Leuchte ist ' + (data.ison ? 'an' : 'aus'));
-			},
-		'json');
-	});
 	$('#uebersicht').on('click', '.wz-wn-an', function() {
 		$.post('std.shellycom.set-relay.req', {ShellyIP:wn_kamin, turn:'true'});
 		$.post('std.shellycom.set-relay.req', {ShellyIP:wn_baum, turn:'true'});
 		$.post('std.shellycom.set-relay.req', {ShellyIP:wn_fenster, turn:'true'});
+		$.post('std.shellycom.set-relay.req', {ShellyIP:herz, turn:'true'});
 	});
 	$('#uebersicht').on('click', '.wz-wn-aus', function() {
 		$.post('std.shellycom.set-relay.req', {ShellyIP:wn_kamin, turn:'false'});
 		$.post('std.shellycom.set-relay.req', {ShellyIP:wn_baum, turn:'false'});
 		$.post('std.shellycom.set-relay.req', {ShellyIP:wn_fenster, turn:'false'});
+		$.post('std.shellycom.set-relay.req', {ShellyIP:herz, turn:'false'});
 	});
 	$('#uebersicht').on('click', '.RenewShellyState', function() {
 		$.get('std.shellycom.renewshellystate.req', function(data) {
@@ -246,6 +282,12 @@ p.page.load = function() {
 			var TheValue = ui.value;
 			var TheSpan = $(this).find('span.toleft');
 			$(TheSpan).text(TheValue);
+			if($(this).hasClass('pa-licht')) {
+				$(this).find('.ui-slider-handle').css({
+					boxShadow: '0px 0px 2px 2px rgba(255,255,0,' +
+						(parseInt(TheValue) / 100) + ')'
+				});
+			}
 		},
 		stop: function(event, ui) {
 			var ip = $(this).attr('data-ip');
@@ -293,7 +335,7 @@ p.page.load = function() {
 	p.getValues();
 	ws.connect();
 	hastimeout();
-	shellydimmer();
+	//shellydimmer();
 };
 
 function hastimeout() {
@@ -377,6 +419,7 @@ function setShellyRelayOff(ip, name) {
 		$.post('std.shellycom.set-relay.req', {ShellyIP:ip, turn:'false'},
 			function(data) {
 				resolve(name + ' ist aus');
+				console.log(name + ' ist aus');
 			},
 		'json');
 	});
@@ -385,7 +428,8 @@ function setShellyDimmerOff(ip, name) {
 	return new Promise((resolve) => {
 		$.post('std.shellycom.set-dimmer.req', {ShellyIP:ip, turn:'false'},
 			function(data) {
-				resolve(name + ' ist ' + (data.ison ? 'an' : 'aus') + ', (' + data.brightness + ' %)');
+				resolve(name + ' ist ' + (data.json.ison ? 'an' : 'aus') + ', (' + data.json.brightness + ' %)');
+				console.log(name + ' ist ' + (data.json.ison ? 'an' : 'aus') + ', (' + data.json.brightness + ' %)');
 			},
 		'json');
 	});
@@ -395,6 +439,7 @@ function setShellyRGBWOff(ip, name) {
 		$.post('std.shellycom.set-rgbw.req', {ShellyIP:ip, turn:'false'},
 			function(data) {
 				resolve(name + ' ist aus');
+				console.log(name + ' ist aus');
 			},
 		'json');
 	});
@@ -404,6 +449,7 @@ function setNeoPixelOff(ip, name) {
 		$.post('uebersicht.setNeoPixelOff.req', {ip:ip},
 			function(data) {
 				resolve(name + ' ist aus');
+				console.log(name + ' ist aus');
 			},
 		'json');
 	});
@@ -413,18 +459,21 @@ function setCwWwOff(ip, name) {
 		$.post('uebersicht.CwWwOff.req', {ip:ip},
 			function(data) {
 				resolve(name + ' ist aus');
+				console.log(name + ' ist aus');
 			},
 		'json');
 	});
 }
-function setFLRUAuto(ip, name) {
+function setFLRUAuto(ip, licht, name) {
 	return new Promise((resolve) => {
 		const setAuto = {
-			ip: ip
+			ip: ip,
+			licht: licht
 		};
 		$.post('uebersicht.setAuto.req', setAuto,
 			function(data) {
 				resolve(name + ' ist aus');
+				console.log(name + ' ist aus');
 			},
 		'json');
 	});

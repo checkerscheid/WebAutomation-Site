@@ -9,12 +9,15 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 11.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 709                                                     $ #
+//# Revision     : $Rev:: 751                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpRGB.psys 709 2024-11-21 13:08:04Z                      $ #
+//# File-ID      : $Id:: wpRGB.psys 751 2025-10-13 06:14:37Z                      $ #
 //#                                                                                 #
 //###################################################################################
 namespace system\Helper;
+
+use system\WebCom;
+
 /**
  * generiert die Oberfläche für die RGB Shelly
  * @author Checker
@@ -29,7 +32,9 @@ class wpRGB {
 		$this->getStatus();
 	}
 	private function getStatus() {
-		$this->status = \json_decode(file_get_contents('http://' . $this->ip . '/status'), true);
+		$WebCom = new WebCom();
+		$this->status = \json_decode($WebCom->send('SetShellyUrlCmd', $this->ip . '%~%' . 'status'), true);
+		//$this->status = \json_decode(file_get_contents('http://' . $this->ip . '/status'), true);
 		if(\json_last_error() != JSON_ERROR_NONE) {
 			echo \json_last_error_msg();
 		}
@@ -39,12 +44,12 @@ class wpRGB {
 		//std::test_array($this->status, 'getStatus');
 	}
 	public function getColorPicker($headline = 'RGB Farben') {
-		$r = $this->status['lights'][0]['red'];
-		$g = $this->status['lights'][0]['green'];
-		$b = $this->status['lights'][0]['blue'];
-		$br = $this->status['lights'][0]['gain'];
+		$r = $this->status['lights'][0]['red'] ?? 0;
+		$g = $this->status['lights'][0]['green'] ?? 0;
+		$b = $this->status['lights'][0]['blue'] ?? 0;
+		$br = $this->status['lights'][0]['gain'] ?? 0;
 ?>
-		<div class="wpRGB ps-container" data-ip="<?=$this->ip ?>">
+		<div class="wpRGB <?=$this->name?> ps-container" data-ip="<?=$this->ip ?>">
 			<h3><?=$headline ?></h3>
 			<hr />
 			<div class="colorPicker">
@@ -70,7 +75,7 @@ class wpRGB {
 					<hr />
 					<div class="ps-flex-container">
 						<div class="pickerContainer">
-							<canvas id="RGBpicker" width="200" height="200"></canvas>
+							<canvas id="<?=$this->name?>" width="200" height="200"></canvas>
 						</div>
 						<div>
 							<span class="ps-button setRGBColor">Color</span><br />

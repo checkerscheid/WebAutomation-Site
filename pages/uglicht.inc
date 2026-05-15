@@ -9,17 +9,19 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 30.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 750                                                     $ #
+//# Revision     : $Rev:: 751                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uglicht.inc 750 2025-09-21 14:18:43Z                     $ #
+//# File-ID      : $Id:: uglicht.inc 751 2025-10-13 06:14:37Z                     $ #
 //#                                                                                 #
 //###################################################################################
 namespace pages;
 use system\html;
 use system\Helper\wpdatabase;
 use system\Helper\wpa;
+use system\Helper\security;
 
 require_once 'system/Helper/wpa.psys';
+require_once 'system/Helper/security.psys';
 
 const WZ_NP = '172.17.80.99';
 const WZ_LS_NP = '172.17.80.98';
@@ -253,7 +255,7 @@ class uglicht {
 			</table>
 		</div>
 		<div class="ps-container">
-			<h2>Schlafzimmer</h2>
+			<h2>Flur</h2>
 			<table>
 				<tbody>
 					<tr><td colspan="2"><hr /></td></tr>

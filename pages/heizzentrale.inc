@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 02.04.2025                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 733                                                     $ #
+//# Revision     : $Rev:: 754                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: heizzentrale.inc 733 2025-04-16 03:01:56Z                $ #
+//# File-ID      : $Id:: heizzentrale.inc 754 2026-05-06 10:11:24Z                $ #
 //#                                                                                 #
 //###################################################################################
 namespace pages;
@@ -21,20 +21,20 @@ use system\html;
 	<h1><? html::getPageHeadline();?></h1>
 	<div class="ps-container">
 		<div class="ps-flex-container">
-			<span class="description">Radiatoren Rücklauf</span>
-			<span class="ps-input" data-ws="KE_HZG_Temp1">- °C</span>
-		</div>
-		<div class="ps-flex-container">
-			<span class="description">Radiatoren Vorlauf</span>
-			<span class="ps-input" data-ws="KE_HZG_Temp2">- °C</span>
-		</div>
-		<div class="ps-flex-container">
 			<span class="description">Fussboden Vorlauf</span>
 			<span class="ps-input" data-ws="KE_HZG_Temp3">- °C</span>
 		</div>
 		<div class="ps-flex-container">
 			<span class="description">Fussboden Rücklauf</span>
 			<span class="ps-input" data-ws="KE_HZG_Temp4">- °C</span>
+		</div>
+		<div class="ps-flex-container">
+			<span class="description">Radiatoren Vorlauf</span>
+			<span class="ps-input" data-ws="KE_HZG_Temp2">- °C</span>
+		</div>
+		<div class="ps-flex-container">
+			<span class="description">Radiatoren Rücklauf</span>
+			<span class="ps-input" data-ws="KE_HZG_Temp1">- °C</span>
 		</div>
 		<div class="ps-flex-container">
 			<span class="ps-button cleanTrends">clean Trends</span>

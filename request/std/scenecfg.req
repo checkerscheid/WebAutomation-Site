@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 22.07.2014                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 709                                                     $ #
+//# Revision     : $Rev:: 752                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: scenecfg.req 709 2024-11-21 13:08:04Z                    $ #
+//# File-ID      : $Id:: scenecfg.req 752 2026-01-15 08:48:48Z                    $ #
 //#                                                                                 #
 //###################################################################################
 /** @var Type $m */
@@ -236,7 +236,7 @@ switch(std::gets('param1')) {
 		$database->query('SELECT
 					[v].[id_scenevalue], ISNULL([dp].[description], [dp].[name]) AS [description], [dp].[name], [dp].[unit], [v].[value]
 					FROM [dp]
-					LEFT JOIN [scenevalue] [v] ON [v].[id_dp] = [dp].[id_dp]
+					RIGHT JOIN [scenevalue] [v] ON [v].[id_dp] = [dp].[id_dp]
 					WHERE [v].[id_scene] = '.std::posts('id').' ORDER BY [dp].[name]');
 			$points = array();
 			while($erg = $database->fetch()) {

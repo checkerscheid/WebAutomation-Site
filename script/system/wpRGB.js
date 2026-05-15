@@ -9,129 +9,132 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 11.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 745                                                     $ #
+//# Revision     : $Rev:: 751                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpRGB.js 745 2025-06-18 08:33:40Z                        $ #
+//# File-ID      : $Id:: wpRGB.js 751 2025-10-13 06:14:37Z                        $ #
 //#                                                                                 #
 //###################################################################################
 ?> wpRGB */
 
-var wpRGB = {
-	canvas: null,
-	ctx: null,
-	image: null,
-	ip: null,
-	target:null,
-	Init: function(target) {
+class wpRGB {
+	name = null;
+	canvas = null;
+	ctx = null;
+	image = null;
+	ip = null;
+	target = null;
+	constructor(target, name) {
 		let returns = false;
-		wpRGB.ip = $('.wpRGB').attr('data-ip');
-		wpRGB.target = target;
-		wpRGB.canvas = document.getElementById('RGBpicker');
-		if(typeof(wpRGB.canvas) != 'undefined' && wpRGB.canvas != null) {
-			wpRGB.ctx = wpRGB.canvas.getContext('2d');
-			wpRGB.image = new Image();
-			wpRGB.image.onload = function () {
-				wpRGB.ctx.drawImage(wpRGB.image, 0, 0, wpRGB.image.width, wpRGB.image.height);
+		this.name = name;
+		this.ip = $('.' + this.name + '.wpRGB').attr('data-ip');
+		this.target = target;
+		this.canvas = document.getElementById(this.name);
+		if(typeof(this.canvas) != 'undefined' && this.canvas != null) {
+			this.ctx = this.canvas.getContext('2d');
+			console.log(this.ctx);
+			this.image = new Image();
+			this.image.onload = () => {
+				this.ctx.drawImage(this.image, 0, 0, this.image.width, this.image.height);
 			};
-			wpRGB.image.src = 'images/layout/ColorWheel.png';
-			wpRGB.Register();
-			wpRGB.getSavedColor();
-			$('.RGBSliderR').slider('option', 'value', $('.RGBColorR').val());
-			$('.RGBSliderG').slider('option', 'value', $('.RGBColorG').val());
-			$('.RGBSliderB').slider('option', 'value', $('.RGBColorB').val());
-			$('.RGBSliderBr').slider('option', 'value', $('.RGBColorBr').text());
+			this.image.src = 'images/layout/ColorWheel.png';
+			this.Register();
+			this.getSavedColor();
+			$('.' + this.name + ' .RGBSliderR').slider('option', 'value', $('.' + this.name + ' .RGBColorR').val());
+			$('.' + this.name + ' .RGBSliderG').slider('option', 'value', $('.' + this.name + ' .RGBColorG').val());
+			$('.' + this.name + ' .RGBSliderB').slider('option', 'value', $('.' + this.name + ' .RGBColorB').val());
+			$('.' + this.name + ' .RGBSliderBr').slider('option', 'value', $('.' + this.name + ' .RGBColorBr').text());
 			returns = true;
 		}
 		return returns;
-	},
-	Register: function() {
-		$('.setRGBOn').on('click', function() {
+	}
+	Register() {
+		$('.' + this.name + ' .setRGBOn').on('click', () => {
 			const on = {
-				ip: wpRGB.ip,
+				ip: this.ip,
 				turn: 'true'
 			};
-			$.post(wpRGB.target + '.RGBTurn.req', on, function(data) {
+			$.post(this.target + '.RGBTurn.req', on, function(data) {
 				console.log(data);
 			}, 'json');
 		});
-		$('.setRGBColor').on('click', function() {
+		$('.' + this.name + ' .setRGBColor').on('click', () => {
 			const on = {
-				ip: wpRGB.ip,
+				ip: this.ip,
 				turn: 'true',
-				r: $('.RGBColorR').val(),
-				g: $('.RGBColorG').val(),
-				b: $('.RGBColorB').val()
+				r: $('.' + this.name + ' .RGBColorR').val(),
+				g: $('.' + this.name + ' .RGBColorG').val(),
+				b: $('.' + this.name + ' .RGBColorB').val()
 			};
-			$.post(wpRGB.target + '.RGBColor.req', on, function(data) {
+			$.post(this.target + '.RGBColor.req', on, function(data) {
 				console.log(data);
 			}, 'json');
 		});
-		$('.setRGBOff').on('click', function() {
-			wpRGB.setOff();
+		$('.' + this.name + ' .setRGBOff').on('click', () => {
+			this.setOff();
 		});
-		$('.RGBSavedColor').on('click', '.colorBorderFav', function() {
+		$('.' + this.name + ' .RGBSavedColor').on('click', '.colorBorderFav', () => {
 			const led = {
-				ip: wpRGB.ip,
+				ip: this.ip,
 				turn: 'true',
 				r: $(this).attr('data-r'),
 				g: $(this).attr('data-g'),
 				b: $(this).attr('data-b')
 			};
-			wpRGB.changeColorSlider(led.r, led.g, led.b);
-			wpRGB.changeColorPreview(led.r, led.g, led.b);
+			this.changeColorSlider(led.r, led.g, led.b);
+			this.changeColorPreview(led.r, led.g, led.b);
 			$.post(wpRGB.target + '.RGBColor.req', led, function(data) {
 			}, 'json');
-			wpRGB.getSavedColor();
+			this.getSavedColor();
 		});
-		$('.RGBColorManagement').on('click', function() {
-			if($('.wpRGB .colorManagement').hasClass('open')) {
-				$('.wpRGB .colorManagement').css({'height':'0px'}).removeClass('open');
+		$('.' + this.name + ' .RGBColorManagement').on('click', () => {
+			if($('.' + this.name + ' .colorManagement').hasClass('open')) {
+				$('.' + this.name + ' .colorManagement').css({'height':'0px'}).removeClass('open');
 			} else {
-				$('.wpRGB .colorManagement').css({'height':'auto'}).addClass('open');
+				$('.' + this.name + ' .colorManagement').css({'height':'auto'}).addClass('open');
 			}
 		});
-		$('#RGBpicker').mousemove(function(e) {
-			var canvasOffset = $(wpRGB.canvas).offset();
+		$('#' + this.name).mousemove(function(e) {
+			var canvasOffset = $(this.canvas).offset();
 			var canvasX = Math.floor(e.pageX - canvasOffset.left);
 			var canvasY = Math.floor(e.pageY - canvasOffset.top);
-			var imageData = wpRGB.ctx.getImageData(canvasX, canvasY, 1, 1);
+			var imageData = this.ctx.getImageData(canvasX, canvasY, 1, 1);
 			var pixel = imageData.data;
 			if((pixel[0] + pixel[1] + pixel[2]) > 0) {
 				var r = pixel[0];
 				var g = pixel[1];
 				var b = pixel[2];
-				wpRGB.changeColorSlider(r, g, b);
-				wpRGB.changeColorPreview(r, g, b);
+				this.changeColorSlider(r, g, b);
+				this.changeColorPreview(r, g, b);
 			}
-		}).click(function(e) {
-			var canvasOffset = $(wpRGB.canvas).offset();
+		}.bind(this)).click(function(e) {
+			var canvasOffset = $(this.canvas).offset();
 			var canvasX = Math.floor(e.pageX - canvasOffset.left);
 			var canvasY = Math.floor(e.pageY - canvasOffset.top);
-			var imageData = wpRGB.ctx.getImageData(canvasX, canvasY, 1, 1);
+			var imageData = this.ctx.getImageData(canvasX, canvasY, 1, 1);
 			var pixel = imageData.data;
 			if((pixel[0] + pixel[1] + pixel[2]) > 0) {
 				var r = pixel[0];
 				var g = pixel[1];
 				var b = pixel[2];
-				wpRGB.changeColorSlider(r, g, b);
-				wpRGB.changeColorPreview(r, g, b);
-				wpRGB.getSavedColor();
-				$('.RGBColorR').val(r);
-				$('.RGBColorG').val(g);
-				$('.RGBColorB').val(b);
+				this.changeColorSlider(r, g, b);
+				this.changeColorPreview(r, g, b);
+				this.getSavedColor();
+				$('.' + this.name + ' .RGBColorR').val(r);
+				$('.' + this.name + ' .RGBColorG').val(g);
+				$('.' + this.name + ' .RGBColorB').val(b);
 				const color = {
-					ip: wpRGB.ip,
+					ip: this.ip,
 					turn: 'true',
 					r: r,
 					g: g,
 					b: b
 				};
-				$.post(wpRGB.target + '.RGBColor.req', color, function(data) {
+				$.post(this.target + '.RGBColor.req', color, function(data) {
 				}, 'json');
-				wpRGB.getSavedColor();
-			}
-		});
-		$('.RGBSliderR, .RGBSliderG, .RGBSliderB').slider({
+				this.getSavedColor();
+			};
+		}.bind(this));
+		$('.' + this.name + ' .RGBSliderR, .' + this.name + ' .RGBSliderG, .' + this.name + ' .RGBSliderB').slider({
 			min: 0,
 			max: 255,
 			range: 'min',
@@ -141,50 +144,44 @@ var wpRGB = {
 			},
 			slide: function(event, ui) {
 				var TheValue = ui.value;
-				var TheSpan = $(this).find('span.toleft');
+				var TheSpan = $(ui.handle.parentNode).find('span.toleft');
 				$(TheSpan).text(TheValue);
-				if($(this).hasClass('RGBSliderR') || $(this).hasClass('RGBSliderG') || $(this).hasClass('RGBSliderB')) {
-					if($(this).hasClass('RGBSliderR')) $('.RGBColorR').val(ui.value);
-					if($(this).hasClass('RGBSliderG')) $('.RGBColorG').val(ui.value);
-					if($(this).hasClass('RGBSliderB')) $('.RGBColorB').val(ui.value);
-					var r = $('.RGBColorR').val();
-					var g = $('.RGBColorG').val();
-					var b = $('.RGBColorB').val();
-					wpRGB.changeColorPreview(r, g, b);
+				if($(ui.handle.parentNode).hasClass('RGBSliderR') ||
+					$(ui.handle.parentNode).hasClass('RGBSliderG') ||
+					$(ui.handle.parentNode).hasClass('RGBSliderB')) {
+					if($(ui.handle.parentNode).hasClass('RGBSliderR')) $('.' + this.name + ' .RGBColorR').val(ui.value);
+					if($(ui.handle.parentNode).hasClass('RGBSliderG')) $('.' + this.name + ' .RGBColorG').val(ui.value);
+					if($(ui.handle.parentNode).hasClass('RGBSliderB')) $('.' + this.name + ' .RGBColorB').val(ui.value);
+					var r = $('.' + this.name + ' .RGBColorR').val();
+					var g = $('.' + this.name + ' .RGBColorG').val();
+					var b = $('.' + this.name + ' .RGBColorB').val();
+					this.changeColorPreview(r, g, b);
 				}
-			},
+			}.bind(this),
 			stop: function(event, ui) {
-				if(($(this).hasClass('RGBSliderR') || $(this).hasClass('RGBSliderG') || $(this).hasClass('RGBSliderB')) && $(this).hasClass('WriteOnly')) {
-					if($(this).hasClass('RGBSliderR')) $('.RGBColorR').val(ui.value);
-					if($(this).hasClass('RGBSliderG')) $('.RGBColorG').val(ui.value);
-					if($(this).hasClass('RGBSliderB')) $('.RGBColorB').val(ui.value);
+				if($(ui.handle.parentNode).hasClass('RGBSliderR') ||
+					$(ui.handle.parentNode).hasClass('RGBSliderG') ||
+					$(ui.handle.parentNode).hasClass('RGBSliderB')) {
+					if($(ui.handle.parentNode).hasClass('RGBSliderR')) $('.' + this.name + ' .RGBColorR').val(ui.value);
+					if($(ui.handle.parentNode).hasClass('RGBSliderG')) $('.' + this.name + ' .RGBColorG').val(ui.value);
+					if($(ui.handle.parentNode).hasClass('RGBSliderB')) $('.' + this.name + ' .RGBColorB').val(ui.value);
 					const slider = {
-						ip: wpRGB.ip,
+						ip: this.ip,
 						turn: 'true',
-						r: $('.RGBColorR').val(),
-						g: $('.RGBColorG').val(),
-						b: $('.RGBColorB').val()
+						r: $('.' + this.name + ' .RGBColorR').val(),
+						g: $('.' + this.name + ' .RGBColorG').val(),
+						b: $('.' + this.name + ' .RGBColorB').val()
 					};
-					wpRGB.changeColorPreview(slider.r, slider.g, slider.b);
-					$.post(wpRGB.target + '.RGBColor.req', slider, function(data) {
+					this.changeColorPreview(slider.r, slider.g, slider.b);
+					$.post(this.target + '.RGBColor.req', slider, function(data) {
 					}, 'json');
-					wpRGB.getSavedColor();
+					this.getSavedColor();
 				}
-				if($(this).hasClass('RGBSliderBr')) {
-					$('.RGBColorBr').text(ui.value);
-					const br = {
-						ip: wpRGB.ip,
-						turn: 'true',
-						brightness: ui.value
-					};
-					$.post(wpRGB.target + '.RGBBrightness.req', br, function(data) {
-					}, 'json');
-				}
-				wpRGB.changeColorPreview();
-				$(this).removeClass('WriteOnly').find('a').text('');
-			}
+				this.changeColorPreview();
+				$(ui.handle.parentNode).removeClass('WriteOnly').find('a').text('');
+			}.bind(this)
 		});
-		$('.RGBSliderBr').slider({
+		$('.' + this.name + ' .RGBSliderBr').slider({
 			min: 0,
 			max: 100,
 			range: 'min',
@@ -198,34 +195,33 @@ var wpRGB = {
 				$(TheSpan).text(TheValue);
 			},
 			stop: function(event, ui) {
-				$('.RGBColorBr').text(ui.value);
+				$('.' + this.name + ' .RGBColorBr').text(ui.value);
 				const br = {
-					ip: wpRGB.ip,
+					ip: this.ip,
 					turn: 'true',
 					brightness: ui.value
 				};
-				$.post(wpRGB.target + '.RGBBrightness.req', br, function(data) {
+				$.post(this.target + '.RGBBrightness.req', br, function(data) {
 				}, 'json');
-				wpRGB.changeColorPreview();
-				$(this).removeClass('WriteOnly').find('a').text('');
-			}
+				$('.' + this.name + ' .RGBSliderBr').removeClass('WriteOnly').find('a').text('');
+			}.bind(this)
 		});
-		$('.setRGBSleep').click(function() {
-			var sec = ($('.RGBSleepHour').text() * 60 * 60) + ($('.RGBSleepMinute').text() * 60);
-			wpRGB.setSleep(sec);
+		$('.' + this.name + ' .setRGBSleep').click(() => {
+			var sec = ($('.' + this.name + ' .RGBSleepHour').text() * 60 * 60) + ($('.' + this.name + ' .RGBSleepMinute').text() * 60);
+			this.setSleep(sec);
 		});
-		$('.RGBSleepHourSlider').slider({
+		$('.' + this.name + ' .RGBSleepHourSlider').slider({
 			min: 0,
 			max: 2,
 			orientation: 'vertical',
 			range: 'min',
 			slide: function(event, ui) {
 				var TheValue = ui.value;
-				var TheSpan = $('.RGBSleepHour');
+				var TheSpan = $('.' + this.name + ' .RGBSleepHour');
 				$(TheSpan).text(TheValue);
-			}
+			}.bind(this)
 		});
-		$('.RGBSleepMinuteSlider').slider({
+		$('.' + this.name + ' .RGBSleepMinuteSlider').slider({
 			min: 0,
 			max: 59,
 			step: 5,
@@ -233,39 +229,39 @@ var wpRGB = {
 			range: 'min',
 			slide: function(event, ui) {
 				var TheValue = ui.value;
-				var TheSpan = $('.RGBSleepMinute');
+				var TheSpan = $('.' + this.name + ' .RGBSleepMinute');
 				$(TheSpan).text(TheValue);
-			}
+			}.bind(this)
 		});
-	},
-	changeColorPreview: function(r, g, b) {
-		$('.RGBColorPreview').css('backgroundColor', 'rgb(' + r + ', ' + g + ', ' + b + ')');
-	},
-	changeColorSlider: function(r, g, b) {
-		$('.RGBSliderR').slider('option', 'value', r);
-		$('.RGBSliderG').slider('option', 'value', g);
-		$('.RGBSliderB').slider('option', 'value', b);
-	},
-	getSavedColor: function() {
-		$.get(wpRGB.target + '.getRGBSavedColor.req', function(data) {
-			$('.RGBSavedColor').html(data);
+	}
+	changeColorPreview(r, g, b) {
+		$('.' + this.name + ' .RGBColorPreview').css('backgroundColor', 'rgb(' + r + ', ' + g + ', ' + b + ')');
+	}
+	changeColorSlider(r, g, b) {
+		$('.' + this.name + ' .RGBSliderR').slider('option', 'value', r);
+		$('.' + this.name + ' .RGBSliderG').slider('option', 'value', g);
+		$('.' + this.name + ' .RGBSliderB').slider('option', 'value', b);
+	}
+	getSavedColor() {
+		$.get(this.target + '.getRGBSavedColor.req', (data) => {
+			$('.' + this.name + ' .RGBSavedColor').html(data);
 		});
-	},
-	setOff: function() {
+	}
+	setOff() {
 		const off = {
-			ip: wpRGB.ip,
+			ip: this.ip,
 			turn: 'false'
 		};
-		$.post(wpRGB.target + '.RGBTurn.req', off, function(data) {
+		$.post(this.target + '.RGBTurn.req', off, function(data) {
 			console.log(data);
 		}, 'json');
-	},
-	setSleep: function(sec) {
+	}
+	setSleep(sec) {
 		const sleep = {
-			ip: wpRGB.ip,
+			ip: this.ip,
 			sleep: sec
 		};
-		$.post(wpRGB.target + '.RGBSleep.req', sleep, function(data) {
+		$.post(this.target + '.RGBSleep.req', sleep, function(data) {
 		}, 'json');
 	}
 };

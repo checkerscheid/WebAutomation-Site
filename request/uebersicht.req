@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 28.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 709                                                     $ #
+//# Revision     : $Rev:: 752                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: uebersicht.req 709 2024-11-21 13:08:04Z                  $ #
+//# File-ID      : $Id:: uebersicht.req 752 2026-01-15 08:48:48Z                  $ #
 //#                                                                                 #
 //###################################################################################
 namespace request;
@@ -29,7 +29,18 @@ class uebersicht {
 		$cmd = 'mode=auto';
 		$WebCom = new WebCom();
 		echo $WebCom->send('SetD1MiniUrlCmd', std::posts('ip') . '%~%' . 'setBM?' . $cmd);
-		file_get_contents('http://wpLicht:turner@' . std::posts('licht') . '/light/0?timer=60');
+		
+		$WebCom = new WebCom();
+		$fc = file_get_contents('http://' . std::posts('licht') . '/light/0');
+		if($fc !== false && $jsondec = json_decode($fc)) {
+			if(json_last_error() == JSON_ERROR_NONE) {
+			//std::test_array($jsondec);
+				if($jsondec->ison && ! $jsondec->has_timer) {
+					$cmd .= '&turn=off';
+					echo $WebCom->send('SetShellyUrlCmd', std::posts('licht') . '%~%' . 'light/0?' . $cmd);
+				}
+			}
+		}
 	}
 	const c_SetManual = 'setManual';
 	public static function SetManual() {

@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 01.08.2024                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 750                                                     $ #
+//# Revision     : $Rev:: 752                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: wpCwWw.js 750 2025-09-21 14:18:43Z                   $ #
+//# File-ID      : $Id:: wpCwWw.js 752 2026-01-15 08:48:48Z                   $ #
 //#                                                                                 #
 //###################################################################################
 ?> wpCwWw */
@@ -27,10 +27,10 @@ class wpCwWw {
 		$('.' + this.name + ' .CwWwSliderCW').slider('option', 'value', $('.' + this.name + ' .CwWwCW').text());
 	}
 	Register() {
-		$('.' + this.name + ' .setCwWwEffect').on('click', () => {
+		$('.' + this.name + ' .setCwWwEffect').on('click', (ev) => {
 			const effect = {
 				ip: this.ip,
-				id: $(this).attr('data-id')
+				id: $(ev.target).attr('data-id')
 			};
 			$.post(this.target + '.CwWwEffect.req', effect, function(data) {
 			}, 'json');
@@ -47,7 +47,7 @@ class wpCwWw {
 			this.setOff();
 		});
 		$('.' + this.name + ' .setCwWwSleep').on('click', () => {
-			var sec = ($('.CwWwSleepHour').text() * 60 * 60) + ($('.CwWwSleepMinute').text() * 60);
+			var sec = ($('.' + this.name + ' .CwWwSleepHour').text() * 60 * 60) + ($('.' + this.name + ' .CwWwSleepMinute').text() * 60);
 			this.setSleep(sec);
 		});
 		$('.' + this.name + ' .CwWwSliderW').slider({

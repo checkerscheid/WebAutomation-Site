@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 06.03.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 742                                                     $ #
+//# Revision     : $Rev:: 754                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: system.js 742 2025-05-27 14:16:13Z                       $ #
+//# File-ID      : $Id:: system.js 754 2026-05-06 10:11:24Z                       $ #
 //#                                                                                 #
 //###################################################################################
 use system\wpInit;
@@ -237,6 +237,36 @@ $(document).ready(function() {
 			tosend = {bm:$(this).attr('data-ws')};
 		}
 		$.post('shellydirect.req', tosend);
+	});
+	$('body').on('click', '.ShellyDirectWithAsk', function() {
+		var tosend = {};
+		var attrvalue = $(this).attr('data-value');
+		if(typeof attrvalue !== 'undefined' && attrvalue !== false) {
+			tosend = {bm:$(this).attr('data-value')};
+		}
+		var attrws = $(this).attr('data-ws');
+		if(typeof attrws !== 'undefined' && attrws !== false) {
+			tosend = {bm:$(this).attr('data-ws')};
+		}
+		$('#dialog').html('<h1>Wollen Sie wirklich schalten?</h1>').dialog({
+			title: 'Sicherheitsfrage', modal: true, width: '300px',
+			buttons: {
+				abbrechen: {
+					text: 'Abbrechen',
+					click: function() {
+						$('#dialog').dialog('close');
+					}
+				},
+				speichern: {
+					text: 'Ja',
+					click: function() {
+						$.post('shellydirect.req', tosend);
+						$('#dialog').dialog('close');
+					}
+				}
+			
+			}
+		});
 	});
 	$('body').on('click', '.pa-scene[data-scene]', function() {
 		$.post('std.writescene.setid.req', {id:$(this).attr('data-scene')}, function(data) {

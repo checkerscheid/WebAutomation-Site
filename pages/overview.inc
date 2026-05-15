@@ -9,9 +9,9 @@
 //# Author       : Christian Scheid                                                 #
 //# Date         : 20.12.2013                                                       #
 //#                                                                                 #
-//# Revision     : $Rev:: 750                                                     $ #
+//# Revision     : $Rev:: 754                                                     $ #
 //# Author       : $Author::                                                      $ #
-//# File-ID      : $Id:: overview.inc 750 2025-09-21 14:18:43Z                    $ #
+//# File-ID      : $Id:: overview.inc 754 2026-05-06 10:11:24Z                    $ #
 //#                                                                                 #
 //###################################################################################
 /**
@@ -32,34 +32,38 @@ $points = array(
 );
 class overview {
 	private static $Licht = array(
-		'WZ_LI'			=> 'Wohnzimmer Licht',
-		'WZ_LI_LS'		=> 'Wohnzimmer Lautsprecher',
-		'WZ_LI_SL'		=> 'Wohnzimmer Stehlampe',
-		'WZ_LI_HZ'		=> 'Wohnzimmer Herz',
-		'WZ_LI_KA'		=> 'Wohnzimmer Kamin',
-		'WZ_LI_LL'		=> 'Wohnzimmer Lichtleiste',
-		'SZ_LI'			=> 'Schlafzimmer Licht',
-		'BU_LI'			=> 'Büro Licht',
-		'KU_LI'			=> 'Küche Licht',
-		'KU_LI_KA'		=> 'Küche Kaffee',
-		'FL_LI'			=> 'Flur Licht',
-		'BA_LI'			=> 'Bad Licht',
-		'BA_SP'			=> 'Bad Spiegelbeleuchtung',
-		'KZ_LI'			=> 'Kinderzimmer Licht',
-		'KZ_BE'			=> 'Kinderzimmer Bett',
-		'KZ_LI_NL'		=> 'Kinderzimmer Nachtlicht',
-		'KZ_RGB'		=> 'Kinderzimmer Bilderrahmen',
-		'Testboard'		=> 'Testboard',
-		'KE'			=> 'Keller Licht',
-		'GA_LI'			=> 'Garten Licht',
-		'GA_BT'			=> 'Blumentöpfe'
+		'WZ_LI'			=> ['_WZ_BM_LI', 'Wohnzimmer Licht'],
+		'WZ_LI_LS'		=> ['_WZ_BM_LI_LS', 'Wohnzimmer Lautsprecher'],
+		'WZ_LI_SL'		=> ['_WZ_BM_LI_SL', 'Wohnzimmer Stehlampe'],
+		'WZ_LI_HZ'		=> ['_WZ_BM_LI_HZ', 'Wohnzimmer Herz'],
+		'WZ_LI_KA'		=> ['_WZ_BM_LI_KA', 'Wohnzimmer Kamin'],
+		'WZ_LI_LL'		=> ['_WZ_BM_LI_LL', 'Wohnzimmer Lichtleiste'],
+		'SZ_LI'			=> ['_SZ_BM_LI', 'Schlafzimmer Licht'],
+		'BU_LI'			=> ['_BU_BM_LI', 'Büro Licht'],
+		'KU_LI'			=> ['_KU_BM_LI', 'Küche Licht'],
+		'FL_LI'			=> ['_BU_BM_LI_FL', 'Flur Licht'],
+		'BA_LI'			=> ['_BA_BM_LI', 'Bad Licht'],
+		'BA_SP'			=> ['_BA_BM_LI_SP', 'Bad Spiegelbeleuchtung'],
+		'KZ_LI'			=> ['_KZ_BM_LI', 'Kinderzimmer Licht'],
+		'KZ_BE'			=> ['_KZ_BM_LI_BE', 'Kinderzimmer Bett'],
+		'KZ_LI_NL'		=> ['_KZ_BM_LI_NL', 'Kinderzimmer Nachtlicht'],
+		'KZ_RGB'		=> ['_KZ_BM_LI_RGB', 'Kinderzimmer Bilderrahmen'],
+		'Testboard'		=> ['Testboard', 'Testboard'],
+		'KE'			=> ['_KE_BM_LI', 'Keller Licht'],
+		'GA_LI'			=> ['_GA_BM_LI', 'Garten Licht'],
+		'GA_BT'			=> ['_GA_BM_LI_BT', 'Blumentöpfe'],
+		'WB_LI_AU'		=> ['_WB_BM_LI_AU', 'Weihnachtsbeleuchtung Außen'],
+		'WB_LI_KA'		=> ['_WB_BM_LI_KA', 'Weihnachtsbeleuchtung Kamin'],
+		'WB_LI_FE'		=> ['_WB_BM_LI_FE', 'Weihnachtsbeleuchtung Fenster'],
+		'WB_LI_WB'		=> ['_WB_BM_LI_WB', 'Weihnachtsbaum']
 	);
 	private static $SystemRelay = array(
-		'EN_FR'			=> 'Fricke',
-		'EN_SRV'		=> 'Server',
-		'SY_SS'			=> 'Schaltschrank',
-		'SY_WW'			=> 'Warmwasser',
-		'SY_KS'			=> 'Kühlschrank'
+		'EN_FR'			=> ['EN_FR', 'Fricke'],
+		'EN_SRV'		=> ['EN_SRV', 'Server'],
+		'SY_SS'			=> ['_SY_SS', 'Schaltschrank'],
+		'SY_WW'			=> ['_SY_WW', 'Warmwasser'],
+		'SY_KS'			=> ['_SY_KS', 'Kühlschrank'],
+		'EG_KS'			=> ['EG_BM_KS', 'Kühlschrank Erdgeschoss']
 	);
 	private static $HT = array(
 		'UG' => array(
@@ -167,7 +171,7 @@ class overview {
 		foreach($all as $dp => $name) {
 			$returns .= '
 				<tr>
-					<td class="ps-taleft" colspan="3">' . $name . ':</td>
+					<td class="ps-taleft ' . wpa::FontOnlyGreyGreen . '" data-ws="' . $name[0] . '" colspan="3">' . $name[1] . ':</td>
 					<td colspan="2"><span data-ws="' . $dp . '_Power" class="ps-input">undefined</span></td>
 					<td></td>
 				</tr>';
@@ -270,20 +274,6 @@ overview::setPflanze();
 					<td colspan="2"><span data-ws="BasisTest_Light" class="ps-input">undefined</span></td>
 					<td colspan="2"></td>
 				</tr-->
-				<tr><td colspan="6"><h2>Wetter</h2></td></tr>
-				<tr><td colspan="6"><hr /></td></tr>
-				<tr>
-					<td class="ps-taleft" colspan="3">Sonne:</td>
-					<td colspan="3"><span data-ws="Sonne" class="ps-input <?=wpa::BlueYellow ?>">undefined</span></td>
-				</tr>
-				<tr>
-					<td class="ps-taleft" colspan="3">Aufgang:</td>
-					<td colspan="3"><span data-ws="Sonnenaufgang" class="ps-input <?=wpa::formattime ?>">undefined</span></td>
-				</tr>
-				<tr>
-					<td class="ps-taleft" colspan="3">Untergang:</td>
-					<td colspan="3"><span data-ws="Sonnenuntergang" class="ps-input <?=wpa::formattime ?>">undefined</span></td>
-				</tr>
 			</tbody>
 		</table>
 	</div>
@@ -293,6 +283,7 @@ overview::setPflanze();
 				<tr>
 					<td colspan="6">
 						<h3>Strom EG</h3>
+						<span>1 DZG00 4010 9630</span>
 					</td>
 				</tr>
 				<tr>
@@ -318,6 +309,7 @@ overview::setPflanze();
 				<tr>
 					<td colspan="6">
 						<h3>Strom UG</h3>
+						<span>1 APA01 8959 1772</span>
 					</td>
 				</tr>
 				<tr>
@@ -421,6 +413,29 @@ while($erg = $database->fetch()) {
 					<td><span data-ws="SY_EZ_voltage" class="ps-input">undefined</span></td>
 					<td><span data-ws="SY_SRV_voltage" class="ps-input">undefined</span></td>
 					<td></td>
+				</tr>
+				<tr><td colspan="6"><h2>Wetter</h2></td></tr>
+				<tr><td colspan="6"><hr /></td></tr>
+				<tr>
+					<td class="ps-taleft" colspan="3">Sonne:</td>
+					<td colspan="3"><span data-ws="Sonne" class="ps-input <?=wpa::BlueYellow ?>">undefined</span></td>
+				</tr>
+				<tr>
+					<td class="ps-taleft" colspan="3">Aufgang:</td>
+					<td colspan="3"><span data-ws="Sonnenaufgang" class="ps-input <?=wpa::formattime ?>">undefined</span></td>
+				</tr>
+				<tr>
+					<td class="ps-taleft" colspan="3">Untergang:</td>
+					<td colspan="3"><span data-ws="Sonnenuntergang" class="ps-input <?=wpa::formattime ?>">undefined</span></td>
+				</tr>
+				<tr>
+					<td class="ps-taleft" colspan="3">Wolken Index:</td>
+					<td colspan="3"><span data-ws="WolkenIndex" class="ps-input">undefined</span></td>
+				</tr>
+				<tr>
+					<td colspan="6">
+						<img src="images/cache/cloud.jpg" alt="Wolkenbild" width="360px" />
+					</td>
 				</tr>
 			</tbody>
 		</table>
